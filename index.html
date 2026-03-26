@@ -506,7 +506,7 @@ function renderAdminInfo() {
 // =============================================
 // ASSIGN
 // =============================================
-async function doAssign() {
+window.doAssign = async function() {
   const fileNo = document.getElementById('fileInput').value.trim();
   const reg = document.getElementById('regSelect').value;
   if (!fileNo) { alert('Enter file number.'); return; }
