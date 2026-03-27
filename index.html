@@ -333,14 +333,10 @@ gap:6px; animation:fadeUp 0.2s ease;
 
 <div class="form-row">
   <div class="field" style="grid-column:1/-1">
-    <label>Clerk / Employee</label>
+    <label>Assigned By</label>
     <select id="opClerkSelect">
       <option value="">— Select —</option>
-      <option>Clerk</option>
-      <option>Employee 1</option>
-      <option>Employee 2</option>
-      <option>Employee 3</option>
-      <option>Reception</option>
+      <option>Clinic Clerk</option>
     </select>
   </div>
 </div>
@@ -714,6 +710,10 @@ window.resetAll = async function() {
 // =============================================
 renderHeader();
 initPointer();
+// Force hide loading overlay after 3 seconds max
+setTimeout(() => {
+  document.getElementById("loadingOverlay").style.display = "none";
+}, 3000);
 
 // =============================================
 // CLINIC DETAIL MODAL
