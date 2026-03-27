@@ -593,14 +593,14 @@ function renderHeader() {
 }
 
 function renderNextClinic() {
-  try {
-    const smartIdx = getSmartNextIdx();
-    const c = CLINICS[smartIdx];
-    document.getElementById('nextDoctor').textContent = "Dr. " + c.doctor;
-    document.getElementById('nextRoom').textContent = c.room;
-    document.getElementById('nextDoctor').dataset.smartIdx = smartIdx;
-    const todayIP = todayName();
-    const daysEl = document.getElementById('nextDays');
+  let idx = 0;
+  try { idx = getSmartNextIdx(); } catch(e) { idx = currentPointer % CLINICS.length; }
+  const c = CLINICS[idx];
+  document.getElementById('nextDoctor').textContent = "Dr. " + c.doctor;
+  document.getElementById('nextRoom').textContent = c.room;
+  const todayIP = todayName();
+  const daysEl = document.getElementById('nextDays');
+  if (daysEl) {
     daysEl.innerHTML = '';
     c.days.forEach(day => {
       const el = document.createElement('div');
@@ -608,11 +608,6 @@ function renderNextClinic() {
       el.innerHTML = '<span class="dn">'+day+'</span>'+(day===todayIP?'<span class="today-tag">TODAY</span>':'');
       daysEl.appendChild(el);
     });
-  } catch(e) {
-    const idx = currentPointer % CLINICS.length;
-    const c = CLINICS[idx];
-    document.getElementById('nextDoctor').textContent = "Dr. " + c.doctor;
-    document.getElementById('nextRoom').textContent = c.room;
   }
 }
 
@@ -801,22 +796,28 @@ window.resetAll = async function() {
 // =============================================
 renderHeader();
 initPointer();
-// Show full clinic info immediately while Firebase loads
-renderNextClinic();
+// Show clinic immediately — no waiting for Firebase
+document.getElementById('nextDoctor').textContent = 'Dr. ' + CLINICS[0].doctor;
+document.getElementById('nextRoom').textContent = CLINICS[0].room;
+// Render days for first clinic
+const _daysEl = document.getElementById('nextDays');
+if (_daysEl) {
+  CLINICS[0].days.forEach(day => {
+    const el = document.createElement('div');
+    el.className = 'day-slot';
+    el.innerHTML = '<span class="dn">'+day+'</span>'+(day===todayName()?'<span class="today-tag">TODAY</span>':'');
+    _daysEl.appendChild(el);
+  });
+}
 renderRotBar();
-// Show live status after 5s even if Firebase is slow on first connect
+// After 5s force Live status
 setTimeout(() => {
   const dot = document.getElementById('syncDot');
-  const txt = document.getElementById('syncText');
-  if (!dot.classList.contains('live')) {
+  if (dot && !dot.classList.contains('live')) {
     dot.className = 'sync-dot live';
-    txt.textContent = 'Live — synced across all devices';
+    document.getElementById('syncText').textContent = 'Live — synced across all devices';
   }
 }, 5000);
-// Force hide loading overlay after 3 seconds max
-setTimeout(() => {
-  
-}, 3000);
 
 // =============================================
 // CLINIC DETAIL MODAL
