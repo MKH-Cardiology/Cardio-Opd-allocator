@@ -313,6 +313,17 @@ gap:6px; animation:fadeUp 0.2s ease;
 <!-- OUTPATIENT -->
 
 <div class="page" id="page-outpatient">
+  <div id="opPinGate" style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:32px;text-align:center;">
+    <div style="font-size:28px;margin-bottom:12px;">🔒</div>
+    <div style="font-family:'DM Serif Display',serif;font-size:20px;margin-bottom:6px;">Outpatient Access</div>
+    <div style="font-size:12px;color:var(--text-muted);font-family:'DM Mono',monospace;margin-bottom:20px;">CLINIC CLERK & ADMIN ONLY</div>
+    <div style="max-width:240px;margin:0 auto;display:flex;flex-direction:column;gap:10px;">
+      <input class="pin-input" type="password" id="opPinInput" maxlength="4" placeholder="PIN" style="text-align:center;letter-spacing:8px;"/>
+      <button class="assign-btn" onclick="checkClerkPin()">Unlock</button>
+      <div class="err" id="opPinErr"></div>
+    </div>
+  </div>
+  <div id="opContent" style="display:none">
   <div class="assign-hero">
     <div class="clinic-result-box">
       <div>
@@ -329,8 +340,13 @@ gap:6px; animation:fadeUp 0.2s ease;
   <div id="opClinicBars"></div>
 </div>
 
-<div class="form-row">
-  <div class="field" style="grid-column:1/-1">
+<div class="form-row" style="grid-template-columns:1fr;gap:10px;">
+  <div class="field">
+    <label>Patient File Number</label>
+    <input type="text" id="opFileInput" placeholder="e.g. 123456" autocomplete="off"/>
+    <div id="opFileErr" style="font-size:11px;color:var(--danger);font-family:DM Mono,monospace;margin-top:4px;"></div>
+  </div>
+  <div class="field">
     <label>Assigned By</label>
     <select id="opClerkSelect">
       <option value="">— Select —</option>
@@ -350,6 +366,7 @@ gap:6px; animation:fadeUp 0.2s ease;
 ```
 
   </div>
+</div>
 </div>
 
 <!-- LOG -->
@@ -396,6 +413,12 @@ gap:6px; animation:fadeUp 0.2s ease;
       </div>
       <div class="admin-row">
         <button class="danger-btn" onclick="resetAll()">⚠ Reset All Counts &amp; Log</button>
+      </div>
+      <div class="admin-row">
+        <div style="flex:1">
+          <div style="font-size:10px;font-family:DM Mono,monospace;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;">Export Weekly Report</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;" id="weekExportBtns"></div>
+        </div>
       </div>
       <div class="info-box" id="infoBox">—</div>
     </div>
@@ -447,6 +470,8 @@ const CLINICS = [
 ];
 
 const ADMIN_PIN = "2025";
+const CLERK_PIN = "2026";
+let clerkUnlocked = false;
 let currentPointer = 0;
 let allLogs = [];
 let currentLogFilter = 'all';
@@ -660,6 +685,10 @@ window.switchTab = function(id, btn) {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.getElementById('page-'+id).classList.add('active');
   btn.classList.add('active');
+  if (id === 'outpatient' && !clerkUnlocked) {
+    document.getElementById('opPinGate').style.display = 'block';
+    document.getElementById('opContent').style.display = 'none';
+  }
 };
 
 // =============================================
@@ -681,6 +710,7 @@ window.checkPin = function() {
     adminUnlocked = true;
     renderAdminInfo();
     renderDist();
+    renderExportButtons();
   } else {
     document.getElementById('pinErr').textContent = 'Incorrect PIN.';
   }
@@ -836,8 +866,21 @@ function renderOutpatient() {
 }
 
 window.doOutpatientAssign = async function() {
+  const fileNo = document.getElementById('opFileInput').value.trim();
   const clerk = document.getElementById('opClerkSelect').value;
+  const errEl = document.getElementById('opFileErr');
+  errEl.textContent = '';
+
+  if (!fileNo) { errEl.textContent = 'File number is required.'; return; }
   if (!clerk) { alert('Select a clerk/employee.'); return; }
+
+  // Duplicate detection — check both inpatient and outpatient logs
+  const dupIP = allLogs.find(e => e.fileNo === fileNo);
+  const dupOP = allOpLogs.find(e => e.fileNo === fileNo);
+  if (dupIP || dupOP) {
+    errEl.textContent = 'File number ' + fileNo + ' already assigned today. Possible duplicate.';
+    return;
+  }
 
   const todayClinics = getTodayClinics();
   if (!todayClinics.length) { alert('No clinics available today.'); return; }
@@ -851,6 +894,7 @@ window.doOutpatientAssign = async function() {
 
   try {
     await addDoc(opLogsRef, {
+      fileNo,
       clerk,
       doctor: best.doctor,
       room: best.room,
@@ -862,13 +906,14 @@ window.doOutpatientAssign = async function() {
     });
 
     document.getElementById('opFlashDoctor').textContent = '→ Dr. ' + best.doctor + '  ·  ' + best.room;
-    document.getElementById('opFlashDetail').textContent = clerk + '  ·  ' + nowTime();
+    document.getElementById('opFlashDetail').textContent = 'File ' + fileNo + '  ·  ' + clerk + '  ·  ' + nowTime();
     document.getElementById('opFlash').className = 'flash show';
 
     const el = document.getElementById('opNextDoctor');
     el.classList.add('pop');
     setTimeout(() => el.classList.remove('pop'), 500);
 
+    document.getElementById('opFileInput').value = '';
     document.getElementById('opClerkSelect').value = '';
   } catch(err) {
     alert('Error saving. Check connection.');
@@ -878,6 +923,83 @@ window.doOutpatientAssign = async function() {
   btn.disabled = false;
   btn.textContent = 'Assign Outpatient →';
 };
+
+
+window.checkClerkPin = function() {
+  const entered = document.getElementById('opPinInput').value;
+  if (entered === CLERK_PIN || entered === ADMIN_PIN) {
+    clerkUnlocked = true;
+    document.getElementById('opPinGate').style.display = 'none';
+    document.getElementById('opContent').style.display = 'block';
+    renderOutpatient();
+  } else {
+    document.getElementById('opPinErr').textContent = 'Incorrect PIN.';
+  }
+};
+
+
+// =============================================
+// WEEKLY EXPORT
+// =============================================
+function getWeekLabel(ts) {
+  const d = new Date(ts);
+  const day = d.getDay();
+  const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+  const monday = new Date(d.setDate(diff));
+  return monday.toLocaleDateString('en-GB', {day:'numeric', month:'short', year:'numeric'});
+}
+
+function renderExportButtons() {
+  const btn = document.getElementById('weekExportBtns');
+  if (!btn) return;
+  const allEntries = [
+    ...allLogs.map(e => ({...e, type:'Inpatient'})),
+    ...allOpLogs.map(e => ({...e, type:'Outpatient'}))
+  ];
+  if (!allEntries.length) { btn.innerHTML = '<span style="font-size:12px;color:var(--text-muted);font-family:DM Mono,monospace">No data yet</span>'; return; }
+
+  const weeks = {};
+  allEntries.forEach(e => {
+    const wk = getWeekLabel(e.ts);
+    if (!weeks[wk]) weeks[wk] = [];
+    weeks[wk].push(e);
+  });
+
+  btn.innerHTML = '';
+  Object.entries(weeks).forEach(([week, entries]) => {
+    const b = document.createElement('button');
+    b.className = 'apply-btn';
+    b.style.cssText = 'display:flex;align-items:center;gap:6px;';
+    b.innerHTML = '📊 ' + week;
+    b.onclick = () => exportWeek(week, entries);
+    btn.appendChild(b);
+  });
+}
+
+function exportWeek(weekLabel, entries) {
+  const rows = [['Date','Time','Type','File No.','Doctor','Room','Clinic Day','Registrar/Clerk']];
+  entries.sort((a,b) => a.ts - b.ts).forEach(e => {
+    rows.push([
+      e.assignDate || '',
+      e.time || '',
+      e.type || '',
+      e.fileNo || 'N/A',
+      'Dr. ' + e.doctor,
+      e.room || '',
+      e.clinicDay || e.day || '',
+      e.reg || e.clerk || ''
+    ]);
+  });
+
+  const csv = rows.map(r => r.map(c => '"' + String(c).replace(/"/g,'""') + '"').join(',')).join('\n');
+  const blob = new Blob([csv], {type:'text/csv'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'MKH-Cardio-OPD-' + weekLabel.replace(/ /g,'-') + '.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+}
 
 </script>
 
