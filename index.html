@@ -542,9 +542,11 @@ function renderHeader() {
 }
 
 function renderNextClinic() {
-  const c = CLINICS[curIdx()];
+  const smartIdx = getSmartNextIdx();
+  const c = CLINICS[smartIdx];
   document.getElementById('nextDoctor').textContent = "Dr. " + c.doctor;
   document.getElementById('nextRoom').textContent = c.room;
+  document.getElementById('nextDoctor').dataset.smartIdx = smartIdx;
   const today = todayName();
   const daysEl = document.getElementById('nextDays');
   daysEl.innerHTML = '';
@@ -977,28 +979,46 @@ function renderExportButtons() {
 }
 
 function exportWeek(weekLabel, entries) {
-  const rows = [['Date','Time','Type','File No.','Doctor','Room','Clinic Day','Registrar/Clerk']];
-  entries.sort((a,b) => a.ts - b.ts).forEach(e => {
-    rows.push([
-      e.assignDate || '',
-      e.time || '',
-      e.type || '',
-      e.fileNo || 'N/A',
-      'Dr. ' + e.doctor,
-      e.room || '',
-      e.clinicDay || e.day || '',
-      e.reg || e.clerk || ''
-    ]);
-  });
+  const sorted = [...entries].sort((a,b) => a.ts - b.ts);
+  
+  const rows = sorted.map(e => `
+    <tr>
+      <td>${e.assignDate||''}</td>
+      <td>${e.time||''}</td>
+      <td><span class="${e.type==='Inpatient'?'badge-ip':'badge-op'}">${e.type||''}</span></td>
+      <td><b>${e.fileNo||'N/A'}</b></td>
+      <td>Dr. ${e.doctor||''}</td>
+      <td>${e.room||''}</td>
+      <td>${e.clinicDay||e.day||''}</td>
+      <td>${e.reg||e.clerk||''}</td>
+    </tr>`).join('');
 
-  const csv = rows.map(r => r.map(c => '"' + String(c).replace(/"/g,'""') + '"').join(',')).join('\n');
-  const blob = new Blob([csv], {type:'text/csv'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'MKH-Cardio-OPD-' + weekLabel.replace(/ /g,'-') + '.csv';
-  a.click();
-  URL.revokeObjectURL(url);
+  const win = window.open('', '_blank');
+  win.document.write(`<!DOCTYPE html><html><head><title>MKH Cardio OPD - ${weekLabel}</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 24px; color: #1a202c; }
+    h1 { font-size: 18px; margin-bottom: 4px; color: #1d4ed8; }
+    h2 { font-size: 13px; color: #64748b; margin-bottom: 20px; font-weight: normal; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    th { background: #1d4ed8; color: white; padding: 8px 10px; text-align: left; font-weight: 600; }
+    td { padding: 7px 10px; border-bottom: 1px solid #e2e8f0; }
+    tr:nth-child(even) td { background: #f8fafc; }
+    .badge-ip { background:#dbeafe;color:#1d4ed8;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600; }
+    .badge-op { background:#d1fae5;color:#065f46;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600; }
+    .footer { margin-top: 20px; font-size: 11px; color: #94a3b8; text-align: center; }
+    @media print { button { display: none; } }
+  </style></head><body>
+
+  <h1>🫀 MKH Cardio OPD — Weekly Assignment Report</h1>
+  <h2>Week of ${weekLabel} &nbsp;|&nbsp; Total: ${sorted.length} patients &nbsp;|&nbsp; Inpatient: ${sorted.filter(e=>e.type==='Inpatient').length} &nbsp;|&nbsp; Outpatient: ${sorted.filter(e=>e.type==='Outpatient').length}</h2>
+  <button onclick="window.print()" style="margin-bottom:16px;padding:8px 20px;background:#1d4ed8;color:white;border:none;border-radius:6px;cursor:pointer;font-size:13px;">🖨 Print / Save as PDF</button>
+  <table>
+    <thead><tr><th>Date</th><th>Time</th><th>Type</th><th>File No.</th><th>Doctor</th><th>Room</th><th>Clinic Day</th><th>Assigned By</th></tr></thead>
+    <tbody>${rows}</tbody>
+  </table>
+  <div class="footer">Generated ${new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})} — Mubarak Al-Kabeer Hospital Cardiology OPD</div>
+  </body></html>`);
+  win.document.close();
 }
 
 </script>
