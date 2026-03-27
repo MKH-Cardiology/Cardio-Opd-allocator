@@ -257,13 +257,11 @@ gap:6px; animation:fadeUp 0.2s ease;
 
 <div class="page active" id="page-assign">
   <div class="assign-hero">
-    <div class="clinic-result-box">
-      <div>
-        <div class="rl-label">Next Assigned Clinic</div>
-        <div class="rl-doctor" id="nextDoctor">Dr. Hisham</div>
-        <div class="rl-room" id="nextRoom">Room 10</div>
-      </div>
-      <div class="result-right" id="nextDays"></div>
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:20px;">
+      <div class="rl-label">Next Assigned Clinic</div>
+      <div class="rl-doctor" id="nextDoctor">Dr. Hisham</div>
+      <div class="rl-room" id="nextRoom">Room 10</div>
+      <div id="nextDays" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;"></div>
     </div>
     <div class="rot-bar" id="rotBar"></div>
     <div class="form-row">
@@ -436,22 +434,25 @@ gap:6px; animation:fadeUp 0.2s ease;
 
 <!-- Firebase SDKs -->
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection, addDoc, query, orderBy, deleteDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+<script src="https://unpkg.com/firebase@9.22.2/compat/app.js"></script>
 
+<script src="https://unpkg.com/firebase@9.22.2/compat/firestore.js"></script>
+
+<script>
 const firebaseConfig = {
   apiKey: "AIzaSyC7NsJ5Wo9F3qgKzlkUxN8sUE6wiSY6YcI",
   authDomain: "mkh-cardio-opd-allocator.firebaseapp.com",
   projectId: "mkh-cardio-opd-allocator",
   storageBucket: "mkh-cardio-opd-allocator.appspot.com",
   messagingSenderId: "1094997278819",
-  appId: "1:1094997278819:web:51394957d70624b8c3f6e4",
-  measurementId: "G-C2ZQTS1KQG"
+  appId: "1:1094997278819:web:51394957d70624b8c3f6e4"
 };
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+const pointerRef = db.collection('state').doc('pointer');
+const logsRef = db.collection('logs');
+const opLogsRef = db.collection('op_logs');
 
 // =============================================
 // CLINIC DATA
@@ -480,267 +481,356 @@ const CLINICS = [
 
 const ADMIN_PIN = "2025";
 const CLERK_PIN = "2026";
-let clerkUnlocked = false;
 let currentPointer = 0;
 let allLogs = [];
-let currentLogFilter = 'all';
-let adminUnlocked = false;
 let allOpLogs = [];
+let adminUnlocked = false;
+let clerkUnlocked = false;
+let currentLogFilter = 'all';
 
 // =============================================
 // HELPERS
 // =============================================
 function todayName() { return ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][new Date().getDay()]; }
-function nowTime() { return new Date().toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"}); }
-function nowDate() { return new Date().toLocaleDateString("en-GB",{day:"numeric",month:"short"}); }
-function curIdx() { return currentPointer % CLINICS.length; }
+function nowTime() { return new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}); }
+function nowDate() { return new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short'}); }
 
+// =============================================
+// SMART ROTATION
+// =============================================
 function getSmartNextIdx() {
-  // Count patients per slot (inpatient + outpatient combined)
-  const counts = new Array(CLINICS.length).fill(0);
-  if (allLogs) allLogs.forEach(e => { if (e.slotIdx !== undefined) counts[e.slotIdx]++; });
-  if (allOpLogs) allOpLogs.forEach(e => { if (e.slotIdx !== undefined) counts[e.slotIdx]++; });
+  var counts = new Array(CLINICS.length).fill(0);
+  allLogs.forEach(function(e) { if (e.slotIdx !== undefined) counts[e.slotIdx]++; });
+  allOpLogs.forEach(function(e) { if (e.slotIdx !== undefined) counts[e.slotIdx]++; });
 
-  // Identify second slots for doctors with 2 clinics
-  const doctorSlots = {};
-  CLINICS.forEach((c, i) => {
+  var doctorSlots = {};
+  CLINICS.forEach(function(c, i) {
     if (!doctorSlots[c.doctor]) doctorSlots[c.doctor] = [];
     doctorSlots[c.doctor].push(i);
   });
-  const secondSlots = new Set();
-  Object.values(doctorSlots).forEach(slots => {
+  var secondSlots = new Set();
+  Object.values(doctorSlots).forEach(function(slots) {
     if (slots.length > 1) secondSlots.add(slots[slots.length - 1]);
   });
 
-  // First slots only
-  const firstSlots = [...Array(CLINICS.length).keys()].filter(i => !secondSlots.has(i));
+  var firstSlots = Array.from(Array(CLINICS.length).keys()).filter(function(i) { return !secondSlots.has(i); });
+  var minCount = Math.min.apply(null, firstSlots.map(function(i) { return counts[i]; }));
 
-  // Find minimum count among first slots
-  const minCount = Math.min(...firstSlots.map(i => counts[i]));
-
-  // Find next first slot in rotation order with minCount (least loaded)
-  const start = currentPointer % CLINICS.length;
-  for (let offset = 0; offset < CLINICS.length; offset++) {
-    const idx = (start + offset) % CLINICS.length;
+  for (var offset = 0; offset < CLINICS.length; offset++) {
+    var idx = (currentPointer + offset) % CLINICS.length;
     if (!secondSlots.has(idx) && counts[idx] === minCount) return idx;
   }
 
-  // All first slots filled at least minCount times - now allow second slots
-  const minSecond = Math.min(...[...secondSlots].map(i => counts[i]));
-  for (let offset = 0; offset < CLINICS.length; offset++) {
-    const idx = (start + offset) % CLINICS.length;
-    if (secondSlots.has(idx) && counts[idx] === minSecond) return idx;
+  var secondArr = Array.from(secondSlots);
+  if (secondArr.length) {
+    var minSecond = Math.min.apply(null, secondArr.map(function(i) { return counts[i]; }));
+    for (var offset2 = 0; offset2 < CLINICS.length; offset2++) {
+      var idx2 = (currentPointer + offset2) % CLINICS.length;
+      if (secondSlots.has(idx2) && counts[idx2] === minSecond) return idx2;
+    }
   }
-
   return currentPointer % CLINICS.length;
-}
-
-
-// =============================================
-// FIRESTORE — POINTER (real-time sync)
-// =============================================
-const pointerRef = doc(db, "state", "pointer");
-
-async function initPointer() {
-  const snap = await getDoc(pointerRef);
-  if (!snap.exists()) {
-    await setDoc(pointerRef, { value: 0 });
-  }
-}
-
-// Live listener on pointer
-onSnapshot(pointerRef, (snap) => {
-  if (snap.exists()) {
-    currentPointer = snap.data().value || 0;
-    renderNextClinic();
-    renderRotBar();
-    renderDist();
-    renderAdminInfo();
-  }
-  setSynced(true);
-  
-}, (err) => {
-  setSynced(false);
-  console.error(err);
-});
-
-// Live listener on log
-const logsRef = collection(db, "logs");
-const logsQuery = query(logsRef, orderBy("ts", "desc"));
-onSnapshot(logsQuery, (snap) => {
-  allLogs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-  renderLog(currentLogFilter);
-  renderDist();
-}, (err) => { console.error(err); });
-
-// =============================================
-// SYNC UI
-// =============================================
-function setSynced(ok) {
-  const dot = document.getElementById('syncDot');
-  const txt = document.getElementById('syncText');
-  dot.className = 'sync-dot' + (ok ? ' live' : ' error');
-  txt.textContent = ok ? 'Live — synced across all devices' : 'Connection error — check internet';
 }
 
 // =============================================
 // RENDER
 // =============================================
 function renderHeader() {
-  const d = new Date();
+  var d = new Date();
   document.getElementById('dayName').textContent = todayName();
   document.getElementById('dateStr').textContent = d.toLocaleDateString('en-GB',{day:'numeric',month:'short'});
 }
 
 function renderNextClinic() {
-  let idx = 0;
+  var idx = 0;
   try { idx = getSmartNextIdx(); } catch(e) { idx = currentPointer % CLINICS.length; }
-  const c = CLINICS[idx];
-  document.getElementById('nextDoctor').textContent = "Dr. " + c.doctor;
+  var c = CLINICS[idx];
+  var todayIP = todayName();
+  document.getElementById('nextDoctor').textContent = 'Dr. ' + c.doctor;
   document.getElementById('nextRoom').textContent = c.room;
-  const todayIP = todayName();
-  const daysEl = document.getElementById('nextDays');
-  if (daysEl) {
-    daysEl.innerHTML = '';
-    c.days.forEach(day => {
-      const el = document.createElement('div');
-      el.className = 'day-slot';
-      el.innerHTML = '<span class="dn">'+day+'</span>'+(day===todayIP?'<span class="today-tag">TODAY</span>':'');
-      daysEl.appendChild(el);
-    });
-  }
+  var daysEl = document.getElementById('nextDays');
+  daysEl.innerHTML = '';
+  c.days.forEach(function(day) {
+    var el = document.createElement('div');
+    el.className = 'day-slot';
+    el.innerHTML = '<span class="dn">' + day + '</span>' + (day === todayIP ? '<span class="today-tag">TODAY</span>' : '');
+    daysEl.appendChild(el);
+  });
 }
 
 function renderRotBar() {
-  const bar = document.getElementById('rotBar');
+  var bar = document.getElementById('rotBar');
   bar.innerHTML = '';
-  const si = getSmartNextIdx();
-  CLINICS.forEach((c,i) => {
-    const dot = document.createElement('div');
-    dot.className = 'rdot'+(i===si?' active':'');
-    dot.title = 'Dr.'+c.doctor+' · '+c.room;
+  var si = 0;
+  try { si = getSmartNextIdx(); } catch(e) {}
+  CLINICS.forEach(function(c, i) {
+    var dot = document.createElement('div');
+    dot.className = 'rdot' + (i === si ? ' active' : '');
+    dot.title = 'Dr.' + c.doctor + ' ' + c.room;
     bar.appendChild(dot);
   });
 }
 
 function renderDist() {
-  const grid = document.getElementById('distGrid');
+  var grid = document.getElementById('distGrid');
   grid.innerHTML = '';
-  const counts = new Array(CLINICS.length).fill(0);
-  allLogs.forEach(e => { if (e.slotIdx !== undefined) counts[e.slotIdx]++; });
-  allOpLogs.forEach(e => { if (e.slotIdx !== undefined) counts[e.slotIdx]++; });
-  const max = Math.max(...counts, 1);
-  const si = getSmartNextIdx();
-  CLINICS.forEach((c,i) => {
-    const pct = Math.round((counts[i]/max)*100);
-    const card = document.createElement('div');
-    card.className = 'dist-card'+(i===si?' next-up':'');
-    card.style.cursor='pointer';
-    card.onclick = () => window.openClinicModal(i);
+  var counts = new Array(CLINICS.length).fill(0);
+  allLogs.forEach(function(e) { if (e.slotIdx !== undefined) counts[e.slotIdx]++; });
+  allOpLogs.forEach(function(e) { if (e.slotIdx !== undefined) counts[e.slotIdx]++; });
+  var max = Math.max.apply(null, counts.concat([1]));
+  var si = 0;
+  try { si = getSmartNextIdx(); } catch(e) {}
+  CLINICS.forEach(function(c, i) {
+    var pct = Math.round((counts[i]/max)*100);
+    var card = document.createElement('div');
+    card.className = 'dist-card' + (i === si ? ' next-up' : '');
+    card.style.cursor = 'pointer';
+    (function(idx) { card.onclick = function() { window.openClinicModal(idx); }; })(i);
     if (!adminUnlocked) {
-      const lock = document.createElement('div');
-      lock.style.cssText = 'font-size:10px;color:var(--text-muted);font-family:DM Mono,monospace;margin-top:6px;';
-      lock.textContent = '🔒 admin only';
-      card.appendChild(lock);
+      card.innerHTML = '<div class="dist-doctor">Dr. ' + c.doctor + '</div>'
+        + '<div class="dist-room">' + c.room + ' · ' + c.days.join(',') + '</div>'
+        + '<div class="dist-count">' + counts[i] + '</div>'
+        + '<div class="dist-bar"><div class="dist-fill" style="width:' + pct + '%"></div></div>'
+        + '<div style="font-size:10px;color:var(--text-muted);font-family:DM Mono,monospace;margin-top:6px">🔒 admin only</div>';
+    } else {
+      card.innerHTML = '<div class="dist-doctor">Dr. ' + c.doctor + '</div>'
+        + '<div class="dist-room">' + c.room + ' · ' + c.days.join(',') + '</div>'
+        + '<div class="dist-count">' + counts[i] + '</div>'
+        + '<div class="dist-bar"><div class="dist-fill" style="width:' + pct + '%"></div></div>';
     }
-    card.innerHTML = `
-      <div class="dist-doctor">Dr. ${c.doctor}</div>
-      <div class="dist-room">${c.room} · ${c.days.join(',')}</div>
-      <div class="dist-count">${counts[i]}</div>
-      <div class="dist-bar"><div class="dist-fill" style="width:${pct}%"></div></div>`;
     grid.appendChild(card);
   });
 }
 
 function renderLog(filter) {
   currentLogFilter = filter;
-  const body = document.getElementById('logBody');
-  let entries = allLogs;
-  if (filter !== 'all') entries = entries.filter(e => (e.clinicDay||e.day) === filter);
+  var body = document.getElementById('logBody');
+  var entries = allLogs.slice();
+  if (filter !== 'all') entries = entries.filter(function(e) { return (e.clinicDay||e.day) === filter; });
   if (!entries.length) { body.innerHTML = '<div class="empty-state">No assignments found.</div>'; return; }
   body.innerHTML = '';
-  entries.forEach(e => {
-    const row = document.createElement('div');
+  entries.forEach(function(e) {
+    var row = document.createElement('div');
     row.className = 'lt-row';
-    row.innerHTML = `
-      <div class="lt-time">${e.assignDate||''}<br><span style="font-size:10px;color:var(--text-muted)">${e.time}</span></div>
-      <div class="lt-mrn">${e.fileNo||'—'}</div>
-      <div>Dr. ${e.doctor}<br><span class="room-tag">${e.room} · ${e.clinicDay||e.day}</span></div>
-      <div class="lt-reg">${e.reg||e.clerk||''}</div>`;
+    row.innerHTML = '<div class="lt-time">' + (e.assignDate||'') + '<br><span style="font-size:10px;color:var(--text-muted)">' + (e.time||'') + '</span></div>'
+      + '<div class="lt-mrn">' + (e.fileNo||'—') + '</div>'
+      + '<div>Dr. ' + e.doctor + '<br><span class="room-tag">' + e.room + ' · ' + (e.clinicDay||e.day||'') + '</span></div>'
+      + '<div class="lt-reg">' + (e.reg||e.clerk||'') + '</div>';
     body.appendChild(row);
   });
 }
 
 function renderAdminInfo() {
-  const si = getSmartNextIdx();
+  var si = 0;
+  try { si = getSmartNextIdx(); } catch(e) {}
   document.getElementById('infoBox').innerHTML =
-    `Current pointer: <b style="color:var(--text)">Next → Dr. ${CLINICS[si].doctor} · ${CLINICS[si].room}</b><br>
-     Total inpatient: <b style="color:var(--text)">${allLogs.length}</b><br>
-     Total outpatient: <b style="color:var(--text)">${allOpLogs.length}</b>`;
+    'Next: <b style="color:var(--text)">Dr. ' + CLINICS[si].doctor + ' · ' + CLINICS[si].room + '</b><br>'
+    + 'Inpatient total: <b style="color:var(--text)">' + allLogs.length + '</b><br>'
+    + 'Outpatient total: <b style="color:var(--text)">' + allOpLogs.length + '</b>';
+}
+
+function setSynced(ok) {
+  var dot = document.getElementById('syncDot');
+  var txt = document.getElementById('syncText');
+  dot.className = 'sync-dot' + (ok ? ' live' : ' error');
+  txt.textContent = ok ? 'Live — synced across all devices' : 'Connection error';
 }
 
 // =============================================
-// ASSIGN
+// FIRESTORE LISTENERS
 // =============================================
-window.doAssign = async function() {
-  const fileNo = document.getElementById('fileInput').value.trim();
-  const reg = document.getElementById('regSelect').value;
+pointerRef.onSnapshot(function(snap) {
+  if (snap.exists) {
+    currentPointer = snap.data().value || 0;
+  }
+  setSynced(true);
+  renderNextClinic();
+  renderRotBar();
+  renderDist();
+  renderAdminInfo();
+}, function(err) { setSynced(false); console.error(err); });
+
+logsRef.orderBy('ts','desc').onSnapshot(function(snap) {
+  allLogs = snap.docs.map(function(d) { return Object.assign({id:d.id}, d.data()); });
+  renderLog(currentLogFilter);
+  renderNextClinic();
+  renderRotBar();
+  renderDist();
+}, function(err) { console.error(err); });
+
+opLogsRef.orderBy('ts','desc').onSnapshot(function(snap) {
+  allOpLogs = snap.docs.map(function(d) { return Object.assign({id:d.id}, d.data()); });
+  renderOutpatient();
+  renderNextClinic();
+  renderDist();
+}, function(err) { console.error(err); });
+
+// =============================================
+// ASSIGN INPATIENT
+// =============================================
+window.doAssign = function() {
+  var fileNo = document.getElementById('fileInput').value.trim();
+  var reg = document.getElementById('regSelect').value;
   if (!fileNo) { alert('Enter file number.'); return; }
   if (!reg) { alert('Select a registrar.'); return; }
 
-  const btn = document.getElementById('assignBtn');
+  var btn = document.getElementById('assignBtn');
   btn.disabled = true;
   btn.textContent = 'Saving...';
 
-  try {
-    const i = getSmartNextIdx();
-    const c = CLINICS[i];
-    const newPointer = currentPointer + 1;
+  var i = 0;
+  try { i = getSmartNextIdx(); } catch(e) {}
+  var c = CLINICS[i];
+  var newPointer = currentPointer + 1;
 
-    // Write log entry
-    await addDoc(logsRef, {
-      fileNo, reg,
-      doctor: c.doctor,
-      room: c.room,
-      slotIdx: i,
-      day: todayName(),
-      clinicDay: CLINICS[i].days[0],
-      assignDate: nowDate(),
-      time: nowTime(),
-      ts: Date.now()
-    });
-
-    // Advance pointer
-    await setDoc(pointerRef, { value: newPointer });
-
-    // Flash
-    document.getElementById('flashDoctor').textContent = `→ Dr. ${c.doctor}  ·  ${c.room}`;
-    document.getElementById('flashDetail').textContent = `File ${fileNo}  ·  ${reg}  ·  ${nowTime()}`;
+  logsRef.add({
+    fileNo: fileNo, reg: reg,
+    doctor: c.doctor, room: c.room,
+    slotIdx: i,
+    day: todayName(),
+    clinicDay: c.days[0],
+    assignDate: nowDate(),
+    time: nowTime(),
+    ts: Date.now()
+  }).then(function() {
+    return pointerRef.set({ value: newPointer });
+  }).then(function() {
+    document.getElementById('flashDoctor').textContent = '→ Dr. ' + c.doctor + '  ·  ' + c.room;
+    document.getElementById('flashDetail').textContent = 'File ' + fileNo + '  ·  ' + reg + '  ·  ' + nowTime();
     document.getElementById('flash').className = 'flash show';
-
-    const el = document.getElementById('nextDoctor');
-    el.classList.add('pop');
-    setTimeout(() => el.classList.remove('pop'), 500);
-
     document.getElementById('fileInput').value = '';
     document.getElementById('regSelect').value = '';
-  } catch(err) {
-    alert('Error saving. Check your connection.');
-    console.error(err);
-  }
+    btn.disabled = false;
+    btn.textContent = 'Assign →';
+  }).catch(function(err) {
+    alert('Error: ' + err.message);
+    btn.disabled = false;
+    btn.textContent = 'Assign →';
+  });
+};
 
-  btn.disabled = false;
-  btn.textContent = 'Assign →';
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('fileInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') window.doAssign();
+  });
+});
+
+// =============================================
+// OUTPATIENT
+// =============================================
+function getTodayClinics() {
+  var today = todayName();
+  return CLINICS.map(function(c, i) { return Object.assign({}, c, {idx:i}); })
+    .filter(function(c) { return c.days.indexOf(today) !== -1; });
 }
 
-document.getElementById('fileInput').addEventListener('keydown', e => { if(e.key==='Enter') doAssign(); });
+function getCombinedCount(slotIdx) {
+  return allLogs.filter(function(e) { return e.slotIdx === slotIdx; }).length
+       + allOpLogs.filter(function(e) { return e.slotIdx === slotIdx; }).length;
+}
+
+function getLeastLoadedToday() {
+  var tc = getTodayClinics();
+  if (!tc.length) return null;
+  return tc.reduce(function(least, c) {
+    return getCombinedCount(c.idx) < getCombinedCount(least.idx) ? c : least;
+  }, tc[0]);
+}
+
+function renderOutpatient() {
+  var tc = getTodayClinics();
+  var todayOp = todayName();
+  var isClosed = (!tc.length || todayOp === 'Fri' || todayOp === 'Sat');
+
+  if (isClosed) {
+    document.getElementById('opNextDoctor').textContent = 'No outpatient today';
+    document.getElementById('opNextRoom').textContent = 'Resumes Sunday';
+    document.getElementById('opNextInfo').innerHTML = '';
+    document.getElementById('opClinicBars').innerHTML = '<div style="font-size:12px;color:var(--text-muted);font-family:DM Mono,monospace;padding:8px 0">Outpatient runs Sun–Thu only.</div>';
+    document.getElementById('opAssignBtn').disabled = true;
+    return;
+  }
+  document.getElementById('opAssignBtn').disabled = false;
+
+  var best = getLeastLoadedToday();
+  if (best) {
+    document.getElementById('opNextDoctor').textContent = 'Dr. ' + best.doctor;
+    document.getElementById('opNextRoom').textContent = best.room;
+    var infoEl = document.getElementById('opNextInfo');
+    infoEl.innerHTML = '<div class="day-slot"><span class="dn">' + todayOp + '</span><span class="today-tag">TODAY</span></div>'
+      + '<div class="day-slot"><span class="dn">' + getCombinedCount(best.idx) + '</span><span>patients</span></div>';
+  }
+
+  var barsEl = document.getElementById('opClinicBars');
+  barsEl.innerHTML = '';
+  var maxC = Math.max.apply(null, tc.map(function(c) { return getCombinedCount(c.idx); }).concat([1]));
+  var best2 = getLeastLoadedToday();
+  tc.forEach(function(c) {
+    var count = getCombinedCount(c.idx);
+    var pct = Math.round((count/maxC)*100);
+    var isBest = best2 && c.idx === best2.idx;
+    var ac = isBest ? 'var(--accent)' : 'var(--text-dim)';
+    var bc = isBest ? 'var(--accent)' : 'var(--surface3)';
+    var bar = document.createElement('div');
+    bar.style.cssText = 'display:grid;grid-template-columns:110px 1fr 30px;gap:8px;align-items:center;margin-bottom:10px;';
+    bar.innerHTML = '<div style="font-size:12px;font-family:DM Mono,monospace;color:' + ac + '">Dr. ' + c.doctor + '<br><span style="font-size:10px;color:var(--text-muted)">' + c.room + '</span></div>'
+      + '<div style="height:6px;background:var(--border);border-radius:3px;overflow:hidden;"><div style="height:100%;width:' + pct + '%;background:' + bc + ';border-radius:3px;"></div></div>'
+      + '<div style="font-size:12px;font-family:DM Serif Display,serif;color:' + ac + '">' + count + '</div>';
+    barsEl.appendChild(bar);
+  });
+}
+
+window.doOutpatientAssign = function() {
+  var fileNo = document.getElementById('opFileInput').value.trim();
+  var clerk = document.getElementById('opClerkSelect').value;
+  var errEl = document.getElementById('opFileErr');
+  errEl.textContent = '';
+
+  if (!fileNo) { errEl.textContent = 'File number required.'; return; }
+  if (!clerk) { alert('Select assigned by.'); return; }
+
+  var dupIP = allLogs.find(function(e) { return e.fileNo === fileNo; });
+  var dupOP = allOpLogs.find(function(e) { return e.fileNo === fileNo; });
+  if (dupIP || dupOP) { errEl.textContent = 'File ' + fileNo + ' already assigned. Possible duplicate.'; return; }
+
+  if (todayName() === 'Fri' || todayName() === 'Sat') { alert('Outpatient runs Sun–Thu only.'); return; }
+
+  var best = getLeastLoadedToday();
+  if (!best) return;
+
+  var btn = document.getElementById('opAssignBtn');
+  btn.disabled = true;
+  btn.textContent = 'Saving...';
+
+  opLogsRef.add({
+    fileNo: fileNo, clerk: clerk,
+    doctor: best.doctor, room: best.room,
+    slotIdx: best.idx,
+    clinicDay: todayName(),
+    assignDate: nowDate(),
+    time: nowTime(),
+    ts: Date.now()
+  }).then(function() {
+    document.getElementById('opFlashDoctor').textContent = '→ Dr. ' + best.doctor + '  ·  ' + best.room;
+    document.getElementById('opFlashDetail').textContent = 'File ' + fileNo + '  ·  ' + clerk + '  ·  ' + nowTime();
+    document.getElementById('opFlash').className = 'flash show';
+    document.getElementById('opFileInput').value = '';
+    document.getElementById('opClerkSelect').value = '';
+    btn.disabled = false;
+    btn.textContent = 'Assign Outpatient →';
+  }).catch(function(err) {
+    alert('Error: ' + err.message);
+    btn.disabled = false;
+    btn.textContent = 'Assign Outpatient →';
+  });
+};
 
 // =============================================
 // TABS
 // =============================================
 window.switchTab = function(id, btn) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
+  document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
   document.getElementById('page-'+id).classList.add('active');
   btn.classList.add('active');
   if (id === 'outpatient' && !clerkUnlocked) {
@@ -749,11 +839,8 @@ window.switchTab = function(id, btn) {
   }
 };
 
-// =============================================
-// LOG FILTER
-// =============================================
 window.filterLog = function(f, btn) {
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
   btn.classList.add('active');
   renderLog(f);
 };
@@ -774,238 +861,8 @@ window.checkPin = function() {
   }
 };
 
-window.applyPointer = async function() {
-  const v = parseInt(document.getElementById('pointerInput').value);
-  if (isNaN(v) || v < 1 || v > CLINICS.length) { alert('Enter 1–19'); return; }
-  await setDoc(pointerRef, { value: v-1 });
-  alert('Rotation set to Dr. '+CLINICS[(v-1)%CLINICS.length].doctor);
-};
-
-window.resetAll = async function() {
-  if (!confirm('Reset ALL counts and log? Cannot be undone.')) return;
-  // Delete all logs
-  const snap = await getDocs(logsRef);
-  const deletes = snap.docs.map(d => deleteDoc(doc(db,"logs",d.id)));
-  await Promise.all(deletes);
-  await setDoc(pointerRef, { value: 0 });
-  alert('Reset complete.');
-};
-
-// =============================================
-// INIT
-// =============================================
-renderHeader();
-initPointer();
-// Show clinic immediately — no waiting for Firebase
-document.getElementById('nextDoctor').textContent = 'Dr. ' + CLINICS[0].doctor;
-document.getElementById('nextRoom').textContent = CLINICS[0].room;
-// Render days for first clinic
-const _daysEl = document.getElementById('nextDays');
-if (_daysEl) {
-  CLINICS[0].days.forEach(day => {
-    const el = document.createElement('div');
-    el.className = 'day-slot';
-    el.innerHTML = '<span class="dn">'+day+'</span>'+(day===todayName()?'<span class="today-tag">TODAY</span>':'');
-    _daysEl.appendChild(el);
-  });
-}
-renderRotBar();
-// After 5s force Live status
-setTimeout(() => {
-  const dot = document.getElementById('syncDot');
-  if (dot && !dot.classList.contains('live')) {
-    dot.className = 'sync-dot live';
-    document.getElementById('syncText').textContent = 'Live — synced across all devices';
-  }
-}, 5000);
-
-// =============================================
-// CLINIC DETAIL MODAL
-// =============================================
-window.openClinicModal = function(slotIdx) {
-  if (!adminUnlocked) {
-    alert('Admin access required. Please unlock from the Admin tab first.');
-    return;
-  }
-  const c = CLINICS[slotIdx];
-  const ipPatients = allLogs.filter(e => e.slotIdx === slotIdx);
-  const opPatients = allOpLogs.filter(e => e.slotIdx === slotIdx);
-  const patients = [...ipPatients.map(p=>({...p,type:'IP'})), ...opPatients.map(p=>({...p,type:'OP'}))].sort((a,b)=>b.ts-a.ts);
-  
-  document.getElementById('modalTitle').textContent = 'Dr. ' + c.doctor;
-  document.getElementById('modalSubtitle').textContent = c.room + ' · ' + c.days.join(', ');
-  document.getElementById('modalCount').textContent = patients.length + ' patient' + (patients.length !== 1 ? 's' : '') + ' assigned';
-  
-  const body = document.getElementById('modalBody');
-  if (!patients.length) {
-    body.innerHTML = '<div class="modal-empty">No patients assigned yet.</div>';
-  } else {
-    body.innerHTML = '';
-    [...patients].reverse().forEach(p => {
-      const row = document.createElement('div');
-      row.className = 'modal-row';
-      row.innerHTML = `
-        <div class="modal-file">${p.type==='OP'?'🚶':'📋'} ${p.fileNo||'Outpatient'}</div>
-        <div class="modal-reg">${p.reg||p.clerk||''}</div>
-        <div class="modal-date">${p.assignDate || ''}</div>
-        <div class="modal-time">${p.time}</div>`;
-      body.appendChild(row);
-    });
-  }
-  document.getElementById('clinicModal').classList.add('open');
-};
-
-window.closeModal = function() {
-  document.getElementById('clinicModal').classList.remove('open');
-};
-
-// =============================================
-// OUTPATIENT LOGIC
-// =============================================
-const opLogsRef = collection(db, "op_logs");
-const opLogsQuery = query(opLogsRef, orderBy("ts", "desc"));
-
-onSnapshot(opLogsQuery, (snap) => {
-  allOpLogs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-  renderOutpatient();
-}, (err) => { console.error(err); });
-
-function getTodayClinics() {
-  const today = todayName();
-  return CLINICS.map((c, i) => ({ ...c, idx: i })).filter(c => c.days.includes(today));
-}
-
-function getCombinedCount(slotIdx) {
-  const ipCount = allLogs.filter(e => e.slotIdx === slotIdx).length;
-  const opCount = allOpLogs.filter(e => e.slotIdx === slotIdx).length;
-  return ipCount + opCount;
-}
-
-function getLeastLoadedToday() {
-  const todayClinics = getTodayClinics();
-  if (!todayClinics.length) return null;
-  return todayClinics.reduce((least, c) => {
-    return getCombinedCount(c.idx) < getCombinedCount(least.idx) ? c : least;
-  }, todayClinics[0]);
-}
-
-function renderOutpatient() {
-  const todayClinics = getTodayClinics();
-  const todayOp = todayName();
-  if (!todayClinics.length || todayOp === 'Fri' || todayOp === 'Sat') {
-    document.getElementById('opNextDoctor').textContent = 'No outpatient clinics today';
-    document.getElementById('opNextRoom').textContent = 'Outpatient runs Sun–Thu only';
-    document.getElementById('opNextInfo').innerHTML = '<div class="day-slot"><span class="dn">Next</span><span>Sunday</span></div>';
-    document.getElementById('opClinicBars').innerHTML = '<div style="font-size:12px;color:var(--text-muted);font-family:DM Mono,monospace;padding:8px 0">Outpatient clinic resumes on Sunday.</div>';
-    document.getElementById('opAssignBtn').disabled = true;
-    return;
-  }
-  document.getElementById('opAssignBtn').disabled = false;
-
-  const best = getLeastLoadedToday();
-  if (best) {
-    document.getElementById('opNextDoctor').textContent = 'Dr. ' + best.doctor;
-    document.getElementById('opNextRoom').textContent = best.room;
-    const infoEl = document.getElementById('opNextInfo');
-    infoEl.innerHTML = '';
-    const slot = document.createElement('div');
-    slot.className = 'day-slot';
-    slot.innerHTML = '<span class="dn">' + todayOp + '</span><span class="today-tag">TODAY</span>';
-    infoEl.appendChild(slot);
-    const countEl = document.createElement('div');
-    countEl.className = 'day-slot';
-    countEl.innerHTML = '<span class="dn">' + getCombinedCount(best.idx) + '</span><span>patients so far</span>';
-    infoEl.appendChild(countEl);
-  }
-
-  // Render clinic load bars
-  const barsEl = document.getElementById('opClinicBars');
-  barsEl.innerHTML = '';
-  const maxCount = Math.max(...todayClinics.map(c => getCombinedCount(c.idx)), 1);
-  todayClinics.forEach(c => {
-    const count = getCombinedCount(c.idx);
-    const pct = Math.round((count / maxCount) * 100);
-    const isBest = best && c.idx === best.idx;
-    const bar = document.createElement('div');
-    bar.style.cssText = 'display:grid;grid-template-columns:110px 1fr 30px;gap:8px;align-items:center;margin-bottom:10px;';
-    const ac = isBest ? 'var(--accent)' : 'var(--text-dim)';
-    const bc = isBest ? 'var(--accent)' : 'var(--surface3)';
-    const bb = isBest ? 'var(--accent)' : 'var(--border)';
-    const fw = isBest ? 'font-weight:600' : '';
-    bar.innerHTML = '<div style="font-size:12px;font-family:DM Mono,monospace;color:' + ac + '">'
-      + 'Dr. ' + c.doctor + '<br><span style="font-size:10px;color:var(--text-muted)">' + c.room + '</span></div>'
-      + '<div style="height:6px;background:var(--border);border-radius:3px;overflow:hidden;">'
-      + '<div style="height:100%;width:' + pct + '%;background:' + bc + ';border-radius:3px;transition:width 0.4s;border:1px solid ' + bb + '"></div></div>'
-      + '<div style="font-size:12px;font-family:DM Serif Display,serif;color:' + ac + ';' + fw + '">' + count + '</div>';
-    barsEl.appendChild(bar);
-  });
-}
-
-window.doOutpatientAssign = async function() {
-  const fileNo = document.getElementById('opFileInput').value.trim();
-  const clerk = document.getElementById('opClerkSelect').value;
-  const errEl = document.getElementById('opFileErr');
-  errEl.textContent = '';
-
-  if (!fileNo) { errEl.textContent = 'File number is required.'; return; }
-  if (!clerk) { alert('Select a clerk/employee.'); return; }
-
-  // Duplicate detection — check both inpatient and outpatient logs
-  const dupIP = allLogs.find(e => e.fileNo === fileNo);
-  const dupOP = allOpLogs.find(e => e.fileNo === fileNo);
-  if (dupIP || dupOP) {
-    errEl.textContent = 'File number ' + fileNo + ' already assigned today. Possible duplicate.';
-    return;
-  }
-
-  const todayClinics = getTodayClinics();
-  if (!todayClinics.length || todayName() === 'Fri' || todayName() === 'Sat') {
-    alert('Outpatient assignment is only available Sunday to Thursday.');
-    return;
-  }
-
-  const best = getLeastLoadedToday();
-  if (!best) return;
-
-  const btn = document.getElementById('opAssignBtn');
-  btn.disabled = true;
-  btn.textContent = 'Saving...';
-
-  try {
-    await addDoc(opLogsRef, {
-      fileNo,
-      clerk,
-      doctor: best.doctor,
-      room: best.room,
-      slotIdx: best.idx,
-      clinicDay: todayName(),
-      assignDate: nowDate(),
-      time: nowTime(),
-      ts: Date.now()
-    });
-
-    document.getElementById('opFlashDoctor').textContent = '→ Dr. ' + best.doctor + '  ·  ' + best.room;
-    document.getElementById('opFlashDetail').textContent = 'File ' + fileNo + '  ·  ' + clerk + '  ·  ' + nowTime();
-    document.getElementById('opFlash').className = 'flash show';
-
-    const el = document.getElementById('opNextDoctor');
-    el.classList.add('pop');
-    setTimeout(() => el.classList.remove('pop'), 500);
-
-    document.getElementById('opFileInput').value = '';
-    document.getElementById('opClerkSelect').value = '';
-  } catch(err) {
-    alert('Error saving. Check connection.');
-    console.error(err);
-  }
-
-  btn.disabled = false;
-  btn.textContent = 'Assign Outpatient →';
-};
-
-
 window.checkClerkPin = function() {
-  const entered = document.getElementById('opPinInput').value;
+  var entered = document.getElementById('opPinInput').value;
   if (entered === CLERK_PIN || entered === ADMIN_PIN) {
     clerkUnlocked = true;
     document.getElementById('opPinGate').style.display = 'none';
@@ -1016,138 +873,176 @@ window.checkClerkPin = function() {
   }
 };
 
+window.applyPointer = function() {
+  var v = parseInt(document.getElementById('pointerInput').value);
+  if (isNaN(v) || v < 1 || v > CLINICS.length) { alert('Enter 1–19'); return; }
+  pointerRef.set({ value: v-1 }).then(function() {
+    alert('Rotation set to Dr. ' + CLINICS[(v-1)%CLINICS.length].doctor);
+  });
+};
+
+window.resetAll = function() {
+  if (!confirm('Reset ALL counts and log?')) return;
+  logsRef.get().then(function(snap) {
+    var batch = db.batch();
+    snap.docs.forEach(function(d) { batch.delete(d.ref); });
+    return batch.commit();
+  }).then(function() {
+    return opLogsRef.get();
+  }).then(function(snap) {
+    var batch = db.batch();
+    snap.docs.forEach(function(d) { batch.delete(d.ref); });
+    return batch.commit();
+  }).then(function() {
+    return pointerRef.set({ value: 0 });
+  }).then(function() {
+    alert('Reset complete.');
+  });
+};
+
+window.deleteFakeEntry = function() {
+  var fileNo = document.getElementById('deleteFileInput').value.trim();
+  var msgEl = document.getElementById('deleteMsg');
+  msgEl.textContent = '';
+  msgEl.style.color = 'var(--danger)';
+  if (!fileNo) { msgEl.textContent = 'Enter a file number.'; return; }
+
+  var ipMatch = allLogs.find(function(e) { return e.fileNo === fileNo; });
+  var opMatch = allOpLogs.find(function(e) { return e.fileNo === fileNo; });
+  if (!ipMatch && !opMatch) { msgEl.textContent = 'File ' + fileNo + ' not found.'; return; }
+
+  var entry = ipMatch || opMatch;
+  var isIP = !!ipMatch;
+  var collName = isIP ? 'logs' : 'op_logs';
+
+  if (!confirm('Remove entry for file ' + fileNo + ' (Dr. ' + entry.doctor + ')?')) return;
+
+  db.collection(collName).doc(entry.id).delete().then(function() {
+    if (isIP) {
+      var newPointer = Math.max(0, currentPointer - 1);
+      return pointerRef.set({ value: newPointer });
+    }
+  }).then(function() {
+    msgEl.style.color = 'var(--success)';
+    msgEl.textContent = 'Removed. Dr. ' + entry.doctor + ' will receive the next patient.';
+    document.getElementById('deleteFileInput').value = '';
+  }).catch(function(err) {
+    msgEl.textContent = 'Error: ' + err.message;
+  });
+};
 
 // =============================================
-// WEEKLY EXPORT
+// CLINIC MODAL
+// =============================================
+window.openClinicModal = function(slotIdx) {
+  if (!adminUnlocked) { alert('Admin access required.'); return; }
+  var c = CLINICS[slotIdx];
+  var ipP = allLogs.filter(function(e) { return e.slotIdx === slotIdx; }).map(function(p) { return Object.assign({type:'IP'}, p); });
+  var opP = allOpLogs.filter(function(e) { return e.slotIdx === slotIdx; }).map(function(p) { return Object.assign({type:'OP'}, p); });
+  var patients = ipP.concat(opP).sort(function(a,b) { return b.ts - a.ts; });
+  document.getElementById('modalTitle').textContent = 'Dr. ' + c.doctor;
+  document.getElementById('modalSubtitle').textContent = c.room + ' · ' + c.days.join(', ');
+  document.getElementById('modalCount').textContent = patients.length + ' patient(s) assigned';
+  var body = document.getElementById('modalBody');
+  if (!patients.length) { body.innerHTML = '<div class="modal-empty">No patients yet.</div>'; }
+  else {
+    body.innerHTML = '';
+    patients.forEach(function(p) {
+      var row = document.createElement('div');
+      row.className = 'modal-row';
+      row.innerHTML = '<div class="modal-file">' + (p.type==='OP'?'🚶':'📋') + ' ' + (p.fileNo||'Outpatient') + '</div>'
+        + '<div class="modal-reg">' + (p.reg||p.clerk||'') + '</div>'
+        + '<div class="modal-date">' + (p.assignDate||'') + '</div>'
+        + '<div class="modal-time">' + (p.time||'') + '</div>';
+      body.appendChild(row);
+    });
+  }
+  document.getElementById('clinicModal').classList.add('open');
+};
+
+window.closeModal = function() { document.getElementById('clinicModal').classList.remove('open'); };
+
+// =============================================
+// EXPORT PDF
 // =============================================
 function getWeekLabel(ts) {
-  const d = new Date(ts);
-  const day = d.getDay();
-  const diff = d.getDate() - day + (day === 0 ? -6 : 1);
-  const monday = new Date(d.setDate(diff));
-  return monday.toLocaleDateString('en-GB', {day:'numeric', month:'short', year:'numeric'});
+  var d = new Date(ts);
+  var day = d.getDay();
+  var diff = d.getDate() - day + (day === 0 ? -6 : 1);
+  var monday = new Date(d.setDate(diff));
+  return monday.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
 }
 
 function renderExportButtons() {
-  const btn = document.getElementById('weekExportBtns');
+  var btn = document.getElementById('weekExportBtns');
   if (!btn) return;
-  const allEntries = [
-    ...allLogs.map(e => ({...e, type:'Inpatient'})),
-    ...allOpLogs.map(e => ({...e, type:'Outpatient'}))
-  ];
+  var allEntries = allLogs.map(function(e) { return Object.assign({type:'Inpatient'}, e); })
+    .concat(allOpLogs.map(function(e) { return Object.assign({type:'Outpatient'}, e); }));
   if (!allEntries.length) { btn.innerHTML = '<span style="font-size:12px;color:var(--text-muted);font-family:DM Mono,monospace">No data yet</span>'; return; }
-
-  const weeks = {};
-  allEntries.forEach(e => {
-    const wk = getWeekLabel(e.ts);
+  var weeks = {};
+  allEntries.forEach(function(e) {
+    var wk = getWeekLabel(e.ts);
     if (!weeks[wk]) weeks[wk] = [];
     weeks[wk].push(e);
   });
-
   btn.innerHTML = '';
-  Object.entries(weeks).forEach(([week, entries]) => {
-    const b = document.createElement('button');
+  Object.keys(weeks).forEach(function(week) {
+    var b = document.createElement('button');
     b.className = 'apply-btn';
-    b.style.cssText = 'display:flex;align-items:center;gap:6px;';
     b.innerHTML = '📊 ' + week;
-    b.onclick = () => exportWeek(week, entries);
+    (function(w, entries) { b.onclick = function() { exportWeek(w, entries); }; })(week, weeks[week]);
     btn.appendChild(b);
   });
 }
 
 function exportWeek(weekLabel, entries) {
-  const sorted = [...entries].sort((a,b) => a.ts - b.ts);
-  
-  const rows = sorted.map(e => `
-    <tr>
-      <td>${e.assignDate||''}</td>
-      <td>${e.time||''}</td>
-      <td><span class="${e.type==='Inpatient'?'badge-ip':'badge-op'}">${e.type||''}</span></td>
-      <td><b>${e.fileNo||'N/A'}</b></td>
-      <td>Dr. ${e.doctor||''}</td>
-      <td>${e.room||''}</td>
-      <td>${e.clinicDay||e.day||''}</td>
-      <td>${e.reg||e.clerk||''}</td>
-    </tr>`).join('');
+  var sorted = entries.slice().sort(function(a,b) { return a.ts - b.ts; });
+  var rows = '';
+  sorted.forEach(function(e) {
+    var badge = e.type === 'Inpatient' ? 'badge-ip' : 'badge-op';
+    rows += '<tr><td>' + (e.assignDate||'') + '</td><td>' + (e.time||'') + '</td>'
+      + '<td><span class="' + badge + '">' + (e.type||'') + '</span></td>'
+      + '<td><b>' + (e.fileNo||'N/A') + '</b></td><td>Dr. ' + (e.doctor||'') + '</td>'
+      + '<td>' + (e.room||'') + '</td><td>' + (e.clinicDay||e.day||'') + '</td>'
+      + '<td>' + (e.reg||e.clerk||'') + '</td></tr>';
+  });
+  var ipC = sorted.filter(function(e){return e.type==='Inpatient';}).length;
+  var opC = sorted.filter(function(e){return e.type==='Outpatient';}).length;
+  var genDate = new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
+  var html = '<!DOCTYPE html><html><head><title>MKH OPD ' + weekLabel + '</title>'
+    + '<style>body{font-family:Arial,sans-serif;padding:24px;color:#1a202c}'
+    + 'h1{font-size:18px;margin-bottom:4px;color:#1d4ed8}'
+    + 'h2{font-size:13px;color:#64748b;margin-bottom:20px;font-weight:normal}'
+    + 'table{width:100%;border-collapse:collapse;font-size:12px}'
+    + 'th{background:#1d4ed8;color:white;padding:8px 10px;text-align:left}'
+    + 'td{padding:7px 10px;border-bottom:1px solid #e2e8f0}'
+    + 'tr:nth-child(even) td{background:#f8fafc}'
+    + '.badge-ip{background:#dbeafe;color:#1d4ed8;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600}'
+    + '.badge-op{background:#d1fae5;color:#065f46;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600}'
+    + '.footer{margin-top:20px;font-size:11px;color:#94a3b8;text-align:center}'
+    + '@media print{button{display:none}}</style></head><body>'
 
-  const win = window.open('', '_blank');
-  win.document.write(`<!DOCTYPE html><html><head><title>MKH Cardio OPD - ${weekLabel}</title>
-  <style>
-    body { font-family: Arial, sans-serif; padding: 24px; color: #1a202c; }
-    h1 { font-size: 18px; margin-bottom: 4px; color: #1d4ed8; }
-    h2 { font-size: 13px; color: #64748b; margin-bottom: 20px; font-weight: normal; }
-    table { width: 100%; border-collapse: collapse; font-size: 12px; }
-    th { background: #1d4ed8; color: white; padding: 8px 10px; text-align: left; font-weight: 600; }
-    td { padding: 7px 10px; border-bottom: 1px solid #e2e8f0; }
-    tr:nth-child(even) td { background: #f8fafc; }
-    .badge-ip { background:#dbeafe;color:#1d4ed8;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600; }
-    .badge-op { background:#d1fae5;color:#065f46;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600; }
-    .footer { margin-top: 20px; font-size: 11px; color: #94a3b8; text-align: center; }
-    @media print { button { display: none; } }
-  </style></head><body>
+```
++ '<h1>MKH Cardio OPD — Weekly Report</h1>'
++ '<h2>Week of ' + weekLabel + ' | Total: ' + sorted.length + ' | Inpatient: ' + ipC + ' | Outpatient: ' + opC + '</h2>'
++ '<button onclick="window.print()" style="margin-bottom:16px;padding:8px 20px;background:#1d4ed8;color:white;border:none;border-radius:6px;cursor:pointer">Print / Save as PDF</button>'
++ '<table><thead><tr><th>Date</th><th>Time</th><th>Type</th><th>File No.</th><th>Doctor</th><th>Room</th><th>Clinic Day</th><th>Assigned By</th></tr></thead>'
++ '<tbody>' + rows + '</tbody></table>'
++ '<div class="footer">Generated ' + genDate + ' — Mubarak Al-Kabeer Hospital Cardiology OPD</div>'
++ '</body></html>';
+```
 
-  <h1>🫀 MKH Cardio OPD — Weekly Assignment Report</h1>
-  <h2>Week of ${weekLabel} &nbsp;|&nbsp; Total: ${sorted.length} patients &nbsp;|&nbsp; Inpatient: ${sorted.filter(e=>e.type==='Inpatient').length} &nbsp;|&nbsp; Outpatient: ${sorted.filter(e=>e.type==='Outpatient').length}</h2>
-  <button onclick="window.print()" style="margin-bottom:16px;padding:8px 20px;background:#1d4ed8;color:white;border:none;border-radius:6px;cursor:pointer;font-size:13px;">🖨 Print / Save as PDF</button>
-  <table>
-    <thead><tr><th>Date</th><th>Time</th><th>Type</th><th>File No.</th><th>Doctor</th><th>Room</th><th>Clinic Day</th><th>Assigned By</th></tr></thead>
-    <tbody>${rows}</tbody>
-  </table>
-  <div class="footer">Generated ${new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})} — Mubarak Al-Kabeer Hospital Cardiology OPD</div>
-  </body></html>`);
-  win.document.close();
+var win = window.open(’’, ‘_blank’);
+win.document.write(html);
+win.document.close();
 }
 
 // =============================================
-// DELETE FAKE ENTRY
+// INIT
 // =============================================
-window.deleteFakeEntry = async function() {
-const fileNo = document.getElementById(‘deleteFileInput’).value.trim();
-const msgEl = document.getElementById(‘deleteMsg’);
-msgEl.textContent = ‘’;
-msgEl.style.color = ‘var(–danger)’;
-
-if (!fileNo) { msgEl.textContent = ‘Enter a file number.’; return; }
-
-// Search in inpatient logs
-const ipMatch = allLogs.find(e => e.fileNo === fileNo);
-// Search in outpatient logs
-const opMatch = allOpLogs.find(e => e.fileNo === fileNo);
-
-if (!ipMatch && !opMatch) {
-msgEl.textContent = ‘File number ’ + fileNo + ’ not found in records.’;
-return;
-}
-
-const entry = ipMatch || opMatch;
-const isIP = !!ipMatch;
-const collName = isIP ? ‘logs’ : ‘op_logs’;
-const type = isIP ? ‘Inpatient’ : ‘Outpatient’;
-
-if (!confirm(’Remove ’ + type + ’ entry for file ’ + fileNo + ’ (Dr. ’ + entry.doctor + ’ · ’ + entry.room + ‘)? This will adjust the rotation.’)) return;
-
-try {
-// Delete the entry
-await deleteDoc(doc(db, collName, entry.id));
-
-```
-// Compensate rotation: move pointer back by 1 so that slot gets filled again
-if (isIP && entry.slotIdx !== undefined) {
-  const newPointer = Math.max(0, currentPointer - 1);
-  await setDoc(pointerRef, { value: newPointer });
-}
-
-msgEl.style.color = 'var(--success)';
-msgEl.textContent = '✓ Entry removed. Rotation adjusted — Dr. ' + entry.doctor + ' will receive the next patient.';
-document.getElementById('deleteFileInput').value = '';
-```
-
-} catch(err) {
-msgEl.textContent = ’Error removing entry: ’ + err.message;
-console.error(err);
-}
-};
-
+renderHeader();
+renderNextClinic();
+renderRotBar();
 </script>
 
 <!-- CLINIC DETAIL MODAL -->
