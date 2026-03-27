@@ -30,7 +30,7 @@ header p{font-size:10px;color:var(--dim);font-family:'DM Mono',monospace}
 .db{margin-left:auto;background:var(--sur2);border:1px solid var(--bor);border-radius:7px;padding:4px 11px;font-family:'DM Mono',monospace;font-size:10px;color:var(--acc2);text-align:center;flex-shrink:0}
 .db strong{display:block;font-size:13px;color:var(--txt)}
 .sb{display:flex;align-items:center;gap:7px;padding:7px 18px;font-family:'DM Mono',monospace;font-size:11px;border-bottom:1px solid var(--bor);background:var(--sur)}
-.sd{width:7px;height:7px;border-radius:50%;background:var(--ok);box-shadow:0 0 6px var(--ok);flex-shrink:0}
+.sd{width:7px;height:7px;border-radius:50%;background:var(--warn);box-shadow:0 0 6px var(--warn);flex-shrink:0;transition:all 0.3s}
 .tabs{display:flex;border-bottom:1px solid var(--bor);background:var(--sur);padding:0 18px;overflow-x:auto}
 .tab{padding:10px 13px;font-size:11px;font-family:'DM Mono',monospace;letter-spacing:1px;text-transform:uppercase;color:var(--dim);cursor:pointer;border-bottom:2px solid transparent;background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap}
 .tab.on{color:var(--acc);border-bottom-color:var(--acc)}
@@ -134,8 +134,8 @@ select option{background:var(--sur2)}
 </header>
 
 <div class="sb">
-  <div class="sd"></div>
-  <span>Ready — data saved on this device</span>
+  <div class="sd" id="syncDot"></div>
+  <span id="syncText" style="font-size:10px; color:var(--warn);">Connecting to database...</span>
 </div>
 
 <div class="tabs">
@@ -291,8 +291,13 @@ var CL=[
 var AP="2025",CP="2026",adm=false,clk=false,lf="all";
 
 function loadState(){try{var s=localStorage.getItem("mkh_v3");if(s){var o=JSON.parse(s);if(o&&o.logs)return o}}catch(e){}return{ptr:0,logs:[],oplogs:[]}}
-function save(){try{localStorage.setItem("mkh_v3",JSON.stringify(S))}catch(e){}}
-var S=loadState();
+
+function save(){
+  try{localStorage.setItem("mkh_v3",JSON.stringify(window.S))}catch(e){}
+  if(window.cloudSync) window.cloudSync(window.S);
+}
+
+window.S = loadState();
 
 function tn(){return["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][new Date().getDay()]}
 function nt(){return new Date().toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"})}
@@ -300,19 +305,19 @@ function nd(){return new Date().toLocaleDateString("en-GB",{day:"numeric",month:
 
 function smartIdx(){
   var cnt=new Array(CL.length).fill(0);
-  S.logs.forEach(function(e){if(e.si!=null)cnt[e.si]++});
-  S.oplogs.forEach(function(e){if(e.si!=null)cnt[e.si]++});
+  window.S.logs.forEach(function(e){if(e.si!=null)cnt[e.si]++});
+  window.S.oplogs.forEach(function(e){if(e.si!=null)cnt[e.si]++});
   var ds={};CL.forEach(function(c,i){if(!ds[c.d])ds[c.d]=[];ds[c.d].push(i)});
   var sec=new Set();Object.values(ds).forEach(function(a){if(a.length>1)sec.add(a[a.length-1])});
   var fst=[];for(var x=0;x<CL.length;x++){if(!sec.has(x))fst.push(x)}
   var mn=Math.min.apply(null,fst.map(function(i){return cnt[i]}));
-  for(var o=0;o<CL.length;o++){var i=(S.ptr+o)%CL.length;if(!sec.has(i)&&cnt[i]===mn)return i}
+  for(var o=0;o<CL.length;o++){var i=(window.S.ptr+o)%CL.length;if(!sec.has(i)&&cnt[i]===mn)return i}
   var sarr=Array.from(sec);
-  if(sarr.length){var ms=Math.min.apply(null,sarr.map(function(i){return cnt[i]}));for(var o2=0;o2<CL.length;o2++){var i2=(S.ptr+o2)%CL.length;if(sec.has(i2)&&cnt[i2]===ms)return i2}}
-  return S.ptr%CL.length;
+  if(sarr.length){var ms=Math.min.apply(null,sarr.map(function(i){return cnt[i]}));for(var o2=0;o2<CL.length;o2++){var i2=(window.S.ptr+o2)%CL.length;if(sec.has(i2)&&cnt[i2]===ms)return i2}}
+  return window.S.ptr%CL.length;
 }
 
-function rAll(){rH();rNext();rRot();rDist();rLog(lf);rAdmin()}
+window.rAll = function(){rH();rNext();rRot();rDist();rLog(lf);rAdmin()}
 
 function rH(){
   var d=new Date();
@@ -341,8 +346,8 @@ function rRot(){
 function rDist(){
   var g=document.getElementById("dg");g.innerHTML="";
   var cnt=new Array(CL.length).fill(0);
-  S.logs.forEach(function(e){if(e.si!=null)cnt[e.si]++});
-  S.oplogs.forEach(function(e){if(e.si!=null)cnt[e.si]++});
+  window.S.logs.forEach(function(e){if(e.si!=null)cnt[e.si]++});
+  window.S.oplogs.forEach(function(e){if(e.si!=null)cnt[e.si]++});
   var mx=Math.max.apply(null,cnt.concat([1]));
   var si=smartIdx();
   CL.forEach(function(c,i){
@@ -356,7 +361,7 @@ function rDist(){
 
 function rLog(f){
   lf=f;var b=document.getElementById("lb");
-  var e=S.logs.slice().reverse();
+  var e=window.S.logs.slice().reverse();
   if(f!=="all")e=e.filter(function(x){return(x.cd||x.day)===f});
   if(!e.length){b.innerHTML='<div class="es">No assignments found.</div>';return}
   b.innerHTML="";
@@ -372,7 +377,7 @@ function rLog(f){
 
 function rAdmin(){
   var si=smartIdx();
-  document.getElementById("ib").innerHTML="Next: <b style='color:var(--txt)'>Dr. "+CL[si].d+" · "+CL[si].r+"</b><br>Inpatient: <b style='color:var(--txt)'>"+S.logs.length+"</b><br>Outpatient: <b style='color:var(--txt)'>"+S.oplogs.length+"</b>";
+  document.getElementById("ib").innerHTML="Next: <b style='color:var(--txt)'>Dr. "+CL[si].d+" · "+CL[si].r+"</b><br>Inpatient: <b style='color:var(--txt)'>"+window.S.logs.length+"</b><br>Outpatient: <b style='color:var(--txt)'>"+window.S.oplogs.length+"</b>";
 }
 
 function doAssign(){
@@ -381,18 +386,18 @@ function doAssign(){
   if(!fn){alert("Enter file number.");return}
   if(!reg){alert("Select registrar.");return}
   var i=smartIdx(),c=CL[i];
-  S.logs.push({fn:fn,reg:reg,doc:c.d,room:c.r,si:i,day:tn(),cd:c.days[0],ad:nd(),time:nt(),ts:Date.now()});
-  S.ptr++;save();
+  window.S.logs.push({fn:fn,reg:reg,doc:c.d,room:c.r,si:i,day:tn(),cd:c.days[0],ad:nd(),time:nt(),ts:Date.now()});
+  window.S.ptr++;save();
   document.getElementById("fd").textContent="→ Dr. "+c.d+" · "+c.r;
   document.getElementById("fdt").textContent="File "+fn+" · "+reg+" · "+nt();
   document.getElementById("fl").className="flash on";
   document.getElementById("fi").value="";document.getElementById("rs").value="";
-  rAll();
+  window.rAll();
 }
 document.getElementById("fi").addEventListener("keydown",function(e){if(e.key==="Enter")doAssign()});
 
 function todayCL(){var t=tn();return CL.map(function(c,i){return Object.assign({},c,{idx:i})}).filter(function(c){return c.days.indexOf(t)!==-1})}
-function cCnt(i){return S.logs.filter(function(e){return e.si===i}).length+S.oplogs.filter(function(e){return e.si===i}).length}
+function cCnt(i){return window.S.logs.filter(function(e){return e.si===i}).length+window.S.oplogs.filter(function(e){return e.si===i}).length}
 function bestCL(){var tc=todayCL();if(!tc.length)return null;return tc.reduce(function(l,c){return cCnt(c.idx)<cCnt(l.idx)?c:l},tc[0])}
 
 function rOp(){
@@ -436,10 +441,10 @@ function doOpAssign(){
   var err=document.getElementById("opfe");err.textContent="";
   if(!fn){err.textContent="File number required.";return}
   if(!cl){alert("Select assigned by.");return}
-  if(S.logs.find(function(e){return e.fn===fn})||S.oplogs.find(function(e){return e.fn===fn})){err.textContent="File "+fn+" already assigned. Possible duplicate.";return}
+  if(window.S.logs.find(function(e){return e.fn===fn})||window.S.oplogs.find(function(e){return e.fn===fn})){err.textContent="File "+fn+" already assigned. Possible duplicate.";return}
   if(tn()==="Fri"||tn()==="Sat"){alert("Outpatient runs Sun–Thu only.");return}
   var best=bestCL();if(!best)return;
-  S.oplogs.push({fn:fn,clerk:cl,doc:best.d,room:best.r,si:best.idx,cd:tn(),ad:nd(),time:nt(),ts:Date.now()});
+  window.S.oplogs.push({fn:fn,clerk:cl,doc:best.d,room:best.r,si:best.idx,cd:tn(),ad:nd(),time:nt(),ts:Date.now()});
   save();
   document.getElementById("opfd").textContent="→ Dr. "+best.d+" · "+best.r;
   document.getElementById("opfdt").textContent="File "+fn+" · "+cl+" · "+nt();
@@ -474,33 +479,33 @@ function adminLogin(){
 function setPtr(){
   var v=parseInt(document.getElementById("pri").value);
   if(isNaN(v)||v<1||v>CL.length){alert("Enter 1–19");return}
-  S.ptr=v-1;save();rAll();alert("Set to Dr. "+CL[(v-1)%CL.length].d);
+  window.S.ptr=v-1;save();window.rAll();alert("Set to Dr. "+CL[(v-1)%CL.length].d);
 }
 
 function resetAll(){
   if(!confirm("Reset ALL data?"))return;
-  S={ptr:0,logs:[],oplogs:[]};save();rAll();alert("Done.");
+  window.S={ptr:0,logs:[],oplogs:[]};save();window.rAll();alert("Done.");
 }
 
 function delEntry(){
   var fn=document.getElementById("dfi").value.trim();
   var m=document.getElementById("dm");m.textContent="";m.style.color="var(--err)";
   if(!fn){m.textContent="Enter file number.";return}
-  var ipi=S.logs.findIndex(function(e){return e.fn===fn});
-  var opi=S.oplogs.findIndex(function(e){return e.fn===fn});
+  var ipi=window.S.logs.findIndex(function(e){return e.fn===fn});
+  var opi=window.S.oplogs.findIndex(function(e){return e.fn===fn});
   if(ipi===-1&&opi===-1){m.textContent="File "+fn+" not found.";return}
-  var isIP=ipi!==-1,ent=isIP?S.logs[ipi]:S.oplogs[opi];
+  var isIP=ipi!==-1,ent=isIP?window.S.logs[ipi]:window.S.oplogs[opi];
   if(!confirm("Remove entry for file "+fn+" (Dr. "+ent.doc+")?"))return;
-  if(isIP){S.logs.splice(ipi,1);S.ptr=Math.max(0,S.ptr-1)}else{S.oplogs.splice(opi,1)}
+  if(isIP){window.S.logs.splice(ipi,1);window.S.ptr=Math.max(0,window.S.ptr-1)}else{window.S.oplogs.splice(opi,1)}
   save();m.style.color="var(--ok)";m.textContent="Removed. Dr. "+ent.doc+" gets next patient.";
-  document.getElementById("dfi").value="";rAll();
+  document.getElementById("dfi").value="";window.rAll();
 }
 
 function openMo(idx){
   if(!adm){alert("Admin access required.");return}
   var c=CL[idx];
-  var pts=S.logs.filter(function(e){return e.si===idx}).map(function(p){return Object.assign({tp:"IP"},p)})
-    .concat(S.oplogs.filter(function(e){return e.si===idx}).map(function(p){return Object.assign({tp:"OP"},p)}))
+  var pts=window.S.logs.filter(function(e){return e.si===idx}).map(function(p){return Object.assign({tp:"IP"},p)})
+    .concat(window.S.oplogs.filter(function(e){return e.si===idx}).map(function(p){return Object.assign({tp:"OP"},p)}))
     .sort(function(a,b){return b.ts-a.ts});
   document.getElementById("mt").textContent="Dr. "+c.d;
   document.getElementById("ms").textContent=c.r+" · "+c.days.join(", ");
@@ -516,7 +521,7 @@ function wkLabel(ts){var d=new Date(ts),dy=d.getDay(),diff=d.getDate()-dy+(dy===
 
 function rExport(){
   var btn=document.getElementById("eb");if(!btn)return;
-  var all=S.logs.map(function(e){return Object.assign({tp:"Inpatient"},e)}).concat(S.oplogs.map(function(e){return Object.assign({tp:"Outpatient"},e)}));
+  var all=window.S.logs.map(function(e){return Object.assign({tp:"Inpatient"},e)}).concat(window.S.oplogs.map(function(e){return Object.assign({tp:"Outpatient"},e)}));
   if(!all.length){btn.innerHTML='<span style="font-size:12px;color:var(--dim);font-family:DM Mono,monospace">No data yet</span>';return}
   var wks={};all.forEach(function(e){var w=wkLabel(e.ts);if(!wks[w])wks[w]=[];wks[w].push(e)});
   btn.innerHTML="";
@@ -536,7 +541,53 @@ function exportPDF(wl,entries){
 var w=window.open("","_blank");w.document.write(h);w.document.close();
 }
 
-rAll();
+window.rAll();
+</script>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+  import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAT7Y3jWM4ix7I5cM4vKsHIJRaZZ6AZ9yI",
+    authDomain: "cardio-opd.firebaseapp.com",
+    databaseURL: "https://cardio-opd-default-rtdb.firebaseio.com",
+    projectId: "cardio-opd",
+    storageBucket: "cardio-opd.firebasestorage.app",
+    messagingSenderId: "71256529635",
+    appId: "1:71256529635:web:d62921678530fdce7303d6"
+  };
+
+  try {
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const dbRef = ref(db, 'mkh_clinic_data');
+
+    onValue(dbRef, (snapshot) => {
+      const data = snapshot.val();
+      if(data) {
+        window.S = data;
+        if(!window.S.logs) window.S.logs = [];
+        if(!window.S.oplogs) window.S.oplogs = [];
+        window.rAll();
+        
+        document.getElementById('syncDot').style.background = 'var(--ok)';
+        document.getElementById('syncDot').style.boxShadow = '0 0 6px var(--ok)';
+        document.getElementById('syncText').textContent = 'Live — Synced with Cloud Database';
+        document.getElementById('syncText').style.color = 'var(--ok)';
+      } else {
+        set(dbRef, window.S);
+      }
+    });
+
+    window.cloudSync = function(data) {
+      set(dbRef, data);
+    };
+
+  } catch(error) {
+    console.error("Firebase connection failed:", error);
+    document.getElementById('syncText').textContent = 'Cloud sync failed - Local mode';
+  }
 </script>
 
 </body>
