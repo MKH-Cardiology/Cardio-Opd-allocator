@@ -190,7 +190,8 @@ function rDist(){
   var g=document.getElementById("dg"); g.innerHTML="";
   CL.forEach((c,i)=>{
     var d=document.createElement("div"); d.className="dc"+(i===smartIdx()?" nx":"");
-    d.innerHTML=`<div class="dd">Dr. ${c.d}</div><div style="font-size:10px;color:var(--dim)">${c.r}</div><div class="dn2">${cCnt(i)}</div>`;
+    // Restored Clinic Day to the card
+    d.innerHTML=`<div class="dd">Dr. ${c.d}</div><div style="font-size:10px;color:var(--dim)">${c.r} · ${c.days.join(", ")}</div><div class="dn2">${cCnt(i)}</div>`;
     d.onclick=()=>openMo(i); g.appendChild(d);
   });
 }
@@ -218,7 +219,7 @@ function openMo(i){
   });
   var pb=document.getElementById("mprint"); pb.innerHTML="";
   var btn=document.createElement("button"); btn.className="btn"; btn.textContent="Print Clinic List";
-  btn.onclick=()=>exportPDF(c.d+" - "+c.r, pts); pb.appendChild(btn);
+  btn.onclick=()=>exportPDF(c.d+" - "+c.r+" ("+c.days.join(", ")+")", pts); pb.appendChild(btn);
   document.getElementById("mo").classList.add("on");
 }
 window.closeMo = function(){document.getElementById("mo").classList.remove("on")};
@@ -263,7 +264,6 @@ function rAll(){
   document.getElementById("nd").textContent="Dr. "+c.d; 
   document.getElementById("nr").textContent=c.r;
   
-  // Restore Clinic Day display logic
   var dayEl = document.getElementById("ndays"); dayEl.innerHTML="";
   c.days.forEach(day => {
     var d = document.createElement("div"); d.className="ds";
