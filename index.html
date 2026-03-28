@@ -158,7 +158,7 @@ select option{background:var(--sur2)}
     <div><label>File Number (6 Digits)</label>
     <input type="text" id="fi" placeholder="e.g. 123456" autocomplete="off" maxlength="6" inputmode="numeric"></div>
     <div><label>Registrar</label>
-    <select id="rs">
+    <select id="rs" onchange="localStorage.setItem('mkh_last_reg', this.value)">
       <option value="">— Select —</option>
       <option>Dr. Rehan</option><option>Dr. Ramy</option><option>Dr. Badawy</option>
       <option>Dr. Sharkawy</option><option>Dr. Mostafa</option><option>Dr. Ibrahim</option>
@@ -308,6 +308,15 @@ function save(){
 
 window.S = loadState();
 
+// Initialize the saved registrar memory
+var savedReg = localStorage.getItem('mkh_last_reg');
+if(savedReg) {
+  var regSelect = document.getElementById('rs');
+  if(Array.from(regSelect.options).some(function(opt){return opt.value === savedReg})) {
+    regSelect.value = savedReg;
+  }
+}
+
 function tn(){return["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][new Date().getDay()]}
 function nt(){return new Date().toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"})}
 function nd(){return new Date().toLocaleDateString("en-GB",{day:"numeric",month:"short"})}
@@ -394,13 +403,18 @@ function doAssign(){
   var reg=document.getElementById("rs").value;
   if(!/^\d{6}$/.test(fn)){alert("File number must be exactly 6 digits.");return}
   if(!reg){alert("Select registrar.");return}
+  
+  // The Safety Net Confirmation Check
+  if(!confirm("Please confirm:\n\nAssign File " + fn + " under the name " + reg + "?")){return}
+
   var i=smartIdx(),c=CL[i];
   window.S.logs.push({fn:fn,reg:reg,doc:c.d,room:c.r,si:i,day:tn(),cd:c.days[0],ad:nd(),time:nt(),ts:Date.now()});
   window.S.ptr++;save();
   document.getElementById("fd").textContent="→ Dr. "+c.d+" · "+c.r;
   document.getElementById("fdt").textContent="File "+fn+" · "+reg+" · "+nt();
   document.getElementById("fl").className="flash on";
-  document.getElementById("fi").value="";document.getElementById("rs").value="";
+  document.getElementById("fi").value="";
+  // Notice we no longer clear the dropdown so it stays ready for the next patient
   window.rAll();
 }
 document.getElementById("fi").addEventListener("keydown",function(e){if(e.key==="Enter")doAssign()});
@@ -452,13 +466,16 @@ function doOpAssign(){
   if(!cl){alert("Select assigned by.");return}
   if(window.S.logs.find(function(e){return e.fn===fn})||window.S.oplogs.find(function(e){return e.fn===fn})){err.textContent="File "+fn+" already assigned. Possible duplicate.";return}
   if(tn()==="Fri"||tn()==="Sat"){alert("Outpatient runs Sun–Thu only.");return}
+  
+  if(!confirm("Please confirm:\n\nAssign Outpatient File " + fn + " under the name " + cl + "?")){return}
+
   var best=bestCL();if(!best)return;
   window.S.oplogs.push({fn:fn,clerk:cl,doc:best.d,room:best.r,si:best.idx,cd:tn(),ad:nd(),time:nt(),ts:Date.now()});
   save();
   document.getElementById("opfd").textContent="→ Dr. "+best.d+" · "+best.r;
   document.getElementById("opfdt").textContent="File "+fn+" · "+cl+" · "+nt();
   document.getElementById("opfl").className="flash on";
-  document.getElementById("opfi").value="";document.getElementById("opcs").value="";
+  document.getElementById("opfi").value="";
   rOp();rDist();
 }
 
