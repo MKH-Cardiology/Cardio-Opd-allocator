@@ -51,11 +51,10 @@ header p{font-size:10px;color:var(--dim);font-family:'DM Mono',monospace}
 label{display:block;font-size:10px;font-family:'DM Mono',monospace;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);margin-bottom:5px}
 input,select{width:100%;background:var(--sur2);border:1px solid var(--bor);border-radius:7px;padding:10px 12px;color:var(--txt);font-family:'DM Mono',monospace;font-size:13px;outline:none;margin-bottom:11px;transition:border-color .2s}
 input:focus,select:focus{border-color:var(--acc)}
-input:disabled{opacity:0.5;cursor:not-allowed}
 select option{background:var(--sur2)}
 .btn{width:100%;background:linear-gradient(135deg,#2563eb,#0891b2);border:none;border-radius:8px;padding:12px;color:#fff;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s}
 .btn:hover{transform:translateY(-1px)}
-.btn:disabled{opacity:.5;cursor:not-allowed;transform:none;background:var(--sur3)}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
 .flash{display:none;margin-top:12px;padding:13px 16px;border-radius:9px;background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.2)}
 .flash.on{display:flex;align-items:center;gap:11px}
 .fic{font-size:20px}
@@ -160,7 +159,7 @@ select option{background:var(--sur2)}
     <input type="text" id="fi" placeholder="e.g. 123456" autocomplete="off" maxlength="6" inputmode="numeric"></div>
     <div><label>Registrar PIN</label>
     <input type="password" id="rpin" placeholder="Enter 4-digit PIN" autocomplete="off" maxlength="4" inputmode="numeric"></div>
-    <button class="btn" id="ipbtn" onclick="doAssign()">Assign →</button>
+    <button class="btn" onclick="doAssign()">Assign →</button>
     <div class="flash" id="fl">
       <div class="fic">✅</div>
       <div class="ft"><strong id="fd">—</strong><span id="fdt">—</span></div>
@@ -175,7 +174,7 @@ select option{background:var(--sur2)}
     <p>CLINIC CLERK &amp; ADMIN ONLY</p>
     <div style="max-width:230px;margin:0 auto">
       <input class="pi" type="password" id="opi" maxlength="4" placeholder="PIN">
-      <button class="btn" id="opulbtn" onclick="clerkLogin()" style="margin-top:2px">Unlock</button>
+      <button class="btn" onclick="clerkLogin()" style="margin-top:2px">Unlock</button>
       <div class="er" id="ope"></div>
     </div>
   </div>
@@ -229,7 +228,7 @@ select option{background:var(--sur2)}
     <h3>🔒 Admin Access</h3>
     <div id="apgate">
       <input class="pi" type="password" id="api" maxlength="4" placeholder="PIN">
-      <button class="ub" id="admulbtn" onclick="adminLogin()">Unlock</button>
+      <button class="ub" onclick="adminLogin()">Unlock</button>
       <div class="er" id="ape"></div>
     </div>
     <div class="ac2" id="ac2">
@@ -299,7 +298,6 @@ var CL=[
   {d:"Maged",r:"Room 11",days:["Tue"]}
 ];
 var AP="2025",CP="2026",adm=false,clk=false,lf="all";
-var ipFails=0, opFails=0, admFails=0;
 
 function loadState(){try{var s=localStorage.getItem("mkh_v3");if(s){var o=JSON.parse(s);if(o&&o.logs)return o}}catch(e){}return{ptr:0,logs:[],oplogs:[]}}
 
@@ -392,23 +390,11 @@ function rAdmin(){
 }
 
 function doAssign(){
-  if(ipFails>=3){alert("Account locked after 3 failed attempts. Please refresh the page.");return;}
   var fn=document.getElementById("fi").value.trim();
   var pin=document.getElementById("rpin").value.trim();
   if(!/^\d{6}$/.test(fn)){alert("File number must be exactly 6 digits.");return}
-  if(!pin || !docPINs[pin]){
-    ipFails++;
-    if(ipFails>=3){
-      alert("Invalid PIN. Maximum attempts reached. Form locked.");
-      document.getElementById("rpin").disabled=true;
-      document.getElementById("ipbtn").disabled=true;
-    } else {
-      alert("Invalid PIN. You have " + (3-ipFails) + " attempt(s) remaining.");
-    }
-    return;
-  }
+  if(!pin || !docPINs[pin]){alert("Invalid PIN. Please enter your correct 4-digit PIN.");return}
   
-  ipFails=0; // Reset counter on successful PIN
   var reg = docPINs[pin];
   if(!confirm("Please confirm:\n\nAssign File " + fn + " under the name " + reg + "?")){return}
 
@@ -447,4 +433,179 @@ function rOp(){
   var bars=document.getElementById("opbars");bars.innerHTML="";
   var mx=Math.max.apply(null,tc.map(function(c){return cCnt(c.idx)}).concat([1]));
   tc.forEach(function(c){
-    var cnt=cCnt(c.idx),p=Math.round(cnt/mx*100),ib=best
+    var cnt=cCnt(c.idx),p=Math.round(cnt/mx*100),ib=best&&c.idx===best.idx;
+    var ac=ib?"var(--acc)":"var(--mid)",bc=ib?"var(--acc)":"var(--bor)";
+    var b=document.createElement("div");b.style.cssText="display:grid;grid-template-columns:105px 1fr 26px;gap:7px;align-items:center;margin-bottom:9px";
+    b.innerHTML='<div style="font-size:11px;font-family:DM Mono,monospace;color:'+ac+'">Dr. '+c.d+'<br><span style="font-size:10px;color:var(--dim)">'+c.r+"</span></div>"
+      +'<div style="height:5px;background:var(--bor);border-radius:3px;overflow:hidden"><div style="height:100%;width:'+p+"%;background:"+bc+";border-radius:3px\"></div></div>"
+      +'<div style="font-size:12px;font-family:DM Serif Display,serif;color:'+ac+'">'+cnt+"</div>";
+    bars.appendChild(b);
+  });
+}
+
+function clerkLogin(){
+  var v=document.getElementById("opi").value;
+  if(v===CP||v===AP){clk=true;document.getElementById("opgate").style.display="none";document.getElementById("opc").style.display="block";rOp()}
+  else{document.getElementById("ope").textContent="Incorrect PIN."}
+}
+
+function doOpAssign(){
+  var fn=document.getElementById("opfi").value.trim();
+  var cl=document.getElementById("opcs").value;
+  var err=document.getElementById("opfe");err.textContent="";
+  if(!/^\d{6}$/.test(fn)){err.textContent="File number must be exactly 6 digits.";return}
+  if(!cl){alert("Select assigned by.");return}
+  if(window.S.logs.find(function(e){return e.fn===fn})||window.S.oplogs.find(function(e){return e.fn===fn})){err.textContent="File "+fn+" already assigned. Possible duplicate.";return}
+  if(tn()==="Fri"||tn()==="Sat"){alert("Outpatient runs Sun–Thu only.");return}
+  
+  if(!confirm("Please confirm:\n\nAssign Outpatient File " + fn + " under the name " + cl + "?")){return}
+
+  var best=bestCL();if(!best)return;
+  window.S.oplogs.push({fn:fn,clerk:cl,doc:best.d,room:best.r,si:best.idx,cd:tn(),ad:nd(),time:nt(),ts:Date.now()});
+  save();
+  document.getElementById("opfd").textContent="→ Dr. "+best.d+" · "+best.r;
+  document.getElementById("opfdt").textContent="File "+fn+" · "+cl+" · "+nt();
+  document.getElementById("opfl").className="flash on";
+  document.getElementById("opfi").value="";
+  rOp();rDist();
+}
+
+function goTab(id,btn){
+  document.querySelectorAll(".pg").forEach(function(p){p.classList.remove("on")});
+  document.querySelectorAll(".tab").forEach(function(t){t.classList.remove("on")});
+  document.getElementById("pg-"+id).classList.add("on");btn.classList.add("on");
+  if(id==="op"&&!clk){document.getElementById("opgate").style.display="block";document.getElementById("opc").style.display="none"}
+  if(id==="op"&&clk)rOp();
+  if(id==="dist")rDist();
+  if(id==="adm"){rAdmin();rExport()}
+}
+
+function filterLog(f,btn){
+  document.querySelectorAll(".fb").forEach(function(b){b.classList.remove("on")});
+  btn.classList.add("on");rLog(f);
+}
+
+function adminLogin(){
+  if(document.getElementById("api").value===AP){
+    document.getElementById("ac2").classList.add("on");
+    document.getElementById("apgate").style.display="none";
+    adm=true;rAdmin();rDist();rExport();
+  }else{document.getElementById("ape").textContent="Incorrect PIN."}
+}
+
+function setPtr(){
+  var v=parseInt(document.getElementById("pri").value);
+  if(isNaN(v)||v<1||v>CL.length){alert("Enter 1–19");return}
+  window.S.ptr=v-1;save();window.rAll();alert("Set to Dr. "+CL[(v-1)%CL.length].d);
+}
+
+function resetAll(){
+  if(!confirm("Reset ALL data?"))return;
+  window.S={ptr:0,logs:[],oplogs:[]};save();window.rAll();alert("Done.");
+}
+
+function delEntry(){
+  var fn=document.getElementById("dfi").value.trim();
+  var m=document.getElementById("dm");m.textContent="";m.style.color="var(--err)";
+  if(!fn){m.textContent="Enter file number.";return}
+  var ipi=window.S.logs.findIndex(function(e){return e.fn===fn});
+  var opi=window.S.oplogs.findIndex(function(e){return e.fn===fn});
+  if(ipi===-1&&opi===-1){m.textContent="File "+fn+" not found.";return}
+  var isIP=ipi!==-1,ent=isIP?window.S.logs[ipi]:window.S.oplogs[opi];
+  if(!confirm("Remove entry for file "+fn+" (Dr. "+ent.doc+")?"))return;
+  if(isIP){window.S.logs.splice(ipi,1);window.S.ptr=Math.max(0,window.S.ptr-1)}else{window.S.oplogs.splice(opi,1)}
+  save();m.style.color="var(--ok)";m.textContent="Removed. Dr. "+ent.doc+" gets next patient.";
+  document.getElementById("dfi").value="";window.rAll();
+}
+
+function openMo(idx){
+  if(!adm){alert("Admin access required.");return}
+  var c=CL[idx];
+  var pts=window.S.logs.filter(function(e){return e.si===idx}).map(function(p){return Object.assign({tp:"IP"},p)})
+    .concat(window.S.oplogs.filter(function(e){return e.si===idx}).map(function(p){return Object.assign({tp:"OP"},p)}))
+    .sort(function(a,b){return b.ts-a.ts});
+  document.getElementById("mt").textContent="Dr. "+c.d;
+  document.getElementById("ms").textContent=c.r+" · "+c.days.join(", ");
+  document.getElementById("mc2").textContent=pts.length+" patient(s) assigned";
+  var b=document.getElementById("mbody");
+  if(!pts.length){b.innerHTML='<div class="me">No patients yet.</div>'}
+  else{b.innerHTML="";pts.forEach(function(p){var r=document.createElement("div");r.className="mr";r.innerHTML='<div class="mf">'+(p.tp==="OP"?"🚶":"📋")+" "+(p.fn||"—")+'</div><div class="mg">'+(p.reg||p.clerk||"")+'</div><div class="md">'+(p.ad||"")+'</div><div class="mt2">'+(p.time||"")+"</div>";b.appendChild(r)})}
+  document.getElementById("mo").classList.add("on");
+}
+function closeMo(){document.getElementById("mo").classList.remove("on")}
+
+function wkLabel(ts){var d=new Date(ts),dy=d.getDay(),diff=d.getDate()-dy+(dy===0?-6:1),m=new Date(d.setDate(diff));return m.toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"})}
+
+function rExport(){
+  var btn=document.getElementById("eb");if(!btn)return;
+  var all=window.S.logs.map(function(e){return Object.assign({tp:"Inpatient"},e)}).concat(window.S.oplogs.map(function(e){return Object.assign({tp:"Outpatient"},e)}));
+  if(!all.length){btn.innerHTML='<span style="font-size:12px;color:var(--dim);font-family:DM Mono,monospace">No data yet</span>';return}
+  var wks={};all.forEach(function(e){var w=wkLabel(e.ts);if(!wks[w])wks[w]=[];wks[w].push(e)});
+  btn.innerHTML="";
+  Object.keys(wks).forEach(function(w){
+    var b=document.createElement("button");b.className="ab2";b.style.cssText="margin-right:7px;margin-bottom:7px";b.textContent="📊 "+w;
+    (function(wk,en){b.onclick=function(){exportPDF(wk,en)}})(w,wks[w]);btn.appendChild(b);
+  });
+}
+
+function exportPDF(wl,entries){
+  var s=entries.slice().sort(function(a,b){return a.ts-b.ts});
+  var rows="";s.forEach(function(e){var bg=e.tp==="Inpatient"?"badge-ip":"badge-op";rows+="<tr><td>"+(e.ad||"")+"</td><td>"+(e.time||"")+"</td><td><span class='"+bg+"'>"+(e.tp||"")+"</span></td><td><b>"+(e.fn||"N/A")+"</b></td><td>Dr. "+(e.doc||"")+"</td><td>"+(e.room||"")+"</td><td>"+(e.cd||e.day||"")+"</td><td>"+(e.reg||e.clerk||"")+"</td></tr>"});
+  var ip=s.filter(function(e){return e.tp==="Inpatient"}).length,op=s.filter(function(e){return e.tp==="Outpatient"}).length;
+  var gd=new Date().toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"});
+  var h="<!DOCTYPE html><html><head><title>MKH OPD "+wl+"</title><style>body{font-family:Arial,sans-serif;padding:24px;color:#1a202c}h1{font-size:18px;margin-bottom:4px;color:#1d4ed8}h2{font-size:13px;color:#64748b;margin-bottom:20px;font-weight:normal}table{width:100%;border-collapse:collapse;font-size:12px}th{background:#1d4ed8;color:white;padding:8px 10px;text-align:left}td{padding:7px 10px;border-bottom:1px solid #e2e8f0}tr:nth-child(even) td{background:#f8fafc}.badge-ip{background:#dbeafe;color:#1d4ed8;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600}.badge-op{background:#d1fae5;color:#065f46;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600}.footer{margin-top:20px;font-size:11px;color:#94a3b8;text-align:center}@media print{button{display:none}}</style></head><body><h1>MKH Cardio OPD Weekly Report</h1><h2>Week of "+wl+" | Total: "+s.length+" | Inpatient: "+ip+" | Outpatient: "+op+"</h2><button onclick=\"window.print()\" style=\"margin-bottom:16px;padding:8px 20px;background:#1d4ed8;color:white;border:none;border-radius:6px;cursor:pointer\">Print / Save as PDF</button><table><thead><tr><th>Date</th><th>Time</th><th>Type</th><th>File No.</th><th>Doctor</th><th>Room</th><th>Clinic Day</th><th>Assigned By</th></tr></thead><tbody>"+rows+"</tbody></table><div class='footer'>Generated "+gd+" — Mubarak Al-Kabeer Hospital Cardiology OPD</div></body></html>";
+
+var w=window.open("","_blank");w.document.write(h);w.document.close();
+}
+
+window.rAll();
+</script>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+  import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAT7Y3jWM4ix7I5cM4vKsHIJRaZZ6AZ9yI",
+    authDomain: "cardio-opd.firebaseapp.com",
+    databaseURL: "https://cardio-opd-default-rtdb.firebaseio.com",
+    projectId: "cardio-opd",
+    storageBucket: "cardio-opd.firebasestorage.app",
+    messagingSenderId: "71256529635",
+    appId: "1:71256529635:web:d62921678530fdce7303d6"
+  };
+
+  try {
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const dbRef = ref(db, 'mkh_clinic_data');
+
+    onValue(dbRef, (snapshot) => {
+      const data = snapshot.val();
+      if(data) {
+        window.S = data;
+        if(!window.S.logs) window.S.logs = [];
+        if(!window.S.oplogs) window.S.oplogs = [];
+        window.rAll();
+        
+        document.getElementById('syncDot').style.background = 'var(--ok)';
+        document.getElementById('syncDot').style.boxShadow = '0 0 6px var(--ok)';
+        document.getElementById('syncText').textContent = 'Live — Synced with Cloud Database';
+        document.getElementById('syncText').style.color = 'var(--ok)';
+      } else {
+        set(dbRef, window.S);
+      }
+    });
+
+    window.cloudSync = function(data) {
+      set(dbRef, data);
+    };
+
+  } catch(error) {
+    console.error("Firebase connection failed:", error);
+    document.getElementById('syncText').textContent = 'Cloud sync failed - Local mode';
+  }
+</script>
+
+</body>
+</html>
