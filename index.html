@@ -7,19 +7,9 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #0f172a;
-  --sur: #1e293b;
-  --sur2: #334155;
-  --sur3: #475569;
-  --bor: #475569;
-  --acc: #60a5fa;
-  --acc2: #38bdf8;
-  --ok: #34d399;
-  --warn: #fbbf24;
-  --err: #f87171;
-  --txt: #f8fafc;
-  --dim: #94a3b8;
-  --mid: #cbd5e1;
+  --bg: #0f172a; --sur: #1e293b; --sur2: #334155; --sur3: #475569; --bor: #475569;
+  --acc: #60a5fa; --acc2: #38bdf8; --ok: #34d399; --warn: #fbbf24; --err: #f87171;
+  --txt: #f8fafc; --dim: #94a3b8; --mid: #cbd5e1;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:var(--bg);color:var(--txt);font-family:'DM Sans',sans-serif;min-height:100vh}
@@ -27,116 +17,59 @@ header{padding:14px 18px;border-bottom:1px solid var(--bor);display:flex;align-i
 .hi{width:38px;height:38px;background:linear-gradient(135deg,#1d4ed8,#0891b2);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
 header h1{font-family:'DM Serif Display',serif;font-size:16px}
 header p{font-size:10px;color:var(--dim);font-family:'DM Mono',monospace}
-.db{margin-left:auto;background:var(--sur2);border:1px solid var(--bor);border-radius:7px;padding:4px 11px;font-family:'DM Mono',monospace;font-size:10px;color:var(--acc2);text-align:center;flex-shrink:0}
+.db{margin-left:auto;background:var(--sur2);border:1px solid var(--bor);border-radius:7px;padding:4px 11px;font-family:'DM Mono',monospace;font-size:10px;color:var(--acc2);text-align:center}
 .db strong{display:block;font-size:13px;color:var(--txt)}
 .sb{display:flex;align-items:center;gap:7px;padding:7px 18px;font-family:'DM Mono',monospace;font-size:11px;border-bottom:1px solid var(--bor);background:var(--sur)}
-.sd{width:7px;height:7px;border-radius:50%;background:var(--warn);box-shadow:0 0 6px var(--warn);flex-shrink:0;transition:all 0.3s}
+.sd{width:7px;height:7px;border-radius:50%;background:var(--warn);box-shadow:0 0 6px var(--warn);transition:all 0.3s}
 .tabs{display:flex;border-bottom:1px solid var(--bor);background:var(--sur);padding:0 18px;overflow-x:auto}
-.tab{padding:10px 13px;font-size:11px;font-family:'DM Mono',monospace;letter-spacing:1px;text-transform:uppercase;color:var(--dim);cursor:pointer;border-bottom:2px solid transparent;background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap}
+.tab{padding:12px 13px;font-size:11px;font-family:'DM Mono',monospace;letter-spacing:1px;text-transform:uppercase;color:var(--dim);cursor:pointer;border-bottom:2px solid transparent;background:none;border:none;white-space:nowrap}
 .tab.on{color:var(--acc);border-bottom-color:var(--acc)}
 .pg{display:none;padding:18px;max-width:860px;margin:0 auto}
 .pg.on{display:block}
 .card{background:var(--sur);border:1px solid var(--bor);border-radius:13px;padding:20px;margin-bottom:14px}
 .cbox{background:var(--sur2);border:1px solid var(--bor);border-radius:11px;padding:18px;margin-bottom:16px}
-.rl{font-size:10px;font-family:'DM Mono',monospace;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:5px}
+.rl{font-size:10px;font-family:'DM Mono',monospace;text-transform:uppercase;color:var(--dim);margin-bottom:5px}
 .rd{font-family:'DM Serif Display',serif;font-size:26px;color:var(--acc);margin-bottom:3px}
 .rr{font-family:'DM Mono',monospace;font-size:12px;color:var(--mid);margin-bottom:9px}
 .dr{display:flex;gap:5px;flex-wrap:wrap}
-.ds{display:flex;align-items:center;gap:5px;background:var(--sur3);border:1px solid var(--bor);border-radius:5px;padding:3px 9px;font-family:'DM Mono',monospace;font-size:11px;color:var(--mid)}
-.ds .dn{color:var(--acc2);font-weight:500}
+.ds{display:flex;align-items:center;gap:5px;background:var(--sur3);border:1px solid var(--bor);border-radius:5px;padding:3px 9px;font-family:'DM Mono',monospace;font-size:11px}
 .tt{font-size:10px;color:var(--ok);background:rgba(16,185,129,.1);border-radius:3px;padding:1px 5px}
 .rb{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:16px;justify-content:center}
 .dot{width:7px;height:7px;border-radius:50%;background:var(--bor);transition:all .3s}
 .dot.on{background:var(--acc);transform:scale(1.5)}
-label{display:block;font-size:10px;font-family:'DM Mono',monospace;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);margin-bottom:5px}
-input,select{width:100%;background:var(--sur2);border:1px solid var(--bor);border-radius:7px;padding:10px 12px;color:var(--txt);font-family:'DM Mono',monospace;font-size:13px;outline:none;margin-bottom:11px;transition:border-color .2s}
-input:focus,select:focus{border-color:var(--acc)}
-select option{background:var(--sur2)}
-.btn{width:100%;background:linear-gradient(135deg,#2563eb,#0891b2);border:none;border-radius:8px;padding:12px;color:#fff;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s}
-.btn:hover{transform:translateY(-1px)}
-.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
-.flash{display:none;margin-top:12px;padding:13px 16px;border-radius:9px;background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.2)}
+label{display:block;font-size:10px;font-family:'DM Mono',monospace;text-transform:uppercase;color:var(--dim);margin-bottom:5px}
+input{width:100%;background:var(--sur2);border:1px solid var(--bor);border-radius:7px;padding:11px;color:var(--txt);font-family:'DM Mono',monospace;font-size:14px;outline:none;margin-bottom:11px}
+.btn{width:100%;background:linear-gradient(135deg,#2563eb,#0891b2);border:none;border-radius:8px;padding:12px;color:#fff;font-weight:600;cursor:pointer}
+.flash{display:none;margin-top:12px;padding:13px;border-radius:9px;background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.2)}
 .flash.on{display:flex;align-items:center;gap:11px}
-.fic{font-size:20px}
-.ft strong{display:block;font-size:14px;color:var(--ok);font-family:'DM Serif Display',serif}
-.ft span{font-size:12px;color:var(--mid);font-family:'DM Mono',monospace}
-.lf{display:flex;gap:7px;margin-bottom:12px;flex-wrap:wrap}
-.fb{background:var(--sur2);border:1px solid var(--bor);color:var(--mid);border-radius:6px;padding:5px 11px;cursor:pointer;font-family:'DM Mono',monospace;font-size:11px}
-.fb.on{border-color:var(--acc);color:var(--acc)}
 .lt{background:var(--sur);border:1px solid var(--bor);border-radius:11px;overflow:hidden}
-.lh{display:grid;grid-template-columns:80px 1fr 1fr 1fr;padding:8px 13px;background:var(--sur2);border-bottom:1px solid var(--bor);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim)}
+.lh{display:grid;grid-template-columns:80px 1fr 1fr 1fr;padding:8px 13px;background:var(--sur2);border-bottom:1px solid var(--bor);font-family:'DM Mono',monospace;font-size:10px;color:var(--dim)}
 .lr{display:grid;grid-template-columns:80px 1fr 1fr 1fr;padding:10px 13px;border-bottom:1px solid var(--bor);font-size:12px}
-.lr:last-child{border-bottom:none}
-.lr:hover{background:var(--sur2)}
-.lti{font-family:'DM Mono',monospace;font-size:11px;color:var(--dim)}
-.lm{font-family:'DM Mono',monospace;font-weight:500}
-.lgx{font-size:11px;color:var(--mid)}
-.rt{font-family:'DM Mono',monospace;font-size:10px;color:var(--acc2);background:rgba(6,182,212,.08);border:1px solid rgba(6,182,212,.2);border-radius:3px;padding:2px 5px;display:inline-block;margin-top:2px}
-.es{padding:36px;text-align:center;color:var(--dim);font-family:'DM Mono',monospace;font-size:12px}
-.dg{display:grid;grid-template-columns:repeat(auto-fill,minmax(135px,1fr));gap:9px}
-.dc{background:var(--sur);border:1px solid var(--bor);border-radius:11px;padding:13px;cursor:pointer;transition:all .2s}
-.dc:hover{border-color:var(--acc2)}
+.dg{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:9px}
+.dc{background:var(--sur);border:1px solid var(--bor);border-radius:11px;padding:13px;cursor:pointer}
 .dc.nx{border-color:var(--acc);background:rgba(59,130,246,.06)}
 .dd{font-size:12px;font-weight:500;margin-bottom:2px}
-.dr2{font-family:'DM Mono',monospace;font-size:10px;color:var(--dim);margin-bottom:7px}
 .dn2{font-family:'DM Serif Display',serif;font-size:26px}
-.dc.nx .dn2{color:var(--acc)}
-.dbr{height:3px;background:var(--bor);border-radius:2px;margin-top:5px;overflow:hidden}
-.dfl{height:100%;background:var(--acc);border-radius:2px}
-.dc.nx .dfl{background:var(--acc2)}
-.lnx{font-size:10px;color:var(--dim);font-family:'DM Mono',monospace;margin-top:5px}
-.ac{background:var(--sur);border:1px solid var(--bor);border-radius:12px;padding:20px;margin-bottom:13px}
-.ac h3{font-size:11px;font-family:'DM Mono',monospace;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:13px}
-.pi{background:var(--sur2);border:1px solid var(--bor);border-radius:7px;padding:10px 13px;color:var(--txt);font-family:'DM Mono',monospace;font-size:15px;letter-spacing:5px;outline:none;width:100%;margin-bottom:9px;text-align:center}
-.ub{background:var(--sur2);border:1px solid var(--bor);color:var(--mid);border-radius:7px;padding:9px 17px;cursor:pointer;font-family:'DM Mono',monospace;font-size:12px}
-.er{font-size:11px;color:var(--err);font-family:'DM Mono',monospace;margin-top:3px}
-.ac2{display:none}
-.ac2.on{display:block}
-.ar{display:flex;gap:9px;align-items:flex-end;margin-bottom:11px;flex-wrap:wrap}
-.af{flex:1;min-width:140px}
-.af input{margin-bottom:0}
-.db3{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.3);color:var(--err);border-radius:7px;padding:9px 15px;cursor:pointer;font-family:'DM Mono',monospace;font-size:12px}
-.ab2{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.3);color:var(--warn);border-radius:7px;padding:9px 15px;cursor:pointer;font-family:'DM Mono',monospace;font-size:12px}
-.ib{background:rgba(59,130,246,.05);border:1px solid rgba(59,130,246,.15);border-radius:7px;padding:13px 15px;font-size:12px;color:var(--mid);font-family:'DM Mono',monospace;line-height:1.9}
-.mo{display:none;position:fixed;inset:0;background:rgba(6,12,24,.87);z-index:200;align-items:center;justify-content:center;padding:18px}
+.pi{background:var(--sur2);border:1px solid var(--bor);border-radius:7px;padding:12px;color:var(--txt);font-family:'DM Mono',monospace;font-size:15px;text-align:center;width:100%;margin-bottom:9px}
+.mo{display:none;position:fixed;inset:0;background:rgba(6,12,24,.9);z-index:200;align-items:center;justify-content:center;padding:18px}
 .mo.on{display:flex}
-.mb{background:var(--sur);border:1px solid var(--bor);border-radius:15px;width:100%;max-width:440px;max-height:78vh;display:flex;flex-direction:column}
+.mb{background:var(--sur);border:1px solid var(--bor);border-radius:15px;width:100%;max-width:440px;max-height:80vh;display:flex;flex-direction:column}
 .mh{padding:15px 18px;border-bottom:1px solid var(--bor);display:flex;align-items:center;justify-content:space-between}
-.mh h2{font-family:'DM Serif Display',serif;font-size:18px;color:var(--acc)}
-.mh p{font-size:11px;color:var(--dim);font-family:'DM Mono',monospace;margin-top:2px}
-.mc{background:var(--sur2);border:1px solid var(--bor);color:var(--mid);border-radius:7px;padding:5px 11px;cursor:pointer;font-family:'DM Mono',monospace;font-size:12px}
 .mbody{padding:15px 18px;overflow-y:auto;flex:1}
-.mct{font-family:'DM Mono',monospace;font-size:11px;color:var(--acc2);margin-bottom:11px}
-.mr{background:var(--sur2);border:1px solid var(--bor);border-radius:7px;padding:10px 12px;margin-bottom:7px;display:grid;grid-template-columns:1fr 1fr;gap:4px}
-.mf{font-family:'DM Mono',monospace;font-weight:600;font-size:13px}
-.mg{font-size:12px;color:var(--mid);text-align:right}
-.md{font-size:11px;color:var(--dim);font-family:'DM Mono',monospace}
-.mt2{font-size:11px;color:var(--dim);font-family:'DM Mono',monospace;text-align:right}
-.me{text-align:center;padding:26px;color:var(--dim);font-family:'DM Mono',monospace;font-size:12px}
-.opgate{text-align:center;padding:28px 18px}
-.opgate .lk{font-size:30px;margin-bottom:11px}
-.opgate h2{font-family:'DM Serif Display',serif;font-size:19px;margin-bottom:5px}
-.opgate p{font-size:11px;color:var(--dim);font-family:'DM Mono',monospace;margin-bottom:18px;letter-spacing:1px}
+.mr{background:var(--sur2);border:1px solid var(--bor);border-radius:7px;padding:10px;margin-bottom:7px;display:grid;grid-template-columns:1fr 1fr;font-size:12px}
+.badge-ip{background:#dbeafe;color:#1d4ed8;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:600}
+.badge-op{background:#d1fae5;color:#065f46;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:600}
 </style>
 </head>
 <body>
 
 <header>
   <div class="hi">🫀</div>
-  <div>
-    <h1>MKH Cardio OPD Allocator</h1>
-    <p>MUBARAK AL-KABEER HOSPITAL</p>
-  </div>
-  <div class="db">
-    <strong id="dayName">—</strong>
-    <span id="dateStr">—</span>
-  </div>
+  <div><h1>MKH Cardio OPD Allocator</h1><p>MUBARAK AL-KABEER HOSPITAL</p></div>
+  <div class="db"><strong id="dayName">—</strong><span id="dateStr">—</span></div>
 </header>
 
-<div class="sb">
-  <div class="sd" id="syncDot"></div>
-  <span id="syncText" style="font-size:10px; color:var(--warn);">Connecting to database...</span>
-</div>
+<div class="sb"><div class="sd" id="syncDot"></div><span id="syncText">Connecting...</span></div>
 
 <div class="tabs">
   <button class="tab on" onclick="goTab('ip',this)">Inpatient</button>
@@ -148,97 +81,173 @@ select option{background:var(--sur2)}
 
 <div class="pg on" id="pg-ip">
   <div class="card">
-    <div class="cbox">
-      <div class="rl">Next Assigned Clinic</div>
-      <div class="rd" id="nd">—</div>
-      <div class="rr" id="nr">—</div>
-      <div class="dr" id="ndays"></div>
-    </div>
+    <div class="cbox"><div class="rl">Next Assigned Clinic</div><div class="rd" id="nd">—</div><div class="rr" id="nr">—</div><div class="dr" id="ndays"></div></div>
     <div class="rb" id="rb"></div>
-    <div><label>File Number (6 Digits)</label>
-    <input type="text" id="fi" placeholder="e.g. 123456" autocomplete="off" maxlength="6" inputmode="numeric"></div>
-    <div><label>Registrar PIN</label>
-    <input type="password" id="rpin" placeholder="Enter 4-digit PIN" autocomplete="off" maxlength="4" inputmode="numeric"></div>
+    <label>File Number (6 Digits)</label><input type="text" id="fi" maxlength="6" inputmode="numeric">
+    <label>Registrar PIN</label><input type="password" id="rpin" maxlength="4" inputmode="numeric">
     <button class="btn" onclick="doAssign()">Assign →</button>
-    <div class="flash" id="fl">
-      <div class="fic">✅</div>
-      <div class="ft"><strong id="fd">—</strong><span id="fdt">—</span></div>
-    </div>
+    <div class="flash" id="fl"><div class="ft"><strong id="fd">—</strong><span id="fdt">—</span></div></div>
   </div>
 </div>
 
 <div class="pg" id="pg-op">
-  <div id="opgate" class="card opgate">
-    <div class="lk">🔒</div>
-    <h2>Outpatient Access</h2>
-    <p>CLINIC CLERK &amp; ADMIN ONLY</p>
-    <div style="max-width:230px;margin:0 auto">
-      <input class="pi" type="password" id="opi" maxlength="4" placeholder="PIN">
-      <button class="btn" onclick="clerkLogin()" style="margin-top:2px">Unlock</button>
-      <div class="er" id="ope"></div>
-    </div>
-  </div>
+  <div id="opgate" class="card" style="text-align:center"><label>CLERK ACCESS PIN</label><input class="pi" type="password" id="opi" maxlength="4"><button class="btn" onclick="clerkLogin()">Unlock</button></div>
   <div id="opc" style="display:none">
-    <div class="card">
-      <div class="cbox">
-        <div class="rl">Next Available Clinic Today</div>
-        <div class="rd" id="opd">—</div>
-        <div class="rr" id="opr">—</div>
-        <div class="dr" id="opinfo"></div>
-      </div>
-      <div id="opbars" style="margin-bottom:16px"></div>
-      <div><label>Patient File Number (6 Digits)</label>
-      <input type="text" id="opfi" placeholder="e.g. 123456" autocomplete="off" maxlength="6" inputmode="numeric">
-      <div class="er" id="opfe"></div></div>
-      <div><label>Assigned By</label>
-      <select id="opcs">
-        <option value="">— Select —</option>
-        <option>Clinic Clerk</option>
-      </select></div>
-      <button class="btn" id="opbtn" onclick="doOpAssign()">Assign Outpatient →</button>
-      <div class="flash" id="opfl">
-        <div class="fic">✅</div>
-        <div class="ft"><strong id="opfd">—</strong><span id="opfdt">—</span></div>
-      </div>
-    </div>
+    <div class="card"><div class="cbox"><div class="rl">Next Available Clinic Today</div><div class="rd" id="opd">—</div><div class="rr" id="opr">—</div></div>
+    <label>Patient File Number (6 Digits)</label><input type="text" id="opfi" maxlength="6" inputmode="numeric">
+    <button class="btn" onclick="doOpAssign()">Assign Outpatient →</button></div>
   </div>
 </div>
 
-<div class="pg" id="pg-log">
-  <div class="lf">
-    <button class="fb on" onclick="filterLog('all',this)">All</button>
-    <button class="fb" onclick="filterLog('Sun',this)">Sun</button>
-    <button class="fb" onclick="filterLog('Mon',this)">Mon</button>
-    <button class="fb" onclick="filterLog('Tue',this)">Tue</button>
-    <button class="fb" onclick="filterLog('Wed',this)">Wed</button>
-    <button class="fb" onclick="filterLog('Thu',this)">Thu</button>
-  </div>
-  <div class="lt">
-    <div class="lh"><div>Date</div><div>File No.</div><div>Doctor / Room</div><div>By</div></div>
-    <div id="lb"><div class="es">No assignments yet.</div></div>
-  </div>
-</div>
+<div class="pg" id="pg-log"><div class="lt"><div class="lh"><div>Date</div><div>File</div><div>Room</div><div>By</div></div><div id="lb"></div></div></div>
 
-<div class="pg" id="pg-dist">
-  <div class="dg" id="dg"></div>
-</div>
+<div class="pg" id="pg-dist"><div class="dg" id="dg"></div></div>
 
 <div class="pg" id="pg-adm">
-  <div class="ac">
-    <h3>🔒 Admin Access</h3>
-    <div id="apgate">
-      <input class="pi" type="password" id="api" maxlength="4" placeholder="PIN">
-      <button class="ub" onclick="adminLogin()">Unlock</button>
-      <div class="er" id="ape"></div>
-    </div>
-    <div class="ac2" id="ac2">
-      <div class="ar">
-        <div class="af"><label>Set Rotation (1–19)</label>
-        <input type="number" id="pri" min="1" max="19" placeholder="e.g. 3"></div>
-        <button class="ab2" onclick="setPtr()">Apply</button>
-      </div>
-      <div class="ar">
-        <div class="af"><label>Remove Fake Entry — File Number</label>
-        <input type="text" id="dfi" placeholder="File number">
-        <div class="er" id="dm"></div></div>
-        <button class="db3" onclick="del
+  <div class="card" id="apgate" style="text-align:center"><label>ADMIN PIN</label><input class="pi" type="password" id="api" maxlength="4"><button class="btn" onclick="adminLogin()">Unlock</button></div>
+  <div id="ac2" style="display:none">
+    <div class="card"><h3>Weekly General Report</h3><div id="eb" style="margin-top:10px"></div><button class="btn" style="background:#f87171;margin-top:20px" onclick="resetAll()">⚠ Reset All Data</button></div>
+  </div>
+</div>
+
+<div class="mo" id="mo"><div class="mb"><div class="mh"><h2 id="mt">—</h2><button onclick="closeMo()">Close</button></div>
+<div class="mbody"><div id="mc2" style="font-size:12px;color:var(--acc2);margin-bottom:10px"></div><div id="mbody"></div><div id="mprint"></div></div></div></div>
+
+<script>
+var docPINs = {"1001":"Dr. Rehan","1002":"Dr. Ramy","1003":"Dr. Badawy","1004":"Dr. Sharkawy","1005":"Dr. Mostafa","1006":"Dr. Ibrahim","1007":"Dr. Hadad","1008":"Dr. Emara","1009":"Dr. Rahim","1010":"Dr. Mamdouh","1011":"Dr. Slam","1012":"Dr. Ezz","1013":"Dr. R Gamal","1014":"Dr. Moghl","1015":"Dr. Darwish","1016":"Dr. Omar","1017":"Dr. Sajid","1018":"Dr. Hamza","1019":"Dr. Eyad","1020":"Dr. Mongy","1021":"Dr. Bahlol"};
+var CL=[{d:"Hisham",r:"Room 10",days:["Sun"]},{d:"Farag",r:"Room 8",days:["Mon"]},{d:"Ibrahim",r:"Room 10",days:["Tue"]},{d:"Hany",r:"Room 16",days:["Sun"]},{d:"Fahd",r:"Room 24",days:["Mon"]},{d:"Ali",r:"Room 11",days:["Wed"]},{d:"Nazanin",r:"Room 25",days:["Sun"]},{d:"Arab",r:"Room 25",days:["Tue"]},{d:"Ehab",r:"Room 25",days:["Mon"]},{d:"Maged",r:"Room 20",days:["Sun"]},{d:"Fawzy",r:"Room 20",days:["Wed"]},{d:"Ashraf",r:"Room 20",days:["Thu"]},{d:"Akmal",r:"Room 10",days:["Mon"]},{d:"Zaher",r:"Room 20",days:["Tue"]},{d:"Shafie",r:"Room 25",days:["Thu"]},{d:"Hisham",r:"Room 8",days:["Tue"]},{d:"Farag",r:"Room 10",days:["Wed"]},{d:"Ibrahim",r:"Room 13",days:["Thu"]},{d:"Maged",r:"Room 11",days:["Tue"]}];
+var AP="2025",CP="2026",adm=false,clk=false;
+window.S={ptr:0,logs:[],oplogs:[]};
+
+function tn(){return["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][new Date().getDay()]}
+function nt(){return new Date().toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"})}
+function nd(){return new Date().toLocaleDateString("en-GB",{day:"numeric",month:"short"})}
+
+function smartIdx(){
+  var cnt=new Array(CL.length).fill(0);
+  window.S.logs.concat(window.S.oplogs).forEach(e=>{if(e.si!=null)cnt[e.si]++});
+  for(var o=0;o<CL.length;o++){var i=(window.S.ptr+o)%CL.length;if(cnt[i]===Math.min(...cnt))return i}
+  return window.S.ptr % CL.length;
+}
+
+function goTab(id,btn){
+  document.querySelectorAll(".pg").forEach(p=>p.classList.remove("on"));
+  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("on"));
+  document.getElementById("pg-"+id).classList.add("on"); btn.classList.add("on");
+  if(id==='dist') rDist(); if(id==='adm') rAdm();
+}
+
+function doAssign(){
+  var fn=document.getElementById("fi").value; var pin=document.getElementById("rpin").value;
+  if(!/^\d{6}$/.test(fn)||!docPINs[pin]) return alert("Check File/PIN");
+  if(!confirm("Assign File "+fn+" to "+docPINs[pin]+"?")) return;
+  var i=smartIdx(), c=CL[i];
+  window.S.logs.push({fn:fn,reg:docPINs[pin],doc:c.d,room:c.r,si:i,ad:nd(),time:nt(),ts:Date.now()});
+  window.S.ptr++; saveCloud();
+  document.getElementById("fi").value=""; document.getElementById("rpin").value="";
+  alert("Assigned to Dr. "+c.d); rAll();
+}
+
+function doOpAssign(){
+  var fn=document.getElementById("opfi").value; if(!/^\d{6}$/.test(fn)) return alert("Check File");
+  var tc=CL.map((c,i)=>({...c,i})).filter(c=>c.days.includes(tn()));
+  if(!tc.length) return alert("No clinics today");
+  var best=tc.reduce((a,b)=> (cCnt(a.i) < cCnt(b.i) ? a : b));
+  window.S.oplogs.push({fn:fn,clerk:"Clerk",doc:best.d,room:best.r,si:best.i,ad:nd(),time:nt(),ts:Date.now(),tp:"OP"});
+  saveCloud(); document.getElementById("opfi").value=""; alert("Assigned to Dr. "+best.d);
+}
+
+function cCnt(i){ return window.S.logs.concat(window.S.oplogs).filter(e=>e.si===i).length; }
+
+function rDist(){
+  var g=document.getElementById("dg"); g.innerHTML="";
+  CL.forEach((c,i)=>{
+    var d=document.createElement("div"); d.className="dc"+(i===smartIdx()?" nx":"");
+    d.innerHTML=`<div class="dd">Dr. ${c.d}</div><div style="font-size:10px;color:var(--dim)">${c.r}</div><div class="dn2">${cCnt(i)}</div>`;
+    d.onclick=()=>openMo(i); g.appendChild(d);
+  });
+}
+
+function rLog(){
+  var b=document.getElementById("lb"); b.innerHTML="";
+  window.S.logs.concat(window.S.oplogs).slice(-20).reverse().forEach(x=>{
+    var r=document.createElement("div"); r.className="lr";
+    r.innerHTML=`<div style="font-size:10px">${x.ad}</div><div>${x.fn}</div><div>${x.room}</div><div style="font-size:10px">${x.reg||"Clerk"}</div>`;
+    b.appendChild(r);
+  });
+}
+
+function openMo(i){
+  if(!adm) return alert("Admin login required to view lists/print.");
+  var c=CL[i]; var pts=window.S.logs.concat(window.S.oplogs).filter(e=>e.si===i);
+  document.getElementById("mt").textContent="Dr. "+c.d;
+  document.getElementById("mc2").textContent=pts.length+" patients total";
+  var b=document.getElementById("mbody"); b.innerHTML="";
+  pts.forEach(p=>{
+    var d=document.createElement("div"); d.className="mr";
+    d.innerHTML=`<div><b>${p.fn}</b></div><div style="text-align:right">${p.time}</div>`;
+    b.appendChild(d);
+  });
+  var pb=document.getElementById("mprint"); pb.innerHTML="";
+  if(pts.length){
+    var btn=document.createElement("button"); btn.className="btn"; btn.textContent="Print Clinic List";
+    btn.onclick=()=>exportPDF(c.d+" - "+c.r, pts); pb.appendChild(btn);
+  }
+  document.getElementById("mo").classList.add("on");
+}
+function closeMo(){document.getElementById("mo").classList.remove("on")}
+
+function clerkLogin(){ if(document.getElementById("opi").value===CP){clk=true; document.getElementById("opgate").style.display="none"; document.getElementById("opc").style.display="block";}}
+function adminLogin(){ if(document.getElementById("api").value===AP){adm=true; document.getElementById("apgate").style.display="none"; document.getElementById("ac2").style.display="block"; rAdm();}}
+
+function rAdm(){
+  var b=document.getElementById("eb"); b.innerHTML="";
+  var btn=document.createElement("button"); btn.className="btn"; btn.textContent="📊 Export Weekly General PDF";
+  btn.onclick=()=>exportPDF("Weekly General Report", window.S.logs.concat(window.S.oplogs));
+  b.appendChild(btn);
+}
+
+function exportPDF(title, data){
+  var rows = data.map(e=> `<tr><td>${e.ad}</td><td>${e.time}</td><td>${e.fn}</td><td>${e.doc}</td><td>${e.room}</td><td>${e.reg||"Clerk"}</td></tr>`).join("");
+  var h = `<html><head><style>table{width:100%;border-collapse:collapse;font-family:sans-serif;font-size:12px}th,td{border:1px solid #ddd;padding:8px;text-align:left}th{background:#f4f4f4}</style></head>
+  <body><h2 style="font-family:sans-serif">${title}</h2><table><thead><tr><th>Date</th><th>Time</th><th>File</th><th>Doctor</th><th>Room</th><th>By</th></tr></thead><tbody>${rows}</tbody></table>
+  <script>window.onload=function(){window.print();window.close();}<\/script></body></html>`;
+  var w=window.open("","_blank"); w.document.write(h); w.document.close();
+}
+
+function resetAll(){ if(confirm("Wipe everything?")) { window.S={ptr:0,logs:[],oplogs:[]}; saveCloud(); alert("Done"); rAll(); }}
+
+function rAll(){
+  document.getElementById("dayName").textContent=tn(); document.getElementById("dateStr").textContent=nd();
+  var i=smartIdx(); document.getElementById("nd").textContent="Dr. "+CL[i].d; document.getElementById("nr").textContent=CL[i].r;
+  var b=document.getElementById("rb"); b.innerHTML=""; CL.forEach((_,idx)=>{ var d=document.createElement("div"); d.className="dot"+(idx===i?" on":""); b.appendChild(d); });
+  rLog(); rDist();
+}
+
+// Cloud Logic
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAT7Y3jWM4ix7I5cM4vKsHIJRaZZ6AZ9yI",
+  authDomain: "cardio-opd.firebaseapp.com",
+  databaseURL: "https://cardio-opd-default-rtdb.firebaseio.com",
+  projectId: "cardio-opd",
+  storageBucket: "cardio-opd.firebasestorage.app",
+  appId: "1:71256529635:web:d62921678530fdce7303d6"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+const dbRef = ref(db, 'mkh_clinic_data');
+
+onValue(dbRef, (snap) => {
+  const d = snap.val(); if(d) { window.S = d; if(!window.S.logs)window.S.logs=[]; if(!window.S.oplogs)window.S.oplogs=[]; rAll(); }
+  document.getElementById("syncDot").style.background="#34d399"; document.getElementById("syncText").textContent="Live — Synced";
+});
+
+function saveCloud(){ set(dbRef, window.S); }
+window.saveCloud = saveCloud;
+</script>
+</body>
+</html>
