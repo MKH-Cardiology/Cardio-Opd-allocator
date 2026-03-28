@@ -39,7 +39,7 @@ header p{font-size:10px;color:var(--dim);font-family:'DM Mono',monospace}
 .dot.on{background:var(--acc);transform:scale(1.5)}
 label{display:block;font-size:10px;font-family:'DM Mono',monospace;text-transform:uppercase;color:var(--dim);margin-bottom:5px}
 input{width:100%;background:var(--sur2);border:1px solid var(--bor);border-radius:7px;padding:11px;color:var(--txt);font-family:'DM Mono',monospace;font-size:14px;outline:none;margin-bottom:11px}
-.btn{width:100%;background:linear-gradient(135deg,#2563eb,#0891b2);border:none;border-radius:8px;padding:12px;color:#fff;font-weight:600;cursor:pointer}
+.btn{width:100%;background:linear-gradient(135deg,#2563eb,#0891b2);border:none;border-radius:8px;padding:12px;color:#fff;font-weight:600;cursor:pointer;margin-bottom:5px}
 .flash{display:none;margin-top:12px;padding:13px;border-radius:9px;background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.2)}
 .flash.on{display:flex;align-items:center;gap:11px}
 .lt{background:var(--sur);border:1px solid var(--bor);border-radius:11px;overflow:hidden}
@@ -57,8 +57,6 @@ input{width:100%;background:var(--sur2);border:1px solid var(--bor);border-radiu
 .mh{padding:15px 18px;border-bottom:1px solid var(--bor);display:flex;align-items:center;justify-content:space-between}
 .mbody{padding:15px 18px;overflow-y:auto;flex:1}
 .mr{background:var(--sur2);border:1px solid var(--bor);border-radius:7px;padding:10px;margin-bottom:7px;display:grid;grid-template-columns:1fr 1fr;font-size:12px}
-.badge-ip{background:#dbeafe;color:#1d4ed8;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:600}
-.badge-op{background:#d1fae5;color:#065f46;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:600}
 </style>
 </head>
 <body>
@@ -69,7 +67,7 @@ input{width:100%;background:var(--sur2);border:1px solid var(--bor);border-radiu
   <div class="db"><strong id="dayName">—</strong><span id="dateStr">—</span></div>
 </header>
 
-<div class="sb"><div class="sd" id="syncDot"></div><span id="syncText">Connecting...</span></div>
+<div class="sb"><div class="sd" id="syncDot"></div><span id="syncText">Connecting to database...</span></div>
 
 <div class="tabs">
   <button class="tab on" onclick="goTab('ip',this)">Inpatient</button>
@@ -106,125 +104,17 @@ input{width:100%;background:var(--sur2);border:1px solid var(--bor);border-radiu
 <div class="pg" id="pg-adm">
   <div class="card" id="apgate" style="text-align:center"><label>ADMIN PIN</label><input class="pi" type="password" id="api" maxlength="4"><button class="btn" onclick="adminLogin()">Unlock</button></div>
   <div id="ac2" style="display:none">
-    <div class="card"><h3>Weekly General Report</h3><div id="eb" style="margin-top:10px"></div><button class="btn" style="background:#f87171;margin-top:20px" onclick="resetAll()">⚠ Reset All Data</button></div>
+    <div class="card"><h3>Admin Controls</h3>
+      <button class="btn" style="margin-top:10px" onclick="exportWeekly()">📊 Weekly General PDF</button>
+      <button class="btn" style="background:#f87171;margin-top:10px" onclick="resetAll()">⚠ Reset All Data</button>
+    </div>
   </div>
 </div>
 
 <div class="mo" id="mo"><div class="mb"><div class="mh"><h2 id="mt">—</h2><button onclick="closeMo()">Close</button></div>
 <div class="mbody"><div id="mc2" style="font-size:12px;color:var(--acc2);margin-bottom:10px"></div><div id="mbody"></div><div id="mprint"></div></div></div></div>
 
-<script>
-var docPINs = {"1001":"Dr. Rehan","1002":"Dr. Ramy","1003":"Dr. Badawy","1004":"Dr. Sharkawy","1005":"Dr. Mostafa","1006":"Dr. Ibrahim","1007":"Dr. Hadad","1008":"Dr. Emara","1009":"Dr. Rahim","1010":"Dr. Mamdouh","1011":"Dr. Slam","1012":"Dr. Ezz","1013":"Dr. R Gamal","1014":"Dr. Moghl","1015":"Dr. Darwish","1016":"Dr. Omar","1017":"Dr. Sajid","1018":"Dr. Hamza","1019":"Dr. Eyad","1020":"Dr. Mongy","1021":"Dr. Bahlol"};
-var CL=[{d:"Hisham",r:"Room 10",days:["Sun"]},{d:"Farag",r:"Room 8",days:["Mon"]},{d:"Ibrahim",r:"Room 10",days:["Tue"]},{d:"Hany",r:"Room 16",days:["Sun"]},{d:"Fahd",r:"Room 24",days:["Mon"]},{d:"Ali",r:"Room 11",days:["Wed"]},{d:"Nazanin",r:"Room 25",days:["Sun"]},{d:"Arab",r:"Room 25",days:["Tue"]},{d:"Ehab",r:"Room 25",days:["Mon"]},{d:"Maged",r:"Room 20",days:["Sun"]},{d:"Fawzy",r:"Room 20",days:["Wed"]},{d:"Ashraf",r:"Room 20",days:["Thu"]},{d:"Akmal",r:"Room 10",days:["Mon"]},{d:"Zaher",r:"Room 20",days:["Tue"]},{d:"Shafie",r:"Room 25",days:["Thu"]},{d:"Hisham",r:"Room 8",days:["Tue"]},{d:"Farag",r:"Room 10",days:["Wed"]},{d:"Ibrahim",r:"Room 13",days:["Thu"]},{d:"Maged",r:"Room 11",days:["Tue"]}];
-var AP="2025",CP="2026",adm=false,clk=false;
-window.S={ptr:0,logs:[],oplogs:[]};
-
-function tn(){return["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][new Date().getDay()]}
-function nt(){return new Date().toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"})}
-function nd(){return new Date().toLocaleDateString("en-GB",{day:"numeric",month:"short"})}
-
-function smartIdx(){
-  var cnt=new Array(CL.length).fill(0);
-  window.S.logs.concat(window.S.oplogs).forEach(e=>{if(e.si!=null)cnt[e.si]++});
-  for(var o=0;o<CL.length;o++){var i=(window.S.ptr+o)%CL.length;if(cnt[i]===Math.min(...cnt))return i}
-  return window.S.ptr % CL.length;
-}
-
-function goTab(id,btn){
-  document.querySelectorAll(".pg").forEach(p=>p.classList.remove("on"));
-  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("on"));
-  document.getElementById("pg-"+id).classList.add("on"); btn.classList.add("on");
-  if(id==='dist') rDist(); if(id==='adm') rAdm();
-}
-
-function doAssign(){
-  var fn=document.getElementById("fi").value; var pin=document.getElementById("rpin").value;
-  if(!/^\d{6}$/.test(fn)||!docPINs[pin]) return alert("Check File/PIN");
-  if(!confirm("Assign File "+fn+" to "+docPINs[pin]+"?")) return;
-  var i=smartIdx(), c=CL[i];
-  window.S.logs.push({fn:fn,reg:docPINs[pin],doc:c.d,room:c.r,si:i,ad:nd(),time:nt(),ts:Date.now()});
-  window.S.ptr++; saveCloud();
-  document.getElementById("fi").value=""; document.getElementById("rpin").value="";
-  alert("Assigned to Dr. "+c.d); rAll();
-}
-
-function doOpAssign(){
-  var fn=document.getElementById("opfi").value; if(!/^\d{6}$/.test(fn)) return alert("Check File");
-  var tc=CL.map((c,i)=>({...c,i})).filter(c=>c.days.includes(tn()));
-  if(!tc.length) return alert("No clinics today");
-  var best=tc.reduce((a,b)=> (cCnt(a.i) < cCnt(b.i) ? a : b));
-  window.S.oplogs.push({fn:fn,clerk:"Clerk",doc:best.d,room:best.r,si:best.i,ad:nd(),time:nt(),ts:Date.now(),tp:"OP"});
-  saveCloud(); document.getElementById("opfi").value=""; alert("Assigned to Dr. "+best.d);
-}
-
-function cCnt(i){ return window.S.logs.concat(window.S.oplogs).filter(e=>e.si===i).length; }
-
-function rDist(){
-  var g=document.getElementById("dg"); g.innerHTML="";
-  CL.forEach((c,i)=>{
-    var d=document.createElement("div"); d.className="dc"+(i===smartIdx()?" nx":"");
-    d.innerHTML=`<div class="dd">Dr. ${c.d}</div><div style="font-size:10px;color:var(--dim)">${c.r}</div><div class="dn2">${cCnt(i)}</div>`;
-    d.onclick=()=>openMo(i); g.appendChild(d);
-  });
-}
-
-function rLog(){
-  var b=document.getElementById("lb"); b.innerHTML="";
-  window.S.logs.concat(window.S.oplogs).slice(-20).reverse().forEach(x=>{
-    var r=document.createElement("div"); r.className="lr";
-    r.innerHTML=`<div style="font-size:10px">${x.ad}</div><div>${x.fn}</div><div>${x.room}</div><div style="font-size:10px">${x.reg||"Clerk"}</div>`;
-    b.appendChild(r);
-  });
-}
-
-function openMo(i){
-  if(!adm) return alert("Admin login required to view lists/print.");
-  var c=CL[i]; var pts=window.S.logs.concat(window.S.oplogs).filter(e=>e.si===i);
-  document.getElementById("mt").textContent="Dr. "+c.d;
-  document.getElementById("mc2").textContent=pts.length+" patients total";
-  var b=document.getElementById("mbody"); b.innerHTML="";
-  pts.forEach(p=>{
-    var d=document.createElement("div"); d.className="mr";
-    d.innerHTML=`<div><b>${p.fn}</b></div><div style="text-align:right">${p.time}</div>`;
-    b.appendChild(d);
-  });
-  var pb=document.getElementById("mprint"); pb.innerHTML="";
-  if(pts.length){
-    var btn=document.createElement("button"); btn.className="btn"; btn.textContent="Print Clinic List";
-    btn.onclick=()=>exportPDF(c.d+" - "+c.r, pts); pb.appendChild(btn);
-  }
-  document.getElementById("mo").classList.add("on");
-}
-function closeMo(){document.getElementById("mo").classList.remove("on")}
-
-function clerkLogin(){ if(document.getElementById("opi").value===CP){clk=true; document.getElementById("opgate").style.display="none"; document.getElementById("opc").style.display="block";}}
-function adminLogin(){ if(document.getElementById("api").value===AP){adm=true; document.getElementById("apgate").style.display="none"; document.getElementById("ac2").style.display="block"; rAdm();}}
-
-function rAdm(){
-  var b=document.getElementById("eb"); b.innerHTML="";
-  var btn=document.createElement("button"); btn.className="btn"; btn.textContent="📊 Export Weekly General PDF";
-  btn.onclick=()=>exportPDF("Weekly General Report", window.S.logs.concat(window.S.oplogs));
-  b.appendChild(btn);
-}
-
-function exportPDF(title, data){
-  var rows = data.map(e=> `<tr><td>${e.ad}</td><td>${e.time}</td><td>${e.fn}</td><td>${e.doc}</td><td>${e.room}</td><td>${e.reg||"Clerk"}</td></tr>`).join("");
-  var h = `<html><head><style>table{width:100%;border-collapse:collapse;font-family:sans-serif;font-size:12px}th,td{border:1px solid #ddd;padding:8px;text-align:left}th{background:#f4f4f4}</style></head>
-  <body><h2 style="font-family:sans-serif">${title}</h2><table><thead><tr><th>Date</th><th>Time</th><th>File</th><th>Doctor</th><th>Room</th><th>By</th></tr></thead><tbody>${rows}</tbody></table>
-  <script>window.onload=function(){window.print();window.close();}<\/script></body></html>`;
-  var w=window.open("","_blank"); w.document.write(h); w.document.close();
-}
-
-function resetAll(){ if(confirm("Wipe everything?")) { window.S={ptr:0,logs:[],oplogs:[]}; saveCloud(); alert("Done"); rAll(); }}
-
-function rAll(){
-  document.getElementById("dayName").textContent=tn(); document.getElementById("dateStr").textContent=nd();
-  var i=smartIdx(); document.getElementById("nd").textContent="Dr. "+CL[i].d; document.getElementById("nr").textContent=CL[i].r;
-  var b=document.getElementById("rb"); b.innerHTML=""; CL.forEach((_,idx)=>{ var d=document.createElement("div"); d.className="dot"+(idx===i?" on":""); b.appendChild(d); });
-  rLog(); rDist();
-}
-
-// Cloud Logic
+<script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
 import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
 
@@ -241,13 +131,122 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const dbRef = ref(db, 'mkh_clinic_data');
 
+var docPINs = {"1001":"Dr. Rehan","1002":"Dr. Ramy","1003":"Dr. Badawy","1004":"Dr. Sharkawy","1005":"Dr. Mostafa","1006":"Dr. Ibrahim","1007":"Dr. Hadad","1008":"Dr. Emara","1009":"Dr. Rahim","1010":"Dr. Mamdouh","1011":"Dr. Slam","1012":"Dr. Ezz","1013":"Dr. R Gamal","1014":"Dr. Moghl","1015":"Dr. Darwish","1016":"Dr. Omar","1017":"Dr. Sajid","1018":"Dr. Hamza","1019":"Dr. Eyad","1020":"Dr. Mongy","1021":"Dr. Bahlol"};
+var CL=[{d:"Hisham",r:"Room 10",days:["Sun"]},{d:"Farag",r:"Room 8",days:["Mon"]},{d:"Ibrahim",r:"Room 10",days:["Tue"]},{d:"Hany",r:"Room 16",days:["Sun"]},{d:"Fahd",r:"Room 24",days:["Mon"]},{d:"Ali",r:"Room 11",days:["Wed"]},{d:"Nazanin",r:"Room 25",days:["Sun"]},{d:"Arab",r:"Room 25",days:["Tue"]},{d:"Ehab",r:"Room 25",days:["Mon"]},{d:"Maged",r:"Room 20",days:["Sun"]},{d:"Fawzy",r:"Room 20",days:["Wed"]},{d:"Ashraf",r:"Room 20",days:["Thu"]},{d:"Akmal",r:"Room 10",days:["Mon"]},{d:"Zaher",r:"Room 20",days:["Tue"]},{d:"Shafie",r:"Room 25",days:["Thu"]},{d:"Hisham",r:"Room 8",days:["Tue"]},{d:"Farag",r:"Room 10",days:["Wed"]},{d:"Ibrahim",r:"Room 13",days:["Thu"]},{d:"Maged",r:"Room 11",days:["Tue"]}];
+window.S={ptr:0,logs:[],oplogs:[]};
+var adm=false; var clk=false;
+
 onValue(dbRef, (snap) => {
-  const d = snap.val(); if(d) { window.S = d; if(!window.S.logs)window.S.logs=[]; if(!window.S.oplogs)window.S.oplogs=[]; rAll(); }
+  const d = snap.val(); if(d) { window.S = d; if(!window.S.logs)window.S.logs=[]; if(!window.S.oplogs)window.S.oplogs=[]; }
   document.getElementById("syncDot").style.background="#34d399"; document.getElementById("syncText").textContent="Live — Synced";
+  rAll();
 });
 
-function saveCloud(){ set(dbRef, window.S); }
-window.saveCloud = saveCloud;
+function tn(){return["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][new Date().getDay()]}
+function nt(){return new Date().toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"})}
+function nd(){return new Date().toLocaleDateString("en-GB",{day:"numeric",month:"short"})}
+
+function smartIdx(){
+  var cnt=new Array(CL.length).fill(0);
+  (window.S.logs||[]).concat(window.S.oplogs||[]).forEach(e=>{if(e.si!=null)cnt[e.si]++});
+  var min = Math.min(...cnt);
+  for(var o=0;o<CL.length;o++){var i=(window.S.ptr+o)%CL.length;if(cnt[i]===min)return i}
+  return window.S.ptr % CL.length;
+}
+
+window.goTab = function(id,btn){
+  document.querySelectorAll(".pg").forEach(p=>p.classList.remove("on"));
+  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("on"));
+  document.getElementById("pg-"+id).classList.add("on"); btn.classList.add("on");
+  rAll();
+};
+
+window.doAssign = function(){
+  var fn=document.getElementById("fi").value; var pin=document.getElementById("rpin").value;
+  if(!/^\d{6}$/.test(fn)||!docPINs[pin]) return alert("Check File/PIN");
+  if(!confirm("Assign File "+fn+" to "+docPINs[pin]+"?")) return;
+  var i=smartIdx(), c=CL[i];
+  window.S.logs.push({fn:fn,reg:docPINs[pin],doc:c.d,room:c.r,si:i,ad:nd(),time:nt(),ts:Date.now()});
+  window.S.ptr++; set(dbRef, window.S);
+  document.getElementById("fi").value=""; document.getElementById("rpin").value="";
+  alert("Assigned to Dr. "+c.d); rAll();
+};
+
+window.doOpAssign = function(){
+  var fn=document.getElementById("opfi").value; if(!/^\d{6}$/.test(fn)) return alert("Check File");
+  var tc=CL.map((c,i)=>({...c,i})).filter(c=>c.days.includes(tn()));
+  if(!tc.length) return alert("No clinics today");
+  var best=tc.reduce((a,b)=> (cCnt(a.i) < cCnt(b.i) ? a : b));
+  window.S.oplogs.push({fn:fn,clerk:"Clerk",doc:best.d,room:best.r,si:best.i,ad:nd(),time:nt(),ts:Date.now()});
+  set(dbRef, window.S); document.getElementById("opfi").value=""; alert("Assigned to Dr. "+best.d); rAll();
+};
+
+function cCnt(i){ return (window.S.logs||[]).concat(window.S.oplogs||[]).filter(e=>e.si===i).length; }
+
+function rDist(){
+  var g=document.getElementById("dg"); g.innerHTML="";
+  CL.forEach((c,i)=>{
+    var d=document.createElement("div"); d.className="dc"+(i===smartIdx()?" nx":"");
+    d.innerHTML=`<div class="dd">Dr. ${c.d}</div><div style="font-size:10px;color:var(--dim)">${c.r}</div><div class="dn2">${cCnt(i)}</div>`;
+    d.onclick=()=>openMo(i); g.appendChild(d);
+  });
+}
+
+function rLog(){
+  var b=document.getElementById("lb"); b.innerHTML="";
+  var combined = (window.S.logs||[]).concat(window.S.oplogs||[]).sort((a,b)=>b.ts-a.ts).slice(0,20);
+  combined.forEach(x=>{
+    var r=document.createElement("div"); r.className="lr";
+    r.innerHTML=`<div style="font-size:10px">${x.ad}</div><div>${x.fn}</div><div>${x.room}</div><div style="font-size:10px">${x.reg||"Clerk"}</div>`;
+    b.appendChild(r);
+  });
+}
+
+function openMo(i){
+  if(!adm) return alert("Admin login required to view lists or print.");
+  var c=CL[i]; var pts=(window.S.logs||[]).concat(window.S.oplogs||[]).filter(e=>e.si===i);
+  document.getElementById("mt").textContent="Dr. "+c.d;
+  document.getElementById("mc2").textContent=pts.length+" patients total";
+  var b=document.getElementById("mbody"); b.innerHTML="";
+  pts.forEach(p=>{
+    var d=document.createElement("div"); d.className="mr";
+    d.innerHTML=`<div><b>${p.fn}</b></div><div style="text-align:right">${p.time}</div>`;
+    b.appendChild(d);
+  });
+  var pb=document.getElementById("mprint"); pb.innerHTML="";
+  var btn=document.createElement("button"); btn.className="btn"; btn.textContent="Print Clinic List";
+  btn.onclick=()=>exportPDF(c.d+" - "+c.r, pts); pb.appendChild(btn);
+  document.getElementById("mo").classList.add("on");
+}
+window.closeMo = function(){document.getElementById("mo").classList.remove("on")};
+
+window.clerkLogin = function(){ if(document.getElementById("opi").value==="2026"){clk=true; document.getElementById("opgate").style.display="none"; document.getElementById("opc").style.display="block";}};
+window.adminLogin = function(){ if(document.getElementById("api").value==="2025"){adm=true; document.getElementById("apgate").style.display="none"; document.getElementById("ac2").style.display="block"; rAll();}};
+
+window.exportWeekly = function(){ exportPDF("Weekly General Report", (window.S.logs||[]).concat(window.S.oplogs||[])); };
+
+function exportPDF(title, data){
+  var rows = data.map(e=> `<tr><td>${e.ad}</td><td>${e.time}</td><td>${e.fn}</td><td>${e.doc}</td><td>${e.room}</td><td>${e.reg||"Clerk"}</td></tr>`).join("");
+  var h = `<html><head><style>table{width:100%;border-collapse:collapse;font-family:sans-serif;font-size:12px}th,td{border:1px solid #ddd;padding:8px;text-align:left}th{background:#f4f4f4}</style></head>
+  <body><h2 style="font-family:sans-serif">${title}</h2><table><thead><tr><th>Date</th><th>Time</th><th>File</th><th>Doctor</th><th>Room</th><th>By</th></tr></thead><tbody>${rows}</tbody></table>
+  <script>window.onload=function(){window.print();window.close();}<\/script></body></html>`;
+  var w=window.open("","_blank"); w.document.write(h); w.document.close();
+}
+
+window.resetAll = function(){ if(confirm("Wipe everything?")) { window.S={ptr:0,logs:[],oplogs:[]}; set(dbRef, window.S); alert("Done"); rAll(); }};
+
+function rAll(){
+  document.getElementById("dayName").textContent=tn(); document.getElementById("dateStr").textContent=nd();
+  var i=smartIdx(); document.getElementById("nd").textContent="Dr. "+CL[i].d; document.getElementById("nr").textContent=CL[i].r;
+  var b=document.getElementById("rb"); b.innerHTML=""; CL.forEach((_,idx)=>{ var d=document.createElement("div"); d.className="dot"+(idx===i?" on":""); b.appendChild(d); });
+  rLog(); rDist();
+  // Update Outpatient display
+  var tc=CL.map((c,idx)=>({...c,idx})).filter(c=>c.days.includes(tn()));
+  if(tc.length){
+    var best=tc.reduce((a,b)=> (cCnt(a.idx) < cCnt(b.idx) ? a : b));
+    document.getElementById("opd").textContent="Dr. "+best.d; document.getElementById("opr").textContent=best.r;
+  }
+}
 </script>
 </body>
 </html>
