@@ -87,7 +87,7 @@ input{width:100%;background:var(--sur2);border:1px solid var(--bor);border-radiu
   <div class="card">
     <div class="cbox"><div class="rl">Next Assigned Clinic</div><div class="rd" id="nd">—</div><div class="rr" id="nr">—</div><div class="dr" id="ndays"></div></div>
     <div class="rb" id="rb"></div>
-    <label>File Number (6 Digits)</label><input type="text" id="fi" maxlength="6" inputmode="numeric">
+    <label>File Number (6 Digits)</label><input type="text" id="fi" maxlength="6" inputmode="numeric" placeholder="e.g. 123456">
     <label>Registrar PIN</label><input type="password" id="rpin" maxlength="4" inputmode="numeric">
     <button class="btn" onclick="doAssign()">Assign →</button>
   </div>
@@ -97,7 +97,10 @@ input{width:100%;background:var(--sur2);border:1px solid var(--bor);border-radiu
   <div id="opgate" class="card" style="text-align:center"><label>CLERK ACCESS PIN</label><input class="pi" type="password" id="opi" maxlength="4"><button class="btn" onclick="clerkLogin()">Unlock</button></div>
   <div id="opc" style="display:none">
     <div class="card"><div class="cbox"><div class="rl">Next Available Clinic Today</div><div class="rd" id="opd">—</div><div class="rr" id="opr">—</div></div>
-    <label>Patient File Number (6 Digits)</label><input type="text" id="opfi" maxlength="6" inputmode="numeric">
+    <label>Patient File Number (6 Digits)</label>
+    <input type="text" id="opfi" maxlength="6" inputmode="numeric" placeholder="e.g. 123456">
+    <label>Patient Phone Number (8 Digits)</label>
+    <input type="text" id="opphone" maxlength="8" inputmode="numeric" placeholder="e.g. 99887766">
     <button class="btn" onclick="doOpAssign()">Assign Outpatient →</button></div>
   </div>
 </div>
@@ -112,7 +115,7 @@ input{width:100%;background:var(--sur2);border:1px solid var(--bor);border-radiu
     <button class="fb" onclick="filterLog('Thu',this)">Thu</button>
   </div>
   <div class="lt">
-    <div class="lh"><div>Date</div><div>File</div><div>Doctor / Room</div><div>By</div></div>
+    <div class="lh"><div>Date</div><div>File / Phone</div><div>Doctor / Room</div><div>By</div></div>
     <div id="lb"></div>
   </div>
 </div>
@@ -127,7 +130,7 @@ input{width:100%;background:var(--sur2);border:1px solid var(--bor);border-radiu
         <button class="btn" style="margin-top:10px" onclick="exportWeekly()">📊 Weekly General PDF</button>
         <hr style="border:0;border-top:1px solid var(--bor);margin:20px 0">
         <label>Remove Specific Patient Entry</label>
-        <input type="text" id="dfi" placeholder="Enter File Number" maxlength="6" inputmode="numeric">
+        <input type="text" id="dfi" placeholder="Enter File or Phone Number" inputmode="numeric">
         <button class="btn" style="background:#fbbf24;color:#000" onclick="delEntry()">🗑 Remove Entry</button>
         <button class="btn btn-warn" onclick="resetAll()">⚠ Wipe All Database Data</button>
     </div>
@@ -193,9 +196,9 @@ window.filterLog = function(f, btn){
 };
 
 window.doAssign = function(){
-  var fn=document.getElementById("fi").value; var pin=document.getElementById("rpin").value;
-  if(!/^\d{6}$/.test(fn)||!docPINs[pin]) return alert("Check File/PIN");
-  if(!confirm("Assign File "+fn+" to "+docPINs[pin]+"?")) return;
+  var fn=document.getElementById("fi").value.trim(); var pin=document.getElementById("rpin").value.trim();
+  if(!/^\d{6}$/.test(fn)||!docPINs[pin]) return alert("Check File (6 digits) and PIN");
+  if(!confirm("Assign Inpatient File "+fn+" to "+docPINs[pin]+"?")) return;
   var i=smartIdx(), c=CL[i];
   window.S.logs.push({fn:fn,reg:docPINs[pin],doc:c.d,room:c.r,si:i,cd:c.days[0],ad:nd(),time:nt(),ts:Date.now()});
   window.S.ptr++; set(dbRef, window.S);
@@ -204,12 +207,27 @@ window.doAssign = function(){
 };
 
 window.doOpAssign = function(){
-  var fn=document.getElementById("opfi").value; if(!/^\d{6}$/.test(fn)) return alert("Check File");
+  var fn=document.getElementById("opfi").value.trim(); 
+  var ph=document.getElementById("opphone").value.trim();
+  
+  if(!fn && !ph) return alert("Please enter either a File Number or a Phone Number.");
+  if(fn && !/^\d{6}$/.test(fn)) return alert("File number must be exactly 6 digits.");
+  if(ph && !/^\d{8}$/.test(ph)) return alert("Phone number must be exactly 8 digits.");
+  
+  var finalFn = "";
+  if(fn && ph) finalFn = fn + " / " + ph;
+  else if(fn) finalFn = fn;
+  else finalFn = ph;
+
   var tc=CL.map((c,idx)=>({...c,idx})).filter(c=>c.days.includes(tn()));
   if(!tc.length) return alert("No clinics today");
   var best=tc.reduce((a,b)=> (cCnt(a.idx) < cCnt(b.idx) ? a : b));
-  window.S.oplogs.push({fn:fn,clerk:"Clerk",doc:best.d,room:best.r,si:best.idx,cd:tn(),ad:nd(),time:nt(),ts:Date.now()});
-  set(dbRef, window.S); document.getElementById("opfi").value=""; rAll();
+  
+  window.S.oplogs.push({fn:finalFn,clerk:"Clerk",doc:best.d,room:best.r,si:best.idx,cd:tn(),ad:nd(),time:nt(),ts:Date.now()});
+  set(dbRef, window.S); 
+  document.getElementById("opfi").value=""; 
+  document.getElementById("opphone").value=""; 
+  rAll();
 };
 
 function cCnt(i){ return (window.S.logs||[]).concat(window.S.oplogs||[]).filter(e=>e.si===i).length; }
@@ -229,7 +247,7 @@ function rLog(){
   if(window.lf !== "all") {
     combined = combined.filter(x => (x.cd || x.day) === window.lf);
   }
-  combined = combined.slice(0,50); // Show top 50 logs
+  combined = combined.slice(0,50);
   if(!combined.length) { b.innerHTML='<div style="padding:20px;text-align:center;color:var(--dim);font-size:12px">No assignments yet.</div>'; return; }
   
   combined.forEach(x=>{
@@ -266,12 +284,15 @@ window.adminLogin = function(){ if(document.getElementById("api").value==="2025"
 window.exportWeekly = function(){ exportPDF("Weekly General Report", (window.S.logs||[]).concat(window.S.oplogs||[])); };
 
 window.delEntry = function() {
-  var fn = document.getElementById("dfi").value.trim();
-  if(!fn) return alert("Enter file number");
-  var ipIdx = (window.S.logs || []).findIndex(e => e.fn === fn);
-  var opIdx = (window.S.oplogs || []).findIndex(e => e.fn === fn);
-  if(ipIdx === -1 && opIdx === -1) return alert("File not found");
-  if(!confirm("Remove entry for File " + fn + "?")) return;
+  var searchVal = document.getElementById("dfi").value.trim();
+  if(!searchVal) return alert("Enter file or phone number");
+  
+  var ipIdx = (window.S.logs || []).findIndex(e => e.fn === searchVal || (e.fn && e.fn.includes(searchVal)));
+  var opIdx = (window.S.oplogs || []).findIndex(e => e.fn === searchVal || (e.fn && e.fn.includes(searchVal)));
+  
+  if(ipIdx === -1 && opIdx === -1) return alert("Number not found");
+  if(!confirm("Remove entry for " + searchVal + "?")) return;
+  
   if(ipIdx !== -1) {
     window.S.logs.splice(ipIdx, 1);
     window.S.ptr = Math.max(0, window.S.ptr - 1);
@@ -287,7 +308,7 @@ window.delEntry = function() {
 function exportPDF(title, data){
   var rows = data.map(e=> `<tr><td>${e.ad}</td><td>${e.time}</td><td>${e.fn}</td><td>${e.doc}</td><td>${e.room} - ${e.cd||""}</td><td>${e.reg||"Clerk"}</td></tr>`).join("");
   var h = `<html><head><style>table{width:100%;border-collapse:collapse;font-family:sans-serif;font-size:12px}th,td{border:1px solid #ddd;padding:8px;text-align:left}th{background:#f4f4f4}</style></head>
-  <body><h2 style="font-family:sans-serif">${title}</h2><table><thead><tr><th>Date</th><th>Time</th><th>File</th><th>Doctor</th><th>Room</th><th>By</th></tr></thead><tbody>${rows}</tbody></table>
+  <body><h2 style="font-family:sans-serif">${title}</h2><table><thead><tr><th>Date</th><th>Time</th><th>File / Phone</th><th>Doctor</th><th>Room</th><th>By</th></tr></thead><tbody>${rows}</tbody></table>
   <script>window.onload=function(){window.print();window.close();}<\/script></body></html>`;
   var w=window.open("","_blank"); w.document.write(h); w.document.close();
 }
