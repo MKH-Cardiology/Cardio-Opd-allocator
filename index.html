@@ -72,7 +72,28 @@ input{width:100%;background:var(--sur2);border:1px solid var(--bor);border-radiu
 .lv-btn.on{background:var(--ok)}
 .lv-btn.off{background:var(--err)}
 .ac-content{display:none}
-.fd-sel { width:100%; background:var(--sur); border:1px solid var(--bor); border-radius:5px; padding:8px; color:var(--acc2); font-family:'DM Mono',monospace; font-size:12px; outline:none; margin-top:5px; cursor:pointer }
+
+/* Updated Appointment Date Selector Styles */
+.fd-sel { 
+    width:100%; 
+    background:rgba(251, 191, 36, 0.1); /* Soft amber background */
+    border:1px solid var(--warn);       /* Amber border */
+    border-radius:5px; 
+    padding:8px; 
+    color:var(--warn);                  /* Amber text */
+    font-family:'DM Mono',monospace; 
+    font-size:13px; 
+    font-weight:600;
+    outline:none; 
+    margin-top:5px; 
+    cursor:pointer;
+    text-align: center;
+}
+.fd-sel option {
+    background: var(--sur); /* Keep dropdown list background dark */
+    color: var(--txt);      /* Keep dropdown text white */
+    text-align: left;
+}
 </style>
 </head>
 <body>
@@ -282,10 +303,17 @@ window.doAssign = function(){
   var fn=document.getElementById("fi").value.trim(); var pin=document.getElementById("rpin").value.trim();
   if(!/^\d{6}$/.test(fn)||!docPINs[pin]) return alert("Check File (6 digits) and PIN");
   if(isDuplicate(fn)) return alert("DUPLICATE ENTRY: This File Number has already been assigned.");
-  if(!confirm("Assign Inpatient File "+fn+" to "+docPINs[pin]+"?")) return;
   
   var fdEl = document.getElementById("fd-sel");
   var aptDate = fdEl && fdEl.value ? fdEl.value : "";
+  
+  // Mandatory check for appointment date
+  if(!aptDate) {
+      alert("MANDATORY FIELD: Please select a Follow-up Date.");
+      return;
+  }
+  
+  if(!confirm("Assign Inpatient File "+fn+" to "+docPINs[pin]+"?\nFollow-up: " + aptDate)) return;
   
   var i=smartIdx(), c=CL[i];
   window.S.logs.push({fn:fn,reg:docPINs[pin],doc:c.d,room:c.r,si:i,cd:c.days[0],ad:nd(),time:nt(),apt:aptDate,ts:Date.now()});
@@ -421,7 +449,8 @@ window.resetAll = function(){ if(confirm("Wipe all data?")) { window.S={ptr:0,lo
 function updateFutureDates(daysStrArray) {
     var dayMap = {"Sun":0,"Mon":1,"Tue":2,"Wed":3,"Thu":4,"Fri":5,"Sat":6};
     var targets = daysStrArray.map(d => dayMap[d]);
-    var opts = "";
+    // Added a blank placeholder option selected by default
+    var opts = `<option value="" disabled selected>Select Follow-up Date...</option>`;
     var d = new Date();
     
     // Look ahead 120 days (approx 4 months)
@@ -457,7 +486,7 @@ function rAll(){
       document.getElementById("nd").textContent="ALL IP OFF"; document.getElementById("nr").textContent="—";
       document.getElementById("ndays").innerHTML=""; document.getElementById("rb").innerHTML="";
       var sel = document.getElementById("fd-sel");
-      if(sel) sel.innerHTML = "<option>No active clinics</option>";
+      if(sel) sel.innerHTML = `<option value="" disabled selected>No active clinics</option>`;
   }
   
   rLog(); rDist();
