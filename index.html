@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MKH Cardio OPD Allocator</title>
+<title>MKH Cardio Master Queue</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -35,8 +35,9 @@ header p{font-size:10px;color:var(--dim);font-family:'DM Mono',monospace}
 .ds{display:flex;align-items:center;gap:5px;background:var(--sur3);border:1px solid var(--bor);border-radius:5px;padding:3px 9px;font-family:'DM Mono',monospace;font-size:11px;color:var(--mid)}
 .tt{font-size:10px;color:var(--ok);background:rgba(16,185,129,.1);border-radius:3px;padding:1px 5px;margin-left:4px}
 .rb{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:16px;justify-content:center}
-.dot{width:7px;height:7px;border-radius:50%;background:var(--bor);transition:all .3s}
-.dot.on{background:var(--acc);transform:scale(1.5)}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--bor);transition:all .3s}
+.dot.used{background:var(--sur3);opacity:0.3}
+.dot.on{background:var(--acc);transform:scale(1.8);box-shadow:0 0 8px var(--acc)}
 label{display:block;font-size:10px;font-family:'DM Mono',monospace;text-transform:uppercase;color:var(--dim);margin-bottom:5px}
 input{width:100%;background:var(--sur2);border:1px solid var(--bor);border-radius:7px;padding:11px;color:var(--txt);font-family:'DM Mono',monospace;font-size:14px;outline:none;margin-bottom:11px}
 .btn{width:100%;background:linear-gradient(135deg,#2563eb,#0891b2);border:none;border-radius:8px;padding:12px;color:#fff;font-weight:600;cursor:pointer;margin-bottom:5px;transition:all 0.2s}
@@ -72,35 +73,15 @@ input{width:100%;background:var(--sur2);border:1px solid var(--bor);border-radiu
 .lv-btn.on{background:var(--ok)}
 .lv-btn.off{background:var(--err)}
 .ac-content{display:none}
-
-/* Sleek Tech Blue Appointment Date Selector Styles */
-.fd-sel { 
-    width:100%; 
-    background:rgba(56, 189, 248, 0.05); 
-    border:1px solid var(--acc2);       
-    border-radius:5px; 
-    padding:8px; 
-    color:var(--acc2);                  
-    font-family:'DM Mono',monospace; 
-    font-size:13px; 
-    font-weight:600;
-    outline:none; 
-    margin-top:5px; 
-    cursor:pointer;
-    text-align: center;
-}
-.fd-sel option {
-    background: var(--sur); 
-    color: var(--txt);      
-    text-align: left;
-}
+.fd-sel { width:100%; background:rgba(56, 189, 248, 0.05); border:1px solid var(--acc2); border-radius:5px; padding:8px; color:var(--acc2); font-family:'DM Mono',monospace; font-size:13px; font-weight:600; outline:none; margin-top:5px; cursor:pointer; text-align: center; }
+.fd-sel option { background: var(--sur); color: var(--txt); text-align: left; }
 </style>
 </head>
 <body>
 
 <header>
   <div class="hi">🫀</div>
-  <div><h1>MKH Cardio OPD Allocator</h1><p>MUBARAK AL-KABEER HOSPITAL</p></div>
+  <div><h1>MKH Cardio Master Queue</h1><p>MUBARAK AL-KABEER HOSPITAL</p></div>
   <div class="db"><strong id="dayName">—</strong><span id="dateStr">—</span></div>
 </header>
 
@@ -117,7 +98,7 @@ input{width:100%;background:var(--sur2);border:1px solid var(--bor);border-radiu
 <div class="pg on" id="pg-ip">
   <div class="card">
     <div class="cbox">
-        <div class="rl">Next Assigned Clinic</div>
+        <div class="rl">Next Inpatient Work Ticket</div>
         <div class="rd" id="nd">—</div>
         <div class="rr" id="nr">—</div>
         <div class="dr" id="ndays"></div>
@@ -129,19 +110,25 @@ input{width:100%;background:var(--sur2);border:1px solid var(--bor);border-radiu
     <div class="rb" id="rb"></div>
     <label>File Number (6 Digits)</label><input type="text" id="fi" maxlength="6" inputmode="numeric" placeholder="e.g. 123456">
     <label>Registrar PIN</label><input type="password" id="rpin" maxlength="4" inputmode="numeric">
-    <button class="btn" onclick="doAssign()">Assign →</button>
+    <button class="btn" onclick="doAssign('ip')">Assign IP Discharge →</button>
   </div>
 </div>
 
 <div class="pg" id="pg-op">
   <div id="opgate" class="card" style="text-align:center"><label>CLERK ACCESS PIN</label><input class="pi" type="password" id="opi" maxlength="4"><button class="btn" onclick="clerkLogin()">Unlock</button></div>
   <div id="opc" style="display:none">
-    <div class="card"><div class="cbox"><div class="rl">Next Available Clinic Today</div><div class="rd" id="opd">—</div><div class="rr" id="opr">—</div></div>
-    <label>Patient File Number (6 Digits)</label>
-    <input type="text" id="opfi" maxlength="6" inputmode="numeric" placeholder="e.g. 123456">
-    <label>Patient Phone Number (8 Digits)</label>
-    <input type="text" id="opphone" maxlength="8" inputmode="numeric" placeholder="e.g. 99887766">
-    <button class="btn" onclick="doOpAssign()">Assign Outpatient →</button></div>
+    <div class="card">
+        <div class="cbox">
+            <div class="rl">Next Available Walk-in Today</div>
+            <div class="rd" id="opd">—</div>
+            <div class="rr" id="opr">—</div>
+        </div>
+        <label>Patient File Number (6 Digits)</label>
+        <input type="text" id="opfi" maxlength="6" inputmode="numeric" placeholder="e.g. 123456">
+        <label>Patient Phone Number (8 Digits)</label>
+        <input type="text" id="opphone" maxlength="8" inputmode="numeric" placeholder="e.g. 99887766">
+        <button class="btn" onclick="doAssign('op')">Assign OP Walk-in →</button>
+    </div>
   </div>
 </div>
 
@@ -165,23 +152,21 @@ input{width:100%;background:var(--sur2);border:1px solid var(--bor);border-radiu
 
 <div class="pg" id="pg-dist">
   <div class="card apgate" style="text-align:center"><label>ADMIN PIN</label><input class="pi" type="password" id="api-dist" maxlength="4"><button class="btn" onclick="adminLogin('api-dist')">Unlock</button></div>
-  <div class="ac-content">
-    <div class="dg" id="dg"></div>
-  </div>
+  <div class="ac-content"><div class="dg" id="dg"></div></div>
 </div>
 
 <div class="pg" id="pg-adm">
   <div class="card apgate" style="text-align:center"><label>ADMIN PIN</label><input class="pi" type="password" id="api-adm" maxlength="4"><button class="btn" onclick="adminLogin('api-adm')">Unlock</button></div>
   <div class="ac-content">
     <div class="card">
-        <h3>Doctor Availability Management</h3>
-        <p style="font-size:10px;color:var(--dim);margin-bottom:12px;font-family:'DM Mono',monospace;">Split toggles for Inpatient (IP) and Outpatient (OP) flow. Toggling a doctor updates all their rotation slots simultaneously.</p>
+        <h3>Unified Rotation Management</h3>
+        <p style="font-size:10px;color:var(--dim);margin-bottom:12px;font-family:'DM Mono',monospace;">The master pointer cycles through all 27 weighted slots. Both IP and OP assignments consume the same tickets. Outpatient walk-ins search ahead for "Today" tickets, which are then skipped by the Inpatient discharge queue.</p>
         <div id="leave-grid" class="dg" style="margin-bottom:20px;"></div>
         <hr style="border:0;border-top:1px solid var(--bor);margin:20px 0">
         <h3>Admin Controls</h3>
-        <button class="btn" style="margin-top:10px" onclick="exportWeekly()">📊 Weekly General PDF</button>
+        <button class="btn" style="margin-top:10px" onclick="exportWeekly()">📊 Export Master Log PDF</button>
         <hr style="border:0;border-top:1px solid var(--bor);margin:20px 0">
-        <label>Remove Specific Patient Entry</label>
+        <label>Remove Patient Row</label>
         <input type="text" id="dfi" placeholder="Enter File or Phone Number" inputmode="numeric">
         <button class="btn" style="background:#fbbf24;color:#000" onclick="delEntry()">🗑 Remove Entry</button>
         <button class="btn btn-warn" onclick="resetAll()">⚠ Wipe All Database Data</button>
@@ -209,48 +194,23 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const dbRef = ref(db, 'mkh_clinic_data');
 
-var docPINs = {
-  "1001":"Dr. Rehan", "1002":"Dr. Ramy", "1003":"Dr. Badawy", "1004":"Dr. Sharkawy",
-  "1005":"Dr. Mostafa", "1006":"Dr. Ibrahim", "1007":"Dr. Hadad", "1008":"Dr. Emara",
-  "1009":"Dr. Rahim", "1010":"Dr. Mamdouh", "1011":"Dr. Slam", "1012":"Dr. Ezz",
-  "1013":"Dr. R Gamal", "1014":"Dr. Moghl", "1015":"Dr. Darwish", "1016":"Dr. Omar",
-  "1017":"Dr. Sajid", "1018":"Dr. Hamza", "1019":"Dr. Eyad", "1020":"Dr. Mongy",
-  "1021":"Dr. Bahlol", "9999":"Admin"
-};
+var docPINs = {"1001":"Dr. Rehan","1002":"Dr. Ramy","1003":"Dr. Badawy","1004":"Dr. Sharkawy","1005":"Dr. Mostafa","1006":"Dr. Ibrahim","1007":"Dr. Hadad","1008":"Dr. Emara","1009":"Dr. Rahim","1010":"Dr. Mamdouh","1011":"Dr. Slam","1012":"Dr. Ezz","1013":"Dr. R Gamal","1014":"Dr. Moghl","1015":"Dr. Darwish","1016":"Dr. Omar","1017":"Dr. Sajid","1018":"Dr. Hamza","1019":"Dr. Eyad","1020":"Dr. Mongy","1021":"Dr. Bahlol","9999":"Admin"};
 
-// New 27-slot rotation provided
+// 27-Slot Rotation Master Sequence
 var CL=[
-  {d:"Hisham",r:"Room 10",days:["Sun"]},
-  {d:"Maged",r:"Room 11",days:["Tue"]},
-  {d:"Hisham",r:"Room 10",days:["Sun"]},
-  {d:"Maged",r:"Room 11",days:["Tue"]},
-  {d:"Fahd",r:"Room 24",days:["Mon"]},
-  {d:"Akmal",r:"Room 10",days:["Mon"]},
-  {d:"Hisham",r:"Room 10",days:["Sun"]},
-  {d:"Maged",r:"Room 11",days:["Tue"]},
-  {d:"Fahd",r:"Room 24",days:["Mon"]},
-  {d:"Farag",r:"Room 8",days:["Mon"]},
-  {d:"Akmal",r:"Room 10",days:["Mon"]},
-  {d:"Farag",r:"Room 8",days:["Mon"]},
-  {d:"Ehab",r:"Room 25",days:["Mon"]},
-  {d:"Ehab",r:"Room 25",days:["Mon"]},
-  {d:"Maged",r:"Room 20",days:["Sun"]},
-  {d:"Hisham",r:"Room 8",days:["Tue"]},
-  {d:"Zaher",r:"Room 20",days:["Tue"]},
-  {d:"Nazanin",r:"Room 25",days:["Sun"]},
-  {d:"Farag",r:"Room 10",days:["Wed"]},
-  {d:"Ali",r:"Room 11",days:["Wed"]},
-  {d:"Fawzy",r:"Room 20",days:["Wed"]},
-  {d:"Shafie",r:"Room 25",days:["Thu"]},
-  {d:"Ibrahim",r:"Room 13",days:["Thu"]},
-  {d:"Ibrahim",r:"Room 10",days:["Tue"]},
-  {d:"Arab",r:"Room 25",days:["Tue"]},
-  {d:"Ashraf",r:"Room 20",days:["Thu"]},
-  {d:"Hany",r:"Room 16",days:["Sun"]}
+  {d:"Hisham",r:"Room 10",days:["Sun"]}, {d:"Maged",r:"Room 11",days:["Tue"]}, {d:"Hisham",r:"Room 10",days:["Sun"]},
+  {d:"Maged",r:"Room 11",days:["Tue"]}, {d:"Fahd",r:"Room 24",days:["Mon"]}, {d:"Akmal",r:"Room 10",days:["Mon"]},
+  {d:"Hisham",r:"Room 10",days:["Sun"]}, {d:"Maged",r:"Room 11",days:["Tue"]}, {d:"Fahd",r:"Room 24",days:["Mon"]},
+  {d:"Farag",r:"Room 8",days:["Mon"]}, {d:"Akmal",r:"Room 10",days:["Mon"]}, {d:"Farag",r:"Room 8",days:["Mon"]},
+  {d:"Ehab",r:"Room 25",days:["Mon"]}, {d:"Ehab",r:"Room 25",days:["Mon"]}, {d:"Maged",r:"Room 20",days:["Sun"]},
+  {d:"Hisham",r:"Room 8",days:["Tue"]}, {d:"Zaher",r:"Room 20",days:["Tue"]}, {d:"Nazanin",r:"Room 25",days:["Sun"]},
+  {d:"Farag",r:"Room 10",days:["Wed"]}, {d:"Ali",r:"Room 11",days:["Wed"]}, {d:"Fawzy",r:"Room 20",days:["Wed"]},
+  {d:"Shafie",r:"Room 25",days:["Thu"]}, {d:"Ibrahim",r:"Room 13",days:["Thu"]}, {d:"Ibrahim",r:"Room 10",days:["Tue"]},
+  {d:"Arab",r:"Room 25",days:["Tue"]}, {d:"Ashraf",r:"Room 20",days:["Thu"]}, {d:"Hany",r:"Room 16",days:["Sun"]}
 ];
 
-window.S={ptr:0,logs:[],oplogs:[],leave:{}};
-var adm=false; var clk=false;
+window.S={ptr:0, used: new Array(27).fill(false), logs:[], oplogs:[], leave:{}};
+var adm=false; 
 window.lf="all";
 
 onValue(dbRef, (snap) => {
@@ -260,6 +220,7 @@ onValue(dbRef, (snap) => {
     if(!window.S.logs) window.S.logs=[]; 
     if(!window.S.oplogs) window.S.oplogs=[]; 
     if(!window.S.leave) window.S.leave={};
+    if(!window.S.used) window.S.used = new Array(27).fill(false);
   }
   document.getElementById("syncDot").style.background="#34d399"; document.getElementById("syncText").textContent="Live — Synced";
   rAll();
@@ -269,79 +230,97 @@ function tn(){return["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][new Date().getDa
 function nt(){return new Date().toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"})}
 function nd(){return new Date().toLocaleDateString("en-GB",{day:"numeric",month:"short"})}
 
-function isOff(idx, type) {
-    var docName = CL[idx].d;
+function isDocOff(docName, type) {
     if(!window.S.leave || !window.S.leave[docName]) return false;
     return window.S.leave[docName][type] === true;
 }
 
 function isDuplicate(val) {
     if (!val) return false;
-    var allLogs = (window.S.logs || []).concat(window.S.oplogs || []);
-    return allLogs.some(e => e.fn && e.fn.includes(val));
+    return (window.S.logs||[]).concat(window.S.oplogs||[]).some(e => e.fn && e.fn.includes(val));
 }
 
-function smartIdx(){
-  var cnt=new Array(CL.length).fill(0);
-  (window.S.logs||[]).concat(window.S.oplogs||[]).forEach(e=>{if(e.si!=null)cnt[e.si]++});
-  var activeIndices = CL.map((c,i)=>i).filter(i => !isOff(i, 'ip'));
-  if(activeIndices.length === 0) return window.S.ptr % CL.length;
-  var min = Math.min(...activeIndices.map(i => cnt[i]));
-  for(var o=0;o<CL.length;o++){
-    var i=(window.S.ptr+o)%CL.length;
-    if(activeIndices.includes(i) && cnt[i]===min) return i;
-  }
-  return activeIndices[0];
+// THE SEARCH ENGINE
+function getNextSlot(type) {
+    const today = tn();
+    
+    // Cycle starts searching from the current master pointer
+    for (let o = 0; o < 27; o++) {
+        let i = (window.S.ptr + o) % 27;
+        
+        // If slot is already "burned" in this cycle, skip it
+        if (window.S.used[i]) continue;
+        
+        let c = CL[i];
+        
+        if (type === 'ip') {
+            // Inpatient just takes the very next non-burned slot
+            if (!isDocOff(c.d, 'ip')) return i;
+        } else {
+            // Outpatient must search forward for a "Today" slot
+            if (c.days.includes(today) && !isDocOff(c.d, 'op')) return i;
+        }
+    }
+    return -1; // Bucket empty
 }
 
-window.goTab = function(id,btn){
-  document.querySelectorAll(".pg").forEach(p=>p.classList.remove("on"));
-  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("on"));
-  document.getElementById("pg-"+id).classList.add("on"); btn.classList.add("on");
-  rAll();
-};
-
-window.filterLog = function(f, btn){
-  document.querySelectorAll(".fb").forEach(b=>b.classList.remove("on"));
-  btn.classList.add("on"); window.lf = f; rLog();
-};
-
-window.doAssign = function(){
-  var fn=document.getElementById("fi").value.trim(); var pin=document.getElementById("rpin").value.trim();
-  if(!/^\d{6}$/.test(fn)||!docPINs[pin]) return alert("Check File (6 digits) and PIN");
-  if(isDuplicate(fn)) return alert("DUPLICATE ENTRY: This File Number has already been assigned.");
+window.doAssign = function(type){
+  var fn, pin, apt = "";
   
-  var fdEl = document.getElementById("fd-sel");
-  var aptDate = fdEl && fdEl.value ? fdEl.value : "";
+  if(type === 'ip') {
+    fn = document.getElementById("fi").value.trim();
+    pin = document.getElementById("rpin").value.trim();
+    apt = document.getElementById("fd-sel").value;
+    if(!/^\d{6}$/.test(fn)||!docPINs[pin]) return alert("Check File (6 digits) and PIN");
+    if(!apt) return alert("Select Follow-up Date.");
+  } else {
+    var ofn = document.getElementById("opfi").value.trim();
+    var ph = document.getElementById("opphone").value.trim();
+    if(!ofn && !ph) return alert("Enter File or Phone Number.");
+    fn = (ofn && ph) ? ofn + " / " + ph : (ofn || ph);
+    pin = "Clerk";
+  }
+
+  if(isDuplicate(fn)) return alert("DUPLICATE ENTRY DETECTED.");
   
-  if(!aptDate) {
-      alert("MANDATORY FIELD: Please select a Follow-up Date.");
-      return;
+  var i = getNextSlot(type);
+  if (i === -1) {
+      // If bucket empty for today, reset the bucket and try once more
+      if (confirm("Rotation cycle completed or no matches found today. Reset ticket bucket?")) {
+          window.S.used = new Array(27).fill(false);
+          i = getNextSlot(type);
+      } else return;
   }
   
-  if(!confirm("Assign Inpatient File "+fn+" to "+docPINs[pin]+"?\nFollow-up: " + aptDate)) return;
+  var c = CL[i];
+  var entry = {fn:fn, reg:docPINs[pin]||pin, doc:c.d, room:c.r, si:i, cd:tn(), ad:nd(), time:nt(), apt:apt, ts:Date.now()};
   
-  var i=smartIdx(), c=CL[i];
-  window.S.logs.push({fn:fn,reg:docPINs[pin],doc:c.d,room:c.r,si:i,cd:c.days[0],ad:nd(),time:nt(),apt:aptDate,ts:Date.now()});
-  window.S.ptr++; set(dbRef, window.S);
-  document.getElementById("fi").value=""; document.getElementById("rpin").value="";
-  rAll();
-};
+  if(type === 'ip') window.S.logs.push(entry); else window.S.oplogs.push(entry);
+  
+  // BURN TICKET
+  window.S.used[i] = true;
+  
+  // Update pointer if we consumed the current head of the queue
+  if (i === window.S.ptr) {
+      window.S.ptr = (window.S.ptr + 1) % 27;
+      // Also advance pointer past any already burned slots
+      while (window.S.used[window.S.ptr]) {
+          window.S.ptr = (window.S.ptr + 1) % 27;
+          if (window.S.used.every(v => v === true)) break;
+      }
+  }
 
-window.doOpAssign = function(){
-  var fn=document.getElementById("opfi").value.trim(); var ph=document.getElementById("opphone").value.trim();
-  if(!fn && !ph) return alert("Enter File or Phone Number.");
-  if(fn && !/^\d{6}$/.test(fn)) return alert("File 6 digits.");
-  if(ph && !/^\d{8}$/.test(ph)) return alert("Phone 8 digits.");
-  if(fn && isDuplicate(fn)) return alert("DUPLICATE ENTRY: This File Number has already been assigned.");
-  if(ph && isDuplicate(ph)) return alert("DUPLICATE ENTRY: This Phone Number has already been assigned.");
+  // Automatic bucket reset if all 27 used
+  if (window.S.used.every(v => v === true)) {
+      window.S.used = new Array(27).fill(false);
+      window.S.ptr = 0;
+  }
   
-  var finalFn = (fn && ph) ? fn + " / " + ph : (fn || ph);
-  var tc=CL.map((c,idx)=>({...c,idx})).filter(c=>c.days.includes(tn()) && !isOff(c.idx, 'op'));
-  if(!tc.length) return alert("No active OP clinics today.");
-  var best=tc.reduce((a,b)=> (cCnt(a.idx) < cCnt(b.idx) ? a : b));
-  window.S.oplogs.push({fn:finalFn,clerk:"Clerk",doc:best.d,room:best.r,si:best.idx,cd:tn(),ad:nd(),time:nt(),ts:Date.now()});
-  set(dbRef, window.S); document.getElementById("opfi").value=""; document.getElementById("opphone").value=""; rAll();
+  set(dbRef, window.S);
+  
+  if(type==='ip'){document.getElementById("fi").value="";document.getElementById("rpin").value="";}
+  else{document.getElementById("opfi").value="";document.getElementById("opphone").value="";}
+  rAll();
 };
 
 function cCnt(i){ return (window.S.logs||[]).concat(window.S.oplogs||[]).filter(e=>e.si===i).length; }
@@ -349,160 +328,104 @@ function cCnt(i){ return (window.S.logs||[]).concat(window.S.oplogs||[]).filter(
 function rDist(){
   var g=document.getElementById("dg"); g.innerHTML="";
   CL.forEach((c,i)=>{
-    var ipOff = isOff(i, 'ip'), opOff = isOff(i, 'op');
-    var isNext = (i===smartIdx() && !ipOff);
-    var d=document.createElement("div"); d.className="dc" + (isNext ? " nx" : "");
-    d.innerHTML=`<div class="dd">Dr. ${c.d}</div><div style="font-size:10px;color:var(--dim)">${c.r} · ${c.days.join(", ")}</div><div class="dn2">${cCnt(i)}</div>
-    <div class="stbox"><div class="stb ${ipOff?'stb-off':'stb-ok'}">IP:${ipOff?'OFF':'OK'}</div><div class="stb ${opOff?'stb-off':'stb-ok'}">OP:${opOff?'OFF':'OK'}</div></div>`;
+    var ipO = isDocOff(c.d,'ip'), opO = isDocOff(c.d,'op'), isN = (i===getNextSlot('ip'));
+    var d=document.createElement("div"); d.className="dc"+(isN?" nx":"");
+    d.innerHTML=`<div class="dd">Dr. ${c.d}</div><div style="font-size:10px;color:var(--dim)">${c.r}</div><div class="dn2">${cCnt(i)}</div>
+    <div class="stbox"><div class="stb ${ipO?'stb-off':'stb-ok'}">IP:${ipO?'OFF':'OK'}</div><div class="stb ${opO?'stb-off':'stb-ok'}">OP:${opO?'OFF':'OK'}</div></div>`;
     d.onclick=()=>openMo(i); g.appendChild(d);
   });
 }
 
 function rLog(){
   var b=document.getElementById("lb"); b.innerHTML="";
-  var combined = (window.S.logs||[]).concat(window.S.oplogs||[]).sort((a,b)=>b.ts-a.ts);
-  if(window.lf !== "all") combined = combined.filter(x => (x.cd || x.day) === window.lf);
-  combined = combined.slice(0,50);
-  if(!combined.length) { b.innerHTML='<div style="padding:20px;text-align:center;color:var(--dim);font-size:12px">No assignments.</div>'; return; }
+  var combined = (window.S.logs||[]).concat(window.S.oplogs||[]).sort((a,b)=>b.ts-a.ts).slice(0,50);
+  if(window.lf !== "all") combined = combined.filter(x => x.cd === window.lf);
   combined.forEach(x=>{
     var r=document.createElement("div"); r.className="lr";
-    r.innerHTML=`<div class="lti">${x.ad||""}<br><span style="font-size:10px">${x.time||""}</span></div>
-      <div class="lm">${x.fn||"—"}</div>
-      <div>Dr. ${x.doc}<br><span class="rt">${x.room} · ${x.cd||x.day||""}</span></div>
-      <div class="lgx" style="color:var(--acc);font-family:'DM Mono',monospace;font-size:10px;">${x.apt||"—"}</div>
-      <div class="lgx">${x.reg||x.clerk||""}</div>`;
+    r.innerHTML=`<div class="lti">${x.ad}<br><span>${x.time}</span></div><div class="lm">${x.fn}</div>
+      <div>Dr. ${x.doc}<br><span class="rt">${x.room}</span></div><div class="lgx" style="color:var(--acc)">${x.apt||"—"}</div><div class="lgx">${x.reg}</div>`;
     b.appendChild(r);
   });
 }
-
-function openMo(i){
-  if(!adm) return alert("Admin login required.");
-  var c=CL[i]; var pts=(window.S.logs||[]).concat(window.S.oplogs||[]).filter(e=>e.si===i);
-  document.getElementById("mt").textContent="Dr. "+c.d;
-  document.getElementById("mc2").textContent=pts.length+" patients total";
-  var b=document.getElementById("mbody"); b.innerHTML="";
-  pts.forEach(p=>{
-    var d=document.createElement("div"); d.className="mr";
-    d.innerHTML=`<div><b>${p.fn}</b></div><div style="text-align:right">${p.time}</div>`;
-    b.appendChild(d);
-  });
-  var pb=document.getElementById("mprint"); pb.innerHTML="";
-  if(pts.length) {
-      var btn=document.createElement("button"); btn.className="btn"; btn.textContent="Print Clinic List";
-      btn.onclick=()=>exportPDF(c.d+" - "+c.r+" ("+c.days.join(", ")+")", pts); pb.appendChild(btn);
-  }
-  document.getElementById("mo").classList.add("on");
-}
-window.closeMo = function(){document.getElementById("mo").classList.remove("on")};
-
-window.clerkLogin = function(){ if(document.getElementById("opi").value==="2026"){clk=true; document.getElementById("opgate").style.display="none"; document.getElementById("opc").style.display="block";}};
-
-window.adminLogin = function(inputId){ 
-    var val = document.getElementById(inputId).value;
-    if(val === "2025"){
-        adm = true; 
-        document.querySelectorAll('.apgate').forEach(el => el.style.display = 'none');
-        document.querySelectorAll('.ac-content').forEach(el => el.style.display = 'block');
-        rAll();
-    } else {
-        alert("Incorrect Admin PIN");
-    }
-};
-
-window.toggleS = function(docName, type) {
-    if(!window.S.leave[docName]) window.S.leave[docName] = {ip: false, op: false};
-    window.S.leave[docName][type] = !window.S.leave[docName][type];
-    set(dbRef, window.S); rAll();
-};
-
-function renderLeaveAdmin() {
-    var g = document.getElementById("leave-grid"); if(!g) return; g.innerHTML = "";
-    var uniqueDocs = [...new Set(CL.map(c => c.d))];
-    uniqueDocs.forEach(docName => {
-        var ipO = window.S.leave && window.S.leave[docName] && window.S.leave[docName].ip;
-        var opO = window.S.leave && window.S.leave[docName] && window.S.leave[docName].op;
-        var d = document.createElement("div"); d.className = "dc"; d.style.textAlign = "center"; d.style.padding = "8px";
-        d.innerHTML = `<div class="dd">Dr. ${docName}</div>
-            <div class="lv-btn-box" style="margin-top:10px">
-                <button class="lv-btn ${ipO?'off':'on'}" onclick="toggleS('${docName}','ip')">IP ${ipO?'OFF':'OK'}</button>
-                <button class="lv-btn ${opO?'off':'on'}" onclick="toggleS('${docName}','op')">OP ${opO?'OFF':'OK'}</button>
-            </div>`;
-        g.appendChild(d);
-    });
-}
-
-window.delEntry = function() {
-  var s = document.getElementById("dfi").value.trim(); if(!s) return alert("Enter number");
-  var ipIdx = (window.S.logs || []).findIndex(e => e.fn === s || (e.fn && e.fn.includes(s)));
-  var opIdx = (window.S.oplogs || []).findIndex(e => e.fn === s || (e.fn && e.fn.includes(s)));
-  if(ipIdx === -1 && opIdx === -1) return alert("Not found");
-  if(!confirm("Remove " + s + "?")) return;
-  if(ipIdx !== -1) { window.S.logs.splice(ipIdx, 1); window.S.ptr = Math.max(0, window.S.ptr - 1); }
-  else { window.S.oplogs.splice(opIdx, 1); }
-  set(dbRef, window.S); document.getElementById("dfi").value = ""; rAll();
-};
-
-function exportPDF(title, data){
-  var rows = data.map(e=> `<tr><td>${e.ad}</td><td>${e.time}</td><td>${e.fn}</td><td>${e.doc}</td><td>${e.room}</td><td>${e.apt||"—"}</td><td>${e.reg||"Clerk"}</td></tr>`).join("");
-  var h = `<html><head><style>table{width:100%;border-collapse:collapse;font-family:sans-serif;font-size:12px}th,td{border:1px solid #ddd;padding:8px;text-align:left}th{background:#f4f4f4}</style></head>
-  <body><h2 style="font-family:sans-serif">${title}</h2><table><thead><tr><th>Date</th><th>Time</th><th>File / Phone</th><th>Doctor</th><th>Room</th><th>Follow-up</th><th>By</th></tr></thead><tbody>${rows}</tbody></table>
-  <script>window.onload=function(){window.print();window.close();}<\/script></body></html>`;
-  var w=window.open("","_blank"); w.document.write(h); w.document.close();
-}
-
-window.resetAll = function(){ if(confirm("Wipe all data?")) { window.S={ptr:0,logs:[],oplogs:[],leave:{}}; set(dbRef, window.S); rAll(); }};
 
 function updateFutureDates(daysStrArray) {
     var dayMap = {"Sun":0,"Mon":1,"Tue":2,"Wed":3,"Thu":4,"Fri":5,"Sat":6};
     var targets = daysStrArray.map(d => dayMap[d]);
     var opts = `<option value="" disabled selected>Select Follow-up Date...</option>`;
     var d = new Date();
-    
     for(var i=0; i<120; i++) {
         if(targets.includes(d.getDay())) {
-            var dateStr = d.toLocaleDateString("en-GB", {weekday:'short', day:'2-digit', month:'short', year:'numeric'});
-            opts += `<option value="${dateStr}">${dateStr}</option>`;
+            var ds = d.toLocaleDateString("en-GB", {weekday:'short', day:'2-digit', month:'short', year:'numeric'});
+            opts += `<option value="${ds}">${ds}</option>`;
         }
         d.setDate(d.getDate() + 1);
     }
-    
-    var sel = document.getElementById("fd-sel");
-    if(sel) sel.innerHTML = opts;
+    document.getElementById("fd-sel").innerHTML = opts;
 }
 
 function rAll(){
   document.getElementById("dayName").textContent=tn(); document.getElementById("dateStr").textContent=nd();
-  var activeIP = CL.map((c,i)=>i).filter(i => !isOff(i, 'ip'));
-  if(activeIP.length > 0) {
-      var i=smartIdx(), c=CL[i], t=tn();
-      document.getElementById("nd").textContent="Dr. "+c.d; document.getElementById("nr").textContent=c.r;
-      var dayEl = document.getElementById("ndays"); dayEl.innerHTML="";
-      c.days.forEach(day => {
-        var d = document.createElement("div"); d.className="ds";
-        d.innerHTML = `<span>${day}</span>` + (day===t ? `<span class="tt">TODAY</span>` : "");
-        dayEl.appendChild(d);
-      });
-      var b=document.getElementById("rb"); b.innerHTML=""; CL.forEach((_,idx)=>{ var d=document.createElement("div"); d.className="dot"+(idx===i?" on":""); b.appendChild(d); });
-      
-      updateFutureDates(c.days);
-      
-  } else {
-      document.getElementById("nd").textContent="ALL IP OFF"; document.getElementById("nr").textContent="—";
-      document.getElementById("ndays").innerHTML=""; document.getElementById("rb").innerHTML="";
-      var sel = document.getElementById("fd-sel");
-      if(sel) sel.innerHTML = `<option value="" disabled selected>No active clinics</option>`;
-  }
+  var ipI = getNextSlot('ip'), opI = getNextSlot('op');
   
-  rLog(); rDist();
-  
-  var tc=CL.map((cl,idx)=>({...cl,idx})).filter(cl=>cl.days.includes(tn()) && !isOff(cl.idx, 'op'));
-  if(tc.length){
-    var best=tc.reduce((a,b)=> (cCnt(a.idx) < cCnt(b.idx) ? a : b));
-    document.getElementById("opd").textContent="Dr. "+best.d; document.getElementById("opr").textContent=best.r;
+  if(ipI !== -1){
+    var c = CL[ipI]; document.getElementById("nd").textContent="Dr. "+c.d; document.getElementById("nr").textContent=c.r;
+    var dy = document.getElementById("ndays"); dy.innerHTML="";
+    c.days.forEach(d => { var el=document.createElement("div"); el.className="ds"; el.innerHTML=`<span>${d}</span>`+(d===tn()?`<span class="tt">TODAY</span>`:""); dy.appendChild(el); });
+    updateFutureDates(c.days);
   } else {
-    document.getElementById("opd").textContent="All OP Active Off"; document.getElementById("opr").textContent="—";
+    document.getElementById("nd").textContent="Bucket Complete"; document.getElementById("fd-sel").innerHTML="<option>N/A</option>";
   }
-  if(adm) renderLeaveAdmin();
+
+  if(opI !== -1){ document.getElementById("opd").textContent="Dr. "+CL[opI].d; document.getElementById("opr").textContent=CL[opI].r; }
+  else { document.getElementById("opd").textContent="No Match Today"; }
+
+  var rb=document.getElementById("rb"); rb.innerHTML=""; 
+  CL.forEach((_,idx)=>{ 
+      var d=document.createElement("div"); 
+      var usedClass = window.S.used[idx] ? " used" : "";
+      var onClass = (idx === ipI) ? " on" : "";
+      d.className="dot" + usedClass + onClass; 
+      rb.appendChild(d); 
+  });
+  
+  rLog(); rDist(); if(adm) renderLeaveAdmin();
+}
+
+window.goTab = (id,btn) => {
+  document.querySelectorAll(".pg").forEach(p=>p.classList.remove("on"));
+  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("on"));
+  document.getElementById("pg-"+id).classList.add("on"); btn.classList.add("on"); rAll();
+};
+window.filterLog = (f,b) => { document.querySelectorAll(".fb").forEach(x=>x.classList.remove("on")); b.classList.add("on"); window.lf=f; rLog(); };
+window.clerkLogin = () => { if(document.getElementById("opi").value==="2026"){document.getElementById("opgate").style.display="none"; document.getElementById("opc").style.display="block";}};
+window.adminLogin = (id) => { if(document.getElementById(id).value==="2025"){adm=true; document.querySelectorAll(".apgate").forEach(e=>e.style.display="none"); document.querySelectorAll(".ac-content").forEach(e=>e.style.display="block"); rAll();}};
+window.toggleS = (name,type) => { if(!window.S.leave[name])window.S.leave[name]={ip:false,op:false}; window.S.leave[name][type]=!window.S.leave[name][type]; set(dbRef,window.S); rAll(); };
+function renderLeaveAdmin() {
+  var g=document.getElementById("leave-grid"); g.innerHTML="";
+  [...new Set(CL.map(c=>c.d))].forEach(name => {
+    var ipO=window.S.leave[name]?.ip, opO=window.S.leave[name]?.op;
+    var d=document.createElement("div"); d.className="dc"; d.style.textAlign="center";
+    d.innerHTML=`<div class="dd">${name}</div><div class="lv-btn-box"><button class="lv-btn ${ipO?'off':'on'}" onclick="toggleS('${name}','ip')">IP ${ipO?'OFF':'OK'}</button>
+      <button class="lv-btn ${opO?'off':'on'}" onclick="toggleS('${name}','op')">OP ${opO?'OFF':'OK'}</button></div>`;
+    g.appendChild(d);
+  });
+}
+window.delEntry = () => {
+  var s=document.getElementById("dfi").value.trim(); if(!s)return;
+  var idxL=window.S.logs.findIndex(e=>e.fn===s), idxO=window.S.oplogs.findIndex(e=>e.fn===s);
+  if(idxL===-1 && idxO===-1)return alert("Not found");
+  if(confirm("Delete?")){ if(idxL!==-1)window.S.logs.splice(idxL,1); else window.S.oplogs.splice(idxO,1); set(dbRef,window.S); rAll();}
+};
+window.resetAll = () => { if(confirm("WIPE EVERYTHING?")){window.S={ptr:0,used:new Array(27).fill(false),logs:[],oplogs:[],leave:{}}; set(dbRef,window.S); rAll();}};
+function openMo(i){ if(!adm)return; var c=CL[i],pts=(window.S.logs||[]).concat(window.S.oplogs||[]).filter(e=>e.si===i); document.getElementById("mt").textContent=c.d; document.getElementById("mc2").textContent=pts.length+" total"; var b=document.getElementById("mbody"); b.innerHTML=""; pts.forEach(p=>{ var d=document.createElement("div"); d.className="mr"; d.innerHTML=`<div>${p.fn}</div><div style="text-align:right">${p.time}</div>`; b.appendChild(d); }); var pb=document.getElementById("mprint"); pb.innerHTML=""; if(pts.length){ var btn=document.createElement("button"); btn.className="btn"; btn.textContent="Print List"; btn.onclick=()=>exportPDF(c.d,pts); pb.appendChild(btn); } document.getElementById("mo").classList.add("on"); }
+window.closeMo = () => document.getElementById("mo").classList.remove("on");
+
+function exportPDF(title, data){
+  var rows = data.map(e=> `<tr><td>${e.ad}</td><td>${e.time}</td><td>${e.fn}</td><td>${e.doc}</td><td>${e.room}</td><td>${e.apt||"—"}</td><td>${e.reg}</td></tr>`).join("");
+  var h = `<html><head><style>table{width:100%;border-collapse:collapse;font-family:sans-serif;font-size:12px}th,td{border:1px solid #ddd;padding:8px;text-align:left}th{background:#f4f4f4}</style></head>
+  <body><h2 style="font-family:sans-serif">${title}</h2><table><thead><tr><th>Date</th><th>Time</th><th>File / Phone</th><th>Doctor</th><th>Room</th><th>Follow-up</th><th>By</th></tr></thead><tbody>${rows}</tbody></table>
+  <script>window.onload=function(){window.print();window.close();}<\/script></body></html>`;
+  var w=window.open("","_blank"); w.document.write(h); w.document.close();
 }
 </script>
 </body>
