@@ -72,6 +72,7 @@ input{width:100%;background:var(--sur2);border:1px solid var(--bor);border-radiu
 .lv-btn.on{background:var(--ok)}
 .lv-btn.off{background:var(--err)}
 .ac-content{display:none}
+.fd-sel { width:100%; background:var(--sur); border:1px solid var(--bor); border-radius:5px; padding:8px; color:var(--acc2); font-family:'DM Mono',monospace; font-size:12px; outline:none; margin-top:5px; cursor:pointer }
 </style>
 </head>
 <body>
@@ -94,7 +95,16 @@ input{width:100%;background:var(--sur2);border:1px solid var(--bor);border-radiu
 
 <div class="pg on" id="pg-ip">
   <div class="card">
-    <div class="cbox"><div class="rl">Next Assigned Clinic</div><div class="rd" id="nd">—</div><div class="rr" id="nr">—</div><div class="dr" id="ndays"></div></div>
+    <div class="cbox">
+        <div class="rl">Next Assigned Clinic</div>
+        <div class="rd" id="nd">—</div>
+        <div class="rr" id="nr">—</div>
+        <div class="dr" id="ndays"></div>
+        <div style="margin-top:15px; border-top:1px dashed var(--bor); padding-top:12px;">
+            <label style="color:var(--dim); font-size:9px;">AVAILABLE FOLLOW-UP DATES (NEXT 3 MONTHS)</label>
+            <select id="fd-sel" class="fd-sel"></select>
+        </div>
+    </div>
     <div class="rb" id="rb"></div>
     <label>File Number (6 Digits)</label><input type="text" id="fi" maxlength="6" inputmode="numeric" placeholder="e.g. 123456">
     <label>Registrar PIN</label><input type="password" id="rpin" maxlength="4" inputmode="numeric">
@@ -180,7 +190,6 @@ const dbRef = ref(db, 'mkh_clinic_data');
 
 var docPINs = {"1001":"Dr. Rehan","1002":"Dr. Ramy","1003":"Dr. Badawy","1004":"Dr. Sharkawy","1005":"Dr. Mostafa","1006":"Dr. Ibrahim","1007":"Dr. Hadad","1008":"Dr. Emara","1009":"Dr. Rahim","1010":"Dr. Mamdouh","1011":"Dr. Slam","1012":"Dr. Ezz","1013":"Dr. R Gamal","1014":"Dr. Moghl","1015":"Dr. Darwish","1016":"Dr. Omar","1017":"Dr. Sajid","1018":"Dr. Hamza","1019":"Dr. Eyad","1020":"Dr. Mongy","1021":"Dr. Bahlol"};
 
-// Updated 28-Slot Rotation
 var CL=[
   {d:"Hisham",r:"Room 10",days:["Sun"]},
   {d:"Maged",r:"Room 11",days:["Tue"]},
@@ -392,6 +401,25 @@ function exportPDF(title, data){
 
 window.resetAll = function(){ if(confirm("Wipe all data?")) { window.S={ptr:0,logs:[],oplogs:[],leave:{}}; set(dbRef, window.S); rAll(); }};
 
+function updateFutureDates(daysStrArray) {
+    var dayMap = {"Sun":0,"Mon":1,"Tue":2,"Wed":3,"Thu":4,"Fri":5,"Sat":6};
+    var targets = daysStrArray.map(d => dayMap[d]);
+    var opts = "";
+    var d = new Date();
+    
+    // Look ahead 90 days
+    for(var i=0; i<90; i++) {
+        if(targets.includes(d.getDay())) {
+            var dateStr = d.toLocaleDateString("en-GB", {weekday:'short', day:'2-digit', month:'short', year:'numeric'});
+            opts += `<option>${dateStr}</option>`;
+        }
+        d.setDate(d.getDate() + 1);
+    }
+    
+    var sel = document.getElementById("fd-sel");
+    if(sel) sel.innerHTML = opts;
+}
+
 function rAll(){
   document.getElementById("dayName").textContent=tn(); document.getElementById("dateStr").textContent=nd();
   var activeIP = CL.map((c,i)=>i).filter(i => !isOff(i, 'ip'));
@@ -405,11 +433,19 @@ function rAll(){
         dayEl.appendChild(d);
       });
       var b=document.getElementById("rb"); b.innerHTML=""; CL.forEach((_,idx)=>{ var d=document.createElement("div"); d.className="dot"+(idx===i?" on":""); b.appendChild(d); });
+      
+      // Update the 3-Month Follow-Up Dates Dropdown
+      updateFutureDates(c.days);
+      
   } else {
       document.getElementById("nd").textContent="ALL IP OFF"; document.getElementById("nr").textContent="—";
       document.getElementById("ndays").innerHTML=""; document.getElementById("rb").innerHTML="";
+      var sel = document.getElementById("fd-sel");
+      if(sel) sel.innerHTML = "<option>No active clinics</option>";
   }
+  
   rLog(); rDist();
+  
   var tc=CL.map((cl,idx)=>({...cl,idx})).filter(cl=>cl.days.includes(tn()) && !isOff(cl.idx, 'op'));
   if(tc.length){
     var best=tc.reduce((a,b)=> (cCnt(a.idx) < cCnt(b.idx) ? a : b));
