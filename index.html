@@ -156,7 +156,7 @@ input{width:100%;background:var(--sur2);border:1px solid var(--bor);border-radiu
   <div class="ac-content">
     <div class="card">
         <h3>Unified Perpetual Rotation</h3>
-        <p style="font-size:10px;color:var(--dim);margin-bottom:12px;font-family:'DM Mono',monospace;">The master pointer never stops. If no valid slots remain for Today, the app instantly opens a new 27-slot cycle to maintain clinical flow.</p>
+        <p style="font-size:10px;color:var(--dim);margin-bottom:12px;font-family:'DM Mono',monospace;">The master pointer never stops. Both IP and OP assignments consume the same tickets. Outpatient walk-ins search ahead for "Today" tickets.</p>
         <div id="leave-grid" class="dg" style="margin-bottom:20px;"></div>
         <hr style="border:0;border-top:1px solid var(--bor);margin:20px 0">
         <h3>Admin Controls</h3>
@@ -217,7 +217,9 @@ onValue(dbRef, (snap) => {
     if(!window.S.leave) window.S.leave={};
     if(!window.S.used) window.S.used = new Array(27).fill(false);
   }
-  document.getElementById("syncDot").style.background="#34d399";
+  // FIX: Bright Green Dot & Updated Label
+  document.getElementById("syncDot").style.background="var(--ok)";
+  document.getElementById("syncText").textContent="Live — Synced";
   rAll();
 });
 
@@ -235,7 +237,6 @@ function isDuplicate(val) {
     return (window.S.logs||[]).concat(window.S.oplogs||[]).some(e => e.fn && e.fn.includes(val));
 }
 
-// SEARCH ENGINE (WITH SILENT AUTO-RESET FOR CONTINUOUS LOOP)
 function getNextSlot(type) {
     const today = tn();
     for (let o = 0; o < 27; o++) {
@@ -271,7 +272,6 @@ window.doAssign = function(type){
   
   var i = getNextSlot(type);
   
-  // CONTINUOUS LOOP LOGIC: SILENT AUTO-RESET
   if (i === -1) {
       window.S.used = new Array(27).fill(false);
       window.S.ptr = 0;
@@ -285,7 +285,6 @@ window.doAssign = function(type){
   
   window.S.used[i] = true;
   
-  // Advance pointer if head was consumed
   if (i === window.S.ptr) {
       window.S.ptr = (window.S.ptr + 1) % 27;
       while (window.S.used[window.S.ptr]) {
@@ -294,7 +293,6 @@ window.doAssign = function(type){
       }
   }
 
-  // Final check for bucket depletion
   if (window.S.used.every(v => v === true)) {
       window.S.used = new Array(27).fill(false);
       window.S.ptr = 0;
@@ -354,7 +352,6 @@ function rAll(){
     var c = CL[ipI]; document.getElementById("nd").textContent="Dr. "+c.d; document.getElementById("nr").textContent=c.r;
     updateFutureDates(c.days);
   } else {
-    // This state should rarely be visible with Perpetual logic
     document.getElementById("nd").textContent="Auto-Cycling Queue"; 
   }
 
