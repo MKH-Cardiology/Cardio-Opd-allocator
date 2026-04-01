@@ -33,7 +33,7 @@ header p{font-size:10px;color:var(--dim);font-family:'DM Mono',monospace}
 .rr{font-family:'DM Mono',monospace;font-size:12px;color:var(--mid);margin-bottom:9px}
 .rb{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:16px;justify-content:center}
 .dot{width:6px;height:6px;border-radius:50%;background:var(--bor);transition:all .3s}
-.dot.used{background:var(--sur3);opacity:0.3}
+.dot.used{background:var(--sur3);opacity:0.2}
 .dot.on{background:var(--acc);transform:scale(1.8);box-shadow:0 0 8px var(--acc)}
 label{display:block;font-size:10px;font-family:'DM Mono',monospace;text-transform:uppercase;color:var(--dim);margin-bottom:5px}
 input{width:100%;background:var(--sur2);border:1px solid var(--bor);border-radius:7px;padding:11px;color:var(--txt);font-family:'DM Mono',monospace;font-size:14px;outline:none;margin-bottom:11px}
@@ -155,8 +155,8 @@ input{width:100%;background:var(--sur2);border:1px solid var(--bor);border-radiu
   <div class="card apgate" style="text-align:center"><label>ADMIN PIN</label><input class="pi" type="password" id="api-adm" maxlength="4"><button class="btn" onclick="adminLogin('api-adm')">Unlock</button></div>
   <div class="ac-content">
     <div class="card">
-        <h3>Unified Perpetual Rotation</h3>
-        <p style="font-size:10px;color:var(--dim);margin-bottom:12px;font-family:'DM Mono',monospace;">System auto-resets bucket if no tickets remain for today. Duplicate checking is now strictly hardcoded to scan all history.</p>
+        <h3>Distribution-Driven Logic</h3>
+        <p style="font-size:10px;color:var(--dim);margin-bottom:12px;font-family:'DM Mono',monospace;">The master pointer is now driven strictly by raw patient counts. It mathematically enforces fairness by ensuring no slot receives an assignment if its count is higher than the department's baseline minimum.</p>
         <div id="leave-grid" class="dg" style="margin-bottom:20px;"></div>
         <hr style="border:0;border-top:1px solid var(--bor);margin:20px 0">
         <h3>Admin Controls</h3>
@@ -204,18 +204,17 @@ var CL=[
   {d:"Arab",r:"Room 25",days:["Tue"]}, {d:"Ashraf",r:"Room 20",days:["Thu"]}, {d:"Hany",r:"Room 16",days:["Sun"]}
 ];
 
-window.S={ptr:0, used: new Array(27).fill(false), logs:[], oplogs:[], leave:{}};
+window.S={ptr:0, logs:[], oplogs:[], leave:{}};
 var adm=false; 
 window.lf="all";
 
 onValue(dbRef, (snap) => {
   const d = snap.val(); 
   if(d) { 
-    window.S = d; 
-    if(!window.S.logs) window.S.logs=[]; 
-    if(!window.S.oplogs) window.S.oplogs=[]; 
-    if(!window.S.leave) window.S.leave={};
-    if(!window.S.used) window.S.used = new Array(27).fill(false);
+    window.S.ptr = d.ptr || 0;
+    window.S.logs = d.logs || [];
+    window.S.oplogs = d.oplogs || [];
+    window.S.leave = d.leave || {};
   }
   document.getElementById("syncDot").style.background="var(--ok)";
   document.getElementById("syncText").textContent="Live — Synced";
@@ -231,36 +230,73 @@ function isDocOff(docName, type) {
     return window.S.leave[docName][type] === true;
 }
 
-// HARDCORE DUPLICATE SCAN
 function isDuplicate(val) {
     if (!val) return false;
-    const cleanVal = val.toString().trim();
-    // Check both arrays and ensure no partial string matches either
+    const s = val.toString().trim();
     const all = (window.S.logs||[]).concat(window.S.oplogs||[]);
-    return all.some(e => e.fn && e.fn.toString().includes(cleanVal));
+    return all.some(e => e.fn && e.fn.toString().includes(s));
 }
 
-// THE AGGRESSIVE ENGINE: Never returns -1 if a doctor works today
-function getNextSlot(type) {
-    const today = tn();
-    // Scan up to 54 slots (two cycles) to guarantee we find a valid ticket
-    for (let o = 0; o < 54; o++) {
-        let i = (window.S.ptr + o) % 27;
-        
-        // If we are looking into the 'future' cycle (o >= 27), 
-        // pretend the ticket isn't used yet.
-        const isBurned = (o < 27) ? window.S.used[i] : false;
-        
-        if (isBurned) continue;
-        
-        let c = CL[i];
-        if (type === 'ip') {
-            if (!isDocOff(c.d, 'ip')) return {idx: i, resetNeeded: (o >= 27)};
-        } else {
-            if (c.days.includes(today) && !isDocOff(c.d, 'op')) return {idx: i, resetNeeded: (o >= 27)};
+// Get the actual distribution count for a specific slot
+function cCnt(i){ 
+    return (window.S.logs||[]).concat(window.S.oplogs||[]).filter(e=>e.si===i).length; 
+}
+
+// Get the global baseline (lowest count among active IP doctors)
+function getGlobalMin() {
+    let minCount = Infinity;
+    for(let i=0; i<27; i++) {
+        if(!isDocOff(CL[i].d, 'ip')) {
+            let cnt = cCnt(i);
+            if(cnt < minCount) minCount = cnt;
         }
     }
-    return null;
+    return minCount;
+}
+
+// INPATIENT: Find the next doctor who is exactly at the baseline
+function getNextSlotIp() {
+    let minCount = getGlobalMin();
+    if(minCount === Infinity) return -1; // Everyone is off
+    
+    // Scan forward from the pointer to preserve sequence
+    for(let o=0; o<27; o++) {
+        let i = (window.S.ptr + o) % 27;
+        if(!isDocOff(CL[i].d, 'ip') && cCnt(i) === minCount) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+// OUTPATIENT: Find the doctor working TODAY with the lowest count
+function getNextSlotOp() {
+    let today = tn();
+    let validSlots = [];
+    
+    for(let i=0; i<27; i++) {
+        if(CL[i].days.includes(today) && !isDocOff(CL[i].d, 'op')) {
+            validSlots.push(i);
+        }
+    }
+    
+    if(validSlots.length === 0) return -1;
+    
+    // Find the minimum count among TODAY'S doctors
+    let minTodayCount = Infinity;
+    validSlots.forEach(i => {
+        let cnt = cCnt(i);
+        if(cnt < minTodayCount) minTodayCount = cnt;
+    });
+    
+    // Scan forward from pointer to preserve sequence among ties
+    for(let o=0; o<27; o++) {
+        let i = (window.S.ptr + o) % 27;
+        if(validSlots.includes(i) && cCnt(i) === minTodayCount) {
+            return i;
+        }
+    }
+    return -1;
 }
 
 window.doAssign = function(type){
@@ -279,51 +315,34 @@ window.doAssign = function(type){
     pin = "Clerk";
   }
 
-  if(isDuplicate(fn)) return alert("STOP: Duplicate Patient detected. File Number "+fn+" is already assigned.");
+  if(isDuplicate(fn)) return alert("STOP: Duplicate Patient detected.");
   
-  var res = getNextSlot(type);
+  var i = (type === 'ip') ? getNextSlotIp() : getNextSlotOp();
   
-  if (!res) return alert("No valid clinics scheduled for Today.");
-
-  // AUTO-RESET BUCKET SILENTLY IF SEARCH PUSHED INTO NEXT CYCLE
-  if (res.resetNeeded) {
-      window.S.used = new Array(27).fill(false);
-  }
+  if (i === -1) return alert("No valid clinics scheduled.");
   
-  var i = res.idx;
   var c = CL[i];
   var entry = {fn:fn, reg:docPINs[pin]||pin, doc:c.d, room:c.r, si:i, cd:tn(), ad:nd(), time:nt(), apt:apt, ts:Date.now()};
-  if(type === 'ip') window.S.logs.push(entry); else window.S.oplogs.push(entry);
   
-  window.S.used[i] = true;
+  if(type === 'ip') window.S.logs.push(entry); 
+  else window.S.oplogs.push(entry);
   
-  // Sync the pointer
-  if (i === window.S.ptr) {
-      window.S.ptr = (window.S.ptr + 1) % 27;
-      while (window.S.used[window.S.ptr]) {
-          window.S.ptr = (window.S.ptr + 1) % 27;
-          if (window.S.used.every(v => v === true)) break;
-      }
-  }
-
-  if (window.S.used.every(v => v === true)) {
-      window.S.used = new Array(27).fill(false);
-      window.S.ptr = 0;
-  }
+  // Advance pointer for the next calculation
+  window.S.ptr = (i + 1) % 27;
   
   set(dbRef, window.S);
+  
   if(type==='ip'){document.getElementById("fi").value="";document.getElementById("rpin").value="";}
   else{document.getElementById("opfi").value="";document.getElementById("opphone").value="";}
   rAll();
 };
 
-function cCnt(i){ return (window.S.logs||[]).concat(window.S.oplogs||[]).filter(e=>e.si===i).length; }
-
 function rDist(){
   var g=document.getElementById("dg"); g.innerHTML="";
+  var ipNext = getNextSlotIp();
   CL.forEach((c,i)=>{
-    var ipO = isDocOff(c.d,'ip'), opO = isDocOff(c.d,'op'), ipNext = getNextSlot('ip');
-    var isN = ipNext && (i === ipNext.idx);
+    var ipO = isDocOff(c.d,'ip'), opO = isDocOff(c.d,'op');
+    var isN = (i === ipNext);
     var d=document.createElement("div"); d.className="dc"+(isN?" nx":"");
     d.innerHTML=`<div class="dd">Dr. ${c.d}</div><div style="font-size:10px;color:var(--dim)">${c.r} • ${c.days.join(", ")}</div><div class="dn2">${cCnt(i)}</div>
     <div class="stbox"><div class="stb ${ipO?'stb-off':'stb-ok'}">IP:${ipO?'OFF':'OK'}</div><div class="stb ${opO?'stb-off':'stb-ok'}">OP:${opO?'OFF':'OK'}</div></div>`;
@@ -360,24 +379,39 @@ function updateFutureDates(daysStrArray) {
 
 function rAll(){
   document.getElementById("dayName").textContent=tn(); document.getElementById("dateStr").textContent=nd();
-  var ipI = getNextSlot('ip'), opI = getNextSlot('op');
   
-  if(ipI){
-    var c = CL[ipI.idx]; document.getElementById("nd").textContent="Dr. "+c.d; document.getElementById("nr").textContent=c.r;
-    updateFutureDates(c.days);
+  var ipI = getNextSlotIp();
+  if(ipI !== -1){
+      var c = CL[ipI]; 
+      document.getElementById("nd").textContent="Dr. "+c.d; 
+      document.getElementById("nr").textContent=c.r;
+      updateFutureDates(c.days);
+  } else {
+      document.getElementById("nd").textContent="All Offline"; 
+      document.getElementById("nr").textContent="—";
+  }
+  
+  var opI = getNextSlotOp();
+  if(opI !== -1){ 
+      document.getElementById("opd").textContent="Dr. "+CL[opI].d; 
+      document.getElementById("opr").textContent=CL[opI].r; 
+  } else { 
+      document.getElementById("opd").textContent="No Match Today"; 
+      document.getElementById("opr").textContent="—";
   }
 
-  if(opI){ document.getElementById("opd").textContent="Dr. "+CL[opI.idx].d; document.getElementById("opr").textContent=CL[opI.idx].r; }
-  else { document.getElementById("opd").textContent="No Clinic Match"; }
-
   var rb=document.getElementById("rb"); rb.innerHTML=""; 
+  var minCount = getGlobalMin();
   CL.forEach((_,idx)=>{ 
       var d=document.createElement("div"); 
-      var usedClass = window.S.used[idx] ? " used" : "";
-      var onClass = (ipI && idx === ipI.idx) ? " on" : "";
+      var cnt = cCnt(idx);
+      // Faded dot if the slot has more patients than the baseline minimum
+      var usedClass = (cnt > minCount) ? " used" : "";
+      var onClass = (idx === ipI) ? " on" : "";
       d.className="dot" + usedClass + onClass; 
       rb.appendChild(d); 
   });
+  
   rLog(); rDist(); if(adm) renderLeaveAdmin();
 }
 
@@ -401,13 +435,16 @@ function renderLeaveAdmin() {
     g.appendChild(d);
   });
 }
+
 window.delEntry = () => {
   var s=document.getElementById("dfi").value.trim(); if(!s)return;
-  var idxL=window.S.logs.findIndex(e=>e.fn.includes(s)), idxO=window.S.oplogs.findIndex(e=>e.fn.includes(s));
+  var idxL=window.S.logs.findIndex(e=>e.fn.toString().includes(s)), idxO=window.S.oplogs.findIndex(e=>e.fn.toString().includes(s));
   if(idxL===-1 && idxO===-1)return alert("Not found");
   if(confirm("Delete?")){ if(idxL!==-1)window.S.logs.splice(idxL,1); else window.S.oplogs.splice(idxO,1); set(dbRef,window.S); rAll();}
 };
-window.resetAll = () => { if(confirm("WIPE EVERYTHING?")){window.S={ptr:0,used:new Array(27).fill(false),logs:[],oplogs:[],leave:{}}; set(dbRef,window.S); rAll();}};
+
+window.resetAll = () => { if(confirm("WIPE EVERYTHING?")){window.S={ptr:0, logs:[], oplogs:[], leave:{}}; set(dbRef,window.S); rAll();}};
+
 function openMo(i){ if(!adm)return; var c=CL[i],pts=(window.S.logs||[]).concat(window.S.oplogs||[]).filter(e=>e.si===i); document.getElementById("mt").textContent=c.d; document.getElementById("mc2").textContent=pts.length+" total"; var b=document.getElementById("mbody"); b.innerHTML=""; pts.forEach(p=>{ var d=document.createElement("div"); d.className="mr"; d.innerHTML=`<div>${p.fn}</div><div style="text-align:right">${p.time}</div>`; b.appendChild(d); }); var pb=document.getElementById("mprint"); pb.innerHTML=""; if(pts.length){ var btn=document.createElement("button"); btn.className="btn"; btn.textContent="Print List"; btn.onclick=()=>exportPDF(c.d,pts); pb.appendChild(btn); } document.getElementById("mo").classList.add("on"); }
 window.closeMo = () => document.getElementById("mo").classList.remove("on");
 
