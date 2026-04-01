@@ -155,8 +155,8 @@ input{width:100%;background:var(--sur2);border:1px solid var(--bor);border-radiu
   <div class="card apgate" style="text-align:center"><label>ADMIN PIN</label><input class="pi" type="password" id="api-adm" maxlength="4"><button class="btn" onclick="adminLogin('api-adm')">Unlock</button></div>
   <div class="ac-content">
     <div class="card">
-        <h3>Distribution-Driven Logic</h3>
-        <p style="font-size:10px;color:var(--dim);margin-bottom:12px;font-family:'DM Mono',monospace;">The master pointer is now driven strictly by raw patient counts. It mathematically enforces fairness by ensuring no slot receives an assignment if its count is higher than the department's baseline minimum.</p>
+        <h3>Pure Count-Driven Logic Active</h3>
+        <p style="font-size:10px;color:var(--dim);margin-bottom:12px;font-family:'DM Mono',monospace;">The confusing "moving pointer" has been deleted. The app now scans strictly from Index 0 to 26 and finds the very first lowest distribution number, preventing Outpatient chaos from disrupting the Inpatient sequence.</p>
         <div id="leave-grid" class="dg" style="margin-bottom:20px;"></div>
         <hr style="border:0;border-top:1px solid var(--bor);margin:20px 0">
         <h3>Admin Controls</h3>
@@ -204,14 +204,13 @@ var CL=[
   {d:"Arab",r:"Room 25",days:["Tue"]}, {d:"Ashraf",r:"Room 20",days:["Thu"]}, {d:"Hany",r:"Room 16",days:["Sun"]}
 ];
 
-window.S={ptr:0, logs:[], oplogs:[], leave:{}};
+window.S={logs:[], oplogs:[], leave:{}};
 var adm=false; 
 window.lf="all";
 
 onValue(dbRef, (snap) => {
   const d = snap.val(); 
   if(d) { 
-    window.S.ptr = d.ptr || 0;
     window.S.logs = d.logs || [];
     window.S.oplogs = d.oplogs || [];
     window.S.leave = d.leave || {};
@@ -237,12 +236,12 @@ function isDuplicate(val) {
     return all.some(e => e.fn && e.fn.toString().includes(s));
 }
 
-// Get the actual distribution count for a specific slot
+// Counts exactly how many patients are in a specific slot (0-26)
 function cCnt(i){ 
     return (window.S.logs||[]).concat(window.S.oplogs||[]).filter(e=>e.si===i).length; 
 }
 
-// Get the global baseline (lowest count among active IP doctors)
+// Finds the absolute minimum number among all doctors working IP
 function getGlobalMin() {
     let minCount = Infinity;
     for(let i=0; i<27; i++) {
@@ -254,14 +253,13 @@ function getGlobalMin() {
     return minCount;
 }
 
-// INPATIENT: Find the next doctor who is exactly at the baseline
+// ALGORITHM 1: Pure Top-To-Bottom Distribution Scan for Inpatient
 function getNextSlotIp() {
     let minCount = getGlobalMin();
-    if(minCount === Infinity) return -1; // Everyone is off
+    if(minCount === Infinity) return -1; 
     
-    // Scan forward from the pointer to preserve sequence
-    for(let o=0; o<27; o++) {
-        let i = (window.S.ptr + o) % 27;
+    // Always start from Index 0. First one to match the minimum gets the patient.
+    for(let i=0; i<27; i++) {
         if(!isDocOff(CL[i].d, 'ip') && cCnt(i) === minCount) {
             return i;
         }
@@ -269,7 +267,7 @@ function getNextSlotIp() {
     return -1;
 }
 
-// OUTPATIENT: Find the doctor working TODAY with the lowest count
+// ALGORITHM 2: Pure Top-To-Bottom Distribution Scan for Today's Outpatient
 function getNextSlotOp() {
     let today = tn();
     let validSlots = [];
@@ -282,16 +280,14 @@ function getNextSlotOp() {
     
     if(validSlots.length === 0) return -1;
     
-    // Find the minimum count among TODAY'S doctors
     let minTodayCount = Infinity;
     validSlots.forEach(i => {
         let cnt = cCnt(i);
         if(cnt < minTodayCount) minTodayCount = cnt;
     });
     
-    // Scan forward from pointer to preserve sequence among ties
-    for(let o=0; o<27; o++) {
-        let i = (window.S.ptr + o) % 27;
+    // Always start from Index 0. First today-doctor to match the minimum gets the patient.
+    for(let i=0; i<27; i++) {
         if(validSlots.includes(i) && cCnt(i) === minTodayCount) {
             return i;
         }
@@ -326,9 +322,6 @@ window.doAssign = function(type){
   
   if(type === 'ip') window.S.logs.push(entry); 
   else window.S.oplogs.push(entry);
-  
-  // Advance pointer for the next calculation
-  window.S.ptr = (i + 1) % 27;
   
   set(dbRef, window.S);
   
@@ -405,7 +398,6 @@ function rAll(){
   CL.forEach((_,idx)=>{ 
       var d=document.createElement("div"); 
       var cnt = cCnt(idx);
-      // Faded dot if the slot has more patients than the baseline minimum
       var usedClass = (cnt > minCount) ? " used" : "";
       var onClass = (idx === ipI) ? " on" : "";
       d.className="dot" + usedClass + onClass; 
@@ -443,7 +435,7 @@ window.delEntry = () => {
   if(confirm("Delete?")){ if(idxL!==-1)window.S.logs.splice(idxL,1); else window.S.oplogs.splice(idxO,1); set(dbRef,window.S); rAll();}
 };
 
-window.resetAll = () => { if(confirm("WIPE EVERYTHING?")){window.S={ptr:0, logs:[], oplogs:[], leave:{}}; set(dbRef,window.S); rAll();}};
+window.resetAll = () => { if(confirm("WIPE EVERYTHING?")){window.S={logs:[], oplogs:[], leave:{}}; set(dbRef,window.S); rAll();}};
 
 function openMo(i){ if(!adm)return; var c=CL[i],pts=(window.S.logs||[]).concat(window.S.oplogs||[]).filter(e=>e.si===i); document.getElementById("mt").textContent=c.d; document.getElementById("mc2").textContent=pts.length+" total"; var b=document.getElementById("mbody"); b.innerHTML=""; pts.forEach(p=>{ var d=document.createElement("div"); d.className="mr"; d.innerHTML=`<div>${p.fn}</div><div style="text-align:right">${p.time}</div>`; b.appendChild(d); }); var pb=document.getElementById("mprint"); pb.innerHTML=""; if(pts.length){ var btn=document.createElement("button"); btn.className="btn"; btn.textContent="Print List"; btn.onclick=()=>exportPDF(c.d,pts); pb.appendChild(btn); } document.getElementById("mo").classList.add("on"); }
 window.closeMo = () => document.getElementById("mo").classList.remove("on");
