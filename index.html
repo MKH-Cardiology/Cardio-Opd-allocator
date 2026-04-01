@@ -1,12 +1,14 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cardio OPD Allocator</title>
 
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='112' fill='%231e293b'/%3E%3Cpath d='M400 128c0-53-43-96-96-96s-96 43-96 96v160c0 17.7-14.3 32-32 32s-32-14.3-32-32V128c0-17.7 14.3-32 32-32h16c8.8 0 16-7.2 16-16s-7.2-16-16-16h-16c-35.3 0-64 28.7-64 64v160c0 35.3 28.7 64 64 64s64-28.7 64-64V128c0-35.3 28.7-64 64-64s64 28.7 64 64v32c0 8.8 7.2 16 16 16s16-7.2 16-16v-32zm-224 256c-26.5 0-48 21.5-48 48s21.5 48 48 48 48-21.5 48-48-21.5-48-48-48z' fill='%2360a5fa'/%3E%3C/svg%3E">
-<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='112' fill='%231e293b'/%3E%3Cpath d='M400 128c0-53-43-96-96-96s-96 43-96 96v160c0 17.7-14.3 32-32 32s-32-14.3-32-32V128c0-17.7 14.3-32 32-32h16c8.8 0 16-7.2 16-16s-7.2-16-16-16h-16c-35.3 0-64 28.7-64 64v160c0 35.3 28.7 64 64 64s64-28.7 64-64V128c0-35.3 28.7-64 64-64s64 28.7 64 64v32c0 8.8 7.2 16 16 16s16-7.2 16-16v-32zm-224 256c-26.5 0-48 21.5-48 48s21.5 48 48 48 48-21.5 48-48-21.5-48-48-48z' fill='%2360a5fa'/%3E%3C/svg%3E">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="apple-mobile-web-app-title" content="OPD Allocator">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -457,6 +459,7 @@ window.closeMo = () => document.getElementById("mo").classList.remove("on");
 function exportPDF(title, data){
   var rows = data.map(e=> `<tr><td>${e.ad}</td><td>${e.time}</td><td>${e.fn}</td><td>${e.doc}</td><td>${e.room}</td><td>${e.apt||"—"}</td><td>${e.reg}</td></tr>`).join("");
   var h = `<html><head><style>table{width:100%;border-collapse:collapse;font-family:sans-serif;font-size:12px}th,td{border:1px solid #ddd;padding:8px;text-align:left}th{background:#f4f4f4}</style></head>
+
   <body><h2 style="font-family:sans-serif">${title}</h2><table><thead><tr><th>Date</th><th>Time</th><th>File / Phone</th><th>Doctor</th><th>Room</th><th>Follow-up</th><th>By</th></tr></thead><tbody>${rows}</tbody></table>
   <script>window.onload=function(){window.print();window.close();}<\/script></body></html>`;
   var w=window.open("","_blank"); w.document.write(h); w.document.close();
