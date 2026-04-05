@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -393,7 +392,7 @@ function rAll(){
   if(ipI !== -1){
       var c = CL[ipI]; 
       document.getElementById("nd").textContent="Dr. "+c.d; 
-      document.getElementById("nr").textContent=c.r;
+      document.getElementById("nr").textContent=c.r + " • " + c.days.join(", ");
       updateFutureDates(c.days);
   } else {
       document.getElementById("nd").textContent="All Offline"; 
@@ -459,11 +458,16 @@ window.closeMo = () => document.getElementById("mo").classList.remove("on");
 function exportPDF(title, data){
   var rows = data.map(e=> `<tr><td>${e.ad}</td><td>${e.time}</td><td>${e.fn}</td><td>${e.doc}</td><td>${e.room}</td><td>${e.apt||"—"}</td><td>${e.reg}</td></tr>`).join("");
   var h = `<html><head><style>table{width:100%;border-collapse:collapse;font-family:sans-serif;font-size:12px}th,td{border:1px solid #ddd;padding:8px;text-align:left}th{background:#f4f4f4}</style></head>
-
   <body><h2 style="font-family:sans-serif">${title}</h2><table><thead><tr><th>Date</th><th>Time</th><th>File / Phone</th><th>Doctor</th><th>Room</th><th>Follow-up</th><th>By</th></tr></thead><tbody>${rows}</tbody></table>
   <script>window.onload=function(){window.print();window.close();}<\/script></body></html>`;
   var w=window.open("","_blank"); w.document.write(h); w.document.close();
 }
+
+window.exportWeekly = () => {
+  var all = (window.S.logs||[]).concat(window.S.oplogs||[]).sort((a,b)=>b.ts-a.ts);
+  if(all.length === 0) return alert("No data to export");
+  exportPDF("Master Log - All Entries", all);
+};
 </script>
 </body>
 </html>
