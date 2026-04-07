@@ -48,6 +48,7 @@ label{display:block;font-size:10px;font-family:'DM Mono',monospace;text-transfor
 input{width:100%;background:var(--sur2);border:1px solid var(--bor);border-radius:7px;padding:11px;color:var(--txt);font-family:'DM Mono',monospace;font-size:14px;outline:none;margin-bottom:11px}
 .btn{width:100%;background:linear-gradient(135deg,#2563eb,#0891b2);border:none;border-radius:8px;padding:12px;color:#fff;font-weight:600;cursor:pointer;margin-bottom:5px;transition:all 0.2s}
 .btn-warn{background:linear-gradient(135deg,#f87171,#ef4444);margin-top:10px}
+.btn:disabled{opacity:0.4;cursor:not-allowed;filter:grayscale(0.8)}
 .lf{display:flex;gap:7px;margin-bottom:12px;flex-wrap:wrap}
 .fb{background:var(--sur2);border:1px solid var(--bor);color:var(--mid);border-radius:6px;padding:5px 11px;cursor:pointer;font-family:'DM Mono',monospace;font-size:11px}
 .fb.on{border-color:var(--acc);color:var(--acc)}
@@ -61,6 +62,7 @@ input{width:100%;background:var(--sur2);border:1px solid var(--bor);border-radiu
 .dg{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:9px}
 .dc{background:var(--sur);border:1px solid var(--bor);border-radius:11px;padding:13px;cursor:pointer;transition:all 0.2s}
 .dc.nx{border-color:var(--acc);background:rgba(59,130,246,.06)}
+.dc.selected{border-color:var(--ok);background:rgba(52,211,153,.08);box-shadow:0 0 0 2px var(--ok)}
 .dd{font-size:12px;font-weight:500;margin-bottom:2px}
 .dn2{font-family:'DM Serif Display',serif;font-size:26px}
 .pi{background:var(--sur2);border:1px solid var(--bor);border-radius:7px;padding:12px;color:var(--txt);font-family:'DM Mono',monospace;font-size:15px;text-align:center;width:100%;margin-bottom:9px}
@@ -82,17 +84,29 @@ input{width:100%;background:var(--sur2);border:1px solid var(--bor);border-radiu
 .fd-sel { width:100%; background:rgba(56, 189, 248, 0.05); border:1px solid var(--acc2); border-radius:5px; padding:8px; color:var(--acc2); font-family:'DM Mono',monospace; font-size:13px; font-weight:600; outline:none; margin-top:5px; cursor:pointer; text-align: center; }
 .fd-sel option { background: var(--sur); color: var(--txt); text-align: left; }
 
-/* Manual Assignment Styles */
+/* Manual Assignment Styles - Count Removed */
 .manual-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
-.manual-btn { background: var(--sur2); border: 1px solid var(--bor); border-radius: 8px; padding: 12px; cursor: pointer; transition: all 0.2s; text-align: left; position: relative; }
-.manual-btn:hover:not(:disabled) { border-color: var(--acc); background: rgba(59,130,246,0.1); }
+.manual-btn { background: var(--sur2); border: 1px solid var(--bor); border-radius: 8px; padding: 12px; cursor: pointer; transition: all 0.2s; text-align: center; position: relative; }
+.manual-btn:hover:not(:disabled) { border-color: var(--acc); background: rgba(59,130,246,0.1); transform: translateY(-1px); }
 .manual-btn:disabled { opacity: 0.4; cursor: not-allowed; filter: grayscale(0.8); }
-.manual-doc { font-weight: 600; font-size: 13px; color: var(--txt); margin-bottom: 2px; }
+.manual-doc { font-weight: 600; font-size: 14px; color: var(--txt); margin-bottom: 4px; }
 .manual-info { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--dim); }
-.manual-count { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--acc); }
 .manual-section { margin-top: 20px; border-top: 1px dashed var(--bor); padding-top: 16px; }
 .manual-title { font-size: 10px; font-family: 'DM Mono', monospace; text-transform: uppercase; color: var(--dim); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
 .manual-badge { background: var(--warn); color: var(--bg); font-size: 9px; padding: 2px 6px; border-radius: 4px; font-weight: 600; }
+
+/* Specific Tab Styles */
+.spec-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 16px; }
+.spec-card { background: var(--sur2); border: 1px solid var(--bor); border-radius: 10px; padding: 16px; cursor: pointer; transition: all 0.2s; text-align: center; position: relative; }
+.spec-card:hover { border-color: var(--acc); background: rgba(59,130,246,0.08); }
+.spec-card.selected { border-color: var(--ok); background: rgba(52,211,153,.1); box-shadow: 0 0 0 2px var(--ok); }
+.spec-card.disabled { opacity: 0.4; cursor: not-allowed; filter: grayscale(0.8); }
+.spec-name { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--txt); margin-bottom: 4px; }
+.spec-meta { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--dim); }
+.spec-form { display: none; animation: fadeIn 0.3s; }
+.spec-form.on { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+.spec-hint { font-size: 11px; color: var(--dim); margin-bottom: 12px; padding: 8px; background: rgba(56,189,248,0.05); border-radius: 6px; border-left: 3px solid var(--acc); }
 </style>
 </head>
 <body>
@@ -107,6 +121,7 @@ input{width:100%;background:var(--sur2);border:1px solid var(--bor);border-radiu
 
 <div class="tabs">
   <button class="tab on" onclick="goTab('ip',this)">Inpatient</button>
+  <button class="tab" onclick="goTab('spec',this)">Specific</button>
   <button class="tab" onclick="goTab('op',this)">Outpatient</button>
   <button class="tab" onclick="goTab('log',this)">Log</button>
   <button class="tab" onclick="goTab('dist',this)">Distribution</button>
@@ -129,15 +144,45 @@ input{width:100%;background:var(--sur2);border:1px solid var(--bor);border-radiu
     <label>Registrar PIN</label><input type="password" id="rpin" maxlength="4" inputmode="numeric">
     <button class="btn" onclick="doAssign('ip')">Assign IP Discharge (Auto) →</button>
     
-    <!-- Manual Assignment Section -->
+    <!-- Manual Assignment Section - No Counts Displayed -->
     <div class="manual-section">
         <div class="manual-title">
-            <span>Manual Assignment</span>
-            <span class="manual-badge">Specific Doctors</span>
+            <span>Quick Manual Assignment</span>
+            <span class="manual-badge">No Date Select</span>
         </div>
         <div class="manual-grid" id="manual-grid">
-            <!-- Buttons injected by JS -->
+            <!-- Buttons injected by JS - No counts shown -->
         </div>
+    </div>
+  </div>
+</div>
+
+<!-- NEW SPECIFIC TAB -->
+<div class="pg" id="pg-spec">
+  <div class="card">
+    <div class="cbox" style="text-align:center; margin-bottom:20px;">
+        <div class="rl">SPECIFIC CLINIC ASSIGNMENT</div>
+        <div class="rd">Select Doctor</div>
+        <div class="rr">Choose clinic to see available dates</div>
+    </div>
+    
+    <div class="spec-grid" id="spec-grid">
+        <!-- Doctor cards injected by JS -->
+    </div>
+    
+    <div class="spec-form" id="spec-form">
+        <div class="spec-hint" id="spec-hint">Loading dates...</div>
+        
+        <label>Follow-up Date</label>
+        <select id="spec-date" class="fd-sel" style="margin-bottom:15px;"></select>
+        
+        <label>File Number (6 Digits)</label>
+        <input type="text" id="spec-fi" maxlength="6" inputmode="numeric" placeholder="e.g. 123456" style="margin-bottom:11px;">
+        
+        <label>Registrar PIN</label>
+        <input type="password" id="spec-pin" maxlength="4" inputmode="numeric" style="margin-bottom:15px;">
+        
+        <button class="btn" onclick="doSpecificAssign()">Assign to Selected Clinic →</button>
     </div>
   </div>
 </div>
@@ -222,7 +267,8 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const dbRef = ref(db, 'mkh_clinic_data');
 
-var docPINs = {"1001":"Dr. Rehan","1002":"Dr. Ramy","1003":"Dr. Badawy","1004":"Dr. Sharkawy","1005":"Dr. Mostafa","1006":"Dr. Ibrahim","1007":"Dr. Hadad","1008":"Dr. Emara","1009":"Dr. Rahim","1010":"Dr. Mamdouh","1011":"Dr. Slam","1012":"Dr. Ezz","1013":"Dr. R Gamal","1014":"Dr. Moghl","1015":"Dr. Darwish","1016":"Dr. Omar","1017":"Dr. Sajid","1018":"Dr. Hamza","1019":"Dr. Eyad","1020":"Dr. Mongy","1021":"Dr. Bahlol","9999":"Admin"};
+// Updated: Changed Dr. Hamza to Dr. Ali
+var docPINs = {"1001":"Dr. Rehan","1002":"Dr. Ramy","1003":"Dr. Badawy","1004":"Dr. Sharkawy","1005":"Dr. Mostafa","1006":"Dr. Ibrahim","1007":"Dr. Hadad","1008":"Dr. Emara","1009":"Dr. Rahim","1010":"Dr. Mamdouh","1011":"Dr. Slam","1012":"Dr. Ezz","1013":"Dr. R Gamal","1014":"Dr. Moghl","1015":"Dr. Darwish","1016":"Dr. Omar","1017":"Dr. Sajid","1018":"Dr. Ali","1019":"Dr. Eyad","1020":"Dr. Mongy","1021":"Dr. Bahlol","9999":"Admin"};
 
 var CL=[
   {d:"Hisham",r:"Room 10",days:["Sun"]}, {d:"Maged",r:"Room 11",days:["Tue"]}, {d:"Hisham",r:"Room 10",days:["Sun"]},
@@ -236,13 +282,15 @@ var CL=[
   {d:"Arab",r:"Room 25",days:["Tue"]}, {d:"Ashraf",r:"Room 20",days:["Thu"]}, {d:"Hany",r:"Room 16",days:["Sun"]}
 ];
 
-// Manual assignment targets: Fahd (4,8), Ali (19), Arab (24), Nazanin (17)
-var manualDocs = [
-  {name: "Fahd", indices: [4, 8], room: "Room 24", days: "Mon"},
-  {name: "Ali", indices: [19], room: "Room 11", days: "Wed"},
-  {name: "Arab", indices: [24], room: "Room 25", days: "Tue"},
-  {name: "Nazanin", indices: [17], room: "Room 25", days: "Sun"}
+// Specific doctors configuration (for Specific tab)
+var specificDocs = [
+  {name: "Fahd", indices: [4, 8], room: "Room 24", day: "Mon", label: "Monday"},
+  {name: "Ali", indices: [19], room: "Room 11", day: "Wed", label: "Wednesday"},
+  {name: "Arab", indices: [24], room: "Room 25", day: "Tue", label: "Tuesday"},
+  {name: "Nazanin", indices: [17], room: "Room 25", day: "Sun", label: "Sunday"}
 ];
+
+var selectedSpecificDoc = null;
 
 window.S={logs:[], oplogs:[], leave:{}};
 var adm=false; 
@@ -329,7 +377,6 @@ function getNextSlotOp() {
     return -1;
 }
 
-// Get best available index for manual doctor (lowest count among their slots)
 function getManualSlotIndex(docIndices) {
     let minCount = Infinity;
     let bestIndex = -1;
@@ -345,6 +392,24 @@ function getManualSlotIndex(docIndices) {
     });
     
     return bestIndex;
+}
+
+function updateDatesForSpecificDoc(docConfig) {
+    var dayMap = {"Sun":0,"Mon":1,"Tue":2,"Wed":3,"Thu":4,"Fri":5,"Sat":6};
+    var targetDay = dayMap[docConfig.day];
+    var opts = `<option value="" disabled selected>Select ${docConfig.label} Date...</option>`;
+    var d = new Date();
+    var count = 0;
+    for(var i=0; i<365; i++) { // Up to 1 year to find 4 months of specific day
+        if(d.getDay() === targetDay) {
+            var ds = d.toLocaleDateString("en-GB", {weekday:'short', day:'2-digit', month:'short', year:'numeric'});
+            opts += `<option value="${ds}">${ds}</option>`;
+            count++;
+            if(count >= 16) break; // Approx 4 months
+        }
+        d.setDate(d.getDate() + 1);
+    }
+    document.getElementById("spec-date").innerHTML = opts;
 }
 
 window.doAssign = function(type, manualSlotIndex = null){
@@ -418,40 +483,120 @@ window.doAssign = function(type, manualSlotIndex = null){
   rAll();
 };
 
+// New function for Specific tab assignment
+window.doSpecificAssign = function() {
+    if(!selectedSpecificDoc) return alert("Please select a doctor first.");
+    
+    var fn = document.getElementById("spec-fi").value.trim();
+    var pin = document.getElementById("spec-pin").value.trim();
+    var apt = document.getElementById("spec-date").value;
+    
+    if(!/^\d{6}$/.test(fn)) return alert("Check File Number (6 digits).");
+    if(!docPINs[pin]) return alert("Invalid Registrar PIN.");
+    if(!apt) return alert("Select Follow-up Date.");
+    if(isDuplicate(fn)) return alert("STOP: Duplicate Patient detected.");
+    
+    var regName = docPINs[pin];
+    var targetIdx = getManualSlotIndex(selectedSpecificDoc.indices);
+    
+    if(targetIdx === -1) return alert("Doctor " + selectedSpecificDoc.name + " is currently marked as OFF/Leave.");
+    
+    var c = CL[targetIdx];
+    
+    if(!confirm(`Confirm Assignment to Dr. ${selectedSpecificDoc.name}:\n\nFile: ${fn}\nDate: ${apt}\nRegistrar: ${regName}\nRoom: ${c.r}`)) {
+        return;
+    }
+    
+    var entry = {
+        fn: fn, 
+        reg: regName, 
+        doc: c.d, 
+        room: c.r, 
+        si: targetIdx, 
+        cd: tn(), 
+        ad: nd(), 
+        time: nt(), 
+        apt: apt, 
+        ts: Date.now()
+    };
+    
+    window.S.logs.push(entry);
+    set(dbRef, window.S);
+    
+    // Reset form
+    document.getElementById("spec-fi").value = "";
+    document.getElementById("spec-pin").value = "";
+    document.getElementById("spec-date").value = "";
+    document.querySelectorAll('.spec-card').forEach(el => el.classList.remove('selected'));
+    document.getElementById("spec-form").classList.remove("on");
+    selectedSpecificDoc = null;
+    
+    rAll();
+    alert("Assignment successful!");
+};
+
 function renderManualButtons() {
     var container = document.getElementById("manual-grid");
     if(!container) return;
     container.innerHTML = "";
     
-    manualDocs.forEach(doc => {
+    specificDocs.forEach(doc => {
         var btn = document.createElement("button");
         btn.className = "manual-btn";
         
-        // Check if doctor is on leave
         var isOff = isDocOff(doc.name, 'ip');
         var availIndices = doc.indices.filter(idx => !isDocOff(CL[idx].d, 'ip'));
-        var bestIdx = getManualSlotIndex(doc.indices);
-        var count = bestIdx !== -1 ? cCnt(bestIdx) : "OFF";
         
         btn.disabled = isOff || availIndices.length === 0;
         
+        // Count removed as requested - only showing name and info
         btn.innerHTML = `
             <div class="manual-doc">Dr. ${doc.name}</div>
-            <div class="manual-info">${doc.room} • ${doc.days}</div>
-            <div class="manual-count">${count}</div>
+            <div class="manual-info">${doc.room} • ${doc.day}</div>
         `;
         
         if(!btn.disabled) {
             btn.onclick = () => {
-                // Use the best available index for this doctor
                 var targetIdx = getManualSlotIndex(doc.indices);
                 if(targetIdx !== -1) {
+                    // Get current date from main dropdown (if available) or use empty
                     window.doAssign('ip', targetIdx);
                 }
             };
         }
         
         container.appendChild(btn);
+    });
+}
+
+function renderSpecificTab() {
+    var container = document.getElementById("spec-grid");
+    if(!container) return;
+    container.innerHTML = "";
+    
+    specificDocs.forEach(doc => {
+        var isOff = isDocOff(doc.name, 'ip');
+        var card = document.createElement("div");
+        card.className = "spec-card" + (isOff ? " disabled" : "");
+        
+        // Removed availability badge and "Every" from the text
+        card.innerHTML = `
+            <div class="spec-name">Dr. ${doc.name}</div>
+            <div class="spec-meta">${doc.room} • ${doc.label}</div>
+        `;
+        
+        if(!isOff) {
+            card.onclick = () => {
+                document.querySelectorAll('.spec-card').forEach(el => el.classList.remove('selected'));
+                card.classList.add('selected');
+                selectedSpecificDoc = doc;
+                updateDatesForSpecificDoc(doc);
+                document.getElementById("spec-form").classList.add("on");
+                document.getElementById("spec-hint").textContent = `Selected: Dr. ${doc.name} (${doc.room}). Choose a ${doc.label} follow-up date below.`;
+            };
+        }
+        
+        container.appendChild(card);
     });
 }
 
@@ -529,7 +674,8 @@ function rAll(){
       rb.appendChild(d); 
   });
   
-  renderManualButtons(); // Update manual buttons with current counts
+  renderManualButtons();
+  renderSpecificTab(); // Refresh specific tab to update availability status
   rLog(); 
   rDist(); 
   if(adm) renderLeaveAdmin();
