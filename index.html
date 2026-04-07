@@ -292,10 +292,11 @@ font-family: ‘DM Mono’, monospace;
 <div class="mo" id="mo"><div class="mb"><div class="mh"><h2 id="mt">—</h2><button onclick="closeMo()">Close</button></div>
 <div class="mbody"><div id="mc2" style="font-size:12px;color:var(--acc2);margin-bottom:10px"></div><div id="mbody"></div><div id="mprint"></div></div></div></div>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+<script>
 const firebaseConfig = {
   apiKey: "AIzaSyAT7Y3jWM4ix7I5cM4vKsHIJRaZZ6AZ9yI",
   authDomain: "cardio-opd.firebaseapp.com",
@@ -305,9 +306,9 @@ const firebaseConfig = {
   appId: "1:71256529635:web:d62921678530fdce7303d6"
 };
 
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-const dbRef = ref(db, 'mkh_clinic_data');
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+const dbRef = db.ref('mkh_clinic_data');
 
 var docPINs = {"1001":"Dr. Rehan","1002":"Dr. Ramy","1003":"Dr. Badawy","1004":"Dr. Sharkawy","1005":"Dr. Mostafa","1006":"Dr. Ibrahim","1007":"Dr. Hadad","1008":"Dr. Emara","1009":"Dr. Rahim","1010":"Dr. Mamdouh","1011":"Dr. Slam","1012":"Dr. Ezz","1013":"Dr. R Gamal","1014":"Dr. Moghl","1015":"Dr. Darwish","1016":"Dr. Omar","1017":"Dr. Sajid","1018":"Dr. Ali","1019":"Dr. Eyad","1020":"Dr. Mongy","1021":"Dr. Bahlol","9999":"Admin"};
 
@@ -336,7 +337,31 @@ window.S={logs:[], oplogs:[], leave:{}};
 var adm=false;
 window.lf="all";
 
-onValue(dbRef, (snap) => {
+// Expose tab/filter functions immediately so onclick handlers work before Firebase loads
+window.goTab=(id,btn)=>{
+  document.querySelectorAll(".pg").forEach(p=>p.classList.remove("on"));
+  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("on"));
+  document.getElementById("pg-"+id).classList.add("on"); btn.classList.add("on"); rAll();
+};
+window.filterLog=(f,b)=>{ document.querySelectorAll(".fb").forEach(x=>x.classList.remove("on")); b.classList.add("on"); window.lf=f; rLog(); };
+window.clerkLogin=()=>{ if(document.getElementById("opi").value==="2026"){document.getElementById("opgate").style.display="none"; document.getElementById("opc").style.display="block";}};
+window.adminLogin=(id)=>{ if(document.getElementById(id).value==="2025"){adm=true; document.querySelectorAll(".apgate").forEach(e=>e.style.display="none"); document.querySelectorAll(".ac-content").forEach(e=>e.style.display="block"); rAll();}};
+window.toggleS=(name,type)=>{ if(!window.S.leave[name])window.S.leave[name]={ip:false,op:false}; window.S.leave[name][type]=!window.S.leave[name][type]; dbRef.set(window.S); rAll(); };
+window.closeMo=()=>document.getElementById("mo").classList.remove("on");
+window.delEntry=()=>{
+  var s=document.getElementById("dfi").value.trim(); if(!s)return;
+  var idxL=window.S.logs.findIndex(e=>e.fn.toString().includes(s)), idxO=window.S.oplogs.findIndex(e=>e.fn.toString().includes(s));
+  if(idxL===-1&&idxO===-1)return alert("Not found");
+  if(confirm("Delete?")){ if(idxL!==-1)window.S.logs.splice(idxL,1); else window.S.oplogs.splice(idxO,1); dbRef.set(window.S); rAll();}
+};
+window.resetAll=()=>{ if(confirm("WIPE EVERYTHING?")){window.S={logs:[],oplogs:[],leave:{}}; dbRef.set(window.S); rAll();}};
+window.exportWeekly=()=>{
+  var all=(window.S.logs||[]).concat(window.S.oplogs||[]).sort((a,b)=>b.ts-a.ts);
+  if(all.length===0) return alert("No data to export");
+  exportPDF("Master Log - All Entries", all);
+};
+
+dbRef.on('value', (snap) => {
   const d = snap.val();
   if(d) {
     window.S.logs = d.logs || [];
@@ -467,7 +492,7 @@ window.doAssign = function(type, manualSlotIndex = null){
   var entry = {fn:fn, reg:regName, doc:c.d, room:c.r, si:i, cd:tn(), ad:nd(), time:nt(), apt:apt, ts:Date.now()};
   if(type === 'ip') window.S.logs.push(entry);
   else window.S.oplogs.push(entry);
-  set(dbRef, window.S);
+  dbRef.set(window.S);
   if(type==='ip'){ document.getElementById("fi").value=""; document.getElementById("rpin").value=""; }
   else { document.getElementById("opfi").value=""; document.getElementById("opphone").value=""; }
   rAll();
@@ -489,7 +514,7 @@ window.doSpecificAssign = function() {
     if(!confirm(`Confirm Assignment to Dr. ${selectedSpecificDoc.name}:\n\nFile: ${fn}\nDate: ${apt}\nRegistrar: ${regName}\nRoom: ${c.r}`)) return;
     var entry = {fn:fn, reg:regName, doc:c.d, room:c.r, si:targetIdx, cd:tn(), ad:nd(), time:nt(), apt:apt, ts:Date.now()};
     window.S.logs.push(entry);
-    set(dbRef, window.S);
+    dbRef.set(window.S);
     document.getElementById("spec-fi").value="";
     document.getElementById("spec-pin").value="";
     document.getElementById("spec-date").value="";
@@ -610,16 +635,6 @@ function rAll(){
   if(adm) renderLeaveAdmin();
 }
 
-window.goTab=(id,btn)=>{
-  document.querySelectorAll(".pg").forEach(p=>p.classList.remove("on"));
-  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("on"));
-  document.getElementById("pg-"+id).classList.add("on"); btn.classList.add("on"); rAll();
-};
-window.filterLog=(f,b)=>{ document.querySelectorAll(".fb").forEach(x=>x.classList.remove("on")); b.classList.add("on"); window.lf=f; rLog(); };
-window.clerkLogin=()=>{ if(document.getElementById("opi").value==="2026"){document.getElementById("opgate").style.display="none"; document.getElementById("opc").style.display="block";}};
-window.adminLogin=(id)=>{ if(document.getElementById(id).value==="2025"){adm=true; document.querySelectorAll(".apgate").forEach(e=>e.style.display="none"); document.querySelectorAll(".ac-content").forEach(e=>e.style.display="block"); rAll();}};
-window.toggleS=(name,type)=>{ if(!window.S.leave[name])window.S.leave[name]={ip:false,op:false}; window.S.leave[name][type]=!window.S.leave[name][type]; set(dbRef,window.S); rAll(); };
-
 function renderLeaveAdmin() {
   var g=document.getElementById("leave-grid"); g.innerHTML="";
   [...new Set(CL.map(c=>c.d))].forEach(name=>{
@@ -631,18 +646,7 @@ function renderLeaveAdmin() {
   });
 }
 
-window.delEntry=()=>{
-  var s=document.getElementById("dfi").value.trim(); if(!s)return;
-  var idxL=window.S.logs.findIndex(e=>e.fn.toString().includes(s)), idxO=window.S.oplogs.findIndex(e=>e.fn.toString().includes(s));
-  if(idxL===-1&&idxO===-1)return alert("Not found");
-  if(confirm("Delete?")){ if(idxL!==-1)window.S.logs.splice(idxL,1); else window.S.oplogs.splice(idxO,1); set(dbRef,window.S); rAll();}
-};
-
-window.resetAll=()=>{ if(confirm("WIPE EVERYTHING?")){window.S={logs:[],oplogs:[],leave:{}}; set(dbRef,window.S); rAll();}};
-
 function openMo(i){ if(!adm)return; var c=CL[i],pts=(window.S.logs||[]).concat(window.S.oplogs||[]).filter(e=>e.si===i); document.getElementById("mt").textContent=c.d; document.getElementById("mc2").textContent=pts.length+" total"; var b=document.getElementById("mbody"); b.innerHTML=""; pts.forEach(p=>{ var d=document.createElement("div"); d.className="mr"; d.innerHTML=`<div>${p.fn}</div><div style="text-align:right">${p.time}</div>`; b.appendChild(d); }); var pb=document.getElementById("mprint"); pb.innerHTML=""; if(pts.length){ var btn=document.createElement("button"); btn.className="btn"; btn.textContent="Print List"; btn.onclick=()=>exportPDF(c.d,pts); pb.appendChild(btn); } document.getElementById("mo").classList.add("on"); }
-window.closeMo=()=>document.getElementById("mo").classList.remove("on");
-
 function exportPDF(title, data){
   var rows=data.map(e=>`<tr><td>${e.ad}</td><td>${e.time}</td><td>${e.fn}</td><td>${e.doc}</td><td>${e.room}</td><td>${e.apt||"—"}</td><td>${e.reg}</td></tr>`).join("");
   var h=`<html><head><style>table{width:100%;border-collapse:collapse;font-family:sans-serif;font-size:12px}th,td{border:1px solid #ddd;padding:8px;text-align:left}th{background:#f4f4f4}</style></head>
@@ -652,12 +656,6 @@ function exportPDF(title, data){
   var w=window.open("","_blank"); w.document.write(h); w.document.close();
 }
 
-window.exportWeekly=()=>{
-var all=(window.S.logs||[]).concat(window.S.oplogs||[]).sort((a,b)=>b.ts-a.ts);
-if(all.length===0) return alert(“No data to export”);
-exportPDF(“Master Log - All Entries”, all);
-};
 </script>
-
 </body>
 </html>
