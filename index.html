@@ -226,22 +226,49 @@ font-family: ‘DM Mono’, monospace;
 <div class="pg" id="pg-op">
   <div id="opgate" class="card" style="text-align:center"><label>CLERK ACCESS PIN</label><input class="pi" type="password" id="opi" maxlength="4"><button class="btn" onclick="clerkLogin()">Unlock</button></div>
   <div id="opc" style="display:none">
-    <div class="card">
-        <div class="cbox">
-            <div class="rl">AUTO — Next Available Today</div>
-            <div class="rd" id="opd">—</div>
-            <div class="rr" id="opr">—</div>
-        </div>
-        <label>Manual Doctor Override (Optional)</label>
-        <select id="op-doc-sel" class="fd-sel" style="margin-bottom:12px;" onchange="opDocChanged()">
-            <option value="">— Auto (Recommended) —</option>
-        </select>
-        <label>Patient File Number (6 Digits)</label>
-        <input type="text" id="opfi" maxlength="6" inputmode="numeric" placeholder="e.g. 123456">
-        <label>Patient Phone Number (8 Digits)</label>
-        <input type="text" id="opphone" maxlength="8" inputmode="numeric" placeholder="e.g. 99887766">
-        <button class="btn" onclick="doAssign('op')">Assign OP Walk-in →</button>
+
+```
+<!-- Sub-tabs -->
+<div class="tabs" style="margin-bottom:14px;border-radius:10px;overflow:hidden;">
+  <button class="tab on" id="optab-walkin" onclick="goOpTab('walkin',this)">Walk-in Today</button>
+  <button class="tab" id="optab-fix" onclick="goOpTab('fix',this)">Fix Appointment</button>
+</div>
+
+<!-- Walk-in Today -->
+<div id="op-walkin">
+  <div class="card">
+    <div class="cbox">
+        <div class="rl">AUTO — Next Available Today</div>
+        <div class="rd" id="opd">—</div>
+        <div class="rr" id="opr">—</div>
     </div>
+    <label>Patient File Number (6 Digits)</label>
+    <input type="text" id="opfi" maxlength="6" inputmode="numeric" placeholder="e.g. 123456">
+    <label>Patient Phone Number (8 Digits)</label>
+    <input type="text" id="opphone" maxlength="8" inputmode="numeric" placeholder="e.g. 99887766">
+    <button class="btn" onclick="doAssign('op')">Assign OP Walk-in →</button>
+  </div>
+</div>
+
+<!-- Fix Appointment (clinics NOT running today) -->
+<div id="op-fix" style="display:none">
+  <div class="card">
+    <div class="rl" style="margin-bottom:12px;">CLINICS NOT RUNNING TODAY — SELECT TO BOOK</div>
+    <div id="fix-clinic-grid" class="spec-grid" style="margin-bottom:16px;"></div>
+    <div id="fix-form" style="display:none">
+      <div class="spec-hint" id="fix-hint"></div>
+      <label>Follow-up Date</label>
+      <select id="fix-date" class="fd-sel" style="margin-bottom:14px;"></select>
+      <label>Patient File Number (6 Digits)</label>
+      <input type="text" id="fix-fi" maxlength="6" inputmode="numeric" placeholder="e.g. 123456">
+      <label>Patient Phone Number (8 Digits)</label>
+      <input type="text" id="fix-phone" maxlength="8" inputmode="numeric" placeholder="e.g. 99887766">
+      <button class="btn" onclick="doFixAssign()">Book Appointment →</button>
+    </div>
+  </div>
+</div>
+```
+
   </div>
 </div>
 
@@ -345,21 +372,92 @@ window.filterLog=(f,b)=>{ document.querySelectorAll(".fb").forEach(x=>x.classLis
 window.clerkLogin=()=>{ if(document.getElementById("opi").value==="2026"){document.getElementById("opgate").style.display="none"; document.getElementById("opc").style.display="block";}};
 window.adminLogin=(id)=>{ if(document.getElementById(id).value==="2025"){adm=true; document.querySelectorAll(".apgate").forEach(e=>e.style.display="none"); document.querySelectorAll(".ac-content").forEach(e=>e.style.display="block"); rAll();}};
 window.toggleS=(name,type)=>{ if(!window.S.leave[name])window.S.leave[name]={ip:false,op:false}; window.S.leave[name][type]=!window.S.leave[name][type]; dbRef.set(window.S); rAll(); };
-window.opDocChanged = function() {
-    var sel = document.getElementById("op-doc-sel");
-    var idx = sel.value;
-    if(idx === "") {
-        var autoI = getNextSlotOp();
-        if(autoI !== -1) {
-            document.getElementById("opd").textContent = "Dr. " + CL[autoI].d;
-            document.getElementById("opr").textContent = CL[autoI].r;
-        }
-    } else {
-        var c = CL[parseInt(idx)];
-        document.getElementById("opd").textContent = "Dr. " + c.d;
-        document.getElementById("opr").textContent = c.r;
-    }
+window.goOpTab = function(tab, btn) {
+    document.querySelectorAll("#opc .tab").forEach(t => t.classList.remove("on"));
+    btn.classList.add("on");
+    document.getElementById("op-walkin").style.display = tab === "walkin" ? "block" : "none";
+    document.getElementById("op-fix").style.display = tab === "fix" ? "block" : "none";
+    if(tab === "fix") renderFixClinics();
 };
+
+var selectedFixDoc = null;
+
+function renderFixClinics() {
+    var today = tn();
+    var container = document.getElementById("fix-clinic-grid");
+    if(!container) return;
+    container.innerHTML = "";
+    document.getElementById("fix-form").style.display = "none";
+    selectedFixDoc = null;
+
+    // Unique clinics NOT running today
+    var seen = {};
+    for(var i = 0; i < 27; i++) {
+        if(!CL[i].days.includes(today) && !isDocOff(CL[i].d, 'op')) {
+            var key = CL[i].d + "_" + CL[i].r + "_" + CL[i].days.join("");
+            if(!seen[key]) {
+                seen[key] = {idx: i, doc: CL[i]};
+            }
+        }
+    }
+
+    Object.values(seen).forEach(function(item) {
+        var card = document.createElement("div");
+        card.className = "spec-card";
+        card.innerHTML =
+            '<div class="rl" style="margin-bottom:4px">CLINIC</div>' +
+            '<div class="spec-name">Dr. ' + item.doc.d + '</div>' +
+            '<div class="spec-meta">' + item.doc.r + ' • ' + item.doc.days.join(", ") + '</div>';
+        card.onclick = function() {
+            document.querySelectorAll("#fix-clinic-grid .spec-card").forEach(c => c.classList.remove("selected"));
+            card.classList.add("selected");
+            selectedFixDoc = item;
+            // Populate dates for this doctor's days
+            var dayMap = {"Sun":0,"Mon":1,"Tue":2,"Wed":3,"Thu":4,"Fri":5,"Sat":6};
+            var targets = item.doc.days.map(d => dayMap[d]);
+            var opts = '<option value="" disabled selected>Select Date...</option>';
+            var d = new Date(); var count = 0;
+            for(var j = 0; j < 120; j++) {
+                if(targets.includes(d.getDay())) {
+                    var ds = d.toLocaleDateString("en-GB", {weekday:'short', day:'2-digit', month:'short', year:'numeric'});
+                    opts += '<option value="' + ds + '">' + ds + '</option>';
+                    if(++count >= 16) break;
+                }
+                d.setDate(d.getDate() + 1);
+            }
+            document.getElementById("fix-date").innerHTML = opts;
+            document.getElementById("fix-hint").textContent =
+                "Dr. " + item.doc.d + " (" + item.doc.r + ") — runs on " + item.doc.days.join(", ");
+            document.getElementById("fix-form").style.display = "block";
+        };
+        container.appendChild(card);
+    });
+}
+
+window.doFixAssign = function() {
+    if(!selectedFixDoc) return alert("Select a clinic first.");
+    var fn = document.getElementById("fix-fi").value.trim();
+    var ph = document.getElementById("fix-phone").value.trim();
+    var apt = document.getElementById("fix-date").value;
+    if(!fn && !ph) return alert("Enter File or Phone Number.");
+    if(!apt) return alert("Select a date.");
+    var patId = (fn && ph) ? fn + " / " + ph : (fn || ph);
+    if(isDuplicate(patId)) return alert("STOP: Duplicate Patient detected.");
+    var c = CL[selectedFixDoc.idx];
+    if(!confirm("Book appointment:\n\nPatient: " + patId + "\nDoctor: Dr. " + c.d + "\nRoom: " + c.r + "\nDate: " + apt)) return;
+    var entry = {fn: patId, reg: "Clerk", doc: c.d, room: c.r, si: selectedFixDoc.idx, cd: tn(), ad: nd(), time: nt(), apt: apt, ts: Date.now()};
+    window.S.oplogs.push(entry);
+    dbRef.set(window.S);
+    document.getElementById("fix-fi").value = "";
+    document.getElementById("fix-phone").value = "";
+    document.getElementById("fix-date").value = "";
+    document.querySelectorAll("#fix-clinic-grid .spec-card").forEach(c => c.classList.remove("selected"));
+    document.getElementById("fix-form").style.display = "none";
+    selectedFixDoc = null;
+    alert("Appointment booked!");
+};
+
+window.opDocChanged = function() {}; // kept for safety, no longer used
 window.closeMo=()=>document.getElementById("mo").classList.remove("on");
 window.delEntry=()=>{
   var s=document.getElementById("dfi").value.trim(); if(!s)return;
@@ -508,7 +606,7 @@ window.doAssign = function(type, manualSlotIndex = null){
   else window.S.oplogs.push(entry);
   dbRef.set(window.S);
   if(type==='ip'){ document.getElementById("fi").value=""; document.getElementById("rpin").value=""; }
-  else { document.getElementById("opfi").value=""; document.getElementById("opphone").value=""; }
+  else { document.getElementById("opfi").value=""; document.getElementById("opphone").value=""; var opS=document.getElementById("op-doc-sel"); if(opS) opS.value=""; }
   rAll();
 };
 
