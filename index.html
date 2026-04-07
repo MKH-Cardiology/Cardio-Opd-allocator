@@ -118,8 +118,8 @@ box-shadow: 0 0 0 2px var(–ok);
 .spec-name {
 font-family: ‘DM Serif Display’, serif;
 font-size: 26px;
-color: var(–acc);
-margin-bottom: 2px;
+color: #60a5fa !important;
+margin-bottom: 3px;
 line-height: 1.1;
 }
 /* Room • Day: same mono + mid colour as .rr */
@@ -203,7 +203,7 @@ font-family: ‘DM Mono’, monospace;
   <div class="card">
     <div class="cbox" style="margin-bottom:16px;">
       <div class="rl">SPECIFIC CLINIC ASSIGNMENT</div>
-      <div class="rd">Select Doctor</div>
+      <div class="rd" style="color:var(--txt)">Select Doctor</div>
       <div class="rr" style="margin-bottom:0">Choose clinic to see available dates</div>
     </div>
 
@@ -540,7 +540,7 @@ function renderSpecificTab() {
             (isOff ? `<div class="spec-off-badge">OFF</div>` : "") +
             `<div class="rl" style="margin-bottom:4px">CLINIC</div>` +
             `<div class="spec-name">Dr. ${doc.name}</div>` +
-            `<div class="spec-meta">${doc.room} &bull; ${doc.label}</div>`;
+            `<div class="spec-meta">${doc.room} • ${doc.label}</div>`;
 
         if(!isOff) {
             card.onclick = () => {
