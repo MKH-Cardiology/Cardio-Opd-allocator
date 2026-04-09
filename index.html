@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cardio OPD Allocator</title>
-
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -12,13 +11,12 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#0f172a">
-
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #0f172a; --sur: #1e293b; --sur2: #334155; --sur3: #475569; --bor: #475569;
-  --acc: #60a5fa; --acc2: #38bdf8; --ok: #34d399; --warn: #fbbf24; --err: #f87171;
-  --txt: #f8fafc; --dim: #94a3b8; --mid: #cbd5e1;
+  --bg:#0f172a;--sur:#1e293b;--sur2:#334155;--sur3:#475569;--bor:#475569;
+  --acc:#60a5fa;--acc2:#38bdf8;--ok:#34d399;--warn:#fbbf24;--err:#f87171;
+  --txt:#f8fafc;--dim:#94a3b8;--mid:#cbd5e1;--ep:#a78bfa;--ep2:#c4b5fd;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:var(--bg);color:var(--txt);font-family:'DM Sans',sans-serif;min-height:100vh}
@@ -33,6 +31,7 @@ header p{font-size:10px;color:var(--dim);font-family:'DM Mono',monospace}
 .tabs{display:flex;border-bottom:1px solid var(--bor);background:var(--sur);padding:0 18px;overflow-x:auto}
 .tab{padding:12px 13px;font-size:11px;font-family:'DM Mono',monospace;letter-spacing:1px;text-transform:uppercase;color:var(--dim);cursor:pointer;border-bottom:2px solid transparent;background:none;border:none;white-space:nowrap}
 .tab.on{color:var(--acc);border-bottom-color:var(--acc)}
+.tab.ep-tab.on{color:var(--ep);border-bottom-color:var(--ep)}
 .pg{display:none;padding:18px;max-width:860px;margin:0 auto}
 .pg.on{display:block}
 .card{background:var(--sur);border:1px solid var(--bor);border-radius:13px;padding:20px;margin-bottom:14px}
@@ -62,7 +61,6 @@ input{width:100%;background:var(--sur2);border:1px solid var(--bor);border-radiu
 .dg{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:9px}
 .dc{background:var(--sur);border:1px solid var(--bor);border-radius:11px;padding:13px;cursor:pointer;transition:all 0.2s}
 .dc.nx{border-color:var(--acc);background:rgba(59,130,246,.06)}
-.dc.selected{border-color:var(--ok);background:rgba(52,211,153,.08);box-shadow:0 0 0 2px var(--ok)}
 .dd{font-size:12px;font-weight:500;margin-bottom:2px}
 .dn2{font-family:'DM Serif Display',serif;font-size:26px}
 .pi{background:var(--sur2);border:1px solid var(--bor);border-radius:7px;padding:12px;color:var(--txt);font-family:'DM Mono',monospace;font-size:15px;text-align:center;width:100%;margin-bottom:9px}
@@ -95,6 +93,41 @@ input{width:100%;background:var(--sur2);border:1px solid var(--bor);border-radiu
 .spec-form.on{display:block}
 @keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
 .spec-hint{font-size:11px;color:var(--dim);margin-bottom:12px;padding:8px;background:rgba(56,189,248,0.05);border-radius:6px;border-left:3px solid var(--acc);font-family:'DM Mono',monospace}
+
+/* Admin sub-tabs */
+.adm-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.adm-tab{background:var(--sur2);border:1px solid var(--bor);color:var(--dim);border-radius:7px;padding:7px 14px;cursor:pointer;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.5px;text-transform:uppercase}
+.adm-tab.on{border-color:var(--acc);color:var(--acc);background:rgba(96,165,250,0.07)}
+.adm-sec{display:none}
+.adm-sec.on{display:block}
+
+/* Clinic export grid */
+.clinic-export-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:9px;margin-bottom:16px}
+.cex-card{background:var(--sur2);border:1px solid var(--bor);border-radius:11px;padding:13px;cursor:pointer;transition:all 0.2s}
+.cex-card:hover{border-color:var(--acc2);background:rgba(56,189,248,0.06)}
+.cex-doc{font-family:'DM Serif Display',serif;font-size:18px;color:var(--acc);margin-bottom:3px}
+.cex-meta{font-family:'DM Mono',monospace;font-size:10px;color:var(--dim)}
+.cex-count{font-family:'DM Mono',monospace;font-size:22px;color:var(--ok);font-weight:600;margin-top:4px}
+
+/* EP clinics */
+.ep-notice{background:rgba(167,139,250,0.08);border:1px solid rgba(167,139,250,0.35);border-radius:10px;padding:14px 16px;margin-bottom:16px;display:flex;gap:12px;align-items:flex-start}
+.ep-notice-icon{font-size:20px;flex-shrink:0;margin-top:1px}
+.ep-notice-text{font-family:'DM Mono',monospace;font-size:12px;color:var(--ep2);line-height:1.6}
+.ep-notice-text strong{color:#fff;font-size:13px}
+.ep-card{border-color:rgba(167,139,250,0.4)!important}
+.ep-card:hover:not(.disabled){border-color:var(--ep)!important;background:rgba(167,139,250,0.08)!important}
+.ep-card.selected{border-color:var(--ep)!important;background:rgba(167,139,250,0.12)!important;box-shadow:0 0 0 2px var(--ep)!important}
+.ep-card .spec-name{color:var(--ep)!important}
+.ep-sel{width:100%;background:rgba(167,139,250,0.06);border:1px solid rgba(167,139,250,0.45);border-radius:5px;padding:8px;color:var(--ep2);font-family:'DM Mono',monospace;font-size:13px;font-weight:600;outline:none;margin-top:5px;cursor:pointer}
+.ep-sel option{background:var(--sur);color:var(--txt)}
+.ep-count-badge{display:inline-block;font-family:'DM Mono',monospace;font-size:10px;padding:2px 7px;border-radius:4px;margin-left:6px;font-weight:600}
+.ep-count-ok{background:rgba(52,211,153,0.15);color:var(--ok);border:1px solid rgba(52,211,153,0.3)}
+.ep-count-warn{background:rgba(251,191,36,0.15);color:var(--warn);border:1px solid rgba(251,191,36,0.3)}
+.ep-count-full{background:rgba(248,113,113,0.15);color:var(--err);border:1px solid rgba(248,113,113,0.3)}
+.btn-ep{background:linear-gradient(135deg,#7c3aed,#6d28d9)!important}
+.adm-section-title{font-family:'DM Serif Display',serif;font-size:18px;color:var(--txt);margin-bottom:4px}
+.adm-section-sub{font-family:'DM Mono',monospace;font-size:10px;color:var(--dim);margin-bottom:14px}
+hr.adm-hr{border:0;border-top:1px solid var(--bor);margin:20px 0}
 </style>
 </head>
 <body>
@@ -108,14 +141,14 @@ input{width:100%;background:var(--sur2);border:1px solid var(--bor);border-radiu
 <div class="sb"><div class="sd" id="syncDot"></div><span id="syncText">Connecting...</span></div>
 
 <div class="tabs">
-  <button class="tab on" onclick="goTab('ip',this)">Inpatient</button>
-  <button class="tab" onclick="goTab('spec',this)">Interventional</button>
-  <button class="tab" onclick="goTab('op',this)">Outpatient</button>
-  <button class="tab" onclick="goTab('log',this)">Log</button>
-  <button class="tab" onclick="goTab('dist',this)">Distribution</button>
-  <button class="tab" onclick="goTab('adm',this)">Admin</button>
+  <button class="tab on"  onclick="goTab('ip',this)">Inpatient</button>
+  <button class="tab"     onclick="goTab('spec',this)">Interventional</button>
+  <button class="tab"     onclick="goTab('op',this)">Outpatient</button>
+  <button class="tab ep-tab" onclick="goTab('ep',this)">EP Clinics</button>
+  <button class="tab"     onclick="goTab('adm',this)">Admin</button>
 </div>
 
+<!-- INPATIENT TAB -->
 <div class="pg on" id="pg-ip">
   <div class="card">
     <div class="cbox">
@@ -165,8 +198,6 @@ input{width:100%;background:var(--sur2);border:1px solid var(--bor);border-radiu
       <button class="tab on" id="optab-walkin" onclick="goOpTab('walkin',this)">Walk-in Today</button>
       <button class="tab" id="optab-fix" onclick="goOpTab('fix',this)">Book Appointment</button>
     </div>
-
-    <!-- Walk-in Today -->
     <div id="op-walkin">
       <div class="card">
         <div class="cbox">
@@ -181,8 +212,6 @@ input{width:100%;background:var(--sur2);border:1px solid var(--bor);border-radiu
         <button class="btn" onclick="doAssign('op')">Assign OP Walk-in →</button>
       </div>
     </div>
-
-    <!-- Book Appointment (clinics NOT running today) -->
     <div id="op-fix" style="display:none">
       <div class="card">
         <div class="rl" style="margin-bottom:12px;">CLINICS NOT RUNNING TODAY — SELECT TO BOOK</div>
@@ -202,40 +231,32 @@ input{width:100%;background:var(--sur2);border:1px solid var(--bor);border-radiu
   </div>
 </div>
 
-<!-- LOG TAB -->
-<div class="pg" id="pg-log">
-  <div class="card apgate" style="text-align:center">
-    <label>ADMIN PIN</label>
-    <input class="pi" type="password" id="api-log" maxlength="4">
-    <button class="btn" onclick="adminLogin('api-log')">Unlock</button>
-  </div>
-  <div class="ac-content">
-    <div class="lf">
-      <button class="fb on" onclick="filterLog('all',this)">All</button>
-      <button class="fb" onclick="filterLog('Sun',this)">Sun</button>
-      <button class="fb" onclick="filterLog('Mon',this)">Mon</button>
-      <button class="fb" onclick="filterLog('Tue',this)">Tue</button>
-      <button class="fb" onclick="filterLog('Wed',this)">Wed</button>
-      <button class="fb" onclick="filterLog('Thu',this)">Thu</button>
+<!-- EP CLINICS TAB -->
+<div class="pg" id="pg-ep">
+  <div class="ep-notice">
+    <div class="ep-notice-icon">⚠️</div>
+    <div class="ep-notice-text">
+      <strong>Before booking an EP Clinic appointment</strong><br>
+      You must contact <strong>Dr. Mahmoud Rehan</strong> for approval before registering any patient in this clinic. Unauthorised bookings will be cancelled.
     </div>
-    <div class="lt">
-      <div class="lh"><div>Date</div><div>File / Phone</div><div>Doctor / Room</div><div>Follow-up</div><div>By</div></div>
-      <div id="lb"></div>
+  </div>
+  <div class="card">
+    <div class="rl" style="margin-bottom:12px;">SELECT EP CLINIC</div>
+    <div class="spec-grid" id="ep-clinic-grid" style="margin-bottom:16px;"></div>
+    <div id="ep-form" style="display:none">
+      <div class="spec-hint" id="ep-hint" style="border-left-color:var(--ep);background:rgba(167,139,250,0.05);color:var(--ep2);"></div>
+      <label>Follow-up Date <span id="ep-date-count-label" style="color:var(--dim);font-style:normal;text-transform:none;font-size:10px;"></span></label>
+      <select id="ep-date" class="ep-sel" style="margin-bottom:15px;"></select>
+      <label>File Number (6 Digits)</label>
+      <input type="text" id="ep-fi" maxlength="6" inputmode="numeric" placeholder="e.g. 123456" style="margin-bottom:11px;">
+      <label>Registrar PIN</label>
+      <input type="password" id="ep-pin" maxlength="4" inputmode="numeric" style="margin-bottom:15px;">
+      <button class="btn btn-ep" onclick="doEpAssign()">Book EP Clinic Appointment →</button>
     </div>
   </div>
 </div>
 
-<!-- DISTRIBUTION TAB -->
-<div class="pg" id="pg-dist">
-  <div class="card apgate" style="text-align:center">
-    <label>ADMIN PIN</label>
-    <input class="pi" type="password" id="api-dist" maxlength="4">
-    <button class="btn" onclick="adminLogin('api-dist')">Unlock</button>
-  </div>
-  <div class="ac-content"><div class="dg" id="dg"></div></div>
-</div>
-
-<!-- ADMIN TAB -->
+<!-- ADMIN TAB (consolidated) -->
 <div class="pg" id="pg-adm">
   <div class="card apgate" style="text-align:center">
     <label>ADMIN PIN</label>
@@ -243,22 +264,71 @@ input{width:100%;background:var(--sur2);border:1px solid var(--bor);border-radiu
     <button class="btn" onclick="adminLogin('api-adm')">Unlock</button>
   </div>
   <div class="ac-content">
-    <div class="card">
-      <h3>Distribution-Driven Logic</h3>
-      <p style="font-size:10px;color:var(--dim);margin-bottom:12px;font-family:'DM Mono',monospace;">The app scans strictly from Index 0 to 26 and finds the very first lowest distribution number, preventing Outpatient chaos from disrupting the Inpatient sequence.</p>
-      <div id="leave-grid" class="dg" style="margin-bottom:20px;"></div>
-      <hr style="border:0;border-top:1px solid var(--bor);margin:20px 0">
-      <h3>Admin Controls</h3>
-      <button class="btn" style="margin-top:10px" onclick="exportWeekly()">📊 Export Master Log PDF</button>
-      <hr style="border:0;border-top:1px solid var(--bor);margin:20px 0">
+
+    <!-- Admin sub-nav -->
+    <div class="adm-tabs">
+      <button class="adm-tab on" onclick="goAdmTab('leave',this)">Doctor Leave</button>
+      <button class="adm-tab"    onclick="goAdmTab('dist',this)">Distribution</button>
+      <button class="adm-tab"    onclick="goAdmTab('log',this)">Log</button>
+      <button class="adm-tab"    onclick="goAdmTab('export',this)">Export / Print</button>
+      <button class="adm-tab"    onclick="goAdmTab('danger',this)">⚠ Danger Zone</button>
+    </div>
+
+    <!-- LEAVE -->
+    <div class="adm-sec on" id="adm-leave">
+      <div class="adm-section-title">Doctor Leave / Status</div>
+      <div class="adm-section-sub">Toggle IP and OP availability for each doctor. Changes are saved live.</div>
+      <div id="leave-grid" class="dg"></div>
+    </div>
+
+    <!-- DISTRIBUTION -->
+    <div class="adm-sec" id="adm-dist">
+      <div class="adm-section-title">Slot Distribution</div>
+      <div class="adm-section-sub">Click any slot card to view its patient list and print.</div>
+      <div class="dg" id="dg"></div>
+    </div>
+
+    <!-- LOG -->
+    <div class="adm-sec" id="adm-log">
+      <div class="adm-section-title">Assignment Log</div>
+      <div class="adm-section-sub">Last 50 entries across all assignment types.</div>
+      <div class="lf">
+        <button class="fb on" onclick="filterLog('all',this)">All</button>
+        <button class="fb" onclick="filterLog('Sun',this)">Sun</button>
+        <button class="fb" onclick="filterLog('Mon',this)">Mon</button>
+        <button class="fb" onclick="filterLog('Tue',this)">Tue</button>
+        <button class="fb" onclick="filterLog('Wed',this)">Wed</button>
+        <button class="fb" onclick="filterLog('Thu',this)">Thu</button>
+      </div>
+      <div class="lt">
+        <div class="lh"><div>Date</div><div>File / Phone</div><div>Doctor / Room</div><div>Follow-up</div><div>By</div></div>
+        <div id="lb"></div>
+      </div>
+    </div>
+
+    <!-- EXPORT -->
+    <div class="adm-sec" id="adm-export">
+      <div class="adm-section-title">Export &amp; Print</div>
+      <div class="adm-section-sub">Select a clinic card to export all its patients as PDF. Patients are grouped by doctor + room + day — not by rotation slot.</div>
+      <button class="btn" style="margin-bottom:18px" onclick="exportWeekly()">📊 Export Master Log (All Entries)</button>
+      <div class="rl" style="margin-bottom:10px;">CLINIC PATIENT LISTS</div>
+      <div class="clinic-export-grid" id="clinic-export-grid"></div>
+    </div>
+
+    <!-- DANGER -->
+    <div class="adm-sec" id="adm-danger">
+      <div class="adm-section-title">Danger Zone</div>
+      <div class="adm-section-sub">Irreversible actions. Use with caution.</div>
       <label>Remove Patient Row</label>
       <input type="text" id="dfi" placeholder="Enter File or Phone Number" inputmode="numeric">
-      <button class="btn" style="background:#fbbf24;color:#000" onclick="delEntry()">🗑 Remove Entry</button>
+      <button class="btn" style="background:#fbbf24;color:#000;margin-bottom:10px" onclick="delEntry()">🗑 Remove Entry</button>
       <button class="btn btn-warn" onclick="resetAll()">⚠ Wipe All Database Data</button>
     </div>
+
   </div>
 </div>
 
+<!-- MODAL -->
 <div class="mo" id="mo">
   <div class="mb">
     <div class="mh"><h2 id="mt">—</h2><button onclick="closeMo()">Close</button></div>
@@ -281,44 +351,73 @@ const firebaseConfig = {
   storageBucket: "cardio-opd.firebasestorage.app",
   appId: "1:71256529635:web:d62921678530fdce7303d6"
 };
-
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 const dbRef = db.ref('mkh_clinic_data');
 
-var docPINs = {"1001":"Dr. Rehan","1002":"Dr. Ramy","1003":"Dr. Badawy","1004":"Dr. Sharkawy","1005":"Dr. Mostafa","1006":"Dr. Ibrahim","1007":"Dr. Hadad","1008":"Dr. Emara","1009":"Dr. Rahim","1010":"Dr. Mamdouh","1011":"Dr. Slam","1012":"Dr. Ezz","1013":"Dr. R Gamal","1014":"Dr. Moghl","1015":"Dr. Darwish","1016":"Dr. Omar","1017":"Dr. Sajid","1018":"Dr. Ali","1019":"Dr. Eyad","1020":"Dr. Mongy","1021":"Dr. Bahlol","9999":"Admin"};
+var docPINs = {
+  "1001":"Dr. Rehan","1002":"Dr. Ramy","1003":"Dr. Badawy","1004":"Dr. Sharkawy",
+  "1005":"Dr. Mostafa","1006":"Dr. Ibrahim","1007":"Dr. Hadad","1008":"Dr. Emara",
+  "1009":"Dr. Rahim","1010":"Dr. Mamdouh","1011":"Dr. Slam","1012":"Dr. Ezz",
+  "1013":"Dr. R Gamal","1014":"Dr. Moghl","1015":"Dr. Darwish","1016":"Dr. Omar",
+  "1017":"Dr. Sajid","1018":"Dr. Ali","1019":"Dr. Eyad","1020":"Dr. Mongy",
+  "1021":"Dr. Bahlol","9999":"Admin"
+};
 
-var CL=[
-  {d:"Hisham",r:"Room 10",days:["Sun"]},{d:"Maged",r:"Room 11",days:["Tue"]},{d:"Hisham",r:"Room 10",days:["Sun"]},
-  {d:"Maged",r:"Room 11",days:["Tue"]},{d:"Fahd",r:"Room 24",days:["Mon"]},{d:"Akmal",r:"Room 10",days:["Mon"]},
-  {d:"Hisham",r:"Room 10",days:["Sun"]},{d:"Maged",r:"Room 11",days:["Tue"]},{d:"Fahd",r:"Room 24",days:["Mon"]},
-  {d:"Farag",r:"Room 8",days:["Mon"]},{d:"Akmal",r:"Room 10",days:["Mon"]},{d:"Farag",r:"Room 8",days:["Mon"]},
-  {d:"Ehab",r:"Room 25",days:["Mon"]},{d:"Ehab",r:"Room 25",days:["Mon"]},{d:"Maged",r:"Room 20",days:["Sun"]},
-  {d:"Hisham",r:"Room 8",days:["Tue"]},{d:"Zaher",r:"Room 20",days:["Tue"]},{d:"Nazanin",r:"Room 25",days:["Sun"]},
-  {d:"Farag",r:"Room 10",days:["Wed"]},{d:"Ali",r:"Room 11",days:["Wed"]},{d:"Fawzy",r:"Room 20",days:["Wed"]},
-  {d:"Shafie",r:"Room 25",days:["Thu"]},{d:"Ibrahim",r:"Room 13",days:["Thu"]},{d:"Ibrahim",r:"Room 10",days:["Tue"]},
-  {d:"Arab",r:"Room 25",days:["Tue"]},{d:"Ashraf",r:"Room 20",days:["Thu"]},{d:"Hany",r:"Room 16",days:["Sun"]}
+var CL = [
+  {d:"Hisham",r:"Room 10",days:["Sun"]},{d:"Maged",r:"Room 11",days:["Tue"]},
+  {d:"Hisham",r:"Room 10",days:["Sun"]},{d:"Maged",r:"Room 11",days:["Tue"]},
+  {d:"Fahd",r:"Room 24",days:["Mon"]},{d:"Akmal",r:"Room 10",days:["Mon"]},
+  {d:"Hisham",r:"Room 10",days:["Sun"]},{d:"Maged",r:"Room 11",days:["Tue"]},
+  {d:"Fahd",r:"Room 24",days:["Mon"]},{d:"Farag",r:"Room 8",days:["Mon"]},
+  {d:"Akmal",r:"Room 10",days:["Mon"]},{d:"Farag",r:"Room 8",days:["Mon"]},
+  {d:"Ehab",r:"Room 25",days:["Mon"]},{d:"Ehab",r:"Room 25",days:["Mon"]},
+  {d:"Maged",r:"Room 20",days:["Sun"]},{d:"Hisham",r:"Room 8",days:["Tue"]},
+  {d:"Zaher",r:"Room 20",days:["Tue"]},{d:"Nazanin",r:"Room 25",days:["Sun"]},
+  {d:"Farag",r:"Room 10",days:["Wed"]},{d:"Ali",r:"Room 11",days:["Wed"]},
+  {d:"Fawzy",r:"Room 20",days:["Wed"]},{d:"Shafie",r:"Room 25",days:["Thu"]},
+  {d:"Ibrahim",r:"Room 13",days:["Thu"]},{d:"Ibrahim",r:"Room 10",days:["Tue"]},
+  {d:"Arab",r:"Room 25",days:["Tue"]},{d:"Ashraf",r:"Room 20",days:["Thu"]},
+  {d:"Hany",r:"Room 16",days:["Sun"]}
 ];
 
+// EP Clinics — outside main rotation
+var EP_CLINICS = [
+  {id:"ep-sun", name:"EP Sunday",  room:"Room 21", day:"Sun", dayNum:0, label:"Sunday"},
+  {id:"ep-tue", name:"EP Tuesday", room:"Room 5",  day:"Tue", dayNum:2, label:"Tuesday"}
+];
+var EP_MAX_PER_DATE = 12;
+
 var specificDocs = [
-  {name:"Fahd",    indices:[4,8], room:"Room 24", day:"Mon", label:"Monday"},
-  {name:"Ali",     indices:[19],  room:"Room 11", day:"Wed", label:"Wednesday"},
-  {name:"Arab",    indices:[24],  room:"Room 25", day:"Tue", label:"Tuesday"},
-  {name:"Nazanin", indices:[17],  room:"Room 25", day:"Sun", label:"Sunday"}
+  {name:"Fahd",    indices:[4,8],  room:"Room 24", day:"Mon", label:"Monday"},
+  {name:"Ali",     indices:[19],   room:"Room 11", day:"Wed", label:"Wednesday"},
+  {name:"Arab",    indices:[24],   room:"Room 25", day:"Tue", label:"Tuesday"},
+  {name:"Nazanin", indices:[17],   room:"Room 25", day:"Sun", label:"Sunday"}
 ];
 
 var selectedSpecificDoc = null;
 var selectedFixDoc = null;
-window.S = {logs:[], oplogs:[], leave:{}};
+var selectedEpClinic = null;
+window.S = {logs:[], oplogs:[], eplogs:[], leave:{}};
 var adm = false;
 window.lf = "all";
 
+// ── TAB NAVIGATION ──────────────────────────────────────────────────────────
 window.goTab = (id, btn) => {
   document.querySelectorAll(".pg").forEach(p => p.classList.remove("on"));
-  document.querySelectorAll(".tab").forEach(t => t.classList.remove("on"));
+  document.querySelectorAll(".tabs > .tab").forEach(t => t.classList.remove("on"));
   document.getElementById("pg-" + id).classList.add("on");
   btn.classList.add("on");
+  if(id === "ep") renderEpTab();
   rAll();
+};
+
+window.goAdmTab = (id, btn) => {
+  document.querySelectorAll(".adm-tab").forEach(t => t.classList.remove("on"));
+  document.querySelectorAll(".adm-sec").forEach(s => s.classList.remove("on"));
+  btn.classList.add("on");
+  document.getElementById("adm-" + id).classList.add("on");
+  if(id === "export") renderClinicExportGrid();
 };
 
 window.filterLog = (f, b) => {
@@ -359,6 +458,104 @@ window.goOpTab = function(tab, btn) {
   if(tab === "fix") renderFixClinics();
 };
 
+// ── EP CLINICS ───────────────────────────────────────────────────────────────
+function getEpCountForDate(clinicId, dateStr) {
+  return (window.S.eplogs||[]).filter(e => e.epClinicId === clinicId && e.apt === dateStr).length;
+}
+
+function renderEpTab() {
+  var grid = document.getElementById("ep-clinic-grid");
+  grid.innerHTML = "";
+  document.getElementById("ep-form").style.display = "none";
+  selectedEpClinic = null;
+
+  EP_CLINICS.forEach(function(clinic) {
+    var card = document.createElement("div");
+    card.className = "spec-card ep-card";
+    card.innerHTML =
+      '<div class="rl" style="margin-bottom:4px">EP CLINIC</div>' +
+      '<div class="spec-name" style="color:var(--ep)!important">' + clinic.room + '</div>' +
+      '<div class="spec-meta">' + clinic.label + '</div>';
+    card.onclick = function() {
+      document.querySelectorAll("#ep-clinic-grid .spec-card").forEach(c => c.classList.remove("selected"));
+      card.classList.add("selected");
+      selectedEpClinic = clinic;
+      renderEpDates(clinic);
+      document.getElementById("ep-hint").textContent =
+        "EP Clinic — " + clinic.room + " every " + clinic.label + ". Max " + EP_MAX_PER_DATE + " patients per date.";
+      document.getElementById("ep-form").style.display = "block";
+    };
+    grid.appendChild(card);
+  });
+}
+
+function renderEpDates(clinic) {
+  var sel = document.getElementById("ep-date");
+  var opts = '<option value="" disabled selected>Select ' + clinic.label + ' Date...</option>';
+  var d = new Date(), count = 0;
+  var sixMonths = new Date(); sixMonths.setMonth(sixMonths.getMonth() + 6);
+  while(d <= sixMonths) {
+    if(d.getDay() === clinic.dayNum) {
+      var ds = d.toLocaleDateString("en-GB", {weekday:'short', day:'2-digit', month:'short', year:'numeric'});
+      var cnt = getEpCountForDate(clinic.id, ds);
+      var full = cnt >= EP_MAX_PER_DATE;
+      var badge = full ? " [FULL]" : " [" + cnt + "/" + EP_MAX_PER_DATE + "]";
+      opts += '<option value="' + ds + '"' + (full ? " disabled" : "") + '>' + ds + badge + '</option>';
+      if(++count >= 26) break;
+    }
+    d.setDate(d.getDate() + 1);
+  }
+  sel.innerHTML = opts;
+  updateEpDateCountLabel();
+}
+
+function updateEpDateCountLabel() {
+  if(!selectedEpClinic) return;
+  var sel = document.getElementById("ep-date");
+  var label = document.getElementById("ep-date-count-label");
+  if(!sel.value) { label.textContent = ""; return; }
+  var cnt = getEpCountForDate(selectedEpClinic.id, sel.value);
+  var rem = EP_MAX_PER_DATE - cnt;
+  label.innerHTML = rem > 0
+    ? '<span class="ep-count-badge ep-count-' + (rem <= 3 ? 'warn' : 'ok') + '">' + cnt + '/' + EP_MAX_PER_DATE + ' booked — ' + rem + ' remaining</span>'
+    : '<span class="ep-count-badge ep-count-full">FULLY BOOKED</span>';
+}
+
+document.addEventListener("change", function(e) {
+  if(e.target.id === "ep-date") updateEpDateCountLabel();
+});
+
+window.doEpAssign = function() {
+  if(!selectedEpClinic) return alert("Select an EP clinic first.");
+  var fn = document.getElementById("ep-fi").value.trim();
+  var pin = document.getElementById("ep-pin").value.trim();
+  var apt = document.getElementById("ep-date").value;
+  if(!/^\d{6}$/.test(fn)) return alert("Check File Number (6 digits).");
+  if(!docPINs[pin]) return alert("Invalid Registrar PIN.");
+  if(!apt) return alert("Select a date.");
+  var cnt = getEpCountForDate(selectedEpClinic.id, apt);
+  if(cnt >= EP_MAX_PER_DATE) return alert("This date is fully booked (max " + EP_MAX_PER_DATE + " patients).");
+  var regName = docPINs[pin];
+  // EP duplicate check within EP logs only
+  var epDup = (window.S.eplogs||[]).some(e => e.fn === fn);
+  if(epDup) return alert("STOP: This file number already has an EP booking.");
+  if(!confirm("Confirm EP Clinic Booking:\n\nClinic: " + selectedEpClinic.room + " (" + selectedEpClinic.label + ")\nFile: " + fn + "\nDate: " + apt + "\nRegistrar: " + regName)) return;
+  var entry = {
+    fn:fn, reg:regName, doc:"EP", room:selectedEpClinic.room,
+    epClinicId:selectedEpClinic.id, epLabel:selectedEpClinic.label,
+    cd:tn(), ad:nd(), time:nt(), apt:apt, ts:Date.now()
+  };
+  if(!window.S.eplogs) window.S.eplogs = [];
+  window.S.eplogs.push(entry);
+  dbRef.set(window.S);
+  document.getElementById("ep-fi").value = "";
+  document.getElementById("ep-pin").value = "";
+  // Refresh dates to update slot counts
+  renderEpDates(selectedEpClinic);
+  alert("EP appointment booked successfully!");
+};
+
+// ── OUTPATIENT HELPERS ───────────────────────────────────────────────────────
 function renderFixClinics() {
   var today = tn();
   var container = document.getElementById("fix-clinic-grid");
@@ -366,7 +563,6 @@ function renderFixClinics() {
   container.innerHTML = "";
   document.getElementById("fix-form").style.display = "none";
   selectedFixDoc = null;
-
   var seen = {};
   for(var i = 0; i < 27; i++) {
     if(!CL[i].days.includes(today) && !isDocOff(CL[i].d, 'op')) {
@@ -374,7 +570,6 @@ function renderFixClinics() {
       if(!seen[key]) seen[key] = {idx:i, doc:CL[i]};
     }
   }
-
   Object.values(seen).forEach(function(item) {
     var card = document.createElement("div");
     card.className = "spec-card";
@@ -432,43 +627,119 @@ window.doFixAssign = function() {
 
 window.closeMo = () => document.getElementById("mo").classList.remove("on");
 
+// ── ADMIN ACTIONS ─────────────────────────────────────────────────────────────
 window.delEntry = () => {
   var s = document.getElementById("dfi").value.trim(); if(!s) return;
   var idxL = window.S.logs.findIndex(e => e.fn.toString().includes(s));
   var idxO = window.S.oplogs.findIndex(e => e.fn.toString().includes(s));
-  if(idxL === -1 && idxO === -1) return alert("Not found");
+  var idxE = (window.S.eplogs||[]).findIndex(e => e.fn.toString().includes(s));
+  if(idxL === -1 && idxO === -1 && idxE === -1) return alert("Not found");
   if(confirm("Delete?")) {
     if(idxL !== -1) window.S.logs.splice(idxL, 1);
-    else window.S.oplogs.splice(idxO, 1);
+    else if(idxO !== -1) window.S.oplogs.splice(idxO, 1);
+    else window.S.eplogs.splice(idxE, 1);
     dbRef.set(window.S); rAll();
   }
 };
 
 window.resetAll = () => {
   if(confirm("WIPE EVERYTHING?")) {
-    window.S = {logs:[], oplogs:[], leave:{}};
+    window.S = {logs:[], oplogs:[], eplogs:[], leave:{}};
     dbRef.set(window.S); rAll();
   }
 };
 
 window.exportWeekly = () => {
-  var all = (window.S.logs||[]).concat(window.S.oplogs||[]).sort((a,b) => b.ts - a.ts);
+  var all = (window.S.logs||[]).concat(window.S.oplogs||[]).concat(window.S.eplogs||[]).sort((a,b) => b.ts - a.ts);
   if(all.length === 0) return alert("No data to export");
-  exportPDF("Master Log - All Entries", all);
+  exportPDF("Master Log — All Entries", all);
 };
 
+// ── CLINIC EXPORT GRID (grouped by doctor+room+day) ──────────────────────────
+function getUniqueClinics() {
+  // Build unique clinic groups from CL array: key = doctor + room + day
+  var seen = {};
+  CL.forEach(function(slot) {
+    var key = slot.d + "|" + slot.r + "|" + slot.days.join(",");
+    if(!seen[key]) seen[key] = {d:slot.d, r:slot.r, days:slot.days, key:key};
+  });
+  return Object.values(seen);
+}
+
+function getClinicPatients(clinicKey) {
+  // clinicKey = "Doctor|Room|Day"
+  var parts = clinicKey.split("|");
+  var docName = parts[0], room = parts[1], days = parts[2].split(",");
+  var all = (window.S.logs||[]).concat(window.S.oplogs||[]);
+  // Match by doctor name AND room AND any of the days
+  return all.filter(function(e) {
+    return e.doc === docName && e.room === room && days.includes(e.cd);
+  });
+  // Note: we match on entry's cd (day-of-week assigned), which covers all rotation slots
+  // But more reliably: match doc + room regardless of day (a clinic is defined by doc+room pair)
+}
+
+function getClinicPatientsByDocRoom(docName, room) {
+  var all = (window.S.logs||[]).concat(window.S.oplogs||[]);
+  return all.filter(e => e.doc === docName && e.room === room);
+}
+
+function renderClinicExportGrid() {
+  var grid = document.getElementById("clinic-export-grid");
+  if(!grid) return;
+  grid.innerHTML = "";
+  var clinics = getUniqueClinics();
+
+  // Also add EP clinics
+  EP_CLINICS.forEach(function(ep) {
+    var epPts = (window.S.eplogs||[]).filter(e => e.epClinicId === ep.id);
+    var card = document.createElement("div");
+    card.className = "cex-card";
+    card.style.borderColor = "rgba(167,139,250,0.4)";
+    card.innerHTML =
+      '<div class="rl" style="color:var(--ep)">EP CLINIC</div>' +
+      '<div class="cex-doc" style="color:var(--ep)">' + ep.room + '</div>' +
+      '<div class="cex-meta">' + ep.label + '</div>' +
+      '<div class="cex-count" style="color:var(--ep)">' + epPts.length + '</div>';
+    card.onclick = function() {
+      if(epPts.length === 0) return alert("No patients in this EP clinic yet.");
+      exportPDF("EP Clinic — " + ep.room + " (" + ep.label + ")", epPts);
+    };
+    grid.appendChild(card);
+  });
+
+  clinics.forEach(function(c) {
+    var pts = getClinicPatientsByDocRoom(c.d, c.r);
+    var card = document.createElement("div");
+    card.className = "cex-card";
+    card.innerHTML =
+      '<div class="rl">' + c.days.join(", ") + '</div>' +
+      '<div class="cex-doc">Dr. ' + c.d + '</div>' +
+      '<div class="cex-meta">' + c.r + '</div>' +
+      '<div class="cex-count">' + pts.length + '</div>';
+    card.onclick = function() {
+      if(pts.length === 0) return alert("No patients in this clinic yet.");
+      exportPDF("Dr. " + c.d + " — " + c.r + " (" + c.days.join(", ") + ")", pts);
+    };
+    grid.appendChild(card);
+  });
+}
+
+// ── FIREBASE SYNC ─────────────────────────────────────────────────────────────
 dbRef.on('value', (snap) => {
   const d = snap.val();
   if(d) {
-    window.S.logs = d.logs || [];
+    window.S.logs   = d.logs   || [];
     window.S.oplogs = d.oplogs || [];
-    window.S.leave = d.leave || {};
+    window.S.eplogs = d.eplogs || [];
+    window.S.leave  = d.leave  || {};
   }
   document.getElementById("syncDot").style.background = "var(--ok)";
   document.getElementById("syncText").textContent = "Live — Synced";
   rAll();
 });
 
+// ── UTILITIES ─────────────────────────────────────────────────────────────────
 function tn() { return ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][new Date().getDay()]; }
 function nt() { return new Date().toLocaleTimeString("en-GB", {hour:"2-digit", minute:"2-digit"}); }
 function nd() { return new Date().toLocaleDateString("en-GB", {day:"numeric", month:"short"}); }
@@ -510,8 +781,7 @@ function getNextSlotIp() {
 }
 
 function getNextSlotOp() {
-  let today = tn();
-  let validSlots = [];
+  let today = tn(), validSlots = [];
   for(let i = 0; i < 27; i++) {
     if(CL[i].days.includes(today) && !isDocOff(CL[i].d, 'op')) validSlots.push(i);
   }
@@ -538,12 +808,12 @@ function getManualSlotIndex(docIndices) {
 function updateDatesForSpecificDoc(docConfig) {
   var dayMap = {"Sun":0,"Mon":1,"Tue":2,"Wed":3,"Thu":4,"Fri":5,"Sat":6};
   var targetDay = dayMap[docConfig.day];
-  var opts = `<option value="" disabled selected>Select ${docConfig.label} Date...</option>`;
+  var opts = '<option value="" disabled selected>Select ' + docConfig.label + ' Date...</option>';
   var d = new Date(), count = 0;
   for(var i = 0; i < 365; i++) {
     if(d.getDay() === targetDay) {
       var ds = d.toLocaleDateString("en-GB", {weekday:'short', day:'2-digit', month:'short', year:'numeric'});
-      opts += `<option value="${ds}">${ds}</option>`;
+      opts += '<option value="' + ds + '">' + ds + '</option>';
       if(++count >= 16) break;
     }
     d.setDate(d.getDate() + 1);
@@ -572,6 +842,11 @@ window.doAssign = function(type, manualSlotIndex = null) {
       ? "Confirm MANUAL Assignment to Dr. " + manualDocName + ":\n\nFile Number: " + fn + "\nRegistrar: " + regName + "\n\n⚠️ This bypasses normal distribution."
       : "Confirm Inpatient Assignment:\n\nFile Number: " + fn + "\nRegistrar: " + regName;
     if(!confirm(confirmMsg)) return;
+    var entry = {fn:fn, reg:regName, doc:c.d, room:c.r, si:i, cd:tn(), ad:nd(), time:nt(), apt:apt, ts:Date.now()};
+    window.S.logs.push(entry);
+    dbRef.set(window.S);
+    document.getElementById("fi").value = "";
+    document.getElementById("rpin").value = "";
   } else {
     var ofn = document.getElementById("opfi").value.trim();
     var ph = document.getElementById("opphone").value.trim();
@@ -582,13 +857,12 @@ window.doAssign = function(type, manualSlotIndex = null) {
     var i = getNextSlotOp();
     if(i === -1) return alert("No valid clinics scheduled today.");
     var c = CL[i];
+    var entry = {fn:fn, reg:regName, doc:c.d, room:c.r, si:i, cd:tn(), ad:nd(), time:nt(), apt:apt, ts:Date.now()};
+    window.S.oplogs.push(entry);
+    dbRef.set(window.S);
+    document.getElementById("opfi").value = "";
+    document.getElementById("opphone").value = "";
   }
-  var entry = {fn:fn, reg:regName, doc:c.d, room:c.r, si:i, cd:tn(), ad:nd(), time:nt(), apt:apt, ts:Date.now()};
-  if(type === 'ip') window.S.logs.push(entry);
-  else window.S.oplogs.push(entry);
-  dbRef.set(window.S);
-  if(type === 'ip') { document.getElementById("fi").value = ""; document.getElementById("rpin").value = ""; }
-  else { document.getElementById("opfi").value = ""; document.getElementById("opphone").value = ""; }
   rAll();
 };
 
@@ -605,7 +879,7 @@ window.doSpecificAssign = function() {
   var targetIdx = getManualSlotIndex(selectedSpecificDoc.indices);
   if(targetIdx === -1) return alert("Doctor " + selectedSpecificDoc.name + " is currently marked as OFF/Leave.");
   var c = CL[targetIdx];
-  if(!confirm(`Confirm Assignment to Dr. ${selectedSpecificDoc.name}:\n\nFile: ${fn}\nDate: ${apt}\nRegistrar: ${regName}\nRoom: ${c.r}`)) return;
+  if(!confirm("Confirm Assignment to Dr. " + selectedSpecificDoc.name + ":\n\nFile: " + fn + "\nDate: " + apt + "\nRegistrar: " + regName + "\nRoom: " + c.r)) return;
   var entry = {fn:fn, reg:regName, doc:c.d, room:c.r, si:targetIdx, cd:tn(), ad:nd(), time:nt(), apt:apt, ts:Date.now()};
   window.S.logs.push(entry);
   dbRef.set(window.S);
@@ -628,10 +902,10 @@ function renderSpecificTab() {
     var card = document.createElement("div");
     card.className = "spec-card" + (isOff ? " disabled" : "");
     card.innerHTML =
-      (isOff ? `<div class="spec-off-badge">OFF</div>` : "") +
-      `<div class="rl" style="margin-bottom:4px">CLINIC</div>` +
-      `<div class="spec-name">Dr. ${doc.name}</div>` +
-      `<div class="spec-meta">${doc.room} • ${doc.label}</div>`;
+      (isOff ? '<div class="spec-off-badge">OFF</div>' : "") +
+      '<div class="rl" style="margin-bottom:4px">CLINIC</div>' +
+      '<div class="spec-name">Dr. ' + doc.name + '</div>' +
+      '<div class="spec-meta">' + doc.room + ' • ' + doc.label + '</div>';
     if(!isOff) {
       card.onclick = () => {
         document.querySelectorAll('.spec-card').forEach(el => el.classList.remove('selected'));
@@ -640,7 +914,7 @@ function renderSpecificTab() {
         updateDatesForSpecificDoc(doc);
         document.getElementById("spec-form").classList.add("on");
         document.getElementById("spec-hint").textContent =
-          `Selected: Dr. ${doc.name} (${doc.room}). Choose a ${doc.label} follow-up date below.`;
+          "Selected: Dr. " + doc.name + " (" + doc.room + "). Choose a " + doc.label + " follow-up date below.";
       };
     }
     container.appendChild(card);
@@ -653,20 +927,33 @@ function rDist() {
   CL.forEach((c, i) => {
     var ipO = isDocOff(c.d,'ip'), opO = isDocOff(c.d,'op'), isN = (i === ipNext);
     var d = document.createElement("div"); d.className = "dc" + (isN ? " nx" : "");
-    d.innerHTML = `<div class="dd">Dr. ${c.d}</div><div style="font-size:10px;color:var(--dim)">${c.r} • ${c.days.join(", ")}</div><div class="dn2">${cCnt(i)}</div>
-    <div class="stbox"><div class="stb ${ipO?'stb-off':'stb-ok'}">IP:${ipO?'OFF':'OK'}</div><div class="stb ${opO?'stb-off':'stb-ok'}">OP:${opO?'OFF':'OK'}</div></div>`;
-    d.onclick = () => openMo(i); g.appendChild(d);
+    d.innerHTML =
+      '<div class="dd">Dr. ' + c.d + '</div>' +
+      '<div style="font-size:10px;color:var(--dim)">' + c.r + ' • ' + c.days.join(", ") + '</div>' +
+      '<div class="dn2">' + cCnt(i) + '</div>' +
+      '<div class="stbox">' +
+        '<div class="stb ' + (ipO?'stb-off':'stb-ok') + '">IP:' + (ipO?'OFF':'OK') + '</div>' +
+        '<div class="stb ' + (opO?'stb-off':'stb-ok') + '">OP:' + (opO?'OFF':'OK') + '</div>' +
+      '</div>';
+    d.onclick = () => openMo(i);
+    g.appendChild(d);
   });
 }
 
 function rLog() {
   var b = document.getElementById("lb"); b.innerHTML = "";
-  var combined = (window.S.logs||[]).concat(window.S.oplogs||[]).sort((a,b) => b.ts - a.ts).slice(0, 50);
+  var combined = (window.S.logs||[]).concat(window.S.oplogs||[]).concat(window.S.eplogs||[])
+    .sort((a,b) => b.ts - a.ts).slice(0, 50);
   if(window.lf !== "all") combined = combined.filter(x => x.cd === window.lf);
   combined.forEach(x => {
     var r = document.createElement("div"); r.className = "lr";
-    r.innerHTML = `<div class="lti">${x.ad}<br><span>${x.time}</span></div><div class="lm">${x.fn}</div>
-      <div>Dr. ${x.doc}<br><span class="rt">${x.room}</span></div><div class="lgx" style="color:var(--acc)">${x.apt||"—"}</div><div class="lgx">${x.reg}</div>`;
+    var docLabel = x.epClinicId ? ("EP/" + x.room) : ("Dr. " + x.doc);
+    r.innerHTML =
+      '<div class="lti">' + x.ad + '<br><span>' + x.time + '</span></div>' +
+      '<div class="lm">' + x.fn + '</div>' +
+      '<div>' + docLabel + '<br><span class="rt">' + x.room + '</span></div>' +
+      '<div class="lgx" style="color:var(--acc)">' + (x.apt||"—") + '</div>' +
+      '<div class="lgx">' + x.reg + '</div>';
     b.appendChild(r);
   });
 }
@@ -674,12 +961,12 @@ function rLog() {
 function updateFutureDates(daysStrArray) {
   var dayMap = {"Sun":0,"Mon":1,"Tue":2,"Wed":3,"Thu":4,"Fri":5,"Sat":6};
   var targets = daysStrArray.map(d => dayMap[d]);
-  var opts = `<option value="" disabled selected>Select Follow-up Date...</option>`;
+  var opts = '<option value="" disabled selected>Select Follow-up Date...</option>';
   var d = new Date();
   for(var i = 0; i < 120; i++) {
     if(targets.includes(d.getDay())) {
       var ds = d.toLocaleDateString("en-GB", {weekday:'short', day:'2-digit', month:'short', year:'numeric'});
-      opts += `<option value="${ds}">${ds}</option>`;
+      opts += '<option value="' + ds + '">' + ds + '</option>';
     }
     d.setDate(d.getDate() + 1);
   }
@@ -689,6 +976,7 @@ function updateFutureDates(daysStrArray) {
 function rAll() {
   document.getElementById("dayName").textContent = tn();
   document.getElementById("dateStr").textContent = nd();
+
   var ipI = getNextSlotIp();
   if(ipI !== -1) {
     var c = CL[ipI];
@@ -699,6 +987,7 @@ function rAll() {
     document.getElementById("nd").textContent = "All Offline";
     document.getElementById("nr").textContent = "—";
   }
+
   var opI = getNextSlotOp();
   if(opI !== -1) {
     document.getElementById("opd").textContent = "Dr. " + CL[opI].d;
@@ -707,6 +996,7 @@ function rAll() {
     document.getElementById("opd").textContent = "No Match Today";
     document.getElementById("opr").textContent = "—";
   }
+
   var rb = document.getElementById("rb"); rb.innerHTML = "";
   var minCount = getGlobalMin();
   CL.forEach((_, idx) => {
@@ -715,10 +1005,16 @@ function rAll() {
     d.className = "dot" + (cnt > minCount ? " used" : "") + (idx === ipI ? " on" : "");
     rb.appendChild(d);
   });
+
   renderSpecificTab();
   rLog();
   rDist();
-  if(adm) renderLeaveAdmin();
+  if(adm) {
+    renderLeaveAdmin();
+    // Refresh export grid if visible
+    var expSec = document.getElementById("adm-export");
+    if(expSec && expSec.classList.contains("on")) renderClinicExportGrid();
+  }
 }
 
 function renderLeaveAdmin() {
@@ -726,40 +1022,61 @@ function renderLeaveAdmin() {
   [...new Set(CL.map(c => c.d))].forEach(name => {
     var ipO = window.S.leave[name]?.ip, opO = window.S.leave[name]?.op;
     var d = document.createElement("div"); d.className = "dc"; d.style.textAlign = "center";
-    d.innerHTML = `<div class="dd">${name}</div><div class="lv-btn-box">
-      <button class="lv-btn ${ipO?'off':'on'}" onclick="toggleS('${name}','ip')">IP ${ipO?'OFF':'OK'}</button>
-      <button class="lv-btn ${opO?'off':'on'}" onclick="toggleS('${name}','op')">OP ${opO?'OFF':'OK'}</button></div>`;
+    d.innerHTML =
+      '<div class="dd">' + name + '</div>' +
+      '<div class="lv-btn-box">' +
+        '<button class="lv-btn ' + (ipO?'off':'on') + '" onclick="toggleS(\'' + name + '\',\'ip\')">IP ' + (ipO?'OFF':'OK') + '</button>' +
+        '<button class="lv-btn ' + (opO?'off':'on') + '" onclick="toggleS(\'' + name + '\',\'op\')">OP ' + (opO?'OFF':'OK') + '</button>' +
+      '</div>';
     g.appendChild(d);
   });
 }
 
 function openMo(i) {
   if(!adm) return;
-  var c = CL[i], pts = (window.S.logs||[]).concat(window.S.oplogs||[]).filter(e => e.si === i);
-  document.getElementById("mt").textContent = c.d;
-  document.getElementById("mc2").textContent = pts.length + " total";
+  var c = CL[i];
+  var pts = (window.S.logs||[]).concat(window.S.oplogs||[]).filter(e => e.si === i);
+  document.getElementById("mt").textContent = "Dr. " + c.d + " — " + c.r;
+  document.getElementById("mc2").textContent = pts.length + " patients (this slot)";
   var b = document.getElementById("mbody"); b.innerHTML = "";
   pts.forEach(p => {
     var d = document.createElement("div"); d.className = "mr";
-    d.innerHTML = `<div>${p.fn}</div><div style="text-align:right">${p.time}</div>`;
+    d.innerHTML = '<div>' + p.fn + '</div><div style="text-align:right">' + p.time + '</div>';
     b.appendChild(d);
   });
   var pb = document.getElementById("mprint"); pb.innerHTML = "";
   if(pts.length) {
     var btn = document.createElement("button"); btn.className = "btn";
-    btn.textContent = "Print List";
-    btn.onclick = () => exportPDF(c.d, pts);
+    btn.textContent = "Print This Slot";
+    btn.onclick = () => exportPDF("Dr. " + c.d + " — " + c.r, pts);
     pb.appendChild(btn);
+    // Also offer full clinic export (all slots same doc+room)
+    var allPts = getClinicPatientsByDocRoom(c.d, c.r);
+    if(allPts.length > pts.length) {
+      var btn2 = document.createElement("button"); btn2.className = "btn";
+      btn2.style.background = "linear-gradient(135deg,#059669,#0891b2)";
+      btn2.style.marginTop = "6px";
+      btn2.textContent = "Print Full Clinic (" + allPts.length + " patients)";
+      btn2.onclick = () => exportPDF("Dr. " + c.d + " — " + c.r + " (All Rotation Slots)", allPts);
+      pb.appendChild(btn2);
+    }
   }
   document.getElementById("mo").classList.add("on");
 }
 
 function exportPDF(title, data) {
-  var rows = data.map(e => `<tr><td>${e.ad}</td><td>${e.time}</td><td>${e.fn}</td><td>${e.doc}</td><td>${e.room}</td><td>${e.apt||"—"}</td><td>${e.reg}</td></tr>`).join("");
-  var h = `<html><head><style>table{width:100%;border-collapse:collapse;font-family:sans-serif;font-size:12px}th,td{border:1px solid #ddd;padding:8px;text-align:left}th{background:#f4f4f4}</style></head>
-  <body><h2 style="font-family:sans-serif">${title}</h2><table><thead><tr><th>Date</th><th>Time</th><th>File / Phone</th><th>Doctor</th><th>Room</th><th>Follow-up</th><th>By</th></tr></thead><tbody>${rows}</tbody></table>
-  <script>window.onload=function(){window.print();window.close();}<\/script></body></html>`;
-  var w = window.open("", "_blank"); w.document.write(h); w.document.close();
+  var rows = data.map(e =>
+    '<tr><td>' + e.ad + '</td><td>' + e.time + '</td><td>' + e.fn + '</td><td>' +
+    (e.epClinicId ? "EP/" + e.room : "Dr. " + e.doc) + '</td><td>' + e.room + '</td><td>' +
+    (e.apt||"—") + '</td><td>' + e.reg + '</td></tr>'
+  ).join("");
+  var h = '<html><head><style>body{font-family:sans-serif}table{width:100%;border-collapse:collapse;font-size:12px}th,td{border:1px solid #ddd;padding:8px;text-align:left}th{background:#f4f4f4}h2{margin-bottom:12px}</style></head>' +
+    '<body><h2>' + title + '</h2><p style="font-size:11px;color:#666;margin-bottom:10px">Generated: ' + new Date().toLocaleString("en-GB") + ' — Total: ' + data.length + ' patients</p>' +
+    '<table><thead><tr><th>Date</th><th>Time</th><th>File / Phone</th><th>Doctor</th><th>Room</th><th>Follow-up</th><th>By</th></tr></thead><tbody>' + rows + '</tbody></table>' +
+    '<script>window.onload=function(){window.print();window.close();}<\/script></body></html>';
+  var w = window.open("", "_blank");
+  w.document.write(h);
+  w.document.close();
 }
 </script>
 </body>
