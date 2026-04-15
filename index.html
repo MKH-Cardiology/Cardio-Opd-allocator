@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -14,355 +13,253 @@
 <meta name="theme-color" content="#0f172a">
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-/* ── DESIGN TOKENS ───────────────────────────────────── */
 :root {
-  --bg:   #0f172a; --sur:  #1e293b; --sur2: #334155;
-  --sur3: #475569; --bor:  #475569;
-  --acc:  #60a5fa; --acc2: #38bdf8;
-  --ok:   #34d399; --warn: #fbbf24; --err:  #f87171;
-  --txt:  #f8fafc; --dim:  #94a3b8; --mid:  #cbd5e1;
-  --ep:   #a78bfa; --ep2:  #c4b5fd;
-  --font-serif: 'DM Serif Display', serif;
-  --font-mono:  'DM Mono', monospace;
-  --font-sans:  'DM Sans', sans-serif;
-  --radius-sm: 6px; --radius: 8px; --radius-md: 11px; --radius-lg: 13px;
+  --bg:#0f172a;--sur:#1e293b;--sur2:#334155;--sur3:#475569;--bor:#475569;
+  --acc:#60a5fa;--acc2:#38bdf8;--ok:#34d399;--warn:#fbbf24;--err:#f87171;
+  --txt:#f8fafc;--dim:#94a3b8;--mid:#cbd5e1;--ep:#a78bfa;--ep2:#c4b5fd;
 }
-
-/* ── RESET & BASE ────────────────────────────────────── */
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-body { background: var(–bg); color: var(–txt); font-family: var(–font-sans); min-height: 100vh; }
-
-/* ── HEADER ──────────────────────────────────────────── */
-header {
-padding: 14px 18px; border-bottom: 1px solid var(–bor);
-display: flex; align-items: center; gap: 12px;
-background: rgba(30,41,59,.96); position: sticky; top: 0; z-index: 99;
-}
-.header-icon {
-width: 38px; height: 38px; flex-shrink: 0; font-size: 18px;
-background: linear-gradient(135deg, #1d4ed8, #0891b2); border-radius: 9px;
-display: flex; align-items: center; justify-content: center;
-}
-header h1 { font-family: var(–font-serif); font-size: 16px; }
-header p  { font-size: 10px; color: var(–dim); font-family: var(–font-mono); }
-.date-badge {
-margin-left: auto; background: var(–sur2); border: 1px solid var(–bor);
-border-radius: 7px; padding: 4px 11px;
-font-family: var(–font-mono); font-size: 10px; color: var(–acc2); text-align: center;
-}
-.date-badge strong { display: block; font-size: 13px; color: var(–txt); }
-
-/* ── SYNC BAR ────────────────────────────────────────── */
-.sync-bar {
-display: flex; align-items: center; gap: 7px; padding: 7px 18px;
-font-family: var(–font-mono); font-size: 11px;
-border-bottom: 1px solid var(–bor); background: var(–sur);
-}
-.sync-dot {
-width: 7px; height: 7px; border-radius: 50%;
-background: var(–warn); box-shadow: 0 0 6px var(–warn);
-transition: background 0.3s, box-shadow 0.3s;
-}
-
-/* ── TABS ────────────────────────────────────────────── */
-.tabs {
-display: flex; border-bottom: 1px solid var(–bor);
-background: var(–sur); padding: 0 18px; overflow-x: auto;
-}
-.tab {
-padding: 12px 13px; font-size: 11px; font-family: var(–font-mono);
-letter-spacing: 1px; text-transform: uppercase; color: var(–dim);
-cursor: pointer; border-bottom: 2px solid transparent;
-background: none; border-top: none; border-left: none; border-right: none; white-space: nowrap;
-}
-.tab.on        { color: var(–acc); border-bottom-color: var(–acc); }
-.tab.ep-tab.on { color: var(–ep);  border-bottom-color: var(–ep); }
-
-/* ── PAGES ───────────────────────────────────────────── */
-.pg { display: none; padding: 18px; max-width: 860px; margin: 0 auto; }
-.pg.on { display: block; }
-
-/* ── CARDS ───────────────────────────────────────────── */
-.card    { background: var(–sur);  border: 1px solid var(–bor); border-radius: var(–radius-lg); padding: 20px; margin-bottom: 14px; }
-.info-box{ background: var(–sur2); border: 1px solid var(–bor); border-radius: var(–radius-md); padding: 18px; margin-bottom: 16px; }
-
-/* ── TYPOGRAPHY HELPERS ──────────────────────────────── */
-.label-sm  { font-size: 10px; font-family: var(–font-mono); text-transform: uppercase; color: var(–dim); margin-bottom: 5px; display: block; }
-.value-lg  { font-family: var(–font-serif); font-size: 26px; color: var(–acc); margin-bottom: 3px; }
-.value-sub { font-family: var(–font-mono); font-size: 12px; color: var(–mid); margin-bottom: 9px; }
-
-/* ── DISTRIBUTION DOTS ───────────────────────────────── */
-.dots-row { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 16px; justify-content: center; }
-.dot { width: 6px; height: 6px; border-radius: 50%; background: var(–bor); transition: all .3s; }
-.dot.used { background: var(–sur3); opacity: 0.2; }
-.dot.on   { background: var(–acc); transform: scale(1.8); box-shadow: 0 0 8px var(–acc); }
-
-/* ── FORM ELEMENTS ───────────────────────────────────── */
-label {
-display: block; font-size: 10px; font-family: var(–font-mono);
-text-transform: uppercase; color: var(–dim); margin-bottom: 5px;
-}
-input {
-width: 100%; background: var(–sur2); border: 1px solid var(–bor);
-border-radius: 7px; padding: 11px; color: var(–txt);
-font-family: var(–font-mono); font-size: 14px; outline: none; margin-bottom: 11px;
-}
-.select-std {
-width: 100%; background: rgba(56,189,248,0.05); border: 1px solid var(–acc2);
-border-radius: 5px; padding: 8px; color: var(–acc2);
-font-family: var(–font-mono); font-size: 13px; font-weight: 600;
-outline: none; margin-top: 5px; cursor: pointer; text-align: center;
-}
-.select-std option { background: var(–sur); color: var(–txt); text-align: left; }
-.select-ep {
-width: 100%; background: rgba(167,139,250,0.06); border: 1px solid rgba(167,139,250,0.45);
-border-radius: 5px; padding: 8px; color: var(–ep2);
-font-family: var(–font-mono); font-size: 13px; font-weight: 600;
-outline: none; margin-top: 5px; cursor: pointer;
-}
-.select-ep option { background: var(–sur); color: var(–txt); }
-.pin-input {
-background: var(–sur2); border: 1px solid var(–bor); border-radius: 7px; padding: 12px;
-color: var(–txt); font-family: var(–font-mono); font-size: 15px;
-text-align: center; width: 100%; margin-bottom: 9px;
-}
-
-/* ── BUTTONS ─────────────────────────────────────────── */
-.btn { width: 100%; background: linear-gradient(135deg,#2563eb,#0891b2); border: none; border-radius: var(–radius); padding: 12px; color: #fff; font-weight: 600; cursor: pointer; margin-bottom: 5px; transition: opacity 0.2s; }
-.btn:hover   { opacity: 0.88; }
-.btn:active  { opacity: 0.75; }
-.btn:disabled{ opacity: 0.4; cursor: not-allowed; filter: grayscale(0.8); }
-.btn-danger  { background: linear-gradient(135deg,#f87171,#ef4444); margin-top: 10px; }
-.btn-ep      { background: linear-gradient(135deg,#7c3aed,#6d28d9) !important; }
-.btn-success { background: linear-gradient(135deg,#059669,#0891b2); }
-
-/* ── LOG ─────────────────────────────────────────────── */
-.log-filters { display: flex; gap: 7px; margin-bottom: 12px; flex-wrap: wrap; }
-.filter-btn  { background: var(–sur2); border: 1px solid var(–bor); color: var(–mid); border-radius: var(–radius-sm); padding: 5px 11px; cursor: pointer; font-family: var(–font-mono); font-size: 11px; }
-.filter-btn.on { border-color: var(–acc); color: var(–acc); }
-.log-table   { background: var(–sur); border: 1px solid var(–bor); border-radius: var(–radius-md); overflow: hidden; }
-.log-header  { display: grid; grid-template-columns: 80px 1fr 1fr 90px 1fr; padding: 8px 13px; background: var(–sur2); border-bottom: 1px solid var(–bor); font-family: var(–font-mono); font-size: 10px; color: var(–dim); }
-.log-row     { display: grid; grid-template-columns: 80px 1fr 1fr 90px 1fr; padding: 10px 13px; border-bottom: 1px solid var(–bor); font-size: 12px; align-items: center; }
-.log-time    { font-family: var(–font-mono); font-size: 11px; color: var(–dim); }
-.log-fn      { font-family: var(–font-mono); font-weight: 500; }
-.log-meta    { font-size: 11px; color: var(–mid); }
-.room-badge  { font-family: var(–font-mono); font-size: 10px; color: var(–acc2); background: rgba(6,182,212,.08); border: 1px solid rgba(6,182,212,.2); border-radius: 3px; padding: 2px 5px; display: inline-block; margin-top: 2px; }
-
-/* ── DISTRIBUTION ────────────────────────────────────── */
-.dist-grid       { display: grid; grid-template-columns: repeat(auto-fill,minmax(140px,1fr)); gap: 9px; }
-.dist-card       { background: var(–sur); border: 1px solid var(–bor); border-radius: var(–radius-md); padding: 13px; cursor: pointer; transition: all 0.2s; }
-.dist-card.next  { border-color: var(–acc); background: rgba(59,130,246,.06); }
-.dist-card-name  { font-size: 12px; font-weight: 500; margin-bottom: 2px; }
-.dist-card-count { font-family: var(–font-serif); font-size: 26px; }
-.status-row { display: flex; gap: 4px; margin-top: 8px; }
-.status-pill{ flex:1; font-size:9px; padding:3px; border-radius:4px; text-align:center; font-family:var(–font-mono); font-weight:600; letter-spacing:0.5px; }
-.pill-ok  { background: rgba(52,211,153,0.15); color: var(–ok);  border: 1px solid rgba(52,211,153,0.3); }
-.pill-off { background: rgba(248,113,113,0.15); color: var(–err); border: 1px solid rgba(248,113,113,0.3); }
-
-/* ── LEAVE TOGGLES ───────────────────────────────────── */
-.leave-btn-row { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin-top: 5px; }
-.leave-btn     { font-size: 9px; padding: 5px 0; border-radius: 4px; border: none; cursor: pointer; font-family: var(–font-mono); color: white; font-weight: 600; }
-.leave-btn.on  { background: var(–ok); }
-.leave-btn.off { background: var(–err); }
-
-/* ── CLINIC SELECTOR CARDS ───────────────────────────── */
-.clinic-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 10px; margin-bottom: 16px; }
-.clinic-card { background: var(–sur2); border: 1px solid var(–bor); border-radius: var(–radius-md); padding: 16px; cursor: pointer; transition: border-color .2s,background .2s,box-shadow .2s; position: relative; }
-.clinic-card:hover:not(.disabled) { border-color: var(–acc); background: rgba(59,130,246,0.08); }
-.clinic-card.selected { border-color: var(–ok); background: rgba(52,211,153,.08); box-shadow: 0 0 0 2px var(–ok); }
-.clinic-card.disabled { opacity: 0.4; cursor: not-allowed; filter: grayscale(0.8); }
-.clinic-card-name { font-family: var(–font-serif); font-size: 26px; color: var(–acc) !important; margin-bottom: 3px; line-height: 1.1; }
-.clinic-card-meta { font-family: var(–font-mono); font-size: 12px; color: var(–mid); }
-.off-badge { position: absolute; top: 8px; right: 8px; font-family: var(–font-mono); font-size: 9px; font-weight: 600; letter-spacing: .5px; background: rgba(248,113,113,.15); color: var(–err); border: 1px solid rgba(248,113,113,.3); border-radius: 4px; padding: 2px 6px; }
-.clinic-form { display: none; }
-.clinic-form.on { display: block; animation: fadeIn 0.25s ease; }
-@keyframes fadeIn { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
-.hint-box { font-size: 11px; color: var(–dim); margin-bottom: 12px; padding: 8px; background: rgba(56,189,248,0.05); border-radius: var(–radius-sm); border-left: 3px solid var(–acc); font-family: var(–font-mono); }
-
-/* ── EP ──────────────────────────────────────────────── */
-.ep-notice { background: rgba(167,139,250,0.08); border: 1px solid rgba(167,139,250,0.35); border-radius: 10px; padding: 14px 16px; margin-bottom: 16px; display: flex; gap: 12px; align-items: flex-start; }
-.ep-notice-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
-.ep-notice-text { font-family: var(–font-mono); font-size: 12px; color: var(–ep2); line-height: 1.6; }
-.ep-notice-text strong { color: #fff; font-size: 13px; }
-.ep-card { border-color: rgba(167,139,250,0.4) !important; }
-.ep-card:hover:not(.disabled) { border-color: var(–ep) !important; background: rgba(167,139,250,0.08) !important; }
-.ep-card.selected { border-color: var(–ep) !important; background: rgba(167,139,250,0.12) !important; box-shadow: 0 0 0 2px var(–ep) !important; }
-.ep-card .clinic-card-name { color: var(–ep) !important; }
-.ep-count-badge { display: inline-block; font-family: var(–font-mono); font-size: 10px; padding: 2px 7px; border-radius: 4px; margin-left: 6px; font-weight: 600; }
-.ep-count-ok   { background: rgba(52,211,153,0.15);  color: var(–ok);   border: 1px solid rgba(52,211,153,0.3); }
-.ep-count-warn { background: rgba(251,191,36,0.15);  color: var(–warn); border: 1px solid rgba(251,191,36,0.3); }
-.ep-count-full { background: rgba(248,113,113,0.15); color: var(–err);  border: 1px solid rgba(248,113,113,0.3); }
-
-/* ── ADMIN ───────────────────────────────────────────── */
-.ac-content { display: none; }
-.adm-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
-.adm-tab  { background: var(–sur2); border: 1px solid var(–bor); color: var(–dim); border-radius: 7px; padding: 7px 14px; cursor: pointer; font-family: var(–font-mono); font-size: 11px; letter-spacing: .5px; text-transform: uppercase; }
-.adm-tab.on { border-color: var(–acc); color: var(–acc); background: rgba(96,165,250,0.07); }
-.adm-sec { display: none; }
-.adm-sec.on { display: block; }
-.adm-title { font-family: var(–font-serif); font-size: 18px; color: var(–txt); margin-bottom: 4px; }
-.adm-sub   { font-family: var(–font-mono); font-size: 10px; color: var(–dim); margin-bottom: 14px; }
-
-/* ── EXPORT GRID ─────────────────────────────────────── */
-.export-grid       { display: grid; grid-template-columns: repeat(auto-fill,minmax(160px,1fr)); gap: 9px; margin-bottom: 16px; }
-.export-card       { background: var(–sur2); border: 1px solid var(–bor); border-radius: var(–radius-md); padding: 13px; cursor: pointer; transition: all 0.2s; }
-.export-card:hover { border-color: var(–acc2); background: rgba(56,189,248,0.06); }
-.export-card-doc   { font-family: var(–font-serif); font-size: 18px; color: var(–acc); margin-bottom: 3px; }
-.export-card-meta  { font-family: var(–font-mono); font-size: 10px; color: var(–dim); }
-.export-card-count { font-family: var(–font-mono); font-size: 22px; color: var(–ok); font-weight: 600; margin-top: 4px; }
-
-/* ── MODAL ───────────────────────────────────────────── */
-.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(6,12,24,.9); z-index: 200; align-items: center; justify-content: center; padding: 18px; }
-.modal-overlay.on { display: flex; }
-.modal-box    { background: var(–sur); border: 1px solid var(–bor); border-radius: 15px; width: 100%; max-width: 440px; max-height: 80vh; display: flex; flex-direction: column; }
-.modal-header { padding: 15px 18px; border-bottom: 1px solid var(–bor); display: flex; align-items: center; justify-content: space-between; }
-.modal-body   { padding: 15px 18px; overflow-y: auto; flex: 1; }
-.modal-row    { background: var(–sur2); border: 1px solid var(–bor); border-radius: 7px; padding: 10px; margin-bottom: 7px; display: grid; grid-template-columns: 1fr 1fr; font-size: 12px; }
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--txt);font-family:'DM Sans',sans-serif;min-height:100vh}
+header{padding:14px 18px;border-bottom:1px solid var(--bor);display:flex;align-items:center;gap:12px;background:rgba(30,41,59,.96);position:sticky;top:0;z-index:99}
+.hi{width:38px;height:38px;background:linear-gradient(135deg,#1d4ed8,#0891b2);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+header h1{font-family:'DM Serif Display',serif;font-size:16px}
+header p{font-size:10px;color:var(--dim);font-family:'DM Mono',monospace}
+.db{margin-left:auto;background:var(--sur2);border:1px solid var(--bor);border-radius:7px;padding:4px 11px;font-family:'DM Mono',monospace;font-size:10px;color:var(--acc2);text-align:center}
+.db strong{display:block;font-size:13px;color:var(--txt)}
+.sb{display:flex;align-items:center;gap:7px;padding:7px 18px;font-family:'DM Mono',monospace;font-size:11px;border-bottom:1px solid var(--bor);background:var(--sur)}
+.sd{width:7px;height:7px;border-radius:50%;background:var(--warn);box-shadow:0 0 6px var(--warn);transition:all 0.3s}
+.tabs{display:flex;border-bottom:1px solid var(--bor);background:var(--sur);padding:0 18px;overflow-x:auto}
+.tab{padding:12px 13px;font-size:11px;font-family:'DM Mono',monospace;letter-spacing:1px;text-transform:uppercase;color:var(--dim);cursor:pointer;border-bottom:2px solid transparent;background:none;border:none;white-space:nowrap}
+.tab.on{color:var(--acc);border-bottom-color:var(--acc)}
+.tab.ep-tab.on{color:var(--ep);border-bottom-color:var(--ep)}
+.pg{display:none;padding:18px;max-width:860px;margin:0 auto}
+.pg.on{display:block}
+.card{background:var(--sur);border:1px solid var(--bor);border-radius:13px;padding:20px;margin-bottom:14px}
+.cbox{background:var(--sur2);border:1px solid var(--bor);border-radius:11px;padding:18px;margin-bottom:16px}
+.rl{font-size:10px;font-family:'DM Mono',monospace;text-transform:uppercase;color:var(--dim);margin-bottom:5px}
+.rd{font-family:'DM Serif Display',serif;font-size:26px;color:var(--acc);margin-bottom:3px}
+.rr{font-family:'DM Mono',monospace;font-size:12px;color:var(--mid);margin-bottom:9px}
+.rb{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:16px;justify-content:center}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--bor);transition:all .3s}
+.dot.used{background:var(--sur3);opacity:0.2}
+.dot.on{background:var(--acc);transform:scale(1.8);box-shadow:0 0 8px var(--acc)}
+label{display:block;font-size:10px;font-family:'DM Mono',monospace;text-transform:uppercase;color:var(--dim);margin-bottom:5px}
+input{width:100%;background:var(--sur2);border:1px solid var(--bor);border-radius:7px;padding:11px;color:var(--txt);font-family:'DM Mono',monospace;font-size:14px;outline:none;margin-bottom:11px}
+.btn{width:100%;background:linear-gradient(135deg,#2563eb,#0891b2);border:none;border-radius:8px;padding:12px;color:#fff;font-weight:600;cursor:pointer;margin-bottom:5px;transition:all 0.2s}
+.btn-warn{background:linear-gradient(135deg,#f87171,#ef4444);margin-top:10px}
+.btn:disabled{opacity:0.4;cursor:not-allowed;filter:grayscale(0.8)}
+.lf{display:flex;gap:7px;margin-bottom:12px;flex-wrap:wrap}
+.fb{background:var(--sur2);border:1px solid var(--bor);color:var(--mid);border-radius:6px;padding:5px 11px;cursor:pointer;font-family:'DM Mono',monospace;font-size:11px}
+.fb.on{border-color:var(--acc);color:var(--acc)}
+.lt{background:var(--sur);border:1px solid var(--bor);border-radius:11px;overflow:hidden}
+.lh{display:grid;grid-template-columns:80px 1fr 1fr 90px 1fr;padding:8px 13px;background:var(--sur2);border-bottom:1px solid var(--bor);font-family:'DM Mono',monospace;font-size:10px;color:var(--dim)}
+.lr{display:grid;grid-template-columns:80px 1fr 1fr 90px 1fr;padding:10px 13px;border-bottom:1px solid var(--bor);font-size:12px;align-items:center}
+.lti{font-family:'DM Mono',monospace;font-size:11px;color:var(--dim)}
+.lm{font-family:'DM Mono',monospace;font-weight:500}
+.lgx{font-size:11px;color:var(--mid)}
+.rt{font-family:'DM Mono',monospace;font-size:10px;color:var(--acc2);background:rgba(6,182,212,.08);border:1px solid rgba(6,182,212,.2);border-radius:3px;padding:2px 5px;display:inline-block;margin-top:2px}
+.dg{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:9px}
+.dc{background:var(--sur);border:1px solid var(--bor);border-radius:11px;padding:13px;cursor:pointer;transition:all 0.2s}
+.dc.nx{border-color:var(--acc);background:rgba(59,130,246,.06)}
+.dd{font-size:12px;font-weight:500;margin-bottom:2px}
+.dn2{font-family:'DM Serif Display',serif;font-size:26px}
+.pi{background:var(--sur2);border:1px solid var(--bor);border-radius:7px;padding:12px;color:var(--txt);font-family:'DM Mono',monospace;font-size:15px;text-align:center;width:100%;margin-bottom:9px}
+.mo{display:none;position:fixed;inset:0;background:rgba(6,12,24,.9);z-index:200;align-items:center;justify-content:center;padding:18px}
+.mo.on{display:flex}
+.mb{background:var(--sur);border:1px solid var(--bor);border-radius:15px;width:100%;max-width:440px;max-height:80vh;display:flex;flex-direction:column}
+.mh{padding:15px 18px;border-bottom:1px solid var(--bor);display:flex;align-items:center;justify-content:space-between}
+.mbody{padding:15px 18px;overflow-y:auto;flex:1}
+.mr{background:var(--sur2);border:1px solid var(--bor);border-radius:7px;padding:10px;margin-bottom:7px;display:grid;grid-template-columns:1fr 1fr;font-size:12px}
+.stbox{display:flex;gap:4px;margin-top:8px}
+.stb{flex:1;font-size:9px;padding:3px;border-radius:4px;text-align:center;font-family:'DM Mono',monospace;font-weight:600;letter-spacing:0.5px}
+.stb-ok{background:rgba(52,211,153,0.15);color:var(--ok);border:1px solid rgba(52,211,153,0.3)}
+.stb-off{background:rgba(248,113,113,0.15);color:var(--err);border:1px solid rgba(248,113,113,0.3)}
+.lv-btn-box{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:5px}
+.lv-btn{font-size:9px;padding:5px 0;border-radius:4px;border:none;cursor:pointer;font-family:'DM Mono',monospace;color:white;font-weight:600}
+.lv-btn.on{background:var(--ok)}
+.lv-btn.off{background:var(--err)}
+.ac-content{display:none}
+.fd-sel{width:100%;background:rgba(56,189,248,0.05);border:1px solid var(--acc2);border-radius:5px;padding:8px;color:var(--acc2);font-family:'DM Mono',monospace;font-size:13px;font-weight:600;outline:none;margin-top:5px;cursor:pointer;text-align:center}
+.fd-sel option{background:var(--sur);color:var(--txt);text-align:left}
+.spec-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px}
+.spec-card{background:var(--sur2);border:1px solid var(--bor);border-radius:11px;padding:16px;cursor:pointer;transition:border-color .2s,background .2s,box-shadow .2s;position:relative}
+.spec-card:hover:not(.disabled){border-color:var(--acc);background:rgba(59,130,246,0.08)}
+.spec-card.selected{border-color:var(--ok);background:rgba(52,211,153,.08);box-shadow:0 0 0 2px var(--ok)}
+.spec-card.disabled{opacity:0.4;cursor:not-allowed;filter:grayscale(0.8)}
+.spec-name{font-family:'DM Serif Display',serif;font-size:26px;color:#60a5fa!important;margin-bottom:3px;line-height:1.1}
+.spec-meta{font-family:'DM Mono',monospace;font-size:12px;color:var(--mid)}
+.spec-off-badge{position:absolute;top:8px;right:8px;font-family:'DM Mono',monospace;font-size:9px;font-weight:600;letter-spacing:.5px;background:rgba(248,113,113,.15);color:var(--err);border:1px solid rgba(248,113,113,.3);border-radius:4px;padding:2px 6px}
+.spec-form{display:none;animation:fadeIn 0.3s}
+.spec-form.on{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+.spec-hint{font-size:11px;color:var(--dim);margin-bottom:12px;padding:8px;background:rgba(56,189,248,0.05);border-radius:6px;border-left:3px solid var(--acc);font-family:'DM Mono',monospace}
+.adm-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.adm-tab{background:var(--sur2);border:1px solid var(--bor);color:var(--dim);border-radius:7px;padding:7px 14px;cursor:pointer;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.5px;text-transform:uppercase}
+.adm-tab.on{border-color:var(--acc);color:var(--acc);background:rgba(96,165,250,0.07)}
+.adm-sec{display:none}
+.adm-sec.on{display:block}
+.clinic-export-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:9px;margin-bottom:16px}
+.cex-card{background:var(--sur2);border:1px solid var(--bor);border-radius:11px;padding:13px;cursor:pointer;transition:all 0.2s}
+.cex-card:hover{border-color:var(--acc2);background:rgba(56,189,248,0.06)}
+.cex-doc{font-family:'DM Serif Display',serif;font-size:18px;color:var(--acc);margin-bottom:3px}
+.cex-meta{font-family:'DM Mono',monospace;font-size:10px;color:var(--dim)}
+.cex-count{font-family:'DM Mono',monospace;font-size:22px;color:var(--ok);font-weight:600;margin-top:4px}
+.ep-notice{background:rgba(167,139,250,0.08);border:1px solid rgba(167,139,250,0.35);border-radius:10px;padding:14px 16px;margin-bottom:16px;display:flex;gap:12px;align-items:flex-start}
+.ep-notice-icon{font-size:20px;flex-shrink:0;margin-top:1px}
+.ep-notice-text{font-family:'DM Mono',monospace;font-size:12px;color:var(--ep2);line-height:1.6}
+.ep-notice-text strong{color:#fff;font-size:13px}
+.ep-card{border-color:rgba(167,139,250,0.4)!important}
+.ep-card:hover:not(.disabled){border-color:var(--ep)!important;background:rgba(167,139,250,0.08)!important}
+.ep-card.selected{border-color:var(--ep)!important;background:rgba(167,139,250,0.12)!important;box-shadow:0 0 0 2px var(--ep)!important}
+.ep-card .spec-name{color:var(--ep)!important}
+.ep-sel{width:100%;background:rgba(167,139,250,0.06);border:1px solid rgba(167,139,250,0.45);border-radius:5px;padding:8px;color:var(--ep2);font-family:'DM Mono',monospace;font-size:13px;font-weight:600;outline:none;margin-top:5px;cursor:pointer}
+.ep-sel option{background:var(--sur);color:var(--txt)}
+.ep-count-badge{display:inline-block;font-family:'DM Mono',monospace;font-size:10px;padding:2px 7px;border-radius:4px;margin-left:6px;font-weight:600}
+.ep-count-ok{background:rgba(52,211,153,0.15);color:var(--ok);border:1px solid rgba(52,211,153,0.3)}
+.ep-count-warn{background:rgba(251,191,36,0.15);color:var(--warn);border:1px solid rgba(251,191,36,0.3)}
+.ep-count-full{background:rgba(248,113,113,0.15);color:var(--err);border:1px solid rgba(248,113,113,0.3)}
+.btn-ep{background:linear-gradient(135deg,#7c3aed,#6d28d9)!important}
+.adm-section-title{font-family:'DM Serif Display',serif;font-size:18px;color:var(--txt);margin-bottom:4px}
+.adm-section-sub{font-family:'DM Mono',monospace;font-size:10px;color:var(--dim);margin-bottom:14px}
+hr.adm-hr{border:0;border-top:1px solid var(--bor);margin:20px 0}
 </style>
-
 </head>
 <body>
 
-<!-- ── HEADER ────────────────────────────────────────── -->
-
 <header>
-  <div class="header-icon">🫀</div>
+  <div class="hi">🫀</div>
   <div><h1>Cardio OPD Allocator</h1><p>MUBARAK AL-KABEER HOSPITAL</p></div>
-  <div class="date-badge"><strong id="dayName">—</strong><span id="dateStr">—</span></div>
+  <div class="db"><strong id="dayName">—</strong><span id="dateStr">—</span></div>
 </header>
-<div class="sync-bar"><div class="sync-dot" id="syncDot"></div><span id="syncText">Connecting...</span></div>
 
-<!-- ── MAIN TABS ──────────────────────────────────────── -->
+<div class="sb"><div class="sd" id="syncDot"></div><span id="syncText">Connecting...</span></div>
 
 <div class="tabs">
-  <button class="tab on"     onclick="goTab('ip',this)">Inpatient</button>
-  <button class="tab"        onclick="goTab('spec',this)">Interventional</button>
-  <button class="tab"        onclick="goTab('op',this)">Outpatient</button>
+  <button class="tab on"  onclick="goTab('ip',this)">Inpatient</button>
+  <button class="tab"     onclick="goTab('spec',this)">Interventional</button>
+  <button class="tab"     onclick="goTab('op',this)">Outpatient</button>
   <button class="tab ep-tab" onclick="goTab('ep',this)">EP Clinics</button>
-  <button class="tab"        onclick="goTab('adm',this)">Admin</button>
+  <button class="tab"     onclick="goTab('adm',this)">Admin</button>
 </div>
 
-<!-- ── INPATIENT ──────────────────────────────────────── -->
-
+<!-- INPATIENT TAB -->
 <div class="pg on" id="pg-ip">
   <div class="card">
-    <div class="info-box">
-      <div class="label-sm">Next Available Clinic (Auto)</div>
-      <div class="value-lg" id="nd">—</div>
-      <div class="value-sub" id="nr">—</div>
+    <div class="cbox">
+      <div class="rl">NEXT AVAILABLE CLINIC (AUTO)</div>
+      <div class="rd" id="nd">—</div>
+      <div class="rr" id="nr">—</div>
       <div style="margin-top:15px;border-top:1px dashed var(--bor);padding-top:12px;">
-        <label style="font-size:9px;">Available Follow-up Dates (Next 4 Months)</label>
-        <select id="fd-sel" class="select-std"></select>
+        <label style="color:var(--dim);font-size:9px;">AVAILABLE FOLLOW-UP DATES (NEXT 4 MONTHS)</label>
+        <select id="fd-sel" class="fd-sel"></select>
       </div>
     </div>
-    <div class="dots-row" id="rb"></div>
+    <div class="rb" id="rb"></div>
     <label>File Number (6 Digits)</label>
     <input type="text" id="fi" maxlength="6" inputmode="numeric" placeholder="e.g. 123456">
     <label>Registrar PIN</label>
     <input type="password" id="rpin" maxlength="4" inputmode="numeric">
-    <button class="btn" onclick="assignIP()">Assign IP Discharge (Auto) →</button>
+    <button class="btn" onclick="doAssign('ip')">Assign IP Discharge (Auto) →</button>
   </div>
 </div>
 
-<!-- ── INTERVENTIONAL ────────────────────────────────── -->
-
+<!-- INTERVENTIONAL TAB -->
 <div class="pg" id="pg-spec">
   <div class="card">
-    <div class="clinic-grid" id="spec-grid"></div>
-    <div class="clinic-form" id="spec-form">
-      <div class="hint-box" id="spec-hint">Loading dates...</div>
+    <div class="spec-grid" id="spec-grid"></div>
+    <div class="spec-form" id="spec-form">
+      <div class="spec-hint" id="spec-hint">Loading dates...</div>
       <label>Follow-up Date</label>
-      <select id="spec-date" class="select-std" style="margin-bottom:15px;"></select>
+      <select id="spec-date" class="fd-sel" style="margin-bottom:15px;"></select>
       <label>File Number (6 Digits)</label>
-      <input type="text" id="spec-fi" maxlength="6" inputmode="numeric" placeholder="e.g. 123456">
+      <input type="text" id="spec-fi" maxlength="6" inputmode="numeric" placeholder="e.g. 123456" style="margin-bottom:11px;">
       <label>Registrar PIN</label>
       <input type="password" id="spec-pin" maxlength="4" inputmode="numeric" style="margin-bottom:15px;">
-      <button class="btn" onclick="assignInterventional()">Assign to Selected Clinic →</button>
+      <button class="btn" onclick="doSpecificAssign()">Assign to Selected Clinic →</button>
     </div>
   </div>
 </div>
 
-<!-- ── OUTPATIENT ─────────────────────────────────────── -->
-
+<!-- OUTPATIENT TAB -->
 <div class="pg" id="pg-op">
   <div id="opgate" class="card" style="text-align:center">
-    <label>Clerk Access PIN</label>
-    <input class="pin-input" type="password" id="opi" maxlength="4">
+    <label>CLERK ACCESS PIN</label>
+    <input class="pi" type="password" id="opi" maxlength="4">
     <button class="btn" onclick="clerkLogin()">Unlock</button>
   </div>
   <div id="opc" style="display:none">
     <div class="tabs" style="margin-bottom:14px;border-radius:10px;overflow:hidden;">
-      <button class="tab on" onclick="goOpTab('walkin',this)">Walk-in Today</button>
-      <button class="tab"    onclick="goOpTab('fix',this)">Book Appointment</button>
+      <button class="tab on" id="optab-walkin" onclick="goOpTab('walkin',this)">Walk-in Today</button>
+      <button class="tab" id="optab-fix" onclick="goOpTab('fix',this)">Book Appointment</button>
     </div>
     <div id="op-walkin">
       <div class="card">
-        <div class="info-box">
-          <div class="label-sm">Auto — Next Available Today</div>
-          <div class="value-lg" id="opd">—</div>
-          <div class="value-sub" id="opr">—</div>
+        <div class="cbox">
+          <div class="rl">AUTO — Next Available Today</div>
+          <div class="rd" id="opd">—</div>
+          <div class="rr" id="opr">—</div>
         </div>
-        <label>Patient File Number (6 Digits) <span style="color:var(--dim);text-transform:none;font-size:10px">— Optional</span></label>
+        <label>Patient File Number (6 Digits) — <span style="color:var(--dim);text-transform:none;font-size:10px">Optional</span></label>
         <input type="text" id="opfi" maxlength="6" inputmode="numeric" placeholder="e.g. 123456">
-        <label>Patient Phone Number (8 Digits) <span style="color:var(--dim);text-transform:none;font-size:10px">— Optional</span></label>
+        <label>Patient Phone Number (8 Digits) — <span style="color:var(--dim);text-transform:none;font-size:10px">Optional</span></label>
         <input type="text" id="opphone" maxlength="8" inputmode="numeric" placeholder="e.g. 99887766">
-        <button class="btn" onclick="assignOP()">Assign OP Walk-in →</button>
+        <button class="btn" onclick="doAssign('op')">Assign OP Walk-in →</button>
       </div>
     </div>
     <div id="op-fix" style="display:none">
       <div class="card">
-        <div class="label-sm" style="margin-bottom:12px;">Clinics Not Running Today — Select to Book</div>
-        <div id="fix-clinic-grid" class="clinic-grid" style="margin-bottom:16px;"></div>
+        <div class="rl" style="margin-bottom:12px;">CLINICS NOT RUNNING TODAY — SELECT TO BOOK</div>
+        <div id="fix-clinic-grid" class="spec-grid" style="margin-bottom:16px;"></div>
         <div id="fix-form" style="display:none">
-          <div class="hint-box" id="fix-hint"></div>
-          <label>Follow-up Date <span style="color:var(--dim);text-transform:none;font-size:10px">— Optional</span></label>
-          <select id="fix-date" class="select-std" style="margin-bottom:14px;"></select>
-          <label>Patient File Number (6 Digits) <span style="color:var(--dim);text-transform:none;font-size:10px">— Optional</span></label>
+          <div class="spec-hint" id="fix-hint"></div>
+          <label>Follow-up Date — <span style="color:var(--dim);text-transform:none;font-size:10px">Optional</span></label>
+          <select id="fix-date" class="fd-sel" style="margin-bottom:14px;"></select>
+          <label>Patient File Number (6 Digits) — <span style="color:var(--dim);text-transform:none;font-size:10px">Optional</span></label>
           <input type="text" id="fix-fi" maxlength="6" inputmode="numeric" placeholder="e.g. 123456">
-          <label>Patient Phone Number (8 Digits) <span style="color:var(--dim);text-transform:none;font-size:10px">— Optional</span></label>
+          <label>Patient Phone Number (8 Digits) — <span style="color:var(--dim);text-transform:none;font-size:10px">Optional</span></label>
           <input type="text" id="fix-phone" maxlength="8" inputmode="numeric" placeholder="e.g. 99887766">
-          <button class="btn" onclick="assignFixedAppointment()">Book Appointment →</button>
+          <button class="btn" onclick="doFixAssign()">Book Appointment →</button>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ── EP CLINICS ─────────────────────────────────────── -->
-
+<!-- EP CLINICS TAB -->
 <div class="pg" id="pg-ep">
   <div class="ep-notice">
     <div class="ep-notice-icon">⚠️</div>
     <div class="ep-notice-text">
       <strong>Before booking an EP Clinic appointment</strong><br>
-      You must contact <strong>Dr. Mahmoud Rehan</strong> for approval before registering any patient.
+      You must contact <strong>Dr. Mahmoud Rehan</strong> for approval before registering any patient in this clinic.
     </div>
   </div>
   <div class="card">
-    <div class="label-sm" style="margin-bottom:12px;">Select EP Clinic</div>
-    <div class="clinic-grid" id="ep-clinic-grid" style="margin-bottom:16px;"></div>
+    <div class="rl" style="margin-bottom:12px;">SELECT EP CLINIC</div>
+    <div class="spec-grid" id="ep-clinic-grid" style="margin-bottom:16px;"></div>
     <div id="ep-form" style="display:none">
-      <div class="hint-box" id="ep-hint" style="border-left-color:var(--ep);background:rgba(167,139,250,0.05);color:var(--ep2);"></div>
+      <div class="spec-hint" id="ep-hint" style="border-left-color:var(--ep);background:rgba(167,139,250,0.05);color:var(--ep2);"></div>
       <label>Follow-up Date <span id="ep-date-count-label" style="color:var(--dim);font-style:normal;text-transform:none;font-size:10px;"></span></label>
-      <select id="ep-date" class="select-ep" style="margin-bottom:15px;"></select>
+      <select id="ep-date" class="ep-sel" style="margin-bottom:15px;"></select>
       <label>File Number (6 Digits)</label>
-      <input type="text" id="ep-fi" maxlength="6" inputmode="numeric" placeholder="e.g. 123456">
+      <input type="text" id="ep-fi" maxlength="6" inputmode="numeric" placeholder="e.g. 123456" style="margin-bottom:11px;">
       <label>Registrar PIN</label>
       <input type="password" id="ep-pin" maxlength="4" inputmode="numeric" style="margin-bottom:15px;">
-      <button class="btn btn-ep" onclick="assignEP()">Book EP Clinic Appointment →</button>
+      <button class="btn btn-ep" onclick="doEpAssign()">Book EP Clinic Appointment →</button>
     </div>
   </div>
 </div>
 
-<!-- ── ADMIN ──────────────────────────────────────────── -->
-
+<!-- ADMIN TAB (consolidated) -->
 <div class="pg" id="pg-adm">
   <div class="card apgate" style="text-align:center">
-    <label>Admin PIN</label>
-    <input class="pin-input" type="password" id="api-adm" maxlength="4">
+    <label>ADMIN PIN</label>
+    <input class="pi" type="password" id="api-adm" maxlength="4">
     <button class="btn" onclick="adminLogin('api-adm')">Unlock</button>
   </div>
   <div class="ac-content">
+
+    <!-- Admin sub-nav -->
     <div class="adm-tabs">
       <button class="adm-tab on" onclick="goAdmTab('leave',this)">Doctor Leave</button>
       <button class="adm-tab"    onclick="goAdmTab('dist',this)">Distribution</button>
@@ -370,56 +267,66 @@ text-align: center; width: 100%; margin-bottom: 9px;
       <button class="adm-tab"    onclick="goAdmTab('export',this)">Export / Print</button>
       <button class="adm-tab"    onclick="goAdmTab('danger',this)">⚠ Danger Zone</button>
     </div>
+
+    <!-- LEAVE -->
     <div class="adm-sec on" id="adm-leave">
-      <div class="adm-title">Doctor Leave / Status</div>
-      <div class="adm-sub">Toggle IP and OP availability per doctor. Changes are saved live.</div>
-      <div id="leave-grid" class="dist-grid"></div>
+      <div class="adm-section-title">Doctor Leave / Status</div>
+      <div class="adm-section-sub">Toggle IP and OP availability for each doctor. Changes are saved live.</div>
+      <div id="leave-grid" class="dg"></div>
     </div>
+
+    <!-- DISTRIBUTION -->
     <div class="adm-sec" id="adm-dist">
-      <div class="adm-title">Slot Distribution</div>
-      <div class="adm-sub">Click any slot card to view its patient list and print.</div>
-      <div class="dist-grid" id="dg"></div>
+      <div class="adm-section-title">Slot Distribution</div>
+      <div class="adm-section-sub">Click any slot card to view its patient list and print.</div>
+      <div class="dg" id="dg"></div>
     </div>
+
+    <!-- LOG -->
     <div class="adm-sec" id="adm-log">
-      <div class="adm-title">Assignment Log</div>
-      <div class="adm-sub">Last 50 entries across all assignment types.</div>
-      <div class="log-filters">
-        <button class="filter-btn on" onclick="filterLog('all',this)">All</button>
-        <button class="filter-btn"    onclick="filterLog('Sun',this)">Sun</button>
-        <button class="filter-btn"    onclick="filterLog('Mon',this)">Mon</button>
-        <button class="filter-btn"    onclick="filterLog('Tue',this)">Tue</button>
-        <button class="filter-btn"    onclick="filterLog('Wed',this)">Wed</button>
-        <button class="filter-btn"    onclick="filterLog('Thu',this)">Thu</button>
+      <div class="adm-section-title">Assignment Log</div>
+      <div class="adm-section-sub">Last 50 entries across all assignment types.</div>
+      <div class="lf">
+        <button class="fb on" onclick="filterLog('all',this)">All</button>
+        <button class="fb" onclick="filterLog('Sun',this)">Sun</button>
+        <button class="fb" onclick="filterLog('Mon',this)">Mon</button>
+        <button class="fb" onclick="filterLog('Tue',this)">Tue</button>
+        <button class="fb" onclick="filterLog('Wed',this)">Wed</button>
+        <button class="fb" onclick="filterLog('Thu',this)">Thu</button>
       </div>
-      <div class="log-table">
-        <div class="log-header"><div>Date</div><div>File / Phone</div><div>Doctor / Room</div><div>Follow-up</div><div>By</div></div>
+      <div class="lt">
+        <div class="lh"><div>Date</div><div>File / Phone</div><div>Doctor / Room</div><div>Follow-up</div><div>By</div></div>
         <div id="lb"></div>
       </div>
     </div>
+
+    <!-- EXPORT -->
     <div class="adm-sec" id="adm-export">
-      <div class="adm-title">Export &amp; Print</div>
-      <div class="adm-sub">Click a clinic card to export all its patients as PDF.</div>
-      <button class="btn" style="margin-bottom:18px" onclick="exportAllPDF()">📊 Export Master Log (All Entries)</button>
-      <div class="label-sm" style="margin-bottom:10px;">Clinic Patient Lists</div>
-      <div class="export-grid" id="clinic-export-grid"></div>
+      <div class="adm-section-title">Export &amp; Print</div>
+      <div class="adm-section-sub">Select a clinic card to export all its patients as PDF. Patients are grouped by doctor + room + day — not by rotation slot.</div>
+      <button class="btn" style="margin-bottom:18px" onclick="exportWeekly()">📊 Export Master Log (All Entries)</button>
+      <div class="rl" style="margin-bottom:10px;">CLINIC PATIENT LISTS</div>
+      <div class="clinic-export-grid" id="clinic-export-grid"></div>
     </div>
+
+    <!-- DANGER -->
     <div class="adm-sec" id="adm-danger">
-      <div class="adm-title">Danger Zone</div>
-      <div class="adm-sub">Irreversible actions. Use with caution.</div>
-      <label>Remove Patient by File / Phone</label>
+      <div class="adm-section-title">Danger Zone</div>
+      <div class="adm-section-sub">Irreversible actions. Use with caution.</div>
+      <label>Remove Patient Row</label>
       <input type="text" id="dfi" placeholder="Enter File or Phone Number" inputmode="numeric">
-      <button class="btn" style="background:#fbbf24;color:#000;margin-bottom:10px" onclick="deleteEntry()">🗑 Remove Entry</button>
-      <button class="btn btn-danger" onclick="wipeAll()">⚠ Wipe All Database Data</button>
+      <button class="btn" style="background:#fbbf24;color:#000;margin-bottom:10px" onclick="delEntry()">🗑 Remove Entry</button>
+      <button class="btn btn-warn" onclick="resetAll()">⚠ Wipe All Database Data</button>
     </div>
+
   </div>
 </div>
 
-<!-- ── MODAL ──────────────────────────────────────────── -->
-
-<div class="modal-overlay" id="mo">
-  <div class="modal-box">
-    <div class="modal-header"><h2 id="mt">—</h2><button onclick="closeModal()">Close</button></div>
-    <div class="modal-body">
+<!-- MODAL -->
+<div class="mo" id="mo">
+  <div class="mb">
+    <div class="mh"><h2 id="mt">—</h2><button onclick="closeMo()">Close</button></div>
+    <div class="mbody">
       <div id="mc2" style="font-size:12px;color:var(--acc2);margin-bottom:10px"></div>
       <div id="mbody"></div>
       <div id="mprint"></div>
@@ -427,589 +334,759 @@ text-align: center; width: 100%; margin-bottom: 9px;
   </div>
 </div>
 
-<!-- ── FIREBASE SDK ───────────────────────────────────── -->
-
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-
 <script>
-'use strict';
-
-// ── FIREBASE ──────────────────────────────────────────
-firebase.initializeApp({
-  apiKey:        "AIzaSyAT7Y3jWM4ix7I5cM4vKsHIJRaZZ6AZ9yI",
-  authDomain:    "cardio-opd.firebaseapp.com",
-  databaseURL:   "https://cardio-opd-default-rtdb.firebaseio.com",
-  projectId:     "cardio-opd",
+const firebaseConfig = {
+  apiKey: "AIzaSyAT7Y3jWM4ix7I5cM4vKsHIJRaZZ6AZ9yI",
+  authDomain: "cardio-opd.firebaseapp.com",
+  databaseURL: "https://cardio-opd-default-rtdb.firebaseio.com",
+  projectId: "cardio-opd",
   storageBucket: "cardio-opd.firebasestorage.app",
-  appId:         "1:71256529635:web:d62921678530fdce7303d6"
-});
-const db    = firebase.database();
+  appId: "1:71256529635:web:d62921678530fdce7303d6"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
 const dbRef = db.ref('mkh_clinic_data');
 
-// ── STATIC DATA ───────────────────────────────────────
-const DOC_PINS = {
-  "1001":"Dr. Rehan",  "1002":"Dr. Ramy",    "1003":"Dr. Badawy",  "1004":"Dr. Sharkawy",
-  "1005":"Dr. Mostafa","1006":"Dr. Ibrahim",  "1007":"Dr. Hadad",   "1008":"Dr. Emara",
-  "1009":"Dr. Rahim",  "1010":"Dr. Mamdouh", "1011":"Dr. Slam",    "1012":"Dr. Ezz",
-  "1013":"Dr. R Gamal","1014":"Dr. Moghl",   "1015":"Dr. Darwish", "1016":"Dr. Omar",
-  "1017":"Dr. Sajid",  "1018":"Dr. Ali",     "1019":"Dr. Eyad",    "1020":"Dr. Mongy",
-  "1021":"Dr. Bahlol", "9999":"Admin"
+var docPINs = {
+  "1001":"Dr. Rehan","1002":"Dr. Ramy","1003":"Dr. Badawy","1004":"Dr. Sharkawy",
+  "1005":"Dr. Mostafa","1006":"Dr. Ibrahim","1007":"Dr. Hadad","1008":"Dr. Emara",
+  "1009":"Dr. Rahim","1010":"Dr. Mamdouh","1011":"Dr. Slam","1012":"Dr. Ezz",
+  "1013":"Dr. R Gamal","1014":"Dr. Moghl","1015":"Dr. Darwish","1016":"Dr. Omar",
+  "1017":"Dr. Sajid","1018":"Dr. Ali","1019":"Dr. Eyad","1020":"Dr. Mongy",
+  "1021":"Dr. Bahlol","9999":"Admin"
 };
 
-const CL = [
-  {d:"Hisham",  r:"Room 10", days:["Sun"]}, {d:"Maged",   r:"Room 11", days:["Tue"]},
-  {d:"Hisham",  r:"Room 10", days:["Sun"]}, {d:"Maged",   r:"Room 11", days:["Tue"]},
-  {d:"Fahd",    r:"Room 24", days:["Mon"]}, {d:"Akmal",   r:"Room 10", days:["Mon"]},
-  {d:"Hisham",  r:"Room 10", days:["Sun"]}, {d:"Maged",   r:"Room 11", days:["Tue"]},
-  {d:"Fahd",    r:"Room 24", days:["Mon"]}, {d:"Farag",   r:"Room 8",  days:["Mon"]},
-  {d:"Akmal",   r:"Room 10", days:["Mon"]}, {d:"Farag",   r:"Room 8",  days:["Mon"]},
-  {d:"Ehab",    r:"Room 25", days:["Mon"]}, {d:"Ehab",    r:"Room 25", days:["Mon"]},
-  {d:"Maged",   r:"Room 20", days:["Sun"]}, {d:"Hisham",  r:"Room 8",  days:["Tue"]},
-  {d:"Zaher",   r:"Room 20", days:["Tue"]}, {d:"Nazanin", r:"Room 25", days:["Sun"]},
-  {d:"Farag",   r:"Room 10", days:["Wed"]}, {d:"Ali",     r:"Room 11", days:["Wed"]},
-  {d:"Fawzy",   r:"Room 20", days:["Wed"]}, {d:"Shafie",  r:"Room 25", days:["Thu"]},
-  {d:"Ibrahim", r:"Room 13", days:["Thu"]}, {d:"Ibrahim", r:"Room 10", days:["Tue"]},
-  {d:"Arab",    r:"Room 25", days:["Tue"]}, {d:"Ashraf",  r:"Room 20", days:["Thu"]},
-  {d:"Hany",    r:"Room 16", days:["Sun"]}
+var CL = [
+  {d:"Hisham",r:"Room 10",days:["Sun"]},{d:"Maged",r:"Room 11",days:["Tue"]},
+  {d:"Hisham",r:"Room 10",days:["Sun"]},{d:"Maged",r:"Room 11",days:["Tue"]},
+  {d:"Fahd",r:"Room 24",days:["Mon"]},{d:"Akmal",r:"Room 10",days:["Mon"]},
+  {d:"Hisham",r:"Room 10",days:["Sun"]},{d:"Maged",r:"Room 11",days:["Tue"]},
+  {d:"Fahd",r:"Room 24",days:["Mon"]},{d:"Farag",r:"Room 8",days:["Mon"]},
+  {d:"Akmal",r:"Room 10",days:["Mon"]},{d:"Farag",r:"Room 8",days:["Mon"]},
+  {d:"Ehab",r:"Room 25",days:["Mon"]},{d:"Ehab",r:"Room 25",days:["Mon"]},
+  {d:"Maged",r:"Room 20",days:["Sun"]},{d:"Hisham",r:"Room 8",days:["Tue"]},
+  {d:"Zaher",r:"Room 20",days:["Tue"]},{d:"Nazanin",r:"Room 25",days:["Sun"]},
+  {d:"Farag",r:"Room 10",days:["Wed"]},{d:"Ali",r:"Room 11",days:["Wed"]},
+  {d:"Fawzy",r:"Room 20",days:["Wed"]},{d:"Shafie",r:"Room 25",days:["Thu"]},
+  {d:"Ibrahim",r:"Room 13",days:["Thu"]},{d:"Ibrahim",r:"Room 10",days:["Tue"]},
+  {d:"Arab",r:"Room 25",days:["Tue"]},{d:"Ashraf",r:"Room 20",days:["Thu"]},
+  {d:"Hany",r:"Room 16",days:["Sun"]}
 ];
 
-const EP_CLINICS = [
-  { id:"ep-sun", name:"EP Device Clinic",   room:"Room 21", day:"Sun", dayNum:0, label:"Sunday"  },
-  { id:"ep-tue", name:"EP Ablation Clinic", room:"Room 5",  day:"Tue", dayNum:2, label:"Tuesday" }
+var EP_CLINICS = [
+  {id:"ep-sun", name:"EP Device Clinic",   room:"Room 21", day:"Sun", dayNum:0, label:"Sunday"},
+  {id:"ep-tue", name:"EP Ablation Clinic", room:"Room 5",  day:"Tue", dayNum:2, label:"Tuesday"}
 ];
-const EP_MAX = 12;
+var EP_MAX_PER_DATE = 12;
 
-const SPECIFIC_DOCS = [
-  { name:"Fahd",    indices:[4,8],  room:"Room 24", day:"Mon", label:"Monday"    },
-  { name:"Ali",     indices:[19],   room:"Room 11", day:"Wed", label:"Wednesday" },
-  { name:"Arab",    indices:[24],   room:"Room 25", day:"Tue", label:"Tuesday"   },
-  { name:"Nazanin", indices:[17],   room:"Room 25", day:"Sun", label:"Sunday"    }
+var specificDocs = [
+  {name:"Fahd",    indices:[4,8],  room:"Room 24", day:"Mon", label:"Monday"},
+  {name:"Ali",     indices:[19],   room:"Room 11", day:"Wed", label:"Wednesday"},
+  {name:"Arab",    indices:[24],   room:"Room 25", day:"Tue", label:"Tuesday"},
+  {name:"Nazanin", indices:[17],   room:"Room 25", day:"Sun", label:"Sunday"}
 ];
 
-const DAY_NUM = { Sun:0, Mon:1, Tue:2, Wed:3, Thu:4, Fri:5, Sat:6 };
+var selectedSpecificDoc = null;
+var selectedFixDoc = null;
+var selectedEpClinic = null;
+window.S = {logs:[], oplogs:[], eplogs:[], leave:{}};
+var adm = false;
+window.lf = "all";
 
-// ── APP STATE ─────────────────────────────────────────
-let S = { logs:[], oplogs:[], eplogs:[], leave:{} };
-let isAdmin        = false;
-let logFilter      = "all";
-let selectedIntDoc = null;
-let selectedFixDoc = null;
-let selectedEpClinic = null;
-
-// ── HELPERS ───────────────────────────────────────────
-const $ = id => document.getElementById(id);
-const todayName = () => ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][new Date().getDay()];
-const timeNow   = () => new Date().toLocaleTimeString("en-GB", { hour:"2-digit", minute:"2-digit" });
-const dateNow   = () => new Date().toLocaleDateString("en-GB", { day:"numeric", month:"short" });
-
-const isOff = (doc, type) => S.leave[doc]?.[type] === true;
-
-const isDuplicate = val => {
-  if (!val || !val.toString().trim()) return false;
-  const s = val.toString().trim();
-  return [...S.logs, ...S.oplogs].some(e => e.fn?.toString().includes(s));
-};
-
-const slotCount = idx => [...S.logs, ...S.oplogs].filter(e => e.si === idx).length;
-
-const makeEntry = extra => ({ cd:todayName(), ad:dateNow(), time:timeNow(), ts:Date.now(), ...extra });
-
-const syncDB = () => dbRef.set(S);
-
-// ── SLOT LOGIC ────────────────────────────────────────
-const getGlobalMin = () => CL.reduce((min, c, i) => isOff(c.d,'ip') ? min : Math.min(min, slotCount(i)), Infinity);
-
-const nextIPSlot = () => {
-  const min = getGlobalMin();
-  if (min === Infinity) return -1;
-  return CL.findIndex((c, i) => !isOff(c.d,'ip') && slotCount(i) === min);
-};
-
-const nextOPSlot = () => {
-  const today = todayName();
-  const valid = CL.reduce((a,c,i) => { if (c.days.includes(today) && !isOff(c.d,'op')) a.push(i); return a; }, []);
-  if (!valid.length) return -1;
-  const min = Math.min(...valid.map(slotCount));
-  return valid.find(i => slotCount(i) === min);
-};
-
-const bestSlotForDoc = indices => {
-  let min = Infinity, best = -1;
-  indices.forEach(i => { if (!isOff(CL[i].d,'ip') && slotCount(i) < min) { min = slotCount(i); best = i; } });
-  return best;
-};
-
-// ── DATE BUILDERS ─────────────────────────────────────
-function buildDateOptions(dayNames, placeholder = "Date", max = 16) {
-  const targets = dayNames.map(d => DAY_NUM[d] ?? d);
-  let opts = `<option value="" disabled selected>Select ${placeholder}...</option>`;
-  let d = new Date(), n = 0;
-  for (let i = 0; i < 365 && n < max; i++, d.setDate(d.getDate()+1)) {
-    if (targets.includes(d.getDay())) {
-      const ds = d.toLocaleDateString("en-GB",{weekday:'short',day:'2-digit',month:'short',year:'numeric'});
-      opts += `<option value="${ds}">${ds}</option>`;
-      n++;
-    }
-  }
-  return opts;
-}
-
-function buildEPOptions(clinic) {
-  let opts = `<option value="" disabled selected>Select ${clinic.label} Date...</option>`;
-  let d = new Date(), n = 0;
-  const end = new Date(); end.setMonth(end.getMonth()+6);
-  while (d <= end && n < 26) {
-    if (d.getDay() === clinic.dayNum) {
-      const ds   = d.toLocaleDateString("en-GB",{weekday:'short',day:'2-digit',month:'short',year:'numeric'});
-      const cnt  = epCount(clinic.id, ds);
-      const full = cnt >= EP_MAX;
-      opts += `<option value="${ds}"${full?" disabled":""}>${ds} [${full?"FULL":cnt+"/"+EP_MAX}]</option>`;
-      n++;
-    }
-    d.setDate(d.getDate()+1);
-  }
-  return opts;
-}
-
-const epCount = (id, ds) => (S.eplogs||[]).filter(e => e.epClinicId===id && e.apt===ds).length;
-
-// ── TAB NAVIGATION ────────────────────────────────────
 window.goTab = (id, btn) => {
   document.querySelectorAll(".pg").forEach(p => p.classList.remove("on"));
   document.querySelectorAll(".tabs > .tab").forEach(t => t.classList.remove("on"));
-  $("pg-"+id).classList.add("on"); btn.classList.add("on");
-  if (id === "ep") renderEpTab();
-  refreshAll();
+  document.getElementById("pg-" + id).classList.add("on");
+  btn.classList.add("on");
+  if(id === "ep") renderEpTab();
+  rAll();
 };
+
 window.goAdmTab = (id, btn) => {
   document.querySelectorAll(".adm-tab").forEach(t => t.classList.remove("on"));
   document.querySelectorAll(".adm-sec").forEach(s => s.classList.remove("on"));
-  btn.classList.add("on"); $("adm-"+id).classList.add("on");
-  if (id === "export") renderExportGrid();
-};
-window.goOpTab = (tab, btn) => {
-  document.querySelectorAll("#opc .tab").forEach(t => t.classList.remove("on"));
   btn.classList.add("on");
-  $("op-walkin").style.display = tab==="walkin" ? "block" : "none";
-  $("op-fix").style.display    = tab==="fix"    ? "block" : "none";
-  if (tab === "fix") renderFixClinics();
-};
-window.filterLog = (f, btn) => {
-  document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("on"));
-  btn.classList.add("on"); logFilter = f; renderLog();
+  document.getElementById("adm-" + id).classList.add("on");
+  if(id === "export") renderClinicExportGrid();
 };
 
-// ── AUTH ──────────────────────────────────────────────
-window.clerkLogin = () => {
-  if ($("opi").value === "2026") { $("opgate").style.display="none"; $("opc").style.display="block"; }
+window.filterLog = (f, b) => {
+  document.querySelectorAll(".fb").forEach(x => x.classList.remove("on"));
+  b.classList.add("on");
+  window.lf = f;
+  rLog();
 };
-window.adminLogin = id => {
-  if ($(id).value === "2025") {
-    isAdmin = true;
-    document.querySelectorAll(".apgate").forEach(e => e.style.display="none");
-    document.querySelectorAll(".ac-content").forEach(e => e.style.display="block");
-    refreshAll();
+
+window.clerkLogin = () => {
+  if(document.getElementById("opi").value === "2026") {
+    document.getElementById("opgate").style.display = "none";
+    document.getElementById("opc").style.display = "block";
   }
 };
-window.toggleLeave = (name, type) => {
-  if (!S.leave[name]) S.leave[name] = {ip:false, op:false};
-  S.leave[name][type] = !S.leave[name][type];
-  syncDB(); refreshAll();
+
+window.adminLogin = (id) => {
+  if(document.getElementById(id).value === "2025") {
+    adm = true;
+    document.querySelectorAll(".apgate").forEach(e => e.style.display = "none");
+    document.querySelectorAll(".ac-content").forEach(e => e.style.display = "block");
+    rAll();
+  }
 };
 
-// ── ASSIGN — INPATIENT ────────────────────────────────
-window.assignIP = (manualIdx = null) => {
-  const fn  = $("fi").value.trim();
-  const pin = $("rpin").value.trim();
-  const apt = $("fd-sel").value;
-  if (!/^\d{6}$/.test(fn) || !DOC_PINS[pin]) return alert("Check File (6 digits) and PIN.");
-  if (!apt)            return alert("Select a Follow-up Date.");
-  if (isDuplicate(fn)) return alert("STOP: Duplicate patient detected.");
-
-  const reg = DOC_PINS[pin];
-  const idx = manualIdx ?? nextIPSlot();
-  if (manualIdx !== null && isOff(CL[idx].d,'ip')) return alert(`Dr. ${CL[idx].d} is OFF.`);
-  if (idx === -1) return alert("No valid clinics available.");
-
-  const c   = CL[idx];
-  const msg = manualIdx !== null
-    ? `MANUAL Assignment → Dr. ${c.d}\n\nFile: ${fn}\nRegistrar: ${reg}\n\n⚠️ Bypasses normal distribution.`
-    : `Confirm IP Assignment:\n\nFile: ${fn}\nRegistrar: ${reg}`;
-  if (!confirm(msg)) return;
-
-  S.logs.push(makeEntry({ fn, reg, doc:c.d, room:c.r, si:idx, apt }));
-  syncDB();
-  $("fi").value = ""; $("rpin").value = "";
-  refreshAll();
+window.toggleS = (name, type) => {
+  if(!window.S.leave[name]) window.S.leave[name] = {ip:false, op:false};
+  window.S.leave[name][type] = !window.S.leave[name][type];
+  dbRef.set(window.S);
+  rAll();
 };
 
-// ── ASSIGN — INTERVENTIONAL ───────────────────────────
-window.assignInterventional = () => {
-  if (!selectedIntDoc) return alert("Select a doctor first.");
-  const fn  = $("spec-fi").value.trim();
-  const pin = $("spec-pin").value.trim();
-  const apt = $("spec-date").value;
-  if (!/^\d{6}$/.test(fn)) return alert("File Number must be 6 digits.");
-  if (!DOC_PINS[pin])      return alert("Invalid Registrar PIN.");
-  if (!apt)                return alert("Select a Follow-up Date.");
-  if (isDuplicate(fn))     return alert("STOP: Duplicate patient detected.");
-
-  const reg = DOC_PINS[pin];
-  const idx = bestSlotForDoc(selectedIntDoc.indices);
-  if (idx === -1) return alert(`Dr. ${selectedIntDoc.name} is OFF.`);
-  const c = CL[idx];
-  if (!confirm(`Assign → Dr. ${selectedIntDoc.name}\n\nFile: ${fn}\nDate: ${apt}\nRegistrar: ${reg}\nRoom: ${c.r}`)) return;
-
-  S.logs.push(makeEntry({ fn, reg, doc:c.d, room:c.r, si:idx, apt }));
-  syncDB();
-  $("spec-fi").value=""; $("spec-pin").value=""; $("spec-date").value="";
-  document.querySelectorAll(".clinic-card").forEach(c => c.classList.remove("selected"));
-  $("spec-form").classList.remove("on");
-  selectedIntDoc = null;
-  refreshAll();
-  alert("Assignment successful!");
+window.goOpTab = function(tab, btn) {
+  document.querySelectorAll("#opc .tab").forEach(t => t.classList.remove("on"));
+  btn.classList.add("on");
+  document.getElementById("op-walkin").style.display = tab === "walkin" ? "block" : "none";
+  document.getElementById("op-fix").style.display = tab === "fix" ? "block" : "none";
+  if(tab === "fix") renderFixClinics();
 };
 
-// ── ASSIGN — OP WALK-IN ───────────────────────────────
-window.assignOP = () => {
-  const ofn = $("opfi").value.trim();
-  const ph  = $("opphone").value.trim();
-  const fn  = ofn && ph ? `${ofn} / ${ph}` : (ofn || ph || `Walk-in-${Date.now().toString().slice(-6)}`);
-  if (!fn.startsWith("Walk-in-") && isDuplicate(fn)) return alert("STOP: Duplicate patient detected.");
-  const idx = nextOPSlot();
-  if (idx === -1) return alert("No clinics running today.");
-  const c = CL[idx];
-  S.oplogs.push(makeEntry({ fn, reg:"Clerk", doc:c.d, room:c.r, si:idx, apt:"" }));
-  syncDB();
-  $("opfi").value=""; $("opphone").value="";
-  refreshAll();
+function getEpCountForDate(clinicId, dateStr) {
+  return (window.S.eplogs||[]).filter(e => e.epClinicId === clinicId && e.apt === dateStr).length;
+}
+
+function renderEpTab() {
+  var grid = document.getElementById("ep-clinic-grid");
+  grid.innerHTML = "";
+  document.getElementById("ep-form").style.display = "none";
+  selectedEpClinic = null;
+
+  EP_CLINICS.forEach(function(clinic) {
+    var card = document.createElement("div");
+    card.className = "spec-card ep-card";
+    card.innerHTML =
+      '<div class="rl" style="margin-bottom:4px">EP CLINIC</div>' +
+      '<div class="spec-name" style="color:var(--ep)!important;font-size:18px">' + clinic.name + '</div>' +
+      '<div class="spec-meta">' + clinic.room + ' • ' + clinic.label + '</div>';
+    card.onclick = function() {
+      document.querySelectorAll("#ep-clinic-grid .spec-card").forEach(c => c.classList.remove("selected"));
+      card.classList.add("selected");
+      selectedEpClinic = clinic;
+      renderEpDates(clinic);
+      document.getElementById("ep-hint").textContent =
+        "EP Clinic — " + clinic.room + " every " + clinic.label + ". Max " + EP_MAX_PER_DATE + " patients per date.";
+      document.getElementById("ep-form").style.display = "block";
+    };
+    grid.appendChild(card);
+  });
+}
+
+function renderEpDates(clinic) {
+  var sel = document.getElementById("ep-date");
+  var opts = '<option value="" disabled selected>Select ' + clinic.label + ' Date...</option>';
+  var d = new Date(), count = 0;
+  var sixMonths = new Date(); sixMonths.setMonth(sixMonths.getMonth() + 6);
+  while(d <= sixMonths) {
+    if(d.getDay() === clinic.dayNum) {
+      var ds = d.toLocaleDateString("en-GB", {weekday:'short', day:'2-digit', month:'short', year:'numeric'});
+      var cnt = getEpCountForDate(clinic.id, ds);
+      var full = cnt >= EP_MAX_PER_DATE;
+      var badge = full ? " [FULL]" : " [" + cnt + "/" + EP_MAX_PER_DATE + "]";
+      opts += '<option value="' + ds + '"' + (full ? " disabled" : "") + '>' + ds + badge + '</option>';
+      if(++count >= 26) break;
+    }
+    d.setDate(d.getDate() + 1);
+  }
+  sel.innerHTML = opts;
+  updateEpDateCountLabel();
+}
+
+function updateEpDateCountLabel() {
+  if(!selectedEpClinic) return;
+  var sel = document.getElementById("ep-date");
+  var label = document.getElementById("ep-date-count-label");
+  if(!sel.value) { label.textContent = ""; return; }
+  var cnt = getEpCountForDate(selectedEpClinic.id, sel.value);
+  var rem = EP_MAX_PER_DATE - cnt;
+  label.innerHTML = rem > 0
+    ? '<span class="ep-count-badge ep-count-' + (rem <= 3 ? 'warn' : 'ok') + '">' + cnt + '/' + EP_MAX_PER_DATE + ' booked — ' + rem + ' remaining</span>'
+    : '<span class="ep-count-badge ep-count-full">FULLY BOOKED</span>';
+}
+
+document.addEventListener("change", function(e) {
+  if(e.target.id === "ep-date") updateEpDateCountLabel();
+});
+
+window.doEpAssign = function() {
+  if(!selectedEpClinic) return alert("Select an EP clinic first.");
+  var fn = document.getElementById("ep-fi").value.trim();
+  var pin = document.getElementById("ep-pin").value.trim();
+  var apt = document.getElementById("ep-date").value;
+  if(!/^\d{6}$/.test(fn)) return alert("Check File Number (6 digits).");
+  if(!docPINs[pin]) return alert("Invalid Registrar PIN.");
+  if(!apt) return alert("Select a date.");
+  var cnt = getEpCountForDate(selectedEpClinic.id, apt);
+  if(cnt >= EP_MAX_PER_DATE) return alert("This date is fully booked (max " + EP_MAX_PER_DATE + " patients).");
+  var regName = docPINs[pin];
+  var epDup = (window.S.eplogs||[]).some(e => e.fn === fn);
+  if(epDup) return alert("STOP: This file number already has an EP booking.");
+  if(!confirm("Confirm EP Clinic Booking:\n\nClinic: " + selectedEpClinic.room + " (" + selectedEpClinic.label + ")\nFile: " + fn + "\nDate: " + apt + "\nRegistrar: " + regName)) return;
+  var entry = {
+    fn:fn, reg:regName, doc:"EP", room:selectedEpClinic.room,
+    epClinicId:selectedEpClinic.id, epLabel:selectedEpClinic.label,
+    cd:tn(), ad:nd(), time:nt(), apt:apt, ts:Date.now()
+  };
+  if(!window.S.eplogs) window.S.eplogs = [];
+  window.S.eplogs.push(entry);
+  dbRef.set(window.S);
+  document.getElementById("ep-fi").value = "";
+  document.getElementById("ep-pin").value = "";
+  renderEpDates(selectedEpClinic);
+  alert("EP appointment booked successfully!");
 };
 
-// ── ASSIGN — FIXED APPOINTMENT ────────────────────────
-window.assignFixedAppointment = () => {
-  if (!selectedFixDoc) return alert("Select a clinic first.");
-  const fn   = $("fix-fi").value.trim();
-  const ph   = $("fix-phone").value.trim();
-  const apt  = $("fix-date").value;
-  const patId = fn && ph ? `${fn} / ${ph}` : (fn || ph || `Walk-in-${Date.now().toString().slice(-6)}`);
-  if (!patId.startsWith("Walk-in-") && isDuplicate(patId)) return alert("STOP: Duplicate patient detected.");
-  const c = CL[selectedFixDoc.idx];
-  if (!confirm(`Book Appointment:\n\nPatient: ${patId}\nDoctor: Dr. ${c.d}\nRoom: ${c.r}\nDate: ${apt||"Not specified"}`)) return;
-  S.oplogs.push(makeEntry({ fn:patId, reg:"Clerk", doc:c.d, room:c.r, si:selectedFixDoc.idx, apt:apt||"" }));
-  syncDB();
-  $("fix-fi").value=""; $("fix-phone").value=""; $("fix-date").value="";
-  document.querySelectorAll("#fix-clinic-grid .clinic-card").forEach(c => c.classList.remove("selected"));
-  $("fix-form").style.display="none";
+function renderFixClinics() {
+  var today = tn();
+  var container = document.getElementById("fix-clinic-grid");
+  if(!container) return;
+  container.innerHTML = "";
+  document.getElementById("fix-form").style.display = "none";
   selectedFixDoc = null;
-  refreshAll();
+  var seen = {};
+  for(var i = 0; i < 27; i++) {
+    if(!CL[i].days.includes(today) && !isDocOff(CL[i].d, 'op')) {
+      var key = CL[i].d + "_" + CL[i].r + "_" + CL[i].days.join("");
+      if(!seen[key]) seen[key] = {idx:i, doc:CL[i]};
+    }
+  }
+  Object.values(seen).forEach(function(item) {
+    var card = document.createElement("div");
+    card.className = "spec-card";
+    card.innerHTML =
+      '<div class="rl" style="margin-bottom:4px">CLINIC</div>' +
+      '<div class="spec-name">Dr. ' + item.doc.d + '</div>' +
+      '<div class="spec-meta">' + item.doc.r + ' • ' + item.doc.days.join(", ") + '</div>';
+    card.onclick = function() {
+      document.querySelectorAll("#fix-clinic-grid .spec-card").forEach(c => c.classList.remove("selected"));
+      card.classList.add("selected");
+      selectedFixDoc = item;
+      var dayMap = {"Sun":0,"Mon":1,"Tue":2,"Wed":3,"Thu":4,"Fri":5,"Sat":6};
+      var targets = item.doc.days.map(d => dayMap[d]);
+      var opts = '<option value="" disabled selected>Select Date...</option>';
+      var d = new Date(), count = 0;
+      for(var j = 0; j < 120; j++) {
+        if(targets.includes(d.getDay())) {
+          var ds = d.toLocaleDateString("en-GB", {weekday:'short', day:'2-digit', month:'short', year:'numeric'});
+          opts += '<option value="' + ds + '">' + ds + '</option>';
+          if(++count >= 16) break;
+        }
+        d.setDate(d.getDate() + 1);
+      }
+      document.getElementById("fix-date").innerHTML = opts;
+      document.getElementById("fix-hint").textContent =
+        "Dr. " + item.doc.d + " (" + item.doc.r + ") — runs on " + item.doc.days.join(", ");
+      document.getElementById("fix-form").style.display = "block";
+    };
+    container.appendChild(card);
+  });
+}
+
+window.doFixAssign = function() {
+  if(!selectedFixDoc) return alert("Select a clinic first.");
+  var fn = document.getElementById("fix-fi").value.trim();
+  var ph = document.getElementById("fix-phone").value.trim();
+  var apt = document.getElementById("fix-date").value;
+  
+  var patId = (fn && ph) ? fn + " / " + ph : (fn || ph);
+  if(!patId) patId = "Walk-in-" + Date.now().toString().slice(-6);
+  
+  if(patId && !patId.startsWith("Walk-in-") && isDuplicate(patId)) return alert("STOP: Duplicate Patient detected.");
+  
+  var c = CL[selectedFixDoc.idx];
+  if(!confirm("Book appointment:\n\nPatient: " + patId + "\nDoctor: Dr. " + c.d + "\nRoom: " + c.r + "\nDate: " + (apt || "Not specified"))) return;
+  
+  var entry = {
+    fn:patId, 
+    reg:"Clerk", 
+    doc:c.d, 
+    room:c.r, 
+    si:selectedFixDoc.idx, 
+    cd:tn(), 
+    ad:nd(), 
+    time:nt(), 
+    apt:apt || "", 
+    ts:Date.now()
+  };
+  
+  window.S.oplogs.push(entry);
+  dbRef.set(window.S);
+  
+  document.getElementById("fix-fi").value = "";
+  document.getElementById("fix-phone").value = "";
+  document.getElementById("fix-date").value = "";
+  document.querySelectorAll("#fix-clinic-grid .spec-card").forEach(c => c.classList.remove("selected"));
+  document.getElementById("fix-form").style.display = "none";
+  selectedFixDoc = null;
+  
   alert("Appointment booked!");
 };
 
-// ── ASSIGN — EP ───────────────────────────────────────
-window.assignEP = () => {
-  if (!selectedEpClinic) return alert("Select an EP clinic first.");
-  const fn  = $("ep-fi").value.trim();
-  const pin = $("ep-pin").value.trim();
-  const apt = $("ep-date").value;
-  if (!/^\d{6}$/.test(fn)) return alert("File Number must be 6 digits.");
-  if (!DOC_PINS[pin])      return alert("Invalid Registrar PIN.");
-  if (!apt)                return alert("Select a date.");
-  if (epCount(selectedEpClinic.id, apt) >= EP_MAX) return alert(`Date fully booked (max ${EP_MAX}).`);
-  const reg = DOC_PINS[pin];
-  if ((S.eplogs||[]).some(e => e.fn === fn)) return alert("STOP: File already has an EP booking.");
-  if (!confirm(`Confirm EP Booking:\n\nClinic: ${selectedEpClinic.room} (${selectedEpClinic.label})\nFile: ${fn}\nDate: ${apt}\nRegistrar: ${reg}`)) return;
-  if (!S.eplogs) S.eplogs = [];
-  S.eplogs.push(makeEntry({ fn, reg, doc:"EP", room:selectedEpClinic.room, epClinicId:selectedEpClinic.id, epLabel:selectedEpClinic.label, apt }));
-  syncDB();
-  $("ep-fi").value=""; $("ep-pin").value="";
-  renderEpDates(selectedEpClinic);
-  alert("EP appointment booked!");
+window.closeMo = () => document.getElementById("mo").classList.remove("on");
+
+window.delEntry = () => {
+  var s = document.getElementById("dfi").value.trim(); if(!s) return;
+  var idxL = window.S.logs.findIndex(e => e.fn.toString().includes(s));
+  var idxO = window.S.oplogs.findIndex(e => e.fn.toString().includes(s));
+  var idxE = (window.S.eplogs||[]).findIndex(e => e.fn.toString().includes(s));
+  if(idxL === -1 && idxO === -1 && idxE === -1) return alert("Not found");
+  if(confirm("Delete?")) {
+    if(idxL !== -1) window.S.logs.splice(idxL, 1);
+    else if(idxO !== -1) window.S.oplogs.splice(idxO, 1);
+    else window.S.eplogs.splice(idxE, 1);
+    dbRef.set(window.S); rAll();
+  }
 };
 
-// ── RENDER — INTERVENTIONAL ───────────────────────────
-function renderInterventionalTab() {
-  const container = $("spec-grid"); if (!container) return;
-  container.innerHTML = "";
-  SPECIFIC_DOCS.forEach(doc => {
-    const off  = isOff(doc.name,'ip');
-    const card = document.createElement("div");
-    card.className = "clinic-card" + (off ? " disabled" : "");
-    card.innerHTML = `${off?'<div class="off-badge">OFF</div>':""}
-      <div class="label-sm" style="margin-bottom:4px">CLINIC</div>
-      <div class="clinic-card-name">Dr. ${doc.name}</div>
-      <div class="clinic-card-meta">${doc.room} • ${doc.label}</div>`;
-    if (!off) card.onclick = () => {
-      document.querySelectorAll(".clinic-card").forEach(c => c.classList.remove("selected"));
-      card.classList.add("selected");
-      selectedIntDoc = doc;
-      $("spec-date").innerHTML = buildDateOptions([doc.day], `${doc.label} Date`);
-      $("spec-form").classList.add("on");
-      $("spec-hint").textContent = `Dr. ${doc.name} (${doc.room}) — Choose a ${doc.label} follow-up date.`;
-    };
-    container.appendChild(card);
-  });
-}
+window.resetAll = () => {
+  if(confirm("WIPE EVERYTHING?")) {
+    window.S = {logs:[], oplogs:[], eplogs:[], leave:{}};
+    dbRef.set(window.S); rAll();
+  }
+};
 
-// ── RENDER — EP ───────────────────────────────────────
-function renderEpTab() {
-  const grid = $("ep-clinic-grid"); grid.innerHTML = "";
-  $("ep-form").style.display = "none"; selectedEpClinic = null;
-  EP_CLINICS.forEach(clinic => {
-    const card = document.createElement("div");
-    card.className = "clinic-card ep-card";
-    card.innerHTML = `<div class="label-sm" style="margin-bottom:4px">EP CLINIC</div>
-      <div class="clinic-card-name" style="font-size:18px">${clinic.name}</div>
-      <div class="clinic-card-meta">${clinic.room} • ${clinic.label}</div>`;
-    card.onclick = () => {
-      document.querySelectorAll("#ep-clinic-grid .clinic-card").forEach(c => c.classList.remove("selected"));
-      card.classList.add("selected"); selectedEpClinic = clinic;
-      renderEpDates(clinic);
-      $("ep-hint").textContent = `EP Clinic — ${clinic.room} every ${clinic.label}. Max ${EP_MAX} patients per date.`;
-      $("ep-form").style.display = "block";
-    };
-    grid.appendChild(card);
-  });
-}
-function renderEpDates(clinic) {
-  $("ep-date").innerHTML = buildEPOptions(clinic); updateEpCountLabel();
-}
-function updateEpCountLabel() {
-  if (!selectedEpClinic) return;
-  const sel = $("ep-date"), lbl = $("ep-date-count-label");
-  if (!sel.value) { lbl.textContent = ""; return; }
-  const cnt = epCount(selectedEpClinic.id, sel.value), rem = EP_MAX - cnt;
-  const cls = rem <= 0 ? "full" : rem <= 3 ? "warn" : "ok";
-  lbl.innerHTML = rem > 0
-    ? `<span class="ep-count-badge ep-count-${cls}">${cnt}/${EP_MAX} booked — ${rem} remaining</span>`
-    : `<span class="ep-count-badge ep-count-full">FULLY BOOKED</span>`;
-}
-document.addEventListener("change", e => { if (e.target.id === "ep-date") updateEpCountLabel(); });
+window.exportWeekly = () => {
+  var all = (window.S.logs||[]).concat(window.S.oplogs||[]).concat(window.S.eplogs||[]).sort((a,b) => b.ts - a.ts);
+  if(all.length === 0) return alert("No data to export");
+  exportPDF("Master Log — All Entries", all);
+};
 
-// ── RENDER — FIX CLINICS ──────────────────────────────
-function renderFixClinics() {
-  const today = todayName(), container = $("fix-clinic-grid"); if (!container) return;
-  container.innerHTML = ""; $("fix-form").style.display = "none"; selectedFixDoc = null;
-  const seen = {};
-  CL.forEach((c,i) => { if (!c.days.includes(today) && !isOff(c.d,'op')) { const k=`${c.d}_${c.r}_${c.days.join("")}`; if (!seen[k]) seen[k]={idx:i,doc:c}; } });
-  Object.values(seen).forEach(item => {
-    const card = document.createElement("div"); card.className = "clinic-card";
-    card.innerHTML = `<div class="label-sm" style="margin-bottom:4px">CLINIC</div>
-      <div class="clinic-card-name">Dr. ${item.doc.d}</div>
-      <div class="clinic-card-meta">${item.doc.r} • ${item.doc.days.join(", ")}</div>`;
-    card.onclick = () => {
-      document.querySelectorAll("#fix-clinic-grid .clinic-card").forEach(c => c.classList.remove("selected"));
-      card.classList.add("selected"); selectedFixDoc = item;
-      $("fix-date").innerHTML = buildDateOptions(item.doc.days, "Date");
-      $("fix-hint").textContent = `Dr. ${item.doc.d} (${item.doc.r}) — runs on ${item.doc.days.join(", ")}`;
-      $("fix-form").style.display = "block";
-    };
-    container.appendChild(card);
-  });
-}
-
-// ── RENDER — DISTRIBUTION ─────────────────────────────
-function renderDist() {
-  const g = $("dg"); g.innerHTML = ""; const next = nextIPSlot();
-  CL.forEach((c,i) => {
-    const ipOff=isOff(c.d,'ip'), opOff=isOff(c.d,'op');
-    const card = document.createElement("div");
-    card.className = "dist-card" + (i===next?" next":"");
-    card.innerHTML = `<div class="dist-card-name">Dr. ${c.d}</div>
-      <div style="font-size:10px;color:var(--dim)">${c.r} • ${c.days.join(", ")}</div>
-      <div class="dist-card-count">${slotCount(i)}</div>
-      <div class="status-row">
-        <div class="status-pill ${ipOff?'pill-off':'pill-ok'}">IP:${ipOff?"OFF":"OK"}</div>
-        <div class="status-pill ${opOff?'pill-off':'pill-ok'}">OP:${opOff?"OFF":"OK"}</div>
-      </div>`;
-    card.onclick = () => openSlotModal(i);
-    g.appendChild(card);
-  });
-}
-
-// ── RENDER — LEAVE ADMIN ──────────────────────────────
-function renderLeaveAdmin() {
-  const g = $("leave-grid"); g.innerHTML = "";
-  [...new Set(CL.map(c => c.d))].forEach(name => {
-    const ip = S.leave[name]?.ip, op = S.leave[name]?.op;
-    const card = document.createElement("div"); card.className="dist-card"; card.style.textAlign="center";
-    card.innerHTML = `<div class="dist-card-name">${name}</div>
-      <div class="leave-btn-row">
-        <button class="leave-btn ${ip?'off':'on'}" onclick="toggleLeave('${name}','ip')">IP ${ip?"OFF":"OK"}</button>
-        <button class="leave-btn ${op?'off':'on'}" onclick="toggleLeave('${name}','op')">OP ${op?"OFF":"OK"}</button>
-      </div>`;
-    g.appendChild(card);
-  });
-}
-
-// ── RENDER — LOG ──────────────────────────────────────
-function renderLog() {
-  const b = $("lb"); b.innerHTML = "";
-  let entries = [...(S.logs||[]),...(S.oplogs||[]),...(S.eplogs||[])].sort((a,b)=>b.ts-a.ts).slice(0,50);
-  if (logFilter !== "all") entries = entries.filter(x => x.cd === logFilter);
-  entries.forEach(x => {
-    const row = document.createElement("div"); row.className = "log-row";
-    row.innerHTML = `<div class="log-time">${x.ad}<br><span>${x.time}</span></div>
-      <div class="log-fn">${x.fn}</div>
-      <div>${x.epClinicId?"EP/"+x.room:"Dr. "+x.doc}<br><span class="room-badge">${x.room}</span></div>
-      <div class="log-meta" style="color:var(--acc)">${x.apt||"—"}</div>
-      <div class="log-meta">${x.reg}</div>`;
-    b.appendChild(row);
-  });
-}
-
-// ── RENDER — EXPORT GRID ──────────────────────────────
-function patientsByDocRoom(doc, room) {
-  return [...(S.logs||[]),...(S.oplogs||[])].filter(e => e.doc===doc && e.room===room);
-}
 function getUniqueClinics() {
-  const seen = {};
-  CL.forEach(s => { const k=`${s.d}|${s.r}|${s.days.join(",")}`; if (!seen[k]) seen[k]={d:s.d,r:s.r,days:s.days}; });
+  var seen = {};
+  CL.forEach(function(slot) {
+    var key = slot.d + "|" + slot.r + "|" + slot.days.join(",");
+    if(!seen[key]) seen[key] = {d:slot.d, r:slot.r, days:slot.days, key:key};
+  });
   return Object.values(seen);
 }
-function renderExportGrid() {
-  const grid = $("clinic-export-grid"); if (!grid) return;
+
+function getClinicPatients(clinicKey) {
+  var parts = clinicKey.split("|");
+  var docName = parts[0], room = parts[1], days = parts[2].split(",");
+  var all = (window.S.logs||[]).concat(window.S.oplogs||[]);
+  return all.filter(function(e) {
+    return e.doc === docName && e.room === room && days.includes(e.cd);
+  });
+}
+
+function getClinicPatientsByDocRoom(docName, room) {
+  var all = (window.S.logs||[]).concat(window.S.oplogs||[]);
+  return all.filter(e => e.doc === docName && e.room === room);
+}
+
+function renderClinicExportGrid() {
+  var grid = document.getElementById("clinic-export-grid");
+  if(!grid) return;
   grid.innerHTML = "";
-  EP_CLINICS.forEach(ep => {
-    const pts = (S.eplogs||[]).filter(e => e.epClinicId===ep.id);
-    const card = document.createElement("div"); card.className="export-card"; card.style.borderColor="rgba(167,139,250,0.4)";
-    card.innerHTML = `<div class="label-sm" style="color:var(--ep)">EP CLINIC</div>
-      <div class="export-card-doc" style="color:var(--ep);font-size:14px">${ep.name}</div>
-      <div class="export-card-meta">${ep.room} • ${ep.label}</div>
-      <div class="export-card-count" style="color:var(--ep)">${pts.length}</div>`;
-    card.onclick = () => pts.length ? buildPDF(`EP Clinic — ${ep.room} (${ep.label})`,pts) : alert("No patients yet.");
+  var clinics = getUniqueClinics();
+
+  EP_CLINICS.forEach(function(ep) {
+    var epPts = (window.S.eplogs||[]).filter(e => e.epClinicId === ep.id);
+    var card = document.createElement("div");
+    card.className = "cex-card";
+    card.style.borderColor = "rgba(167,139,250,0.4)";
+    card.innerHTML =
+      '<div class="rl" style="color:var(--ep)">EP CLINIC</div>' +
+      '<div class="cex-doc" style="color:var(--ep);font-size:14px">' + ep.name + '</div>' +
+      '<div class="cex-meta">' + ep.room + ' • ' + ep.label + '</div>' +
+      '<div class="cex-count" style="color:var(--ep)">' + epPts.length + '</div>';
+    card.onclick = function() {
+      if(epPts.length === 0) return alert("No patients in this EP clinic yet.");
+      exportPDF("EP Clinic — " + ep.room + " (" + ep.label + ")", epPts);
+    };
     grid.appendChild(card);
   });
-  getUniqueClinics().forEach(c => {
-    const pts = patientsByDocRoom(c.d, c.r);
-    const card = document.createElement("div"); card.className="export-card";
-    card.innerHTML = `<div class="label-sm">${c.days.join(", ")}</div>
-      <div class="export-card-doc">Dr. ${c.d}</div>
-      <div class="export-card-meta">${c.r}</div>
-      <div class="export-card-count">${pts.length}</div>`;
-    card.onclick = () => pts.length ? buildPDF(`Dr. ${c.d} — ${c.r} (${c.days.join(", ")})`,pts) : alert("No patients yet.");
+
+  clinics.forEach(function(c) {
+    var pts = getClinicPatientsByDocRoom(c.d, c.r);
+    var card = document.createElement("div");
+    card.className = "cex-card";
+    card.innerHTML =
+      '<div class="rl">' + c.days.join(", ") + '</div>' +
+      '<div class="cex-doc">Dr. ' + c.d + '</div>' +
+      '<div class="cex-meta">' + c.r + '</div>' +
+      '<div class="cex-count">' + pts.length + '</div>';
+    card.onclick = function() {
+      if(pts.length === 0) return alert("No patients in this clinic yet.");
+      exportPDF("Dr. " + c.d + " — " + c.r + " (" + c.days.join(", ") + ")", pts);
+    };
     grid.appendChild(card);
   });
 }
 
-// ── SLOT MODAL ────────────────────────────────────────
-function openSlotModal(i) {
-  if (!isAdmin) return;
-  const c = CL[i];
-  const pts = [...(S.logs||[]),...(S.oplogs||[])].filter(e => e.si===i);
-  $("mt").textContent = `Dr. ${c.d} — ${c.r}`;
-  $("mc2").textContent = `${pts.length} patient(s) this slot`;
-  $("mbody").innerHTML = "";
-  pts.forEach(p => {
-    const row = document.createElement("div"); row.className="modal-row";
-    row.innerHTML = `<div>${p.fn}</div><div style="text-align:right">${p.time}</div>`;
-    $("mbody").appendChild(row);
-  });
-  const pb = $("mprint"); pb.innerHTML = "";
-  if (pts.length) {
-    const btn = document.createElement("button"); btn.className="btn"; btn.textContent="Print This Slot";
-    btn.onclick = () => buildPDF(`Dr. ${c.d} — ${c.r}`, pts); pb.appendChild(btn);
-    const allPts = patientsByDocRoom(c.d, c.r);
-    if (allPts.length > pts.length) {
-      const btn2 = document.createElement("button"); btn2.className="btn btn-success"; btn2.style.marginTop="6px";
-      btn2.textContent = `Print Full Clinic (${allPts.length} patients)`;
-      btn2.onclick = () => buildPDF(`Dr. ${c.d} — ${c.r} (All Slots)`, allPts); pb.appendChild(btn2);
+dbRef.on('value', (snap) => {
+  const d = snap.val();
+  if(d) {
+    window.S.logs   = d.logs   || [];
+    window.S.oplogs = d.oplogs || [];
+    window.S.eplogs = d.eplogs || [];
+    window.S.leave  = d.leave  || {};
+  }
+  document.getElementById("syncDot").style.background = "var(--ok)";
+  document.getElementById("syncText").textContent = "Live — Synced";
+  rAll();
+});
+
+function tn() { return ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][new Date().getDay()]; }
+function nt() { return new Date().toLocaleTimeString("en-GB", {hour:"2-digit", minute:"2-digit"}); }
+function nd() { return new Date().toLocaleDateString("en-GB", {day:"numeric", month:"short"}); }
+
+function isDocOff(docName, type) {
+  if(!window.S.leave || !window.S.leave[docName]) return false;
+  return window.S.leave[docName][type] === true;
+}
+
+function isDuplicate(val) {
+  if(!val || val.toString().trim() === "") return false;
+  const s = val.toString().trim();
+  const all = (window.S.logs||[]).concat(window.S.oplogs||[]);
+  return all.some(e => e.fn && e.fn.toString().includes(s));
+}
+
+function cCnt(i) {
+  return (window.S.logs||[]).concat(window.S.oplogs||[]).filter(e => e.si === i).length;
+}
+
+function getGlobalMin() {
+  let minCount = Infinity;
+  for(let i = 0; i < 27; i++) {
+    if(!isDocOff(CL[i].d, 'ip')) {
+      let cnt = cCnt(i);
+      if(cnt < minCount) minCount = cnt;
     }
   }
-  $("mo").classList.add("on");
+  return minCount;
 }
-window.closeModal = () => $("mo").classList.remove("on");
 
-// ── ADMIN ACTIONS ─────────────────────────────────────
-window.deleteEntry = () => {
-  const s = $("dfi").value.trim(); if (!s) return;
-  const iL = S.logs.findIndex(e => e.fn?.toString().includes(s));
-  const iO = S.oplogs.findIndex(e => e.fn?.toString().includes(s));
-  const iE = (S.eplogs||[]).findIndex(e => e.fn?.toString().includes(s));
-  if (iL<0 && iO<0 && iE<0) return alert("Not found.");
-  if (!confirm("Delete this entry?")) return;
-  if (iL>=0) S.logs.splice(iL,1); else if (iO>=0) S.oplogs.splice(iO,1); else S.eplogs.splice(iE,1);
-  syncDB(); refreshAll();
+function getNextSlotIp() {
+  let minCount = getGlobalMin();
+  if(minCount === Infinity) return -1;
+  for(let i = 0; i < 27; i++) {
+    if(!isDocOff(CL[i].d, 'ip') && cCnt(i) === minCount) return i;
+  }
+  return -1;
+}
+
+function getNextSlotOp() {
+  let today = tn(), validSlots = [];
+  for(let i = 0; i < 27; i++) {
+    if(CL[i].days.includes(today) && !isDocOff(CL[i].d, 'op')) validSlots.push(i);
+  }
+  if(validSlots.length === 0) return -1;
+  let minTodayCount = Infinity;
+  validSlots.forEach(i => { let cnt = cCnt(i); if(cnt < minTodayCount) minTodayCount = cnt; });
+  for(let i = 0; i < 27; i++) {
+    if(validSlots.includes(i) && cCnt(i) === minTodayCount) return i;
+  }
+  return -1;
+}
+
+function getManualSlotIndex(docIndices) {
+  let minCount = Infinity, bestIndex = -1;
+  docIndices.forEach(idx => {
+    if(!isDocOff(CL[idx].d, 'ip')) {
+      let cnt = cCnt(idx);
+      if(cnt < minCount) { minCount = cnt; bestIndex = idx; }
+    }
+  });
+  return bestIndex;
+}
+
+function updateFutureDates(daysStrArray) {
+  var dayMap = {"Sun":0,"Mon":1,"Tue":2,"Wed":3,"Thu":4,"Fri":5,"Sat":6};
+  var targets = daysStrArray.map(d => dayMap[d]);
+  var opts = '<option value="" disabled selected>Select Follow-up Date...</option>';
+  var d = new Date();
+  for(var i = 0; i < 120; i++) {
+    if(targets.includes(d.getDay())) {
+      var ds = d.toLocaleDateString("en-GB", {weekday:'short', day:'2-digit', month:'short', year:'numeric'});
+      opts += '<option value="' + ds + '">' + ds + '</option>';
+    }
+    d.setDate(d.getDate() + 1);
+  }
+  document.getElementById("fd-sel").innerHTML = opts;
+}
+
+window.doAssign = function(type, manualSlotIndex = null) {
+  var fn, pin, apt = "", regName;
+  if(type === 'ip') {
+    fn = document.getElementById("fi").value.trim();
+    pin = document.getElementById("rpin").value.trim();
+    apt = document.getElementById("fd-sel").value;
+    if(!/^\d{6}$/.test(fn) || !docPINs[pin]) return alert("Check File (6 digits) and PIN");
+    if(!apt) return alert("Select Follow-up Date.");
+    regName = docPINs[pin];
+    if(isDuplicate(fn)) return alert("STOP: Duplicate Patient detected.");
+    var i, isManual = false, manualDocName = "";
+    if(manualSlotIndex !== null) {
+      i = manualSlotIndex; isManual = true; manualDocName = CL[i].d;
+      if(isDocOff(CL[i].d, 'ip')) return alert("Doctor " + CL[i].d + " is currently marked as OFF/Leave.");
+    } else { i = getNextSlotIp(); }
+    if(i === -1) return alert("No valid clinics scheduled.");
+    var c = CL[i];
+    var confirmMsg = isManual
+      ? "Confirm MANUAL Assignment to Dr. " + manualDocName + ":\n\nFile Number: " + fn + "\nRegistrar: " + regName + "\n\n⚠️ This bypasses normal distribution."
+      : "Confirm Inpatient Assignment:\n\nFile Number: " + fn + "\nRegistrar: " + regName;
+    if(!confirm(confirmMsg)) return;
+    var entry = {fn:fn, reg:regName, doc:c.d, room:c.r, si:i, cd:tn(), ad:nd(), time:nt(), apt:apt, ts:Date.now()};
+    window.S.logs.push(entry);
+    dbRef.set(window.S);
+    document.getElementById("fi").value = "";
+    document.getElementById("rpin").value = "";
+  } else {
+    var ofn = document.getElementById("opfi").value.trim();
+    var ph = document.getElementById("opphone").value.trim();
+    
+    fn = (ofn && ph) ? ofn + " / " + ph : (ofn || ph);
+    if(!fn) fn = "Walk-in-" + Date.now().toString().slice(-6);
+    
+    pin = "Clerk"; 
+    regName = "Clerk";
+    
+    if(!fn.startsWith("Walk-in-") && isDuplicate(fn)) return alert("STOP: Duplicate Patient detected.");
+    
+    var i = getNextSlotOp();
+    if(i === -1) return alert("No valid clinics scheduled today.");
+    var c = CL[i];
+    var entry = {
+      fn:fn, 
+      reg:regName, 
+      doc:c.d, 
+      room:c.r, 
+      si:i, 
+      cd:tn(), 
+      ad:nd(), 
+      time:nt(), 
+      apt:apt, 
+      ts:Date.now()
+    };
+    window.S.oplogs.push(entry);
+    dbRef.set(window.S);
+    
+    document.getElementById("opfi").value = "";
+    document.getElementById("opphone").value = "";
+  }
+  rAll();
 };
-window.wipeAll = () => {
-  if (!confirm("WIPE EVERYTHING? This cannot be undone.")) return;
-  S = {logs:[],oplogs:[],eplogs:[],leave:{}}; syncDB(); refreshAll();
+
+window.doSpecificAssign = function() {
+  if(!selectedSpecificDoc) return alert("Please select a doctor first.");
+  var fn = document.getElementById("spec-fi").value.trim();
+  var pin = document.getElementById("spec-pin").value.trim();
+  var apt = document.getElementById("spec-date").value;
+  if(!/^\d{6}$/.test(fn)) return alert("Check File Number (6 digits).");
+  if(!docPINs[pin]) return alert("Invalid Registrar PIN.");
+  if(!apt) return alert("Select Follow-up Date.");
+  if(isDuplicate(fn)) return alert("STOP: Duplicate Patient detected.");
+  var regName = docPINs[pin];
+  var targetIdx = getManualSlotIndex(selectedSpecificDoc.indices);
+  if(targetIdx === -1) return alert("Doctor " + selectedSpecificDoc.name + " is currently marked as OFF/Leave.");
+  var c = CL[targetIdx];
+  if(!confirm("Confirm Assignment to Dr. " + selectedSpecificDoc.name + ":\n\nFile: " + fn + "\nDate: " + apt + "\nRegistrar: " + regName + "\nRoom: " + c.r)) return;
+  var entry = {fn:fn, reg:regName, doc:c.d, room:c.r, si:targetIdx, cd:tn(), ad:nd(), time:nt(), apt:apt, ts:Date.now()};
+  window.S.logs.push(entry);
+  dbRef.set(window.S);
+  document.getElementById("spec-fi").value = "";
+  document.getElementById("spec-pin").value = "";
+  document.getElementById("spec-date").value = "";
+  document.querySelectorAll('.spec-card').forEach(el => el.classList.remove('selected'));
+  document.getElementById("spec-form").classList.remove("on");
+  selectedSpecificDoc = null;
+  rAll();
+  alert("Assignment successful!");
 };
-window.exportAllPDF = () => {
-  const all = [...(S.logs||[]),...(S.oplogs||[]),...(S.eplogs||[])].sort((a,b)=>b.ts-a.ts);
-  if (!all.length) return alert("No data to export."); buildPDF("Master Log — All Entries", all);
-};
 
-// ── PDF BUILDER ───────────────────────────────────────
-function buildPDF(title, data) {
-  const rows = data.map(e => `<tr><td>${e.ad}</td><td>${e.time}</td><td>${e.fn}</td><td>${e.epClinicId?"EP/"+e.room:"Dr. "+e.doc}</td><td>${e.room}</td><td>${e.apt||"—"}</td><td>${e.reg}</td></tr>`).join("");
-  const w = window.open("","_blank");
-  const printScript = '<scr'+'ipt>window.onload=function(){window.print();window.close();}<'+'/script>';
-  w.document.write('<html><head><style>body{font-family:sans-serif}h2{margin-bottom:10px}p{font-size:11px;color:#666;margin-bottom:10px}table{width:100%;border-collapse:collapse;font-size:12px}th,td{border:1px solid #ddd;padding:8px;text-align:left}th{background:#f4f4f4}</style></head><body><h2>' + title + '</h2><p>Generated: ' + new Date().toLocaleString("en-GB") + ' — Total: ' + data.length + ' patients</p><table><thead><tr><th>Date</th><th>Time</th><th>File / Phone</th><th>Doctor</th><th>Room</th><th>Follow-up</th><th>By</th></tr></thead><tbody>' + rows + '</tbody></table>' + printScript + '</body></html>');
-
-w.document.close();
+function renderSpecificTab() {
+  var container = document.getElementById("spec-grid");
+  if(!container) return;
+  container.innerHTML = "";
+  specificDocs.forEach(doc => {
+    var isOff = isDocOff(doc.name, 'ip');
+    var card = document.createElement("div");
+    card.className = "spec-card" + (isOff ? " disabled" : "");
+    card.innerHTML =
+      (isOff ? '<div class="spec-off-badge">OFF</div>' : "") +
+      '<div class="rl" style="margin-bottom:4px">CLINIC</div>' +
+      '<div class="spec-name">Dr. ' + doc.name + '</div>' +
+      '<div class="spec-meta">' + doc.room + ' • ' + doc.label + '</div>';
+    if(!isOff) {
+      card.onclick = () => {
+        document.querySelectorAll('.spec-card').forEach(el => el.classList.remove('selected'));
+        card.classList.add('selected');
+        selectedSpecificDoc = doc;
+        updateDatesForSpecificDoc(doc);
+        document.getElementById("spec-form").classList.add("on");
+        document.getElementById("spec-hint").textContent =
+          "Selected: Dr. " + doc.name + " (" + doc.room + "). Choose a " + doc.label + " follow-up date below.";
+      };
+    }
+    container.appendChild(card);
+  });
 }
 
-// ── MAIN REFRESH ──────────────────────────────────────
-function refreshAll() {
-$(“dayName”).textContent = todayName();
-$(“dateStr”).textContent = dateNow();
-
-const ipI = nextIPSlot();
-if (ipI >= 0) {
-const c = CL[ipI];
-$(“nd”).textContent = “Dr. “ + c.d;
-$(“nr”).textContent = c.r + “ • “ + c.days.join(”, “);
-$(“fd-sel”).innerHTML = buildDateOptions(c.days, “Follow-up Date”, 120);
-} else {
-$(“nd”).textContent = “All Offline”;
-$(“nr”).textContent = “—”;
+function rDist() {
+  var g = document.getElementById("dg"); g.innerHTML = "";
+  var ipNext = getNextSlotIp();
+  CL.forEach((c, i) => {
+    var ipO = isDocOff(c.d,'ip'), opO = isDocOff(c.d,'op'), isN = (i === ipNext);
+    var d = document.createElement("div"); d.className = "dc" + (isN ? " nx" : "");
+    d.innerHTML =
+      '<div class="dd">Dr. ' + c.d + '</div>' +
+      '<div style="font-size:10px;color:var(--dim)">' + c.r + ' • ' + c.days.join(", ") + '</div>' +
+      '<div class="dn2">' + cCnt(i) + '</div>' +
+      '<div class="stbox">' +
+        '<div class="stb ' + (ipO?'stb-off':'stb-ok') + '">IP:' + (ipO?'OFF':'OK') + '</div>' +
+        '<div class="stb ' + (opO?'stb-off':'stb-ok') + '">OP:' + (opO?'OFF':'OK') + '</div>' +
+      '</div>';
+    d.onclick = () => openMo(i);
+    g.appendChild(d);
+  });
 }
 
-const opI = nextOPSlot();
-$(“opd”).textContent = opI >= 0 ? “Dr. “ + CL[opI].d : “No Match Today”;
-$(“opr”).textContent = opI >= 0 ? CL[opI].r : “—”;
-
-const dotsRow = $(“rb”); dotsRow.innerHTML = “”;
-const minCnt  = getGlobalMin();
-CL.forEach((_, i) => {
-const dot = document.createElement(“div”);
-dot.className = “dot” + (slotCount(i) > minCnt ? “ used” : “”) + (i === ipI ? “ on” : “”);
-dotsRow.appendChild(dot);
-});
-
-renderInterventionalTab();
-renderLog();
-renderDist();
-if (isAdmin) {
-renderLeaveAdmin();
-if ($(“adm-export”)?.classList.contains(“on”)) renderExportGrid();
-}
+function rLog() {
+  var b = document.getElementById("lb"); b.innerHTML = "";
+  var combined = (window.S.logs||[]).concat(window.S.oplogs||[]).concat(window.S.eplogs||[])
+    .sort((a,b) => b.ts - a.ts).slice(0, 50);
+  if(window.lf !== "all") combined = combined.filter(x => x.cd === window.lf);
+  combined.forEach(x => {
+    var r = document.createElement("div"); r.className = "lr";
+    var docLabel = x.epClinicId ? ("EP/" + x.room) : ("Dr. " + x.doc);
+    r.innerHTML =
+      '<div class="lti">' + x.ad + '<br><span>' + x.time + '</span></div>' +
+      '<div class="lm">' + x.fn + '</div>' +
+      '<div>' + docLabel + '<br><span class="rt">' + x.room + '</span></div>' +
+      '<div class="lgx" style="color:var(--acc)">' + (x.apt||"—") + '</div>' +
+      '<div class="lgx">' + x.reg + '</div>';
+    b.appendChild(r);
+  });
 }
 
-// ── FIREBASE SYNC ─────────────────────────────────────
-function setSync(cssVar, text) {
-const dot = $(“syncDot”);
-dot.style.background = `var(${cssVar})`;
-dot.style.boxShadow  = `0 0 6px var(${cssVar})`;
-$(“syncText”).textContent = text;
+function updateFutureDates(daysStrArray) {
+  var dayMap = {"Sun":0,"Mon":1,"Tue":2,"Wed":3,"Thu":4,"Fri":5,"Sat":6};
+  var targets = daysStrArray.map(d => dayMap[d]);
+  var opts = '<option value="" disabled selected>Select Follow-up Date...</option>';
+  var d = new Date();
+  for(var i = 0; i < 120; i++) {
+    if(targets.includes(d.getDay())) {
+      var ds = d.toLocaleDateString("en-GB", {weekday:'short', day:'2-digit', month:'short', year:'numeric'});
+      opts += '<option value="' + ds + '">' + ds + '</option>';
+    }
+    d.setDate(d.getDate() + 1);
+  }
+  document.getElementById("fd-sel").innerHTML = opts;
 }
 
-dbRef.on(‘value’, snap => {
-const d = snap.val();
-if (d) { S.logs=d.logs||[]; S.oplogs=d.oplogs||[]; S.eplogs=d.eplogs||[]; S.leave=d.leave||{}; }
-setSync(”–ok”, “Live — Synced”);
-refreshAll();
-}, err => {
-setSync(”–err”, “Firebase Error: “ + err.message);
-console.error(“Firebase:”, err);
-});
+function rAll() {
+  document.getElementById("dayName").textContent = tn();
+  document.getElementById("dateStr").textContent = nd();
 
-db.ref(’.info/connected’).on(‘value’, snap => {
-if (snap.val() !== true) setSync(”–warn”, “Reconnecting…”);
-});
+  var ipI = getNextSlotIp();
+  if(ipI !== -1) {
+    var c = CL[ipI];
+    document.getElementById("nd").textContent = "Dr. " + c.d;
+    document.getElementById("nr").textContent = c.r + " • " + c.days.join(", ");
+    updateFutureDates(c.days);
+  } else {
+    document.getElementById("nd").textContent = "All Offline";
+    document.getElementById("nr").textContent = "—";
+  }
+
+  var opI = getNextSlotOp();
+  if(opI !== -1) {
+    document.getElementById("opd").textContent = "Dr. " + CL[opI].d;
+    document.getElementById("opr").textContent = CL[opI].r;
+  } else {
+    document.getElementById("opd").textContent = "No Match Today";
+    document.getElementById("opr").textContent = "—";
+  }
+
+  var rb = document.getElementById("rb"); rb.innerHTML = "";
+  var minCount = getGlobalMin();
+  CL.forEach((_, idx) => {
+    var d = document.createElement("div");
+    var cnt = cCnt(idx);
+    d.className = "dot" + (cnt > minCount ? " used" : "") + (idx === ipI ? " on" : "");
+    rb.appendChild(d);
+  });
+
+  renderSpecificTab();
+  rLog();
+  rDist();
+  if(adm) {
+    renderLeaveAdmin();
+    var expSec = document.getElementById("adm-export");
+    if(expSec && expSec.classList.contains("on")) renderClinicExportGrid();
+  }
+}
+
+function renderLeaveAdmin() {
+  var g = document.getElementById("leave-grid"); g.innerHTML = "";
+  [...new Set(CL.map(c => c.d))].forEach(name => {
+    var ipO = window.S.leave[name]?.ip, opO = window.S.leave[name]?.op;
+    var d = document.createElement("div"); d.className = "dc"; d.style.textAlign = "center";
+    d.innerHTML =
+      '<div class="dd">' + name + '</div>' +
+      '<div class="lv-btn-box">' +
+        '<button class="lv-btn ' + (ipO?'off':'on') + '" onclick="toggleS(\'' + name + '\',\'ip\')">IP ' + (ipO?'OFF':'OK') + '</button>' +
+        '<button class="lv-btn ' + (opO?'off':'on') + '" onclick="toggleS(\'' + name + '\',\'op\')">OP ' + (opO?'OFF':'OK') + '</button>' +
+      '</div>';
+    g.appendChild(d);
+  });
+}
+
+function openMo(i) {
+  if(!adm) return;
+  var c = CL[i];
+  var pts = (window.S.logs||[]).concat(window.S.oplogs||[]).filter(e => e.si === i);
+  document.getElementById("mt").textContent = "Dr. " + c.d + " — " + c.r;
+  document.getElementById("mc2").textContent = pts.length + " patients (this slot)";
+  var b = document.getElementById("mbody"); b.innerHTML = "";
+  pts.forEach(p => {
+    var d = document.createElement("div"); d.className = "mr";
+    d.innerHTML = '<div>' + p.fn + '</div><div style="text-align:right">' + p.time + '</div>';
+    b.appendChild(d);
+  });
+  var pb = document.getElementById("mprint"); pb.innerHTML = "";
+  if(pts.length) {
+    var btn = document.createElement("button"); btn.className = "btn";
+    btn.textContent = "Print This Slot";
+    btn.onclick = () => exportPDF("Dr. " + c.d + " — " + c.r, pts);
+    pb.appendChild(btn);
+    var allPts = getClinicPatientsByDocRoom(c.d, c.r);
+    if(allPts.length > pts.length) {
+      var btn2 = document.createElement("button"); btn2.className = "btn";
+      btn2.style.background = "linear-gradient(135deg,#059669,#0891b2)";
+      btn2.style.marginTop = "6px";
+      btn2.textContent = "Print Full Clinic (" + allPts.length + " patients)";
+      btn2.onclick = () => exportPDF("Dr. " + c.d + " — " + c.r + " (All Rotation Slots)", allPts);
+      pb.appendChild(btn2);
+    }
+  }
+  document.getElementById("mo").classList.add("on");
+}
+
+function exportPDF(title, data) {
+  var rows = data.map(e =>
+    '<tr><td>' + e.ad + '</td><td>' + e.time + '</td><td>' + e.fn + '</td><td>' +
+    (e.epClinicId ? "EP/" + e.room : "Dr. " + e.doc) + '</td><td>' + e.room + '</td><td>' +
+    (e.apt||"—") + '</td><td>' + e.reg + '</td></tr>'
+  ).join("");
+  var h = '<html><head><style>body{font-family:sans-serif}table{width:100%;border-collapse:collapse;font-size:12px}th,td{border:1px solid #ddd;padding:8px;text-align:left}th{background:#f4f4f4}h2{margin-bottom:12px}</style></head>' +
+    '<body><h2>' + title + '</h2><p style="font-size:11px;color:#666;margin-bottom:10px">Generated: ' + new Date().toLocaleString("en-GB") + ' — Total: ' + data.length + ' patients</p>' +
+    '<table><thead><tr><th>Date</th><th>Time</th><th>File / Phone</th><th>Doctor</th><th>Room</th><th>Follow-up</th><th>By</th></tr></thead><tbody>' + rows + '</tbody></table>' +
+    '<script>window.onload=function(){window.print();window.close();}<\/script></body></html>';
+  var w = window.open("", "_blank");
+  w.document.write(h);
+  w.document.close();
+}
 </script>
-
 </body>
 </html>
