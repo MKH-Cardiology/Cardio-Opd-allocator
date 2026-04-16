@@ -367,16 +367,6 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 const dbRef = db.ref('mkh_clinic_data');
 
-// Safe write helpers — never call dbRef.set(window.S) as it overwrites the entire DB
-// and causes data loss when multiple clients are connected simultaneously.
-function dbPushLog(entry)   { db.ref('mkh_clinic_data/logs').transaction(cur   => (cur||[]).concat([entry])); }
-function dbPushOplog(entry) { db.ref('mkh_clinic_data/oplogs').transaction(cur => (cur||[]).concat([entry])); }
-function dbPushEplog(entry) { db.ref('mkh_clinic_data/eplogs').transaction(cur => (cur||[]).concat([entry])); }
-function dbSetLeave()       { db.ref('mkh_clinic_data/leave').set(window.S.leave); }
-function dbSpliceLog(arr, key) {
-  db.ref('mkh_clinic_data/' + key).set(arr);
-}
-
 var docPINs = {
   "1001":"Dr. Rehan","1002":"Dr. Ramy","1003":"Dr. Badawy","1004":"Dr. Sharkawy",
   "1005":"Dr. Mostafa","1006":"Dr. Ibrahim","1007":"Dr. Hadad","1008":"Dr. Emara",
@@ -468,7 +458,7 @@ window.adminLogin = (id) => {
 window.toggleS = (name, type) => {
   if(!window.S.leave[name]) window.S.leave[name] = {ip:false, op:false};
   window.S.leave[name][type] = !window.S.leave[name][type];
-  dbSetLeave();
+  dbRef.set(window.S);
   rAll();
 };
 
@@ -569,7 +559,7 @@ window.doEpAssign = function() {
   };
   if(!window.S.eplogs) window.S.eplogs = [];
   window.S.eplogs.push(entry);
-  dbPushEplog(entry);
+  dbRef.set(window.S);
   document.getElementById("ep-fi").value = "";
   document.getElementById("ep-pin").value = "";
   // Refresh dates to update slot counts
@@ -629,13 +619,15 @@ window.doFixAssign = function() {
   var fn = document.getElementById("fix-fi").value.trim();
   var ph = document.getElementById("fix-phone").value.trim();
   var apt = document.getElementById("fix-date").value;
-  var patId = (fn && ph) ? fn + " / " + ph : (fn || ph || "—");
+  if(!fn && !ph) return alert("Enter File or Phone Number.");
+  if(!apt) return alert("Select a date.");
+  var patId = (fn && ph) ? fn + " / " + ph : (fn || ph);
   if(isDuplicate(patId)) return alert("STOP: Duplicate Patient detected.");
   var c = CL[selectedFixDoc.idx];
   if(!confirm("Book appointment:\n\nPatient: " + patId + "\nDoctor: Dr. " + c.d + "\nRoom: " + c.r + "\nDate: " + apt)) return;
   var entry = {fn:patId, reg:"Clerk", doc:c.d, room:c.r, si:selectedFixDoc.idx, cd:tn(), ad:nd(), time:nt(), apt:apt, ts:Date.now()};
   window.S.oplogs.push(entry);
-  dbPushOplog(entry);
+  dbRef.set(window.S);
   document.getElementById("fix-fi").value = "";
   document.getElementById("fix-phone").value = "";
   document.getElementById("fix-date").value = "";
@@ -655,10 +647,10 @@ window.delEntry = () => {
   var idxE = (window.S.eplogs||[]).findIndex(e => e.fn.toString().includes(s));
   if(idxL === -1 && idxO === -1 && idxE === -1) return alert("Not found");
   if(confirm("Delete?")) {
-    if(idxL !== -1) { window.S.logs.splice(idxL, 1); dbSpliceLog(window.S.logs, 'logs'); }
-    else if(idxO !== -1) { window.S.oplogs.splice(idxO, 1); dbSpliceLog(window.S.oplogs, 'oplogs'); }
-    else { window.S.eplogs.splice(idxE, 1); dbSpliceLog(window.S.eplogs, 'eplogs'); }
-    rAll();
+    if(idxL !== -1) window.S.logs.splice(idxL, 1);
+    else if(idxO !== -1) window.S.oplogs.splice(idxO, 1);
+    else window.S.eplogs.splice(idxE, 1);
+    dbRef.set(window.S); rAll();
   }
 };
 
@@ -746,53 +738,24 @@ function renderClinicExportGrid() {
 }
 
 // ── FIREBASE SYNC ─────────────────────────────────────────────────────────────
-var _fbConnected = false;
-var _fbRetryTimer = null;
-
-function syncSetStatus(ok, msg) {
-  var dot = document.getElementById("syncDot");
-  var txt = document.getElementById("syncText");
-  if(!dot || !txt) return;
-  dot.style.background = ok ? "var(--ok)" : "var(--err)";
-  dot.style.boxShadow  = ok ? "0 0 6px var(--ok)" : "0 0 6px var(--err)";
-  txt.textContent = msg;
-}
-
-function attachFirebaseListener() {
-  dbRef.on('value', (snap) => {
-    _fbConnected = true;
-    if(_fbRetryTimer) { clearTimeout(_fbRetryTimer); _fbRetryTimer = null; }
-    const d = snap.val();
-    if(d) {
-      window.S.logs   = d.logs   || [];
-      window.S.oplogs = d.oplogs || [];
-      window.S.eplogs = d.eplogs || [];
-      window.S.leave  = d.leave  || {};
-    }
-    syncSetStatus(true, "Live — Synced");
-    rAll();
-  }, (err) => {
-    // Permission denied or network error
-    syncSetStatus(false, "DB Error — Retrying...");
-    console.warn("Firebase error:", err);
-    dbRef.off();
-    _fbRetryTimer = setTimeout(attachFirebaseListener, 5000);
-  });
-}
-
-// Monitor actual connection state via .info/connected
-// Only show "Reconnecting" if we haven't received data yet, to avoid flickering
-db.ref('.info/connected').on('value', (snap) => {
-  if(snap.val() !== true) {
-    // Only show reconnecting if we're not already in a synced state
-    var txt = document.getElementById("syncText");
-    if(txt && txt.textContent !== "Live — Synced") {
-      syncSetStatus(false, "Reconnecting...");
-    }
+dbRef.on('value', (snap) => {
+  const d = snap.val();
+  if(d) {
+    window.S.logs   = d.logs   || [];
+    window.S.oplogs = d.oplogs || [];
+    window.S.eplogs = d.eplogs || [];
+    window.S.leave  = d.leave  || {};
   }
+  document.getElementById("syncDot").style.background = "var(--ok)";
+  document.getElementById("syncDot").style.boxShadow  = "0 0 6px var(--ok)";
+  document.getElementById("syncText").textContent = "Live — Synced";
+  rAll();
+}, (err) => {
+  document.getElementById("syncDot").style.background = "var(--err)";
+  document.getElementById("syncDot").style.boxShadow  = "0 0 6px var(--err)";
+  document.getElementById("syncText").textContent = "DB Error — check console";
+  console.error("Firebase error:", err);
 });
-
-attachFirebaseListener();
 
 // ── UTILITIES ─────────────────────────────────────────────────────────────────
 function tn() { return ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][new Date().getDay()]; }
@@ -805,7 +768,7 @@ function isDocOff(docName, type) {
 }
 
 function isDuplicate(val) {
-  if(!val) return false;
+  if(!val || val.toString().trim() === "") return false;
   const s = val.toString().trim();
   const all = (window.S.logs||[]).concat(window.S.oplogs||[]);
   return all.some(e => e.fn && e.fn.toString().includes(s));
@@ -899,21 +862,22 @@ window.doAssign = function(type, manualSlotIndex = null) {
     if(!confirm(confirmMsg)) return;
     var entry = {fn:fn, reg:regName, doc:c.d, room:c.r, si:slotIdx, cd:tn(), ad:nd(), time:nt(), apt:apt, ts:Date.now()};
     window.S.logs.push(entry);
-    dbPushLog(entry);
+    dbRef.set(window.S);
     document.getElementById("fi").value = "";
     document.getElementById("rpin").value = "";
   } else {
     var ofn = document.getElementById("opfi").value.trim();
-    var ph  = document.getElementById("opphone").value.trim();
-    fn = (ofn && ph) ? ofn + " / " + ph : (ofn || ph || "");
+    var ph = document.getElementById("opphone").value.trim();
+    if(!ofn && !ph) return alert("Enter File or Phone Number.");
+    fn = (ofn && ph) ? ofn + " / " + ph : (ofn || ph);
     pin = "Clerk"; regName = "Clerk";
-    if(fn && isDuplicate(fn)) return alert("STOP: Duplicate Patient detected.");
+    if(isDuplicate(fn)) return alert("STOP: Duplicate Patient detected.");
     var opSlot = getNextSlotOp();
     if(opSlot === -1) return alert("No valid clinics scheduled today.");
-    var oc = CL[opSlot];
-    var opEntry = {fn:(fn||"—"), reg:regName, doc:oc.d, room:oc.r, si:opSlot, cd:tn(), ad:nd(), time:nt(), apt:apt, ts:Date.now()};
-    window.S.oplogs.push(opEntry);
-    dbPushOplog(opEntry);
+    var c = CL[opSlot];
+    var entry = {fn:fn, reg:regName, doc:c.d, room:c.r, si:opSlot, cd:tn(), ad:nd(), time:nt(), apt:apt, ts:Date.now()};
+    window.S.oplogs.push(entry);
+    dbRef.set(window.S);
     document.getElementById("opfi").value = "";
     document.getElementById("opphone").value = "";
   }
@@ -936,7 +900,7 @@ window.doSpecificAssign = function() {
   if(!confirm("Confirm Assignment to Dr. " + selectedSpecificDoc.name + ":\n\nFile: " + fn + "\nDate: " + apt + "\nRegistrar: " + regName + "\nRoom: " + c.r)) return;
   var entry = {fn:fn, reg:regName, doc:c.d, room:c.r, si:targetIdx, cd:tn(), ad:nd(), time:nt(), apt:apt, ts:Date.now()};
   window.S.logs.push(entry);
-  dbPushLog(entry);
+  dbRef.set(window.S);
   document.getElementById("spec-fi").value = "";
   document.getElementById("spec-pin").value = "";
   document.getElementById("spec-date").value = "";
