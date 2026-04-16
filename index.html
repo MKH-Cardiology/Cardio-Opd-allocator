@@ -259,7 +259,46 @@ function renderLeaveAdmin(){ let g=document.getElementById("leave-grid"); g.inne
 window.toggleS=(name,type)=>{ if(!window.S.leave[name]) window.S.leave[name]={ip:false,op:false}; window.S.leave[name][type]=!window.S.leave[name][type]; dbRef.set(window.S); rAll(); };
 function renderClinicExportGrid(){ let grid=document.getElementById("clinic-export-grid"); if(!grid) return; grid.innerHTML=""; let clinics=[...new Map(CL.map(slot=>[slot.d+"|"+slot.r,slot])).values()]; EP_CLINICS.forEach(ep=>{ let epPts=(window.S.eplogs||[]).filter(e=>e.epClinicId===ep.id); let card=document.createElement("div"); card.className="cex-card"; card.style.borderColor="rgba(167,139,250,0.4)"; card.innerHTML=`<div class="rl" style="color:var(--ep)">EP CLINIC</div><div class="cex-doc" style="color:var(--ep);font-size:14px">${ep.name}</div><div class="cex-meta">${ep.room} • ${ep.label}</div><div class="cex-count" style="color:var(--ep)">${epPts.length}</div>`; card.onclick=()=>{ if(epPts.length) exportPDF(`EP Clinic — ${ep.room} (${ep.label})`, epPts); else alert("No patients"); }; grid.appendChild(card); }); clinics.forEach(c=>{ let pts=(window.S.logs||[]).concat(window.S.oplogs||[]).filter(e=>e.doc===c.d && e.room===c.r); let card=document.createElement("div"); card.className="cex-card"; card.innerHTML=`<div class="rl">${c.days.join(", ")}</div><div class="cex-doc">Dr. ${c.d}</div><div class="cex-meta">${c.r}</div><div class="cex-count">${pts.length}</div>`; card.onclick=()=>{ if(pts.length) exportPDF(`Dr. ${c.d} — ${c.r}`, pts); else alert("No patients"); }; grid.appendChild(card); }); }
 function rAll(){ document.getElementById("dayName").innerText=tn(); document.getElementById("dateStr").innerText=nd(); let ipI=getNextSlotIp(); if(ipI!==-1){ let c=CL[ipI]; document.getElementById("nd").innerText="Dr. "+c.d; document.getElementById("nr").innerText=c.r+" • "+c.days.join(", "); updateFutureDates(c.days); } else { document.getElementById("nd").innerText="All Offline"; document.getElementById("nr").innerText="—"; } let opI=getNextSlotOp(); if(opI!==-1){ document.getElementById("opd").innerText="Dr. "+CL[opI].d; document.getElementById("opr").innerText=CL[opI].r; } else { document.getElementById("opd").innerText="No Match Today"; document.getElementById("opr").innerText="—"; } let rb=document.getElementById("rb"); rb.innerHTML=""; let minCount=getGlobalMin(); CL.forEach((_,idx)=>{ let cnt=cCnt(idx); let d=document.createElement("div"); d.className="dot"+(cnt>minCount?" used":"")+(idx===ipI?" on":""); rb.appendChild(d); }); renderSpecificTab(); rLog(); rDist(); if(adm) { renderLeaveAdmin(); if(document.getElementById("adm-export")?.classList.contains("on")) renderClinicExportGrid(); } }
-function renderSpecificTab(){ let container=document.getElementById("spec-grid"); if(!container) return; container.innerHTML=""; specificDocs.forEach(doc=>{ let isOff=isDocOff(doc.name,'ip'); let card=document.createElement("div"); card.className="spec-card"+(isOff?" disabled":""); card.innerHTML=(isOff?'<div class="spec-off-badge">OFF</div>':'')+`<div class="rl" style="margin-bottom:4px">CLINIC</div><div class="spec-name">Dr. ${doc.name}</div><div class="spec-meta">${doc.room} • ${doc.label}</div>`; if(!isOff) card.onclick=()=>{ document.querySelectorAll('.spec-card').forEach(el=>el.classList.remove('selected')); card.classList.add('selected'); selectedSpecificDoc=doc; let dayMap={"Sun":0,"Mon":1,"Tue":2,"Wed":3,"Thu":4,"Fri":5,"Sat":6}, target=dayMap[doc.day], opts='<option value="" disabled selected>Select Date...</option>', d=new Date(); for(let i=0;i<180;i++){ if(d.getDay()===target){ opts+=`<option value="${d.toLocaleDateString("en-GB",{weekday:'short',day:'2-digit',month:'short',year:'numeric'})}">${d.toLocaleDateString("en-GB",{weekday:'short',day:'2-digit',month:'short',year:'numeric'})}</option>`; if(++i>15) break;} d.setDate(d.getDate()+1); } document.getElementById("spec-date").innerHTML=opts; document.getElementById("spec-form").classList.add("on"); document.getElementById("spec-hint").innerHTML=`Selected: Dr. ${doc.name} (${doc.room}). Choose a ${doc.label} follow-up date below.`; }; container.appendChild(card); }); }
+
+// Extended 6-month date generation for interventional clinics (no early break)
+function renderSpecificTab(){ 
+  let container = document.getElementById("spec-grid"); 
+  if(!container) return; 
+  container.innerHTML = ""; 
+  specificDocs.forEach(doc => { 
+    let isOff = isDocOff(doc.name,'ip'); 
+    let card = document.createElement("div"); 
+    card.className = "spec-card" + (isOff ? " disabled" : ""); 
+    card.innerHTML = (isOff?'<div class="spec-off-badge">OFF</div>':'') + 
+      `<div class="rl" style="margin-bottom:4px">CLINIC</div><div class="spec-name">Dr. ${doc.name}</div><div class="spec-meta">${doc.room} • ${doc.label}</div>`; 
+    if(!isOff) { 
+      card.onclick = () => { 
+        document.querySelectorAll('.spec-card').forEach(el=>el.classList.remove('selected')); 
+        card.classList.add('selected'); 
+        selectedSpecificDoc = doc; 
+        // generate all dates for the next 6 months (all matching weekdays)
+        let dayMap = {"Sun":0,"Mon":1,"Tue":2,"Wed":3,"Thu":4,"Fri":5,"Sat":6}; 
+        let targetDay = dayMap[doc.day]; 
+        let opts = '<option value="" disabled selected>Select Follow-up Date (next 6 months)...</option>'; 
+        let current = new Date(); 
+        let sixMonthsLater = new Date(); 
+        sixMonthsLater.setMonth(sixMonthsLater.getMonth() + 6); 
+        while(current <= sixMonthsLater) { 
+          if(current.getDay() === targetDay) { 
+            let formatted = current.toLocaleDateString("en-GB", {weekday:'short', day:'2-digit', month:'short', year:'numeric'}); 
+            opts += `<option value="${formatted}">${formatted}</option>`; 
+          } 
+          current.setDate(current.getDate() + 1); 
+        } 
+        document.getElementById("spec-date").innerHTML = opts; 
+        document.getElementById("spec-form").classList.add("on"); 
+        document.getElementById("spec-hint").innerHTML = `Selected: Dr. ${doc.name} (${doc.room}). Choose a ${doc.label} follow-up date below. All ${doc.label}s for the next 6 months are shown.`; 
+      }; 
+    } 
+    container.appendChild(card); 
+  }); 
+}
+
 window.goTab=(id,btn)=>{ document.querySelectorAll(".pg").forEach(p=>p.classList.remove("on")); document.querySelectorAll(".tabs>.tab").forEach(t=>t.classList.remove("on")); document.getElementById("pg-"+id).classList.add("on"); btn.classList.add("on"); if(id==="ep") renderEpTab(); rAll(); };
 window.goAdmTab=(id,btn)=>{ document.querySelectorAll(".adm-tab").forEach(t=>t.classList.remove("on")); document.querySelectorAll(".adm-sec").forEach(s=>s.classList.remove("on")); btn.classList.add("on"); document.getElementById("adm-"+id).classList.add("on"); if(id==="export") renderClinicExportGrid(); };
 window.filterLog=(f,b)=>{ document.querySelectorAll(".fb").forEach(x=>x.classList.remove("on")); b.classList.add("on"); window.lf=f; rLog(); };
