@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -96,39 +97,40 @@ input{width:100%;background:var(--sur2);border:1px solid var(--bor);border-radiu
 
 /* Admin sub-tabs */
 .adm-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
-.adm-tab{background:var(--sur2);border:1px solid var(--bor);color:var(--dim);border-radius:7px;padding:7px 14px;cursor:pointer;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.5px;text-transform:uppercase}
-.adm-tab.on{border-color:var(--acc);color:var(--acc);background:rgba(96,165,250,0.07)}
+.adm-tab{background:var(–sur2);border:1px solid var(–bor);color:var(–dim);border-radius:7px;padding:7px 14px;cursor:pointer;font-family:‘DM Mono’,monospace;font-size:11px;letter-spacing:.5px;text-transform:uppercase}
+.adm-tab.on{border-color:var(–acc);color:var(–acc);background:rgba(96,165,250,0.07)}
 .adm-sec{display:none}
 .adm-sec.on{display:block}
 
 /* Clinic export grid */
 .clinic-export-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:9px;margin-bottom:16px}
-.cex-card{background:var(--sur2);border:1px solid var(--bor);border-radius:11px;padding:13px;cursor:pointer;transition:all 0.2s}
-.cex-card:hover{border-color:var(--acc2);background:rgba(56,189,248,0.06)}
-.cex-doc{font-family:'DM Serif Display',serif;font-size:18px;color:var(--acc);margin-bottom:3px}
-.cex-meta{font-family:'DM Mono',monospace;font-size:10px;color:var(--dim)}
-.cex-count{font-family:'DM Mono',monospace;font-size:22px;color:var(--ok);font-weight:600;margin-top:4px}
+.cex-card{background:var(–sur2);border:1px solid var(–bor);border-radius:11px;padding:13px;cursor:pointer;transition:all 0.2s}
+.cex-card:hover{border-color:var(–acc2);background:rgba(56,189,248,0.06)}
+.cex-doc{font-family:‘DM Serif Display’,serif;font-size:18px;color:var(–acc);margin-bottom:3px}
+.cex-meta{font-family:‘DM Mono’,monospace;font-size:10px;color:var(–dim)}
+.cex-count{font-family:‘DM Mono’,monospace;font-size:22px;color:var(–ok);font-weight:600;margin-top:4px}
 
 /* EP clinics */
 .ep-notice{background:rgba(167,139,250,0.08);border:1px solid rgba(167,139,250,0.35);border-radius:10px;padding:14px 16px;margin-bottom:16px;display:flex;gap:12px;align-items:flex-start}
 .ep-notice-icon{font-size:20px;flex-shrink:0;margin-top:1px}
-.ep-notice-text{font-family:'DM Mono',monospace;font-size:12px;color:var(--ep2);line-height:1.6}
+.ep-notice-text{font-family:‘DM Mono’,monospace;font-size:12px;color:var(–ep2);line-height:1.6}
 .ep-notice-text strong{color:#fff;font-size:13px}
 .ep-card{border-color:rgba(167,139,250,0.4)!important}
-.ep-card:hover:not(.disabled){border-color:var(--ep)!important;background:rgba(167,139,250,0.08)!important}
-.ep-card.selected{border-color:var(--ep)!important;background:rgba(167,139,250,0.12)!important;box-shadow:0 0 0 2px var(--ep)!important}
-.ep-card .spec-name{color:var(--ep)!important}
-.ep-sel{width:100%;background:rgba(167,139,250,0.06);border:1px solid rgba(167,139,250,0.45);border-radius:5px;padding:8px;color:var(--ep2);font-family:'DM Mono',monospace;font-size:13px;font-weight:600;outline:none;margin-top:5px;cursor:pointer}
-.ep-sel option{background:var(--sur);color:var(--txt)}
-.ep-count-badge{display:inline-block;font-family:'DM Mono',monospace;font-size:10px;padding:2px 7px;border-radius:4px;margin-left:6px;font-weight:600}
-.ep-count-ok{background:rgba(52,211,153,0.15);color:var(--ok);border:1px solid rgba(52,211,153,0.3)}
-.ep-count-warn{background:rgba(251,191,36,0.15);color:var(--warn);border:1px solid rgba(251,191,36,0.3)}
-.ep-count-full{background:rgba(248,113,113,0.15);color:var(--err);border:1px solid rgba(248,113,113,0.3)}
+.ep-card:hover:not(.disabled){border-color:var(–ep)!important;background:rgba(167,139,250,0.08)!important}
+.ep-card.selected{border-color:var(–ep)!important;background:rgba(167,139,250,0.12)!important;box-shadow:0 0 0 2px var(–ep)!important}
+.ep-card .spec-name{color:var(–ep)!important}
+.ep-sel{width:100%;background:rgba(167,139,250,0.06);border:1px solid rgba(167,139,250,0.45);border-radius:5px;padding:8px;color:var(–ep2);font-family:‘DM Mono’,monospace;font-size:13px;font-weight:600;outline:none;margin-top:5px;cursor:pointer}
+.ep-sel option{background:var(–sur);color:var(–txt)}
+.ep-count-badge{display:inline-block;font-family:‘DM Mono’,monospace;font-size:10px;padding:2px 7px;border-radius:4px;margin-left:6px;font-weight:600}
+.ep-count-ok{background:rgba(52,211,153,0.15);color:var(–ok);border:1px solid rgba(52,211,153,0.3)}
+.ep-count-warn{background:rgba(251,191,36,0.15);color:var(–warn);border:1px solid rgba(251,191,36,0.3)}
+.ep-count-full{background:rgba(248,113,113,0.15);color:var(–err);border:1px solid rgba(248,113,113,0.3)}
 .btn-ep{background:linear-gradient(135deg,#7c3aed,#6d28d9)!important}
-.adm-section-title{font-family:'DM Serif Display',serif;font-size:18px;color:var(--txt);margin-bottom:4px}
-.adm-section-sub{font-family:'DM Mono',monospace;font-size:10px;color:var(--dim);margin-bottom:14px}
-hr.adm-hr{border:0;border-top:1px solid var(--bor);margin:20px 0}
+.adm-section-title{font-family:‘DM Serif Display’,serif;font-size:18px;color:var(–txt);margin-bottom:4px}
+.adm-section-sub{font-family:‘DM Mono’,monospace;font-size:10px;color:var(–dim);margin-bottom:14px}
+hr.adm-hr{border:0;border-top:1px solid var(–bor);margin:20px 0}
 </style>
+
 </head>
 <body>
 
@@ -149,6 +151,7 @@ hr.adm-hr{border:0;border-top:1px solid var(--bor);margin:20px 0}
 </div>
 
 <!-- INPATIENT TAB -->
+
 <div class="pg on" id="pg-ip">
   <div class="card">
     <div class="cbox">
@@ -170,6 +173,7 @@ hr.adm-hr{border:0;border-top:1px solid var(--bor);margin:20px 0}
 </div>
 
 <!-- INTERVENTIONAL TAB -->
+
 <div class="pg" id="pg-spec">
   <div class="card">
     <div class="spec-grid" id="spec-grid"></div>
@@ -187,6 +191,7 @@ hr.adm-hr{border:0;border-top:1px solid var(--bor);margin:20px 0}
 </div>
 
 <!-- OUTPATIENT TAB -->
+
 <div class="pg" id="pg-op">
   <div id="opgate" class="card" style="text-align:center">
     <label>CLERK ACCESS PIN</label>
@@ -232,6 +237,7 @@ hr.adm-hr{border:0;border-top:1px solid var(--bor);margin:20px 0}
 </div>
 
 <!-- EP CLINICS TAB -->
+
 <div class="pg" id="pg-ep">
   <div class="ep-notice">
     <div class="ep-notice-icon">⚠️</div>
@@ -257,6 +263,7 @@ hr.adm-hr{border:0;border-top:1px solid var(--bor);margin:20px 0}
 </div>
 
 <!-- ADMIN TAB (consolidated) -->
+
 <div class="pg" id="pg-adm">
   <div class="card apgate" style="text-align:center">
     <label>ADMIN PIN</label>
@@ -265,70 +272,73 @@ hr.adm-hr{border:0;border-top:1px solid var(--bor);margin:20px 0}
   </div>
   <div class="ac-content">
 
-    <!-- Admin sub-nav -->
-    <div class="adm-tabs">
-      <button class="adm-tab on" onclick="goAdmTab('leave',this)">Doctor Leave</button>
-      <button class="adm-tab"    onclick="goAdmTab('dist',this)">Distribution</button>
-      <button class="adm-tab"    onclick="goAdmTab('log',this)">Log</button>
-      <button class="adm-tab"    onclick="goAdmTab('export',this)">Export / Print</button>
-      <button class="adm-tab"    onclick="goAdmTab('danger',this)">⚠ Danger Zone</button>
-    </div>
+```
+<!-- Admin sub-nav -->
+<div class="adm-tabs">
+  <button class="adm-tab on" onclick="goAdmTab('leave',this)">Doctor Leave</button>
+  <button class="adm-tab"    onclick="goAdmTab('dist',this)">Distribution</button>
+  <button class="adm-tab"    onclick="goAdmTab('log',this)">Log</button>
+  <button class="adm-tab"    onclick="goAdmTab('export',this)">Export / Print</button>
+  <button class="adm-tab"    onclick="goAdmTab('danger',this)">⚠ Danger Zone</button>
+</div>
 
-    <!-- LEAVE -->
-    <div class="adm-sec on" id="adm-leave">
-      <div class="adm-section-title">Doctor Leave / Status</div>
-      <div class="adm-section-sub">Toggle IP and OP availability for each doctor. Changes are saved live.</div>
-      <div id="leave-grid" class="dg"></div>
-    </div>
+<!-- LEAVE -->
+<div class="adm-sec on" id="adm-leave">
+  <div class="adm-section-title">Doctor Leave / Status</div>
+  <div class="adm-section-sub">Toggle IP and OP availability for each doctor. Changes are saved live.</div>
+  <div id="leave-grid" class="dg"></div>
+</div>
 
-    <!-- DISTRIBUTION -->
-    <div class="adm-sec" id="adm-dist">
-      <div class="adm-section-title">Slot Distribution</div>
-      <div class="adm-section-sub">Click any slot card to view its patient list and print.</div>
-      <div class="dg" id="dg"></div>
-    </div>
+<!-- DISTRIBUTION -->
+<div class="adm-sec" id="adm-dist">
+  <div class="adm-section-title">Slot Distribution</div>
+  <div class="adm-section-sub">Click any slot card to view its patient list and print.</div>
+  <div class="dg" id="dg"></div>
+</div>
 
-    <!-- LOG -->
-    <div class="adm-sec" id="adm-log">
-      <div class="adm-section-title">Assignment Log</div>
-      <div class="adm-section-sub">Last 50 entries across all assignment types.</div>
-      <div class="lf">
-        <button class="fb on" onclick="filterLog('all',this)">All</button>
-        <button class="fb" onclick="filterLog('Sun',this)">Sun</button>
-        <button class="fb" onclick="filterLog('Mon',this)">Mon</button>
-        <button class="fb" onclick="filterLog('Tue',this)">Tue</button>
-        <button class="fb" onclick="filterLog('Wed',this)">Wed</button>
-        <button class="fb" onclick="filterLog('Thu',this)">Thu</button>
-      </div>
-      <div class="lt">
-        <div class="lh"><div>Date</div><div>File / Phone</div><div>Doctor / Room</div><div>Follow-up</div><div>By</div></div>
-        <div id="lb"></div>
-      </div>
-    </div>
+<!-- LOG -->
+<div class="adm-sec" id="adm-log">
+  <div class="adm-section-title">Assignment Log</div>
+  <div class="adm-section-sub">Last 50 entries across all assignment types.</div>
+  <div class="lf">
+    <button class="fb on" onclick="filterLog('all',this)">All</button>
+    <button class="fb" onclick="filterLog('Sun',this)">Sun</button>
+    <button class="fb" onclick="filterLog('Mon',this)">Mon</button>
+    <button class="fb" onclick="filterLog('Tue',this)">Tue</button>
+    <button class="fb" onclick="filterLog('Wed',this)">Wed</button>
+    <button class="fb" onclick="filterLog('Thu',this)">Thu</button>
+  </div>
+  <div class="lt">
+    <div class="lh"><div>Date</div><div>File / Phone</div><div>Doctor / Room</div><div>Follow-up</div><div>By</div></div>
+    <div id="lb"></div>
+  </div>
+</div>
 
-    <!-- EXPORT -->
-    <div class="adm-sec" id="adm-export">
-      <div class="adm-section-title">Export &amp; Print</div>
-      <div class="adm-section-sub">Select a clinic card to export all its patients as PDF. Patients are grouped by doctor + room + day — not by rotation slot.</div>
-      <button class="btn" style="margin-bottom:18px" onclick="exportWeekly()">📊 Export Master Log (All Entries)</button>
-      <div class="rl" style="margin-bottom:10px;">CLINIC PATIENT LISTS</div>
-      <div class="clinic-export-grid" id="clinic-export-grid"></div>
-    </div>
+<!-- EXPORT -->
+<div class="adm-sec" id="adm-export">
+  <div class="adm-section-title">Export &amp; Print</div>
+  <div class="adm-section-sub">Select a clinic card to export all its patients as PDF. Patients are grouped by doctor + room + day — not by rotation slot.</div>
+  <button class="btn" style="margin-bottom:18px" onclick="exportWeekly()">📊 Export Master Log (All Entries)</button>
+  <div class="rl" style="margin-bottom:10px;">CLINIC PATIENT LISTS</div>
+  <div class="clinic-export-grid" id="clinic-export-grid"></div>
+</div>
 
-    <!-- DANGER -->
-    <div class="adm-sec" id="adm-danger">
-      <div class="adm-section-title">Danger Zone</div>
-      <div class="adm-section-sub">Irreversible actions. Use with caution.</div>
-      <label>Remove Patient Row</label>
-      <input type="text" id="dfi" placeholder="Enter File or Phone Number" inputmode="numeric">
-      <button class="btn" style="background:#fbbf24;color:#000;margin-bottom:10px" onclick="delEntry()">🗑 Remove Entry</button>
-      <button class="btn btn-warn" onclick="resetAll()">⚠ Wipe All Database Data</button>
-    </div>
+<!-- DANGER -->
+<div class="adm-sec" id="adm-danger">
+  <div class="adm-section-title">Danger Zone</div>
+  <div class="adm-section-sub">Irreversible actions. Use with caution.</div>
+  <label>Remove Patient Row</label>
+  <input type="text" id="dfi" placeholder="Enter File or Phone Number" inputmode="numeric">
+  <button class="btn" style="background:#fbbf24;color:#000;margin-bottom:10px" onclick="delEntry()">🗑 Remove Entry</button>
+  <button class="btn btn-warn" onclick="resetAll()">⚠ Wipe All Database Data</button>
+</div>
+```
 
   </div>
 </div>
 
 <!-- MODAL -->
+
 <div class="mo" id="mo">
   <div class="mb">
     <div class="mh"><h2 id="mt">—</h2><button onclick="closeMo()">Close</button></div>
@@ -341,7 +351,9 @@ hr.adm-hr{border:0;border-top:1px solid var(--bor);margin:20px 0}
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
 <script>
 const firebaseConfig = {
   apiKey: "AIzaSyAT7Y3jWM4ix7I5cM4vKsHIJRaZZ6AZ9yI",
@@ -607,9 +619,8 @@ window.doFixAssign = function() {
   var fn = document.getElementById("fix-fi").value.trim();
   var ph = document.getElementById("fix-phone").value.trim();
   var apt = document.getElementById("fix-date").value;
-  if(!fn && !ph) return alert("Enter File or Phone Number.");
   if(!apt) return alert("Select a date.");
-  var patId = (fn && ph) ? fn + " / " + ph : (fn || ph);
+  var patId = (fn && ph) ? fn + " / " + ph : (fn || ph || "—");
   if(isDuplicate(patId)) return alert("STOP: Duplicate Patient detected.");
   var c = CL[selectedFixDoc.idx];
   if(!confirm("Book appointment:\n\nPatient: " + patId + "\nDoctor: Dr. " + c.d + "\nRoom: " + c.r + "\nDate: " + apt)) return;
@@ -850,8 +861,7 @@ window.doAssign = function(type, manualSlotIndex = null) {
   } else {
     var ofn = document.getElementById("opfi").value.trim();
     var ph = document.getElementById("opphone").value.trim();
-    if(!ofn && !ph) return alert("Enter File or Phone Number.");
-    fn = (ofn && ph) ? ofn + " / " + ph : (ofn || ph);
+    fn = (ofn && ph) ? ofn + " / " + ph : (ofn || ph || "—");
     pin = "Clerk"; regName = "Clerk";
     if(isDuplicate(fn)) return alert("STOP: Duplicate Patient detected.");
     var i = getNextSlotOp();
@@ -1071,13 +1081,18 @@ function exportPDF(title, data) {
     (e.apt||"—") + '</td><td>' + e.reg + '</td></tr>'
   ).join("");
   var h = '<html><head><style>body{font-family:sans-serif}table{width:100%;border-collapse:collapse;font-size:12px}th,td{border:1px solid #ddd;padding:8px;text-align:left}th{background:#f4f4f4}h2{margin-bottom:12px}</style></head>' +
-    '<body><h2>' + title + '</h2><p style="font-size:11px;color:#666;margin-bottom:10px">Generated: ' + new Date().toLocaleString("en-GB") + ' — Total: ' + data.length + ' patients</p>' +
-    '<table><thead><tr><th>Date</th><th>Time</th><th>File / Phone</th><th>Doctor</th><th>Room</th><th>Follow-up</th><th>By</th></tr></thead><tbody>' + rows + '</tbody></table>' +
-    '<script>window.onload=function(){window.print();window.close();}<\/script></body></html>';
-  var w = window.open("", "_blank");
-  w.document.write(h);
-  w.document.close();
+
+```
+'<body><h2>' + title + '</h2><p style="font-size:11px;color:#666;margin-bottom:10px">Generated: ' + new Date().toLocaleString("en-GB") + ' — Total: ' + data.length + ' patients</p>' +
+'<table><thead><tr><th>Date</th><th>Time</th><th>File / Phone</th><th>Doctor</th><th>Room</th><th>Follow-up</th><th>By</th></tr></thead><tbody>' + rows + '</tbody></table>' +
+'<script>window.onload=function(){window.print();window.close();}<\/script></body></html>';
+```
+
+var w = window.open(””, “_blank”);
+w.document.write(h);
+w.document.close();
 }
 </script>
+
 </body>
 </html>
