@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -96,39 +97,40 @@ input{width:100%;background:var(--sur2);border:1px solid var(--bor);border-radiu
 
 /* Admin sub-tabs */
 .adm-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
-.adm-tab{background:var(--sur2);border:1px solid var(--bor);color:var(--dim);border-radius:7px;padding:7px 14px;cursor:pointer;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.5px;text-transform:uppercase}
-.adm-tab.on{border-color:var(--acc);color:var(--acc);background:rgba(96,165,250,0.07)}
+.adm-tab{background:var(–sur2);border:1px solid var(–bor);color:var(–dim);border-radius:7px;padding:7px 14px;cursor:pointer;font-family:‘DM Mono’,monospace;font-size:11px;letter-spacing:.5px;text-transform:uppercase}
+.adm-tab.on{border-color:var(–acc);color:var(–acc);background:rgba(96,165,250,0.07)}
 .adm-sec{display:none}
 .adm-sec.on{display:block}
 
 /* Clinic export grid */
 .clinic-export-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:9px;margin-bottom:16px}
-.cex-card{background:var(--sur2);border:1px solid var(--bor);border-radius:11px;padding:13px;cursor:pointer;transition:all 0.2s}
-.cex-card:hover{border-color:var(--acc2);background:rgba(56,189,248,0.06)}
-.cex-doc{font-family:'DM Serif Display',serif;font-size:18px;color:var(--acc);margin-bottom:3px}
-.cex-meta{font-family:'DM Mono',monospace;font-size:10px;color:var(--dim)}
-.cex-count{font-family:'DM Mono',monospace;font-size:22px;color:var(--ok);font-weight:600;margin-top:4px}
+.cex-card{background:var(–sur2);border:1px solid var(–bor);border-radius:11px;padding:13px;cursor:pointer;transition:all 0.2s}
+.cex-card:hover{border-color:var(–acc2);background:rgba(56,189,248,0.06)}
+.cex-doc{font-family:‘DM Serif Display’,serif;font-size:18px;color:var(–acc);margin-bottom:3px}
+.cex-meta{font-family:‘DM Mono’,monospace;font-size:10px;color:var(–dim)}
+.cex-count{font-family:‘DM Mono’,monospace;font-size:22px;color:var(–ok);font-weight:600;margin-top:4px}
 
 /* EP clinics */
 .ep-notice{background:rgba(167,139,250,0.08);border:1px solid rgba(167,139,250,0.35);border-radius:10px;padding:14px 16px;margin-bottom:16px;display:flex;gap:12px;align-items:flex-start}
 .ep-notice-icon{font-size:20px;flex-shrink:0;margin-top:1px}
-.ep-notice-text{font-family:'DM Mono',monospace;font-size:12px;color:var(--ep2);line-height:1.6}
+.ep-notice-text{font-family:‘DM Mono’,monospace;font-size:12px;color:var(–ep2);line-height:1.6}
 .ep-notice-text strong{color:#fff;font-size:13px}
 .ep-card{border-color:rgba(167,139,250,0.4)!important}
-.ep-card:hover:not(.disabled){border-color:var(--ep)!important;background:rgba(167,139,250,0.08)!important}
-.ep-card.selected{border-color:var(--ep)!important;background:rgba(167,139,250,0.12)!important;box-shadow:0 0 0 2px var(--ep)!important}
-.ep-card .spec-name{color:var(--ep)!important}
-.ep-sel{width:100%;background:rgba(167,139,250,0.06);border:1px solid rgba(167,139,250,0.45);border-radius:5px;padding:8px;color:var(--ep2);font-family:'DM Mono',monospace;font-size:13px;font-weight:600;outline:none;margin-top:5px;cursor:pointer}
-.ep-sel option{background:var(--sur);color:var(--txt)}
-.ep-count-badge{display:inline-block;font-family:'DM Mono',monospace;font-size:10px;padding:2px 7px;border-radius:4px;margin-left:6px;font-weight:600}
-.ep-count-ok{background:rgba(52,211,153,0.15);color:var(--ok);border:1px solid rgba(52,211,153,0.3)}
-.ep-count-warn{background:rgba(251,191,36,0.15);color:var(--warn);border:1px solid rgba(251,191,36,0.3)}
-.ep-count-full{background:rgba(248,113,113,0.15);color:var(--err);border:1px solid rgba(248,113,113,0.3)}
+.ep-card:hover:not(.disabled){border-color:var(–ep)!important;background:rgba(167,139,250,0.08)!important}
+.ep-card.selected{border-color:var(–ep)!important;background:rgba(167,139,250,0.12)!important;box-shadow:0 0 0 2px var(–ep)!important}
+.ep-card .spec-name{color:var(–ep)!important}
+.ep-sel{width:100%;background:rgba(167,139,250,0.06);border:1px solid rgba(167,139,250,0.45);border-radius:5px;padding:8px;color:var(–ep2);font-family:‘DM Mono’,monospace;font-size:13px;font-weight:600;outline:none;margin-top:5px;cursor:pointer}
+.ep-sel option{background:var(–sur);color:var(–txt)}
+.ep-count-badge{display:inline-block;font-family:‘DM Mono’,monospace;font-size:10px;padding:2px 7px;border-radius:4px;margin-left:6px;font-weight:600}
+.ep-count-ok{background:rgba(52,211,153,0.15);color:var(–ok);border:1px solid rgba(52,211,153,0.3)}
+.ep-count-warn{background:rgba(251,191,36,0.15);color:var(–warn);border:1px solid rgba(251,191,36,0.3)}
+.ep-count-full{background:rgba(248,113,113,0.15);color:var(–err);border:1px solid rgba(248,113,113,0.3)}
 .btn-ep{background:linear-gradient(135deg,#7c3aed,#6d28d9)!important}
-.adm-section-title{font-family:'DM Serif Display',serif;font-size:18px;color:var(--txt);margin-bottom:4px}
-.adm-section-sub{font-family:'DM Mono',monospace;font-size:10px;color:var(--dim);margin-bottom:14px}
-hr.adm-hr{border:0;border-top:1px solid var(--bor);margin:20px 0}
+.adm-section-title{font-family:‘DM Serif Display’,serif;font-size:18px;color:var(–txt);margin-bottom:4px}
+.adm-section-sub{font-family:‘DM Mono’,monospace;font-size:10px;color:var(–dim);margin-bottom:14px}
+hr.adm-hr{border:0;border-top:1px solid var(–bor);margin:20px 0}
 </style>
+
 </head>
 <body>
 
@@ -147,6 +149,8 @@ hr.adm-hr{border:0;border-top:1px solid var(--bor);margin:20px 0}
   <button class="tab ep-tab" onclick="goTab('ep',this)">EP Clinics</button>
   <button class="tab"     onclick="goTab('adm',this)">Admin</button>
 </div>
+
+<!-- INPATIENT TAB -->
 
 <div class="pg on" id="pg-ip">
   <div class="card">
@@ -168,6 +172,8 @@ hr.adm-hr{border:0;border-top:1px solid var(--bor);margin:20px 0}
   </div>
 </div>
 
+<!-- INTERVENTIONAL TAB -->
+
 <div class="pg" id="pg-spec">
   <div class="card">
     <div class="spec-grid" id="spec-grid"></div>
@@ -183,6 +189,8 @@ hr.adm-hr{border:0;border-top:1px solid var(--bor);margin:20px 0}
     </div>
   </div>
 </div>
+
+<!-- OUTPATIENT TAB -->
 
 <div class="pg" id="pg-op">
   <div id="opgate" class="card" style="text-align:center">
@@ -202,10 +210,10 @@ hr.adm-hr{border:0;border-top:1px solid var(--bor);margin:20px 0}
           <div class="rd" id="opd">—</div>
           <div class="rr" id="opr">—</div>
         </div>
-        <label>Patient File Number</label>
-        <input type="text" id="opfi" placeholder="e.g. 123456">
-        <label>Patient Phone Number</label>
-        <input type="text" id="opphone" placeholder="e.g. 99887766">
+        <label>Patient File Number (6 Digits)</label>
+        <input type="text" id="opfi" maxlength="6" inputmode="numeric" placeholder="e.g. 123456">
+        <label>Patient Phone Number (8 Digits)</label>
+        <input type="text" id="opphone" maxlength="8" inputmode="numeric" placeholder="e.g. 99887766">
         <button class="btn" onclick="doAssign('op')">Assign OP Walk-in →</button>
       </div>
     </div>
@@ -217,16 +225,18 @@ hr.adm-hr{border:0;border-top:1px solid var(--bor);margin:20px 0}
           <div class="spec-hint" id="fix-hint"></div>
           <label>Follow-up Date</label>
           <select id="fix-date" class="fd-sel" style="margin-bottom:14px;"></select>
-          <label>Patient File Number</label>
-          <input type="text" id="fix-fi" placeholder="e.g. 123456">
-          <label>Patient Phone Number</label>
-          <input type="text" id="fix-phone" placeholder="e.g. 99887766">
+          <label>Patient File Number (6 Digits)</label>
+          <input type="text" id="fix-fi" maxlength="6" inputmode="numeric" placeholder="e.g. 123456">
+          <label>Patient Phone Number (8 Digits)</label>
+          <input type="text" id="fix-phone" maxlength="8" inputmode="numeric" placeholder="e.g. 99887766">
           <button class="btn" onclick="doFixAssign()">Book Appointment →</button>
         </div>
       </div>
     </div>
   </div>
 </div>
+
+<!-- EP CLINICS TAB -->
 
 <div class="pg" id="pg-ep">
   <div class="ep-notice">
@@ -252,6 +262,8 @@ hr.adm-hr{border:0;border-top:1px solid var(--bor);margin:20px 0}
   </div>
 </div>
 
+<!-- ADMIN TAB (consolidated) -->
+
 <div class="pg" id="pg-adm">
   <div class="card apgate" style="text-align:center">
     <label>ADMIN PIN</label>
@@ -260,102 +272,107 @@ hr.adm-hr{border:0;border-top:1px solid var(--bor);margin:20px 0}
   </div>
   <div class="ac-content">
 
-    <div class="adm-tabs">
-      <button class="adm-tab on" onclick="goAdmTab('leave',this)">Doctor Leave</button>
-      <button class="adm-tab"    onclick="goAdmTab('dist',this)">Distribution</button>
-      <button class="adm-tab"    onclick="goAdmTab('log',this)">Log</button>
-      <button class="adm-tab"    onclick="goAdmTab('export',this)">Export / Print</button>
-      <button class="adm-tab"    onclick="goAdmTab('danger',this)">⚠ Danger Zone</button>
-    </div>
+```
+<!-- Admin sub-nav -->
+<div class="adm-tabs">
+  <button class="adm-tab on" onclick="goAdmTab('leave',this)">Doctor Leave</button>
+  <button class="adm-tab"    onclick="goAdmTab('dist',this)">Distribution</button>
+  <button class="adm-tab"    onclick="goAdmTab('log',this)">Log</button>
+  <button class="adm-tab"    onclick="goAdmTab('export',this)">Export / Print</button>
+  <button class="adm-tab"    onclick="goAdmTab('danger',this)">⚠ Danger Zone</button>
+</div>
 
-    <div class="adm-sec on" id="adm-leave">
-      <div class="adm-section-title">Doctor Leave / Status</div>
-      <div class="adm-section-sub">Toggle IP and OP availability for each doctor. Changes are saved live.</div>
-      <div id="leave-grid" class="dg"></div>
-    </div>
+<!-- LEAVE -->
+<div class="adm-sec on" id="adm-leave">
+  <div class="adm-section-title">Doctor Leave / Status</div>
+  <div class="adm-section-sub">Toggle IP and OP availability for each doctor. Changes are saved live.</div>
+  <div id="leave-grid" class="dg"></div>
+</div>
 
-    <div class="adm-sec" id="adm-dist">
-      <div class="adm-section-title">Slot Distribution</div>
-      <div class="adm-section-sub">Click any slot card to view its patient list and print.</div>
-      <div class="dg" id="dg"></div>
-    </div>
+<!-- DISTRIBUTION -->
+<div class="adm-sec" id="adm-dist">
+  <div class="adm-section-title">Slot Distribution</div>
+  <div class="adm-section-sub">Click any slot card to view its patient list and print.</div>
+  <div class="dg" id="dg"></div>
+</div>
 
-    <div class="adm-sec" id="adm-log">
-      <div class="adm-section-title">Assignment Log</div>
-      <div class="adm-section-sub">Last 50 entries across all assignment types.</div>
-      <div class="lf">
-        <button class="fb on" onclick="filterLog('all',this)">All</button>
-        <button class="fb" onclick="filterLog('Sun',this)">Sun</button>
-        <button class="fb" onclick="filterLog('Mon',this)">Mon</button>
-        <button class="fb" onclick="filterLog('Tue',this)">Tue</button>
-        <button class="fb" onclick="filterLog('Wed',this)">Wed</button>
-        <button class="fb" onclick="filterLog('Thu',this)">Thu</button>
-      </div>
-      <div class="lt">
-        <div class="lh"><div>Date</div><div>File / Phone</div><div>Doctor / Room</div><div>Follow-up</div><div>By</div></div>
-        <div id="lb"></div>
-      </div>
-    </div>
+<!-- LOG -->
+<div class="adm-sec" id="adm-log">
+  <div class="adm-section-title">Assignment Log</div>
+  <div class="adm-section-sub">Last 50 entries across all assignment types.</div>
+  <div class="lf">
+    <button class="fb on" onclick="filterLog('all',this)">All</button>
+    <button class="fb" onclick="filterLog('Sun',this)">Sun</button>
+    <button class="fb" onclick="filterLog('Mon',this)">Mon</button>
+    <button class="fb" onclick="filterLog('Tue',this)">Tue</button>
+    <button class="fb" onclick="filterLog('Wed',this)">Wed</button>
+    <button class="fb" onclick="filterLog('Thu',this)">Thu</button>
+  </div>
+  <div class="lt">
+    <div class="lh"><div>Date</div><div>File / Phone</div><div>Doctor / Room</div><div>Follow-up</div><div>By</div></div>
+    <div id="lb"></div>
+  </div>
+</div>
 
-    <div class="adm-sec" id="adm-export">
-      <div class="adm-section-title">Export &amp; Print</div>
-      <div class="adm-section-sub">Select a clinic card to export all its patients as PDF. Patients are grouped by doctor + room + day — not by rotation slot.</div>
-      <button class="btn" style="margin-bottom:18px" onclick="exportWeekly()">📊 Export Master Log (All Entries)</button>
-      <div class="rl" style="margin-bottom:10px;">CLINIC PATIENT LISTS</div>
-      <div class="clinic-export-grid" id="clinic-export-grid"></div>
-    </div>
+<!-- EXPORT -->
+<div class="adm-sec" id="adm-export">
+  <div class="adm-section-title">Export &amp; Print</div>
+  <div class="adm-section-sub">Select a clinic card to export all its patients as PDF. Patients are grouped by doctor + room + day — not by rotation slot.</div>
+  <button class="btn" style="margin-bottom:18px" onclick="exportWeekly()">📊 Export Master Log (All Entries)</button>
+  <div class="rl" style="margin-bottom:10px;">CLINIC PATIENT LISTS</div>
+  <div class="clinic-export-grid" id="clinic-export-grid"></div>
+</div>
 
-    <div class="adm-sec" id="adm-danger">
-      <div class="adm-section-title" style="color:var(--err)">Danger Zone</div>
-      <div class="adm-section-sub">Destructive actions. Use with extreme caution.</div>
-      <hr class="adm-hr">
-      <label>Delete specific patient</label>
-      <input type="text" id="dfi" placeholder="Enter File/Phone to Delete">
-      <button class="btn btn-warn" onclick="delEntry()">Delete Record</button>
-      <hr class="adm-hr">
-      <button class="btn btn-warn" onclick="resetAll()">⚠️ Factory Reset WIPE ALL DATA ⚠️</button>
-    </div>
+<!-- DANGER -->
+<div class="adm-sec" id="adm-danger">
+  <div class="adm-section-title">Danger Zone</div>
+  <div class="adm-section-sub">Irreversible actions. Use with caution.</div>
+  <label>Remove Patient Row</label>
+  <input type="text" id="dfi" placeholder="Enter File or Phone Number" inputmode="numeric">
+  <button class="btn" style="background:#fbbf24;color:#000;margin-bottom:10px" onclick="delEntry()">🗑 Remove Entry</button>
+  <button class="btn btn-warn" onclick="resetAll()">⚠ Wipe All Database Data</button>
+</div>
+```
 
   </div>
 </div>
+
+<!-- MODAL -->
 
 <div class="mo" id="mo">
   <div class="mb">
-    <div class="mh">
-      <div>
-        <div class="rl" style="margin-bottom:0">SLOT DETAILS</div>
-        <div class="rd" id="mdc" style="font-size:20px;margin-bottom:0">—</div>
-        <div class="rr" id="mrr" style="margin-bottom:0">—</div>
-      </div>
-      <button onclick="closeMo()" style="background:var(--sur2);border:none;color:var(--txt);width:32px;height:32px;border-radius:50%;cursor:pointer">✕</button>
+    <div class="mh"><h2 id="mt">—</h2><button onclick="closeMo()">Close</button></div>
+    <div class="mbody">
+      <div id="mc2" style="font-size:12px;color:var(--acc2);margin-bottom:10px"></div>
+      <div id="mbody"></div>
+      <div id="mprint"></div>
     </div>
-    <div class="mbody" id="mpb"></div>
   </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+<script>
 const firebaseConfig = {
-  databaseURL: "https://cardio-opd-2025-default-rtdb.europe-west1.firebasedatabase.app/"
+  apiKey: "AIzaSyAT7Y3jWM4ix7I5cM4vKsHIJRaZZ6AZ9yI",
+  authDomain: "cardio-opd.firebaseapp.com",
+  databaseURL: "https://cardio-opd-default-rtdb.firebaseio.com",
+  projectId: "cardio-opd",
+  storageBucket: "cardio-opd.firebasestorage.app",
+  appId: "1:71256529635:web:d62921678530fdce7303d6"
 };
-
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-const dbRef = ref(db, 'opd_system_v1');
-
-window.S = { logs:[], oplogs:[], eplogs:[], leave:{} };
-window.lf = "all";
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+const dbRef = db.ref('mkh_clinic_data');
 
 var docPINs = {
-  "1001":"Dr. Farag", "1002":"Dr. Hisham","1003":"Dr. Zaher","1004":"Dr. Shafie",
-  "1005":"Dr. Akmal", "1006":"Dr. Maged", "1007":"Dr. Fahd", "1008":"Dr. Ehab",
-  "1009":"Dr. Nazanin","1010":"Dr. Arab",  "1011":"Dr. Ashraf","1012":"Dr. Fawzy",
-  "1013":"Dr. Gamal","1014":"Dr. Moghl", "1015":"Dr. Darwish","1016":"Dr. Omar",
-  "1017":"Dr. Sajid","1018":"Dr. Ali",   "1019":"Dr. Eyad",   "1020":"Dr. Mongy",
+  "1001":"Dr. Rehan","1002":"Dr. Ramy","1003":"Dr. Badawy","1004":"Dr. Sharkawy",
+  "1005":"Dr. Mostafa","1006":"Dr. Ibrahim","1007":"Dr. Hadad","1008":"Dr. Emara",
+  "1009":"Dr. Rahim","1010":"Dr. Mamdouh","1011":"Dr. Slam","1012":"Dr. Ezz",
+  "1013":"Dr. R Gamal","1014":"Dr. Moghl","1015":"Dr. Darwish","1016":"Dr. Omar",
+  "1017":"Dr. Sajid","1018":"Dr. Ali","1019":"Dr. Eyad","1020":"Dr. Mongy",
   "1021":"Dr. Bahlol","9999":"Admin"
 };
 
@@ -378,130 +395,409 @@ var CL = [
 
 // EP Clinics — outside main rotation
 var EP_CLINICS = [
-  { id: "ep1", name: "Dr. Alaa / Dr. Nabeel", room: "Room 10", label: "Sunday", dayNum: 0 },
-  { id: "ep2", name: "Dr. Mahmoud Rehan", room: "Room 10", label: "Thursday", dayNum: 4 }
+  {id:"ep-sun", name:"EP Device Clinic",   room:"Room 21", day:"Sun", dayNum:0, label:"Sunday"},
+  {id:"ep-tue", name:"EP Ablation Clinic", room:"Room 5",  day:"Tue", dayNum:2, label:"Tuesday"}
 ];
-const EP_MAX_PER_DATE = 8;
-var selectedEpClinic = null;
+var EP_MAX_PER_DATE = 12;
 
-// Specific Clinics Configuration (e.g., HF, Structural)
-var SPECIFIC_CLINICS = [
-  { id: "sp_hf1", name: "Hisham", room: "Room 10", label: "Heart Failure", day: "Sun", indices: [0,2,6] },
-  { id: "sp_st1", name: "Maged", room: "Room 11", label: "Structural", day: "Tue", indices: [1,3,7] }
+var specificDocs = [
+  {name:"Fahd",    indices:[4,8],  room:"Room 24", day:"Mon", label:"Monday"},
+  {name:"Ali",     indices:[19],   room:"Room 11", day:"Wed", label:"Wednesday"},
+  {name:"Arab",    indices:[24],   room:"Room 25", day:"Tue", label:"Tuesday"},
+  {name:"Nazanin", indices:[17],   room:"Room 25", day:"Sun", label:"Sunday"}
 ];
+
 var selectedSpecificDoc = null;
 var selectedFixDoc = null;
+var selectedEpClinic = null;
+window.S = {logs:[], oplogs:[], eplogs:[], leave:{}};
+var adm = false;
+window.lf = "all";
 
-var ADM_PIN = "9999", CLK_PIN = "0000";
-
-function tn() { return new Date().toLocaleDateString("en-US", {weekday:'short'}); }
-function nd() { return new Date().toLocaleDateString("en-GB", {day:'2-digit',month:'short',year:'numeric'}); }
-function nt() { return new Date().toLocaleTimeString("en-GB", {hour:'2-digit',minute:'2-digit'}); }
-function cCnt(i) { return (window.S.logs||[]).filter(x => x.si === i).length + (window.S.oplogs||[]).filter(x => x.si === i).length; }
-function isDocOff(docName, type) { return window.S.leave && window.S.leave[docName] && window.S.leave[docName][type] === true; }
-function isDuplicate(fn) {
-  if(!fn) return false;
-  var all = (window.S.logs||[]).concat(window.S.oplogs||[]).concat(window.S.eplogs||[]);
-  return all.some(x => String(x.fn) === String(fn));
-}
-
-function getEpCountForDate(epClinicId, dateStr) {
-  if(!window.S.eplogs) return 0;
-  return window.S.eplogs.filter(x => x.epClinicId === epClinicId && x.apt === dateStr).length;
-}
-
-function getClinicPatientsByDocRoom(docName, roomName) {
-  var all = (window.S.logs||[]).concat(window.S.oplogs||[]);
-  return all.filter(x => x.doc === docName && x.room === roomName);
-}
-
-// ── NAVIGATION & TABS ────────────────────────────────────────────────────────
-window.goTab = function(t, el) {
-  document.querySelectorAll(".tab:not(.adm-tab):not(#optab-walkin):not(#optab-fix)").forEach(b => b.classList.remove("on"));
+// ── TAB NAVIGATION ──────────────────────────────────────────────────────────
+window.goTab = (id, btn) => {
   document.querySelectorAll(".pg").forEach(p => p.classList.remove("on"));
-  el.classList.add("on");
-  document.getElementById("pg-" + t).classList.add("on");
-  rAll();
-  if(t === 'spec') renderSpecificClinics();
-  if(t === 'ep') renderEpClinics();
-  if(t === 'adm') renderLeaveAdmin();
-};
-
-window.goOpTab = function(t, el) {
-  document.querySelectorAll("#optab-walkin, #optab-fix").forEach(b => b.classList.remove("on"));
-  el.classList.add("on");
-  document.getElementById("op-walkin").style.display = t === 'walkin' ? 'block' : 'none';
-  document.getElementById("op-fix").style.display = t === 'fix' ? 'block' : 'none';
-  if(t === 'fix') renderFixClinics();
-};
-
-window.goAdmTab = function(t, el) {
-  document.querySelectorAll(".adm-tab").forEach(b => b.classList.remove("on"));
-  document.querySelectorAll(".adm-sec").forEach(s => s.classList.remove("on"));
-  el.classList.add("on");
-  document.getElementById("adm-" + t).classList.add("on");
-  if(t === 'dist') rAll();
-  if(t === 'log') rLog();
-  if(t === 'leave') renderLeaveAdmin();
-  if(t === 'export') renderExportGrid();
-};
-
-window.adminLogin = function() {
-  if(document.getElementById("api-adm").value === ADM_PIN) {
-    document.querySelector(".apgate").style.display = "none";
-    document.querySelector(".ac-content").style.display = "block";
-    renderLeaveAdmin();
-  } else alert("Wrong Admin PIN");
-};
-
-window.clerkLogin = function() {
-  if(document.getElementById("opi").value === CLK_PIN) {
-    document.getElementById("opgate").style.display = "none";
-    document.getElementById("opc").style.display = "block";
-    rAll();
-  } else alert("Wrong Clerk PIN");
-};
-
-window.filterLog = function(d, btn) {
-  window.lf = d;
-  document.querySelectorAll(".fb").forEach(b => b.classList.remove("on"));
+  document.querySelectorAll(".tabs > .tab").forEach(t => t.classList.remove("on"));
+  document.getElementById("pg-" + id).classList.add("on");
   btn.classList.add("on");
+  if(id === "ep") renderEpTab();
+  rAll();
+};
+
+window.goAdmTab = (id, btn) => {
+  document.querySelectorAll(".adm-tab").forEach(t => t.classList.remove("on"));
+  document.querySelectorAll(".adm-sec").forEach(s => s.classList.remove("on"));
+  btn.classList.add("on");
+  document.getElementById("adm-" + id).classList.add("on");
+  if(id === "export") renderClinicExportGrid();
+};
+
+window.filterLog = (f, b) => {
+  document.querySelectorAll(".fb").forEach(x => x.classList.remove("on"));
+  b.classList.add("on");
+  window.lf = f;
   rLog();
 };
 
-window.toggleS = function(d, t) {
-  if(!window.S.leave) window.S.leave = {};
-  if(!window.S.leave[d]) window.S.leave[d] = {ip:false, op:false};
-  window.S.leave[d][t] = !window.S.leave[d][t];
+window.clerkLogin = () => {
+  if(document.getElementById("opi").value === "2026") {
+    document.getElementById("opgate").style.display = "none";
+    document.getElementById("opc").style.display = "block";
+  }
+};
+
+window.adminLogin = (id) => {
+  if(document.getElementById(id).value === "2025") {
+    adm = true;
+    document.querySelectorAll(".apgate").forEach(e => e.style.display = "none");
+    document.querySelectorAll(".ac-content").forEach(e => e.style.display = "block");
+    rAll();
+  }
+};
+
+window.toggleS = (name, type) => {
+  if(!window.S.leave[name]) window.S.leave[name] = {ip:false, op:false};
+  window.S.leave[name][type] = !window.S.leave[name][type];
   dbRef.set(window.S);
-  renderLeaveAdmin();
   rAll();
 };
 
-// ── CORE LOGIC ────────────────────────────────────────────────────────────────
-function getNextSlot() {
-  let minCount = Infinity, bestIndex = -1;
+window.goOpTab = function(tab, btn) {
+  document.querySelectorAll("#opc .tab").forEach(t => t.classList.remove("on"));
+  btn.classList.add("on");
+  document.getElementById("op-walkin").style.display = tab === "walkin" ? "block" : "none";
+  document.getElementById("op-fix").style.display = tab === "fix" ? "block" : "none";
+  if(tab === "fix") renderFixClinics();
+};
+
+// ── EP CLINICS ───────────────────────────────────────────────────────────────
+function getEpCountForDate(clinicId, dateStr) {
+  return (window.S.eplogs||[]).filter(e => e.epClinicId === clinicId && e.apt === dateStr).length;
+}
+
+function renderEpTab() {
+  var grid = document.getElementById("ep-clinic-grid");
+  grid.innerHTML = "";
+  document.getElementById("ep-form").style.display = "none";
+  selectedEpClinic = null;
+
+  EP_CLINICS.forEach(function(clinic) {
+    var card = document.createElement("div");
+    card.className = "spec-card ep-card";
+    card.innerHTML =
+      '<div class="rl" style="margin-bottom:4px">EP CLINIC</div>' +
+      '<div class="spec-name" style="color:var(--ep)!important;font-size:18px">' + clinic.name + '</div>' +
+      '<div class="spec-meta">' + clinic.room + ' • ' + clinic.label + '</div>';
+    card.onclick = function() {
+      document.querySelectorAll("#ep-clinic-grid .spec-card").forEach(c => c.classList.remove("selected"));
+      card.classList.add("selected");
+      selectedEpClinic = clinic;
+      renderEpDates(clinic);
+      document.getElementById("ep-hint").textContent =
+        "EP Clinic — " + clinic.room + " every " + clinic.label + ". Max " + EP_MAX_PER_DATE + " patients per date.";
+      document.getElementById("ep-form").style.display = "block";
+    };
+    grid.appendChild(card);
+  });
+}
+
+function renderEpDates(clinic) {
+  var sel = document.getElementById("ep-date");
+  var opts = '<option value="" disabled selected>Select ' + clinic.label + ' Date...</option>';
+  var d = new Date(), count = 0;
+  var sixMonths = new Date(); sixMonths.setMonth(sixMonths.getMonth() + 6);
+  while(d <= sixMonths) {
+    if(d.getDay() === clinic.dayNum) {
+      var ds = d.toLocaleDateString("en-GB", {weekday:'short', day:'2-digit', month:'short', year:'numeric'});
+      var cnt = getEpCountForDate(clinic.id, ds);
+      var full = cnt >= EP_MAX_PER_DATE;
+      var badge = full ? " [FULL]" : " [" + cnt + "/" + EP_MAX_PER_DATE + "]";
+      opts += '<option value="' + ds + '"' + (full ? " disabled" : "") + '>' + ds + badge + '</option>';
+      if(++count >= 26) break;
+    }
+    d.setDate(d.getDate() + 1);
+  }
+  sel.innerHTML = opts;
+  updateEpDateCountLabel();
+}
+
+function updateEpDateCountLabel() {
+  if(!selectedEpClinic) return;
+  var sel = document.getElementById("ep-date");
+  var label = document.getElementById("ep-date-count-label");
+  if(!sel.value) { label.textContent = ""; return; }
+  var cnt = getEpCountForDate(selectedEpClinic.id, sel.value);
+  var rem = EP_MAX_PER_DATE - cnt;
+  label.innerHTML = rem > 0
+    ? '<span class="ep-count-badge ep-count-' + (rem <= 3 ? 'warn' : 'ok') + '">' + cnt + '/' + EP_MAX_PER_DATE + ' booked — ' + rem + ' remaining</span>'
+    : '<span class="ep-count-badge ep-count-full">FULLY BOOKED</span>';
+}
+
+document.addEventListener("change", function(e) {
+  if(e.target.id === "ep-date") updateEpDateCountLabel();
+});
+
+window.doEpAssign = function() {
+  if(!selectedEpClinic) return alert("Select an EP clinic first.");
+  var fn = document.getElementById("ep-fi").value.trim();
+  var pin = document.getElementById("ep-pin").value.trim();
+  var apt = document.getElementById("ep-date").value;
+  if(!/^\d{6}$/.test(fn)) return alert("Check File Number (6 digits).");
+  if(!docPINs[pin]) return alert("Invalid Registrar PIN.");
+  if(!apt) return alert("Select a date.");
+  var cnt = getEpCountForDate(selectedEpClinic.id, apt);
+  if(cnt >= EP_MAX_PER_DATE) return alert("This date is fully booked (max " + EP_MAX_PER_DATE + " patients).");
+  var regName = docPINs[pin];
+  // EP duplicate check within EP logs only
+  var epDup = (window.S.eplogs||[]).some(e => e.fn === fn);
+  if(epDup) return alert("STOP: This file number already has an EP booking.");
+  if(!confirm("Confirm EP Clinic Booking:\n\nClinic: " + selectedEpClinic.room + " (" + selectedEpClinic.label + ")\nFile: " + fn + "\nDate: " + apt + "\nRegistrar: " + regName)) return;
+  var entry = {
+    fn:fn, reg:regName, doc:"EP", room:selectedEpClinic.room,
+    epClinicId:selectedEpClinic.id, epLabel:selectedEpClinic.label,
+    cd:tn(), ad:nd(), time:nt(), apt:apt, ts:Date.now()
+  };
+  if(!window.S.eplogs) window.S.eplogs = [];
+  window.S.eplogs.push(entry);
+  dbRef.set(window.S);
+  document.getElementById("ep-fi").value = "";
+  document.getElementById("ep-pin").value = "";
+  // Refresh dates to update slot counts
+  renderEpDates(selectedEpClinic);
+  alert("EP appointment booked successfully!");
+};
+
+// ── OUTPATIENT HELPERS ───────────────────────────────────────────────────────
+function renderFixClinics() {
+  var today = tn();
+  var container = document.getElementById("fix-clinic-grid");
+  if(!container) return;
+  container.innerHTML = "";
+  document.getElementById("fix-form").style.display = "none";
+  selectedFixDoc = null;
+  var seen = {};
+  for(var i = 0; i < 27; i++) {
+    if(!CL[i].days.includes(today) && !isDocOff(CL[i].d, 'op')) {
+      var key = CL[i].d + "_" + CL[i].r + "_" + CL[i].days.join("");
+      if(!seen[key]) seen[key] = {idx:i, doc:CL[i]};
+    }
+  }
+  Object.values(seen).forEach(function(item) {
+    var card = document.createElement("div");
+    card.className = "spec-card";
+    card.innerHTML =
+      '<div class="rl" style="margin-bottom:4px">CLINIC</div>' +
+      '<div class="spec-name">Dr. ' + item.doc.d + '</div>' +
+      '<div class="spec-meta">' + item.doc.r + ' • ' + item.doc.days.join(", ") + '</div>';
+    card.onclick = function() {
+      document.querySelectorAll("#fix-clinic-grid .spec-card").forEach(c => c.classList.remove("selected"));
+      card.classList.add("selected");
+      selectedFixDoc = item;
+      var dayMap = {"Sun":0,"Mon":1,"Tue":2,"Wed":3,"Thu":4,"Fri":5,"Sat":6};
+      var targets = item.doc.days.map(d => dayMap[d]);
+      var opts = '<option value="" disabled selected>Select Date...</option>';
+      var d = new Date(), count = 0;
+      for(var j = 0; j < 120; j++) {
+        if(targets.includes(d.getDay())) {
+          var ds = d.toLocaleDateString("en-GB", {weekday:'short', day:'2-digit', month:'short', year:'numeric'});
+          opts += '<option value="' + ds + '">' + ds + '</option>';
+          if(++count >= 16) break;
+        }
+        d.setDate(d.getDate() + 1);
+      }
+      document.getElementById("fix-date").innerHTML = opts;
+      document.getElementById("fix-hint").textContent =
+        "Dr. " + item.doc.d + " (" + item.doc.r + ") — runs on " + item.doc.days.join(", ");
+      document.getElementById("fix-form").style.display = "block";
+    };
+    container.appendChild(card);
+  });
+}
+
+window.doFixAssign = function() {
+  if(!selectedFixDoc) return alert("Select a clinic first.");
+  var fn = document.getElementById("fix-fi").value.trim();
+  var ph = document.getElementById("fix-phone").value.trim();
+  var apt = document.getElementById("fix-date").value;
+  if(!fn && !ph) { var patId = "—"; } else { var patId = (fn && ph) ? fn + " / " + ph : (fn || ph); }
+  if(isDuplicate(patId)) return alert("STOP: Duplicate Patient detected.");
+  var c = CL[selectedFixDoc.idx];
+  if(!confirm("Book appointment:\n\nPatient: " + patId + "\nDoctor: Dr. " + c.d + "\nRoom: " + c.r + "\nDate: " + apt)) return;
+  var entry = {fn:patId, reg:"Clerk", doc:c.d, room:c.r, si:selectedFixDoc.idx, cd:tn(), ad:nd(), time:nt(), apt:apt, ts:Date.now()};
+  window.S.oplogs.push(entry);
+  dbRef.set(window.S);
+  document.getElementById("fix-fi").value = "";
+  document.getElementById("fix-phone").value = "";
+  document.getElementById("fix-date").value = "";
+  document.querySelectorAll("#fix-clinic-grid .spec-card").forEach(c => c.classList.remove("selected"));
+  document.getElementById("fix-form").style.display = "none";
+  selectedFixDoc = null;
+  alert("Appointment booked!");
+};
+
+window.closeMo = () => document.getElementById("mo").classList.remove("on");
+
+// ── ADMIN ACTIONS ─────────────────────────────────────────────────────────────
+window.delEntry = () => {
+  var s = document.getElementById("dfi").value.trim(); if(!s) return;
+  var idxL = window.S.logs.findIndex(e => e.fn.toString().includes(s));
+  var idxO = window.S.oplogs.findIndex(e => e.fn.toString().includes(s));
+  var idxE = (window.S.eplogs||[]).findIndex(e => e.fn.toString().includes(s));
+  if(idxL === -1 && idxO === -1 && idxE === -1) return alert("Not found");
+  if(confirm("Delete?")) {
+    if(idxL !== -1) window.S.logs.splice(idxL, 1);
+    else if(idxO !== -1) window.S.oplogs.splice(idxO, 1);
+    else window.S.eplogs.splice(idxE, 1);
+    dbRef.set(window.S); rAll();
+  }
+};
+
+window.resetAll = () => {
+  if(confirm("WIPE EVERYTHING?")) {
+    window.S = {logs:[], oplogs:[], eplogs:[], leave:{}};
+    dbRef.set(window.S); rAll();
+  }
+};
+
+window.exportWeekly = () => {
+  var all = (window.S.logs||[]).concat(window.S.oplogs||[]).concat(window.S.eplogs||[]).sort((a,b) => b.ts - a.ts);
+  if(all.length === 0) return alert("No data to export");
+  exportPDF("Master Log — All Entries", all);
+};
+
+// ── CLINIC EXPORT GRID (grouped by doctor+room+day) ──────────────────────────
+function getUniqueClinics() {
+  // Build unique clinic groups from CL array: key = doctor + room + day
+  var seen = {};
+  CL.forEach(function(slot) {
+    var key = slot.d + "|" + slot.r + "|" + slot.days.join(",");
+    if(!seen[key]) seen[key] = {d:slot.d, r:slot.r, days:slot.days, key:key};
+  });
+  return Object.values(seen);
+}
+
+function getClinicPatients(clinicKey) {
+  // clinicKey = "Doctor|Room|Day"
+  var parts = clinicKey.split("|");
+  var docName = parts[0], room = parts[1], days = parts[2].split(",");
+  var all = (window.S.logs||[]).concat(window.S.oplogs||[]);
+  // Match by doctor name AND room AND any of the days
+  return all.filter(function(e) {
+    return e.doc === docName && e.room === room && days.includes(e.cd);
+  });
+  // Note: we match on entry's cd (day-of-week assigned), which covers all rotation slots
+  // But more reliably: match doc + room regardless of day (a clinic is defined by doc+room pair)
+}
+
+function getClinicPatientsByDocRoom(docName, room) {
+  var all = (window.S.logs||[]).concat(window.S.oplogs||[]);
+  return all.filter(e => e.doc === docName && e.room === room);
+}
+
+function renderClinicExportGrid() {
+  var grid = document.getElementById("clinic-export-grid");
+  if(!grid) return;
+  grid.innerHTML = "";
+  var clinics = getUniqueClinics();
+
+  // Also add EP clinics
+  EP_CLINICS.forEach(function(ep) {
+    var epPts = (window.S.eplogs||[]).filter(e => e.epClinicId === ep.id);
+    var card = document.createElement("div");
+    card.className = "cex-card";
+    card.style.borderColor = "rgba(167,139,250,0.4)";
+    card.innerHTML =
+      '<div class="rl" style="color:var(--ep)">EP CLINIC</div>' +
+      '<div class="cex-doc" style="color:var(--ep);font-size:14px">' + ep.name + '</div>' +
+      '<div class="cex-meta">' + ep.room + ' • ' + ep.label + '</div>' +
+      '<div class="cex-count" style="color:var(--ep)">' + epPts.length + '</div>';
+    card.onclick = function() {
+      if(epPts.length === 0) return alert("No patients in this EP clinic yet.");
+      exportPDF("EP Clinic — " + ep.room + " (" + ep.label + ")", epPts);
+    };
+    grid.appendChild(card);
+  });
+
+  clinics.forEach(function(c) {
+    var pts = getClinicPatientsByDocRoom(c.d, c.r);
+    var card = document.createElement("div");
+    card.className = "cex-card";
+    card.innerHTML =
+      '<div class="rl">' + c.days.join(", ") + '</div>' +
+      '<div class="cex-doc">Dr. ' + c.d + '</div>' +
+      '<div class="cex-meta">' + c.r + '</div>' +
+      '<div class="cex-count">' + pts.length + '</div>';
+    card.onclick = function() {
+      if(pts.length === 0) return alert("No patients in this clinic yet.");
+      exportPDF("Dr. " + c.d + " — " + c.r + " (" + c.days.join(", ") + ")", pts);
+    };
+    grid.appendChild(card);
+  });
+}
+
+// ── FIREBASE SYNC ─────────────────────────────────────────────────────────────
+dbRef.on('value', (snap) => {
+  const d = snap.val();
+  if(d) {
+    window.S.logs   = d.logs   || [];
+    window.S.oplogs = d.oplogs || [];
+    window.S.eplogs = d.eplogs || [];
+    window.S.leave  = d.leave  || {};
+  }
+  document.getElementById("syncDot").style.background = "var(--ok)";
+  document.getElementById("syncText").textContent = "Live — Synced";
+  rAll();
+});
+
+// ── UTILITIES ─────────────────────────────────────────────────────────────────
+function tn() { return ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][new Date().getDay()]; }
+function nt() { return new Date().toLocaleTimeString("en-GB", {hour:"2-digit", minute:"2-digit"}); }
+function nd() { return new Date().toLocaleDateString("en-GB", {day:"numeric", month:"short"}); }
+
+function isDocOff(docName, type) {
+  if(!window.S.leave || !window.S.leave[docName]) return false;
+  return window.S.leave[docName][type] === true;
+}
+
+function isDuplicate(val) {
+  if(!val) return false;
+  const s = val.toString().trim();
+  const all = (window.S.logs||[]).concat(window.S.oplogs||[]);
+  return all.some(e => e.fn && e.fn.toString().includes(s));
+}
+
+function cCnt(i) {
+  return (window.S.logs||[]).concat(window.S.oplogs||[]).filter(e => e.si === i).length;
+}
+
+function getGlobalMin() {
+  let minCount = Infinity;
   for(let i = 0; i < 27; i++) {
     if(!isDocOff(CL[i].d, 'ip')) {
       let cnt = cCnt(i);
-      if(cnt < minCount) { minCount = cnt; bestIndex = i; }
+      if(cnt < minCount) minCount = cnt;
     }
   }
-  return bestIndex;
+  return minCount;
+}
+
+function getNextSlotIp() {
+  let minCount = getGlobalMin();
+  if(minCount === Infinity) return -1;
+  for(let i = 0; i < 27; i++) {
+    if(!isDocOff(CL[i].d, 'ip') && cCnt(i) === minCount) return i;
+  }
+  return -1;
 }
 
 function getNextSlotOp() {
-  let today = tn();
-  let validSlots = [];
+  let today = tn(), validSlots = [];
   for(let i = 0; i < 27; i++) {
     if(CL[i].days.includes(today) && !isDocOff(CL[i].d, 'op')) validSlots.push(i);
   }
   if(validSlots.length === 0) return -1;
   let minTodayCount = Infinity;
-  validSlots.forEach(i => {
-    let cnt = cCnt(i);
-    if(cnt < minTodayCount) minTodayCount = cnt;
-  });
+  validSlots.forEach(i => { let cnt = cCnt(i); if(cnt < minTodayCount) minTodayCount = cnt; });
   for(let i = 0; i < 27; i++) {
     if(validSlots.includes(i) && cCnt(i) === minTodayCount) return i;
   }
@@ -513,10 +809,7 @@ function getManualSlotIndex(docIndices) {
   docIndices.forEach(idx => {
     if(!isDocOff(CL[idx].d, 'ip')) {
       let cnt = cCnt(idx);
-      if(cnt < minCount) {
-        minCount = cnt;
-        bestIndex = idx;
-      }
+      if(cnt < minCount) { minCount = cnt; bestIndex = idx; }
     }
   });
   return bestIndex;
@@ -540,45 +833,42 @@ function updateDatesForSpecificDoc(docConfig) {
 
 window.doAssign = function(type, manualSlotIndex = null) {
   var fn, pin, apt = "", regName;
-
   if(type === 'ip') {
     fn = document.getElementById("fi").value.trim();
     pin = document.getElementById("rpin").value.trim();
     apt = document.getElementById("fd-sel").value;
-    if(!/^\d{6}$/.test(fn)) return alert("Check File Number (6 digits).");
-    if(!docPINs[pin]) return alert("Invalid Registrar PIN.");
+    if(!/^\d{6}$/.test(fn) || !docPINs[pin]) return alert("Check File (6 digits) and PIN");
+    if(!apt) return alert("Select Follow-up Date.");
     regName = docPINs[pin];
     if(isDuplicate(fn)) return alert("STOP: Duplicate Patient detected.");
-
-    var i = getNextSlot();
-    if(i === -1) return alert("All doctors marked OFF for IP.");
+    var i, isManual = false, manualDocName = "";
+    if(manualSlotIndex !== null) {
+      i = manualSlotIndex; isManual = true; manualDocName = CL[i].d;
+      if(isDocOff(CL[i].d, 'ip')) return alert("Doctor " + CL[i].d + " is currently marked as OFF/Leave.");
+    } else { i = getNextSlotIp(); }
+    if(i === -1) return alert("No valid clinics scheduled.");
     var c = CL[i];
+    var confirmMsg = isManual
+      ? "Confirm MANUAL Assignment to Dr. " + manualDocName + ":\n\nFile Number: " + fn + "\nRegistrar: " + regName + "\n\n⚠️ This bypasses normal distribution."
+      : "Confirm Inpatient Assignment:\n\nFile Number: " + fn + "\nRegistrar: " + regName;
+    if(!confirm(confirmMsg)) return;
     var entry = {fn:fn, reg:regName, doc:c.d, room:c.r, si:i, cd:tn(), ad:nd(), time:nt(), apt:apt, ts:Date.now()};
     window.S.logs.push(entry);
     dbRef.set(window.S);
     document.getElementById("fi").value = "";
-
-  } else if(type === 'op') {
-    // FIX: Get both values, ensure at least one exists, and combine them properly if both exist
-    var f = document.getElementById("opfi").value.trim();
-    var p = document.getElementById("opphone").value.trim();
-    
-    if(!f && !p) return alert("Please enter at least a File Number or a Phone Number.");
-    
-    // If they provided both, combine them (e.g. "123456 / 99887766"). Otherwise, use whichever one exists.
-    fn = f ? (p ? f + " / " + p : f) : p;
-    
-    regName = "Clerk";
+    document.getElementById("rpin").value = "";
+  } else {
+    var ofn = document.getElementById("opfi").value.trim();
+    var ph = document.getElementById("opphone").value.trim();
+    fn = (ofn && ph) ? ofn + " / " + ph : (ofn || ph || "—");
+    pin = "Clerk"; regName = "Clerk";
     if(isDuplicate(fn)) return alert("STOP: Duplicate Patient detected.");
-
     var i = getNextSlotOp();
     if(i === -1) return alert("No valid clinics scheduled today.");
     var c = CL[i];
-    
     var entry = {fn:fn, reg:regName, doc:c.d, room:c.r, si:i, cd:tn(), ad:nd(), time:nt(), apt:apt, ts:Date.now()};
     window.S.oplogs.push(entry);
     dbRef.set(window.S);
-    
     document.getElementById("opfi").value = "";
     document.getElementById("opphone").value = "";
   }
@@ -590,492 +880,189 @@ window.doSpecificAssign = function() {
   var fn = document.getElementById("spec-fi").value.trim();
   var pin = document.getElementById("spec-pin").value.trim();
   var apt = document.getElementById("spec-date").value;
-  
   if(!/^\d{6}$/.test(fn)) return alert("Check File Number (6 digits).");
   if(!docPINs[pin]) return alert("Invalid Registrar PIN.");
   if(!apt) return alert("Select Follow-up Date.");
   if(isDuplicate(fn)) return alert("STOP: Duplicate Patient detected.");
-
   var regName = docPINs[pin];
   var targetIdx = getManualSlotIndex(selectedSpecificDoc.indices);
-
   if(targetIdx === -1) return alert("Doctor " + selectedSpecificDoc.name + " is currently marked as OFF/Leave.");
-  
   var c = CL[targetIdx];
   if(!confirm("Confirm Assignment to Dr. " + selectedSpecificDoc.name + ":\n\nFile: " + fn + "\nDate: " + apt + "\nRegistrar: " + regName + "\nRoom: " + c.r)) return;
-
   var entry = {fn:fn, reg:regName, doc:c.d, room:c.r, si:targetIdx, cd:tn(), ad:nd(), time:nt(), apt:apt, ts:Date.now()};
   window.S.logs.push(entry);
   dbRef.set(window.S);
-
   document.getElementById("spec-fi").value = "";
   document.getElementById("spec-pin").value = "";
-  alert("Assigned successfully to Dr. " + selectedSpecificDoc.name);
+  document.getElementById("spec-date").value = "";
+  document.querySelectorAll('.spec-card').forEach(el => el.classList.remove('selected'));
+  document.getElementById("spec-form").classList.remove("on");
+  selectedSpecificDoc = null;
+  rAll();
+  alert("Assignment successful!");
 };
 
-window.doEpAssign = function() {
-  if(!selectedEpClinic) return alert("Please select an EP Clinic.");
-  var fn = document.getElementById("ep-fi").value.trim();
-  var pin = document.getElementById("ep-pin").value.trim();
-  var apt = document.getElementById("ep-date").value;
-
-  if(!/^\d{6}$/.test(fn)) return alert("Check File Number (6 digits).");
-  if(!docPINs[pin]) return alert("Invalid Registrar PIN.");
-  if(!apt) return alert("Select Follow-up Date.");
-  if(isDuplicate(fn)) return alert("STOP: Duplicate Patient detected.");
-
-  var currentCount = getEpCountForDate(selectedEpClinic.id, apt);
-  if(currentCount >= EP_MAX_PER_DATE) return alert("STOP: This EP clinic date is fully booked (" + EP_MAX_PER_DATE + "/" + EP_MAX_PER_DATE + ").");
-
-  var regName = docPINs[pin];
-  
-  if(!confirm("Confirm EP Appointment:\n\nClinic: " + selectedEpClinic.room + " (" + selectedEpClinic.label + ")\nFile: " + fn + "\nDate: " + apt + "\nRegistrar: " + regName)) return;
-
-  var entry = {
-    fn:fn, reg:regName, doc:"EP", room:selectedEpClinic.room, epClinicId:selectedEpClinic.id, epLabel:selectedEpClinic.label,
-    cd:tn(), ad:nd(), time:nt(), apt:apt, ts:Date.now()
-  };
-  
-  if(!window.S.eplogs) window.S.eplogs = [];
-  window.S.eplogs.push(entry);
-  dbRef.set(window.S);
-
-  document.getElementById("ep-fi").value = "";
-  document.getElementById("ep-pin").value = "";
-  
-  renderEpDates(selectedEpClinic);
-  alert("EP appointment booked successfully!");
-};
-
-// ── OUTPATIENT HELPERS ───────────────────────────────────────────────────────
-function renderFixClinics() {
-  var today = tn();
-  var container = document.getElementById("fix-clinic-grid");
+function renderSpecificTab() {
+  var container = document.getElementById("spec-grid");
   if(!container) return;
   container.innerHTML = "";
-  document.getElementById("fix-form").style.display = "none";
-  selectedFixDoc = null;
-
-  var seen = {};
-  for(var i = 0; i < 27; i++) {
-    if(!CL[i].days.includes(today) && !isDocOff(CL[i].d, 'op')) {
-      var key = CL[i].d + "_" + CL[i].r + "_" + CL[i].days.join("");
-      if(!seen[key]) seen[key] = {idx:i, doc:CL[i]};
-    }
-  }
-
-  Object.values(seen).forEach(function(item) {
+  specificDocs.forEach(doc => {
+    var isOff = isDocOff(doc.name, 'ip');
     var card = document.createElement("div");
-    card.className = "spec-card";
-    card.innerHTML = '<div class="rl" style="margin-bottom:4px">CLINIC</div>' +
-                     '<div class="spec-name">Dr. ' + item.doc.d + '</div>' +
-                     '<div class="spec-meta">' + item.doc.r + ' • ' + item.doc.days.join(", ") + '</div>';
-    
-    card.onclick = function() {
-      document.querySelectorAll("#fix-clinic-grid .spec-card").forEach(c => c.classList.remove("selected"));
-      card.classList.add("selected");
-      selectedFixDoc = item;
-      renderFixDates(item.doc.days);
-      document.getElementById("fix-hint").textContent = "Booking for Dr. " + item.doc.d + " (" + item.doc.days.join(", ") + ")";
-      document.getElementById("fix-form").style.display = "block";
-    };
+    card.className = "spec-card" + (isOff ? " disabled" : "");
+    card.innerHTML =
+      (isOff ? '<div class="spec-off-badge">OFF</div>' : "") +
+      '<div class="rl" style="margin-bottom:4px">CLINIC</div>' +
+      '<div class="spec-name">Dr. ' + doc.name + '</div>' +
+      '<div class="spec-meta">' + doc.room + ' • ' + doc.label + '</div>';
+    if(!isOff) {
+      card.onclick = () => {
+        document.querySelectorAll('.spec-card').forEach(el => el.classList.remove('selected'));
+        card.classList.add('selected');
+        selectedSpecificDoc = doc;
+        updateDatesForSpecificDoc(doc);
+        document.getElementById("spec-form").classList.add("on");
+        document.getElementById("spec-hint").textContent =
+          "Selected: Dr. " + doc.name + " (" + doc.room + "). Choose a " + doc.label + " follow-up date below.";
+      };
+    }
     container.appendChild(card);
   });
 }
 
-function renderFixDates(validDays) {
-  var dayMap = {"Sun":0,"Mon":1,"Tue":2,"Wed":3,"Thu":4,"Fri":5,"Sat":6};
-  var validDayNums = validDays.map(d => dayMap[d]);
-  
-  var sel = document.getElementById("fix-date");
-  var opts = '<option value="" disabled selected>Select Date...</option>';
-  var d = new Date(), count = 0;
-  for(var i = 0; i < 120; i++) {
-    if(validDayNums.includes(d.getDay())) {
-      var ds = d.toLocaleDateString("en-GB", {weekday:'short', day:'2-digit', month:'short', year:'numeric'});
-      opts += '<option value="' + ds + '">' + ds + '</option>';
-      if(++count >= 16) break;
-    }
-    d.setDate(d.getDate() + 1);
-  }
-  sel.innerHTML = opts;
-}
-
-window.doFixAssign = function() {
-  if(!selectedFixDoc) return alert("Select a clinic to book.");
-  
-  // FIX: Allow either File or Phone, and map appropriately
-  var f = document.getElementById("fix-fi").value.trim();
-  var p = document.getElementById("fix-phone").value.trim();
-  var apt = document.getElementById("fix-date").value;
-  
-  if(!f && !p) return alert("Please enter at least a File Number or a Phone Number.");
-  var fn = f ? (p ? f + " / " + p : f) : p;
-  
-  if(!apt) return alert("Select Follow-up Date.");
-  if(isDuplicate(fn)) return alert("STOP: Duplicate Patient detected.");
-
-  var c = selectedFixDoc.doc;
-  if(!confirm("Book appointment for Patient: " + fn + "\nDr. " + c.d + " on " + apt + "?")) return;
-
-  var entry = {fn:fn, reg:"Clerk", doc:c.d, room:c.r, si:selectedFixDoc.idx, cd:tn(), ad:nd(), time:nt(), apt:apt, ts:Date.now()};
-  window.S.oplogs.push(entry);
-  dbRef.set(window.S);
-  
-  document.getElementById("fix-fi").value = "";
-  document.getElementById("fix-phone").value = "";
-  document.getElementById("fix-date").value = "";
-  document.querySelectorAll("#fix-clinic-grid .spec-card").forEach(c => c.classList.remove("selected"));
-  document.getElementById("fix-form").style.display = "none";
-  selectedFixDoc = null;
-  alert("Appointment booked!");
-};
-
-window.closeMo = () => document.getElementById("mo").classList.remove("on");
-
-// ── ADMIN ACTIONS ─────────────────────────────────────────────────────────────
-window.delEntry = () => {
-  var s = document.getElementById("dfi").value.trim();
-  if(!s) return;
-  var idxL = window.S.logs.findIndex(e => e.fn.toString().includes(s));
-  var idxO = window.S.oplogs.findIndex(e => e.fn.toString().includes(s));
-  var idxE = (window.S.eplogs||[]).findIndex(e => e.fn.toString().includes(s));
-  
-  if(idxL === -1 && idxO === -1 && idxE === -1) return alert("Not found");
-  if(confirm("Delete?")) {
-    if(idxL !== -1) window.S.logs.splice(idxL, 1);
-    else if(idxO !== -1) window.S.oplogs.splice(idxO, 1);
-    else window.S.eplogs.splice(idxE, 1);
-    dbRef.set(window.S);
-    rAll();
-  }
-};
-
-window.resetAll = () => {
-  if(confirm("WIPE EVERYTHING?")) {
-    window.S = {logs:[], oplogs:[], eplogs:[], leave:{}};
-    dbRef.set(window.S);
-    rAll();
-  }
-};
-
-window.exportWeekly = () => {
-  var all = (window.S.logs||[]).concat(window.S.oplogs||[]).concat(window.S.eplogs||[])
-             .sort((a,b) => a.ts - b.ts);
-  if(!all.length) return alert("No data");
-  exportPDF("All Assignments Log", all);
-};
-
-// ── RENDERERS ─────────────────────────────────────────────────────────────────
-function rAll() {
-  document.getElementById("dayName").textContent = tn().toUpperCase();
-  document.getElementById("dateStr").textContent = nd();
-
-  // IP Tab Updates
-  var ni = getNextSlot();
-  if(ni !== -1) {
-    document.getElementById("nd").textContent = "Dr. " + CL[ni].d;
-    document.getElementById("nr").textContent = CL[ni].r + " • " + CL[ni].days.join(", ");
-  } else {
-    document.getElementById("nd").textContent = "NONE";
-    document.getElementById("nr").textContent = "All doctors marked OFF";
-  }
-
-  var rb = document.getElementById("rb");
-  rb.innerHTML = "";
-  for(var i=0; i<27; i++) {
-    var d = document.createElement("div");
-    d.className = "dot" + (i < ni ? " used" : "") + (i === ni ? " on" : "");
-    rb.appendChild(d);
-  }
-
-  // OP Tab Updates
-  var noi = getNextSlotOp();
-  if(noi !== -1) {
-    document.getElementById("opd").textContent = "Dr. " + CL[noi].d;
-    document.getElementById("opr").textContent = CL[noi].r + " • " + CL[noi].days.join(", ");
-  } else {
-    document.getElementById("opd").textContent = "NONE RUNNING TODAY";
-    document.getElementById("opr").textContent = "Or all marked OFF";
-  }
-
-  rLog();
-  rAdm();
-  updateFutureDates(['Sun','Mon','Tue','Wed','Thu','Fri','Sat']);
-}
-
-function renderSpecificClinics() {
-  var grid = document.getElementById("spec-grid");
-  grid.innerHTML = "";
-  document.getElementById("spec-form").style.display = "none";
-  selectedSpecificDoc = null;
-
-  SPECIFIC_CLINICS.forEach(function(clinic) {
-    var isOff = isDocOff(clinic.name, 'ip');
-    var card = document.createElement("div");
-    card.className = "spec-card" + (isOff ? " disabled" : "");
-    
-    var offBadge = isOff ? '<div class="spec-off-badge">OFF</div>' : '';
-    
-    card.innerHTML = offBadge + 
-                     '<div class="rl" style="margin-bottom:4px">' + clinic.label + '</div>' +
-                     '<div class="spec-name">Dr. ' + clinic.name + '</div>' +
-                     '<div class="spec-meta">' + clinic.room + ' • ' + clinic.day + '</div>';
-    
-    card.onclick = function() {
-      if(isOff) return alert("Dr. " + clinic.name + " is currently marked OFF/Leave.");
-      document.querySelectorAll(".spec-card").forEach(c => c.classList.remove("selected"));
-      card.classList.add("selected");
-      selectedSpecificDoc = clinic;
-      updateDatesForSpecificDoc(clinic);
-      document.getElementById("spec-hint").textContent = clinic.label + " clinics operate strictly on " + clinic.day + "s.";
-      document.getElementById("spec-form").style.display = "block";
-    };
-    grid.appendChild(card);
-  });
-}
-
-function renderEpClinics() {
-  var grid = document.getElementById("ep-clinic-grid");
-  grid.innerHTML = "";
-  document.getElementById("ep-form").style.display = "none";
-  selectedEpClinic = null;
-
-  EP_CLINICS.forEach(function(clinic) {
-    var card = document.createElement("div");
-    card.className = "spec-card ep-card";
-    
-    card.innerHTML = '<div class="rl" style="margin-bottom:4px;color:var(--ep2)">EP CLINIC</div>' +
-                     '<div class="spec-name" style="font-size:22px;">' + clinic.name + '</div>' +
-                     '<div class="spec-meta">' + clinic.room + ' • ' + clinic.label + '</div>';
-    
-    card.onclick = function() {
-      document.querySelectorAll("#ep-clinic-grid .spec-card").forEach(c => c.classList.remove("selected"));
-      card.classList.add("selected");
-      selectedEpClinic = clinic;
-      renderEpDates(clinic);
-      document.getElementById("ep-hint").textContent = "EP Clinic — " + clinic.room + " every " + clinic.label + ". Max " + EP_MAX_PER_DATE + " patients per date.";
-      document.getElementById("ep-form").style.display = "block";
-    };
-    grid.appendChild(card);
-  });
-}
-
-function renderEpDates(clinic) {
-  var sel = document.getElementById("ep-date");
-  var opts = '<option value="" disabled selected>Select ' + clinic.label + ' Date...</option>';
-  var d = new Date(), count = 0;
-  
-  var sixMonths = new Date();
-  sixMonths.setMonth(sixMonths.getMonth() + 6);
-
-  while(d <= sixMonths) {
-    if(d.getDay() === clinic.dayNum) {
-      var ds = d.toLocaleDateString("en-GB", {weekday:'short', day:'2-digit', month:'short', year:'numeric'});
-      var cnt = getEpCountForDate(clinic.id, ds);
-      var full = cnt >= EP_MAX_PER_DATE;
-      var badge = full ? " [FULL]" : " [" + cnt + "/" + EP_MAX_PER_DATE + "]";
-      opts += '<option value="' + ds + '"' + (full ? " disabled" : "") + '>' + ds + badge + '</option>';
-      if(++count >= 26) break;
-    }
-    d.setDate(d.getDate() + 1);
-  }
-  sel.innerHTML = opts;
-  updateEpDateCountLabel();
-}
-
-function updateEpDateCountLabel() {
-  if(!selectedEpClinic) return;
-  var sel = document.getElementById("ep-date");
-  var label = document.getElementById("ep-date-count-label");
-  if(!sel.value) { label.textContent = ""; return; }
-  
-  var cnt = getEpCountForDate(selectedEpClinic.id, sel.value);
-  var classN = "ep-count-ok";
-  if(cnt >= EP_MAX_PER_DATE) classN = "ep-count-full";
-  else if(cnt >= EP_MAX_PER_DATE - 2) classN = "ep-count-warn";
-
-  label.innerHTML = '<span class="ep-count-badge ' + classN + '">' + cnt + ' / ' + EP_MAX_PER_DATE + ' Booked</span>';
-}
-
-document.getElementById("ep-date").addEventListener('change', updateEpDateCountLabel);
-
-function renderExportGrid() {
-  var grid = document.getElementById("clinic-export-grid");
-  if(!grid) return;
-  grid.innerHTML = "";
-
-  var clinics = [];
-  var seen = {};
-  CL.forEach(function(c) {
-    var key = c.d + "_" + c.r;
-    if(!seen[key]) {
-      seen[key] = { d: c.d, r: c.r, days: new Set(c.days) };
-    } else {
-      c.days.forEach(day => seen[key].days.add(day));
-    }
-  });
-
-  Object.values(seen).forEach(c => {
-    clinics.push({ d: c.d, r: c.r, days: Array.from(c.days) });
-  });
-
-  EP_CLINICS.forEach(function(ep) {
-    var epPts = (window.S.eplogs||[]).filter(x => x.epClinicId === ep.id);
-    var card = document.createElement("div");
-    card.className = "cex-card";
-    card.style.borderColor = "rgba(167,139,250,0.4)";
-    card.innerHTML = '<div class="rl" style="color:var(--ep2)">EP CLINIC</div>' +
-                     '<div class="cex-doc" style="color:var(--ep);font-size:16px;">' + ep.name + '</div>' +
-                     '<div class="cex-meta">' + ep.room + ' • ' + ep.label + '</div>' +
-                     '<div class="cex-count" style="color:var(--ep)">' + epPts.length + '</div>';
-    card.onclick = function() {
-      if(epPts.length === 0) return alert("No patients in this EP clinic yet.");
-      exportPDF("EP Clinic — " + ep.room + " (" + ep.label + ")", epPts);
-    };
-    grid.appendChild(card);
-  });
-
-  clinics.forEach(function(c) {
-    var pts = getClinicPatientsByDocRoom(c.d, c.r);
-    var card = document.createElement("div");
-    card.className = "cex-card";
-    card.innerHTML = '<div class="rl">' + c.days.join(", ") + '</div>' +
-                     '<div class="cex-doc">Dr. ' + c.d + '</div>' +
-                     '<div class="cex-meta">' + c.r + '</div>' +
-                     '<div class="cex-count">' + pts.length + '</div>';
-    card.onclick = function() {
-      if(pts.length === 0) return alert("No patients in this clinic yet.");
-      exportPDF("Dr. " + c.d + " — " + c.r + " (" + c.days.join(", ") + ")", pts);
-    };
-    grid.appendChild(card);
-  });
-}
-
-// ── FIREBASE SYNC ─────────────────────────────────────────────────────────────
-dbRef.on('value', (snap) => {
-  const d = snap.val();
-  if(d) {
-    window.S.logs = d.logs || [];
-    window.S.oplogs = d.oplogs || [];
-    window.S.eplogs = d.eplogs || [];
-    window.S.leave = d.leave || {};
-  }
-  document.getElementById("syncDot").style.background = "var(--ok)";
-  document.getElementById("syncText").textContent = "Live — Synced";
-  rAll();
-  if(document.getElementById("adm-export").classList.contains("on")) renderExportGrid();
-});
-
-// ── ADMIN RENDERING ───────────────────────────────────────────────────────────
-function rAdm() {
-  var g = document.getElementById("dg");
-  if(!g) return;
-  g.innerHTML = "";
+function rDist() {
+  var g = document.getElementById("dg"); g.innerHTML = "";
+  var ipNext = getNextSlotIp();
   CL.forEach((c, i) => {
-    var ipO = isDocOff(c.d, 'ip'), opO = isDocOff(c.d, 'op');
-    var isN = (i === getNextSlot());
-    var d = document.createElement("div");
-    d.className = "dc" + (isN ? " nx" : "");
-    d.innerHTML = '<div class="dd">Dr. ' + c.d + '</div>' +
-                  '<div class="lti" style="margin-bottom:5px">' + c.r + ' • ' + c.days.join(", ") + '</div>' +
-                  '<div class="dn2">' + cCnt(i) + '</div>' +
-                  '<div class="stbox">' +
-                    '<div class="stb ' + (ipO?'stb-off':'stb-ok') + '">IP:' + (ipO?'OFF':'OK') + '</div>' +
-                    '<div class="stb ' + (opO?'stb-off':'stb-ok') + '">OP:' + (opO?'OFF':'OK') + '</div>' +
-                  '</div>';
+    var ipO = isDocOff(c.d,'ip'), opO = isDocOff(c.d,'op'), isN = (i === ipNext);
+    var d = document.createElement("div"); d.className = "dc" + (isN ? " nx" : "");
+    d.innerHTML =
+      '<div class="dd">Dr. ' + c.d + '</div>' +
+      '<div style="font-size:10px;color:var(--dim)">' + c.r + ' • ' + c.days.join(", ") + '</div>' +
+      '<div class="dn2">' + cCnt(i) + '</div>' +
+      '<div class="stbox">' +
+        '<div class="stb ' + (ipO?'stb-off':'stb-ok') + '">IP:' + (ipO?'OFF':'OK') + '</div>' +
+        '<div class="stb ' + (opO?'stb-off':'stb-ok') + '">OP:' + (opO?'OFF':'OK') + '</div>' +
+      '</div>';
     d.onclick = () => openMo(i);
     g.appendChild(d);
   });
 }
 
 function rLog() {
-  var b = document.getElementById("lb");
-  b.innerHTML = "";
+  var b = document.getElementById("lb"); b.innerHTML = "";
   var combined = (window.S.logs||[]).concat(window.S.oplogs||[]).concat(window.S.eplogs||[])
-                 .sort((a,b) => b.ts - a.ts).slice(0, 50);
+    .sort((a,b) => b.ts - a.ts).slice(0, 50);
   if(window.lf !== "all") combined = combined.filter(x => x.cd === window.lf);
-
   combined.forEach(x => {
-    var r = document.createElement("div");
-    r.className = "lr";
+    var r = document.createElement("div"); r.className = "lr";
     var docLabel = x.epClinicId ? ("EP/" + x.room) : ("Dr. " + x.doc);
-    r.innerHTML = '<div class="lti">' + x.ad + '<br><span>' + x.time + '</span></div>' +
-                  '<div class="lm">' + x.fn + '</div>' +
-                  '<div>' + docLabel + '<br><span class="rt">' + x.room + '</span></div>' +
-                  '<div class="lgx" style="color:var(--acc)">' + (x.apt||"—") + '</div>' +
-                  '<div class="lgx">' + x.reg + '</div>';
+    r.innerHTML =
+      '<div class="lti">' + x.ad + '<br><span>' + x.time + '</span></div>' +
+      '<div class="lm">' + x.fn + '</div>' +
+      '<div>' + docLabel + '<br><span class="rt">' + x.room + '</span></div>' +
+      '<div class="lgx" style="color:var(--acc)">' + (x.apt||"—") + '</div>' +
+      '<div class="lgx">' + x.reg + '</div>';
     b.appendChild(r);
   });
 }
 
 function updateFutureDates(daysStrArray) {
-  var sel = document.getElementById("fd-sel");
-  if(!sel) return;
-  var dMap = {"Sun":0,"Mon":1,"Tue":2,"Wed":3,"Thu":4,"Fri":5,"Sat":6};
-  var valid = daysStrArray.map(x => dMap[x]);
+  var dayMap = {"Sun":0,"Mon":1,"Tue":2,"Wed":3,"Thu":4,"Fri":5,"Sat":6};
+  var targets = daysStrArray.map(d => dayMap[d]);
   var opts = '<option value="" disabled selected>Select Follow-up Date...</option>';
-  var d = new Date(), count = 0;
-  for(var i=0; i<120; i++) {
-    if(valid.includes(d.getDay())) {
-      var ds = d.toLocaleDateString("en-GB", {weekday:'short',day:'2-digit',month:'short',year:'numeric'});
+  var d = new Date();
+  for(var i = 0; i < 120; i++) {
+    if(targets.includes(d.getDay())) {
+      var ds = d.toLocaleDateString("en-GB", {weekday:'short', day:'2-digit', month:'short', year:'numeric'});
       opts += '<option value="' + ds + '">' + ds + '</option>';
-      if(++count >= 30) break;
     }
-    d.setDate(d.getDate()+1);
+    d.setDate(d.getDate() + 1);
   }
-  sel.innerHTML = opts;
+  document.getElementById("fd-sel").innerHTML = opts;
+}
+
+function rAll() {
+  document.getElementById("dayName").textContent = tn();
+  document.getElementById("dateStr").textContent = nd();
+
+  var ipI = getNextSlotIp();
+  if(ipI !== -1) {
+    var c = CL[ipI];
+    document.getElementById("nd").textContent = "Dr. " + c.d;
+    document.getElementById("nr").textContent = c.r + " • " + c.days.join(", ");
+    updateFutureDates(c.days);
+  } else {
+    document.getElementById("nd").textContent = "All Offline";
+    document.getElementById("nr").textContent = "—";
+  }
+
+  var opI = getNextSlotOp();
+  if(opI !== -1) {
+    document.getElementById("opd").textContent = "Dr. " + CL[opI].d;
+    document.getElementById("opr").textContent = CL[opI].r;
+  } else {
+    document.getElementById("opd").textContent = "No Match Today";
+    document.getElementById("opr").textContent = "—";
+  }
+
+  var rb = document.getElementById("rb"); rb.innerHTML = "";
+  var minCount = getGlobalMin();
+  CL.forEach((_, idx) => {
+    var d = document.createElement("div");
+    var cnt = cCnt(idx);
+    d.className = "dot" + (cnt > minCount ? " used" : "") + (idx === ipI ? " on" : "");
+    rb.appendChild(d);
+  });
+
+  renderSpecificTab();
+  rLog();
+  rDist();
+  if(adm) {
+    renderLeaveAdmin();
+    // Refresh export grid if visible
+    var expSec = document.getElementById("adm-export");
+    if(expSec && expSec.classList.contains("on")) renderClinicExportGrid();
+  }
 }
 
 function renderLeaveAdmin() {
-  var g = document.getElementById("leave-grid");
-  g.innerHTML = "";
+  var g = document.getElementById("leave-grid"); g.innerHTML = "";
   [...new Set(CL.map(c => c.d))].forEach(name => {
     var ipO = window.S.leave[name]?.ip, opO = window.S.leave[name]?.op;
-    var d = document.createElement("div");
-    d.className = "dc";
-    d.style.textAlign = "center";
-    d.innerHTML = '<div class="dd">' + name + '</div>' +
-                  '<div class="lv-btn-box">' +
-                    '<button class="lv-btn ' + (ipO?'off':'on') + '" onclick="toggleS(\'' + name + '\',\'ip\')">IP ' + (ipO?'OFF':'OK') + '</button>' +
-                    '<button class="lv-btn ' + (opO?'off':'on') + '" onclick="toggleS(\'' + name + '\',\'op\')">OP ' + (opO?'OFF':'OK') + '</button>' +
-                  '</div>';
+    var d = document.createElement("div"); d.className = "dc"; d.style.textAlign = "center";
+    d.innerHTML =
+      '<div class="dd">' + name + '</div>' +
+      '<div class="lv-btn-box">' +
+        '<button class="lv-btn ' + (ipO?'off':'on') + '" onclick="toggleS(\'' + name + '\',\'ip\')">IP ' + (ipO?'OFF':'OK') + '</button>' +
+        '<button class="lv-btn ' + (opO?'off':'on') + '" onclick="toggleS(\'' + name + '\',\'op\')">OP ' + (opO?'OFF':'OK') + '</button>' +
+      '</div>';
     g.appendChild(d);
   });
 }
 
-// ── MODAL & PDF ───────────────────────────────────────────────────────────────
-window.openMo = function(i) {
+function openMo(i) {
+  if(!adm) return;
   var c = CL[i];
-  document.getElementById("mdc").textContent = "Dr. " + c.d;
-  document.getElementById("mrr").textContent = c.r + " • Slot " + i;
-  var pb = document.getElementById("mpb");
-  pb.innerHTML = "";
-  
-  var myIp = (window.S.logs||[]).filter(x => x.si === i);
-  var myOp = (window.S.oplogs||[]).filter(x => x.si === i);
-  var pts = myIp.concat(myOp).sort((a,b) => a.ts - b.ts);
-
-  if(pts.length === 0) pb.innerHTML = "<div class='rr'>No patients assigned to this slot yet.</div>";
-  else {
-    pts.forEach(p => {
-      var d = document.createElement("div");
-      d.className = "mr";
-      d.innerHTML = '<div>' + p.fn + '<br><span style="color:var(--dim)">' + (p.apt||"No Date") + '</span></div>' +
-                    '<div style="text-align:right;color:var(--acc2)">' + p.reg + '<br><span style="color:var(--dim)">' + p.ad + ' ' + p.time + '</span></div>';
-      pb.appendChild(d);
-    });
-    var btn = document.createElement("button");
-    btn.className = "btn";
-    btn.style.marginTop = "10px";
-    btn.textContent = "Print Rotation Slot (" + pts.length + ")";
-    btn.onclick = () => exportPDF("Dr. " + c.d + " — " + c.r + " (Slot " + i + ")", pts);
+  var pts = (window.S.logs||[]).concat(window.S.oplogs||[]).filter(e => e.si === i);
+  document.getElementById("mt").textContent = "Dr. " + c.d + " — " + c.r;
+  document.getElementById("mc2").textContent = pts.length + " patients (this slot)";
+  var b = document.getElementById("mbody"); b.innerHTML = "";
+  pts.forEach(p => {
+    var d = document.createElement("div"); d.className = "mr";
+    d.innerHTML = '<div>' + p.fn + '</div><div style="text-align:right">' + p.time + '</div>';
+    b.appendChild(d);
+  });
+  var pb = document.getElementById("mprint"); pb.innerHTML = "";
+  if(pts.length) {
+    var btn = document.createElement("button"); btn.className = "btn";
+    btn.textContent = "Print This Slot";
+    btn.onclick = () => exportPDF("Dr. " + c.d + " — " + c.r, pts);
     pb.appendChild(btn);
-
+    // Also offer full clinic export (all slots same doc+room)
     var allPts = getClinicPatientsByDocRoom(c.d, c.r);
     if(allPts.length > pts.length) {
-      var btn2 = document.createElement("button");
-      btn2.className = "btn";
+      var btn2 = document.createElement("button"); btn2.className = "btn";
       btn2.style.background = "linear-gradient(135deg,#059669,#0891b2)";
       btn2.style.marginTop = "6px";
       btn2.textContent = "Print Full Clinic (" + allPts.length + " patients)";
@@ -1087,18 +1074,24 @@ window.openMo = function(i) {
 }
 
 function exportPDF(title, data) {
-  var rows = data.map(e => 
-    '<tr><td>' + e.ad + '</td><td>' + e.time + '</td><td>' + e.fn + '</td><td>' + 
-    (e.epClinicId ? "EP/" + e.room : "Dr. " + e.doc) + '</td><td>' + e.room + '</td><td>' + 
+  var rows = data.map(e =>
+    '<tr><td>' + e.ad + '</td><td>' + e.time + '</td><td>' + e.fn + '</td><td>' +
+    (e.epClinicId ? "EP/" + e.room : "Dr. " + e.doc) + '</td><td>' + e.room + '</td><td>' +
     (e.apt||"—") + '</td><td>' + e.reg + '</td></tr>'
   ).join("");
   var h = '<html><head><style>body{font-family:sans-serif}table{width:100%;border-collapse:collapse;font-size:12px}th,td{border:1px solid #ddd;padding:8px;text-align:left}th{background:#f4f4f4}h2{margin-bottom:12px}</style></head>' +
-    '<body><h2>' + title + '</h2><p style="font-size:11px;color:#666">Generated: ' + nd() + ' ' + nt() + '</p><table><tr><th>Date</th><th>Time</th><th>File/Phone</th><th>Doctor/EP</th><th>Room</th><th>Follow-up</th><th>By</th></tr>' + rows + '</table></body></html>';
-  var w = window.open("", "_blank");
-  w.document.write(h);
-  w.document.close();
-  setTimeout(() => { w.print(); }, 500);
+
+```
+'<body><h2>' + title + '</h2><p style="font-size:11px;color:#666;margin-bottom:10px">Generated: ' + new Date().toLocaleString("en-GB") + ' — Total: ' + data.length + ' patients</p>' +
+'<table><thead><tr><th>Date</th><th>Time</th><th>File / Phone</th><th>Doctor</th><th>Room</th><th>Follow-up</th><th>By</th></tr></thead><tbody>' + rows + '</tbody></table>' +
+'<script>window.onload=function(){window.print();window.close();}<\/script></body></html>';
+```
+
+var w = window.open(””, “_blank”);
+w.document.write(h);
+w.document.close();
 }
 </script>
+
 </body>
 </html>
