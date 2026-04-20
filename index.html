@@ -152,6 +152,8 @@ hr.adm-hr{border:0;border-top:1px solid var(--bor);margin:20px 0}
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <script>
 const firebaseConfig = { apiKey: "AIzaSyAT7Y3jWM4ix7I5cM4vKsHIJRaZZ6AZ9yI", authDomain: "cardio-opd.firebaseapp.com", databaseURL: "https://cardio-opd-default-rtdb.firebaseio.com", projectId: "cardio-opd", storageBucket: "cardio-opd.firebasestorage.app", appId: "1:71256529635:web:d62921678530fdce7303d6" };
 firebase.initializeApp(firebaseConfig);
@@ -166,6 +168,7 @@ var selectedSpecificDoc = null, selectedFixDoc = null, selectedEpClinic = null;
 window.S = {logs:[], oplogs:[], eplogs:[], leave:{}};
 var adm = false;
 window.lf = "all";
+var dataLoaded = false;  // tracks Firebase initial sync to prevent flash of wrong doctor
 
 function tn() { return ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][new Date().getDay()]; }
 function nt() { return new Date().toLocaleTimeString("en-GB", {hour:"2-digit", minute:"2-digit"}); }
@@ -256,7 +259,47 @@ window.doEpAssign=function(){ if(!selectedEpClinic) return alert("Select EP clin
 
 function rDist(){ let g=document.getElementById("dg"); g.innerHTML=""; let ipNext=getNextSlotIp(); CL.forEach((c,i)=>{ let ipO=isDocOff(c.d,'ip'), opO=isDocOff(c.d,'op'), isN=(i===ipNext), d=document.createElement("div"); d.className="dc"+(isN?" nx":""); d.innerHTML=`<div class="dd">Dr. ${c.d}</div><div style="font-size:10px;color:var(--dim)">${c.r} • ${c.days.join(", ")}</div><div class="dn2">${cCnt(i)}</div><div class="stbox"><div class="stb ${ipO?'stb-off':'stb-ok'}">IP:${ipO?'OFF':'OK'}</div><div class="stb ${opO?'stb-off':'stb-ok'}">OP:${opO?'OFF':'OK'}</div></div>`; d.onclick=()=>openMo(i); g.appendChild(d); }); }
 function openMo(i){ if(!adm) return; let c=CL[i], pts=(window.S.logs||[]).concat(window.S.oplogs||[]).filter(e=>e.si===i); document.getElementById("mt").innerHTML=`Dr. ${c.d} — ${c.r}`; document.getElementById("mc2").innerHTML=pts.length+" patients (this slot)"; let b=document.getElementById("mbody"); b.innerHTML=""; pts.forEach(p=>{let div=document.createElement("div"); div.className="mr"; div.innerHTML=`<div>${p.fn}</div><div style="text-align:right">${p.time}</div>`; b.appendChild(div);}); let pb=document.getElementById("mprint"); pb.innerHTML=""; if(pts.length){ let btn=document.createElement("button"); btn.className="btn"; btn.textContent="Print This Slot"; btn.onclick=()=>exportPDF(`Dr. ${c.d} — ${c.r}`, pts); pb.appendChild(btn); } document.getElementById("mo").classList.add("on"); }
-function exportPDF(title,data){ let rows=data.map(e=>`<td>${e.ad}</td><td>${e.time}</td><td>${e.fn}</td><td>${e.epClinicId?"EP/"+e.room:"Dr. "+e.doc}</td><td>${e.room}</td><td>${e.apt||"—"}</td><td>${e.reg}</td></tr>`).join(""); let w=window.open("","_blank"); w.document.write(`<html><head><style>body{font-family:sans-serif}table{width:100%;border-collapse:collapse;font-size:12px}th,td{border:1px solid #ddd;padding:8px;text-align:left}th{background:#f4f4f4}</style></head><body><h2>${title}</h2><p>Total: ${data.length}</p><table><thead><tr><th>Date</th><th>Time</th><th>File/Phone</th><th>Doctor</th><th>Room</th><th>Follow-up</th><th>By</th></tr></thead><tbody>${rows}</tbody></table><script>window.onload=function(){window.print();window.close();}<\\/script></body></html>`); w.document.close(); }
+function exportPDF(title, data){
+  if(!data || !data.length){ alert("No data to export."); return; }
+  // Use jsPDF + autoTable to generate a real downloadable PDF file
+  if(typeof window.jspdf === "undefined"){ alert("PDF library still loading. Please try again in a second."); return; }
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation: "landscape", unit: "pt", format: "a4" });
+  // Header
+  doc.setFont("helvetica", "bold"); doc.setFontSize(14);
+  doc.text(title, 40, 36);
+  doc.setFont("helvetica", "normal"); doc.setFontSize(10); doc.setTextColor(90);
+  const stamp = new Date().toLocaleString("en-GB", { day:"2-digit", month:"short", year:"numeric", hour:"2-digit", minute:"2-digit" });
+  doc.text(`Mubarak Al-Kabeer Hospital — Cardio OPD     Generated: ${stamp}     Total: ${data.length}`, 40, 52);
+  // Table
+  const head = [["Date","Time","File / Phone","Doctor","Room","Follow-up","By"]];
+  const body = data.map(e => [
+    e.ad || "—",
+    e.time || "—",
+    (e.fn!==undefined && e.fn!==null ? String(e.fn) : "—"),
+    e.epClinicId ? ("EP / " + e.room) : ("Dr. " + (e.doc||"—")),
+    e.room || "—",
+    e.apt || "—",
+    e.reg || "—"
+  ]);
+  doc.autoTable({
+    head, body, startY: 66,
+    styles: { font:"helvetica", fontSize: 9, cellPadding: 5, overflow: "linebreak" },
+    headStyles: { fillColor: [30,64,175], textColor: 255, fontStyle:"bold" },
+    alternateRowStyles: { fillColor: [243, 246, 250] },
+    margin: { left: 40, right: 40 },
+    didDrawPage: (d) => {
+      const pageCount = doc.internal.getNumberOfPages();
+      const pageSize = doc.internal.pageSize;
+      doc.setFontSize(8); doc.setTextColor(120);
+      doc.text(`Page ${d.pageNumber} of ${pageCount}`, pageSize.getWidth()-80, pageSize.getHeight()-20);
+    }
+  });
+  // Build a safe filename
+  const safeTitle = title.replace(/[^a-z0-9\-_]+/gi, "_").replace(/^_+|_+$/g,"").slice(0,60) || "OPD_Export";
+  const today = new Date().toISOString().slice(0,10);
+  doc.save(`${safeTitle}_${today}.pdf`);
+}
 function rLog(){ let b=document.getElementById("lb"); b.innerHTML=""; let combined=(window.S.logs||[]).concat(window.S.oplogs||[]).concat(window.S.eplogs||[]).sort((a,b)=>b.ts-a.ts).slice(0,50); if(window.lf!=="all") combined=combined.filter(x=>x.cd===window.lf); combined.forEach(x=>{ let r=document.createElement("div"); r.className="lr"; let docLabel=x.epClinicId?`EP/${x.room}`:`Dr. ${x.doc}`; let delCell = adm ? `<button class="log-del" title="Delete this entry" onclick="deleteLogEntry(${x.ts})">🗑</button>` : `<div></div>`; r.innerHTML=`<div class="lti">${x.ad}<br><span>${x.time}</span></div><div class="lm">${x.fn}</div><div>${docLabel}<br><span class="rt">${x.room}</span></div><div class="lgx" style="color:var(--acc)">${x.apt||"—"}</div><div class="lgx">${x.reg}</div>${delCell}`; b.appendChild(r); }); }
 window.deleteLogEntry = function(ts){
   if(!adm){ alert("Admin access required."); return; }
@@ -278,7 +321,30 @@ window.deleteLogEntry = function(ts){
 function renderLeaveAdmin(){ let g=document.getElementById("leave-grid"); g.innerHTML=""; [...new Set(CL.map(c=>c.d))].forEach(name=>{ let ipO=window.S.leave[name]?.ip, opO=window.S.leave[name]?.op, d=document.createElement("div"); d.className="dc"; d.style.textAlign="center"; d.innerHTML=`<div class="dd">${name}</div><div class="lv-btn-box"><button class="lv-btn ${ipO?'off':'on'}" onclick="toggleS('${name}','ip')">IP ${ipO?'OFF':'OK'}</button><button class="lv-btn ${opO?'off':'on'}" onclick="toggleS('${name}','op')">OP ${opO?'OFF':'OK'}</button></div>`; g.appendChild(d); }); }
 window.toggleS=(name,type)=>{ if(!window.S.leave[name]) window.S.leave[name]={ip:false,op:false}; window.S.leave[name][type]=!window.S.leave[name][type]; dbRef.set(window.S); rAll(); };
 function renderClinicExportGrid(){ let grid=document.getElementById("clinic-export-grid"); if(!grid) return; grid.innerHTML=""; let clinics=[...new Map(CL.map(slot=>[slot.d+"|"+slot.r,slot])).values()]; EP_CLINICS.forEach(ep=>{ let epPts=(window.S.eplogs||[]).filter(e=>e.epClinicId===ep.id); let card=document.createElement("div"); card.className="cex-card"; card.style.borderColor="rgba(167,139,250,0.4)"; card.innerHTML=`<div class="rl" style="color:var(--ep)">EP CLINIC</div><div class="cex-doc" style="color:var(--ep);font-size:14px">${ep.name}</div><div class="cex-meta">${ep.room} • ${ep.label}</div><div class="cex-count" style="color:var(--ep)">${epPts.length}</div>`; card.onclick=()=>{ if(epPts.length) exportPDF(`EP Clinic — ${ep.room} (${ep.label})`, epPts); else alert("No patients"); }; grid.appendChild(card); }); clinics.forEach(c=>{ let pts=(window.S.logs||[]).concat(window.S.oplogs||[]).filter(e=>e.doc===c.d && e.room===c.r); let card=document.createElement("div"); card.className="cex-card"; card.innerHTML=`<div class="rl">${c.days.join(", ")}</div><div class="cex-doc">Dr. ${c.d}</div><div class="cex-meta">${c.r}</div><div class="cex-count">${pts.length}</div>`; card.onclick=()=>{ if(pts.length) exportPDF(`Dr. ${c.d} — ${c.r}`, pts); else alert("No patients"); }; grid.appendChild(card); }); }
-function rAll(){ document.getElementById("dayName").innerText=tn(); document.getElementById("dateStr").innerText=nd(); let ipI=getNextSlotIp(); if(ipI!==-1){ let c=CL[ipI]; document.getElementById("nd").innerText="Dr. "+c.d; document.getElementById("nr").innerText=c.r+" • "+c.days.join(", "); updateFutureDates(c.days); } else { document.getElementById("nd").innerText="All Offline"; document.getElementById("nr").innerText="—"; } let opI=getNextSlotOp(); if(opI!==-1){ document.getElementById("opd").innerText="Dr. "+CL[opI].d; document.getElementById("opr").innerText=CL[opI].r; } else { document.getElementById("opd").innerText="No Match Today"; document.getElementById("opr").innerText="—"; } let rb=document.getElementById("rb"); rb.innerHTML=""; let minCount=getGlobalMin(); CL.forEach((_,idx)=>{ let cnt=cCnt(idx); let d=document.createElement("div"); d.className="dot"+(cnt>minCount?" used":"")+(idx===ipI?" on":""); rb.appendChild(d); }); renderSpecificTab(); rLog(); rDist(); if(adm) { renderLeaveAdmin(); if(document.getElementById("adm-export")?.classList.contains("on")) renderClinicExportGrid(); } }
+function rAll(){
+  document.getElementById("dayName").innerText=tn();
+  document.getElementById("dateStr").innerText=nd();
+  // Don't compute next-clinic from empty data before Firebase sync — this prevents the
+  // initial flash of "Dr. Hisham" that would happen because index 0 always has 0 count
+  // before real data loads.
+  if(!dataLoaded){
+    document.getElementById("nd").innerText="Loading...";
+    document.getElementById("nr").innerText="Syncing with server";
+    document.getElementById("opd").innerText="Loading...";
+    document.getElementById("opr").innerText="Syncing with server";
+    document.getElementById("rb").innerHTML="";
+    return;
+  }
+  let ipI=getNextSlotIp();
+  if(ipI!==-1){ let c=CL[ipI]; document.getElementById("nd").innerText="Dr. "+c.d; document.getElementById("nr").innerText=c.r+" • "+c.days.join(", "); updateFutureDates(c.days); } else { document.getElementById("nd").innerText="All Offline"; document.getElementById("nr").innerText="—"; }
+  let opI=getNextSlotOp();
+  if(opI!==-1){ document.getElementById("opd").innerText="Dr. "+CL[opI].d; document.getElementById("opr").innerText=CL[opI].r; } else { document.getElementById("opd").innerText="No Match Today"; document.getElementById("opr").innerText="—"; }
+  let rb=document.getElementById("rb"); rb.innerHTML="";
+  let minCount=getGlobalMin();
+  CL.forEach((_,idx)=>{ let cnt=cCnt(idx); let d=document.createElement("div"); d.className="dot"+(cnt>minCount?" used":"")+(idx===ipI?" on":""); rb.appendChild(d); });
+  renderSpecificTab(); rLog(); rDist();
+  if(adm) { renderLeaveAdmin(); if(document.getElementById("adm-export")?.classList.contains("on")) renderClinicExportGrid(); }
+}
 
 // Extended 6-month date generation for interventional clinics (no early break)
 function renderSpecificTab(){ 
@@ -345,7 +411,7 @@ window.closeMo=()=>document.getElementById("mo").classList.remove("on");
 window.delEntry=()=>{ let s=document.getElementById("dfi").value.trim(); if(!s) return; let idxL=window.S.logs.findIndex(e=>e.fn.toString().includes(s)), idxO=window.S.oplogs.findIndex(e=>e.fn.toString().includes(s)), idxE=(window.S.eplogs||[]).findIndex(e=>e.fn.toString().includes(s)); if(idxL===-1 && idxO===-1 && idxE===-1) return alert("Not found"); if(confirm("Delete?")){ if(idxL!==-1) window.S.logs.splice(idxL,1); else if(idxO!==-1) window.S.oplogs.splice(idxO,1); else window.S.eplogs.splice(idxE,1); dbRef.set(window.S); rAll(); } };
 window.resetAll=()=>{ if(confirm("WIPE EVERYTHING?")){ window.S={logs:[], oplogs:[], eplogs:[], leave:{}}; dbRef.set(window.S); rAll(); } };
 window.exportWeekly=()=>{ let all=(window.S.logs||[]).concat(window.S.oplogs||[]).concat(window.S.eplogs||[]).sort((a,b)=>b.ts-a.ts); if(!all.length) return alert("No data"); exportPDF("Master Log — All Entries", all); };
-dbRef.on('value',(snap)=>{ let d=snap.val(); if(d){ window.S.logs=d.logs||[]; window.S.oplogs=d.oplogs||[]; window.S.eplogs=d.eplogs||[]; window.S.leave=d.leave||{}; } document.getElementById("syncDot").style.background="var(--ok)"; document.getElementById("syncText").innerText="Live — Synced"; rAll(); });
+dbRef.on('value',(snap)=>{ let d=snap.val(); if(d){ window.S.logs=d.logs||[]; window.S.oplogs=d.oplogs||[]; window.S.eplogs=d.eplogs||[]; window.S.leave=d.leave||{}; } dataLoaded=true; document.getElementById("syncDot").style.background="var(--ok)"; document.getElementById("syncText").innerText="Live — Synced"; rAll(); });
 rAll();
 </script>
 </body>
