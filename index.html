@@ -133,7 +133,7 @@ hr.adm-hr{border:0;border-top:1px solid var(--bor);margin:20px 0}
 </head>
 <body>
 <header><div class="hi">🫀</div><div><h1>Cardio OPD Allocator</h1><p>MUBARAK AL-KABEER HOSPITAL</p></div><div class="db"><strong id="dayName">—</strong><span id="dateStr">—</span></div></header>
-<div class="sb"><div class="sd" id="syncDot"></div><span id="syncText">Connecting...</span><span style="margin-left:auto;color:var(--dim);font-size:10px">v2.0</span></div>
+<div class="sb"><div class="sd" id="syncDot"></div><span id="syncText">Connecting...</span><span style="margin-left:auto;color:var(--dim);font-size:10px">v2.2</span></div>
 <div class="tabs"><button class="tab on" onclick="goTab('ip',this)">Inpatient</button><button class="tab" onclick="goTab('spec',this)">Interventional</button><button class="tab" onclick="goTab('op',this)">Outpatient</button><button class="tab ep-tab" onclick="goTab('ep',this)">EP Clinics</button><button class="tab" onclick="goTab('adm',this)">Admin</button></div>
 
 <!-- INPATIENT -->
@@ -162,7 +162,22 @@ const firebaseConfig = { apiKey: "AIzaSyAT7Y3jWM4ix7I5cM4vKsHIJRaZZ6AZ9yI", auth
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 const dbRef = db.ref('mkh_clinic_data');
-var docPINs = { "1001":"Dr. Rehan","1002":"Dr. Ramy","1003":"Dr. Badawy","1004":"Dr. Sharkawy","1005":"Dr. Mostafa","1006":"Dr. Ibrahim","1007":"Dr. Hadad","1008":"Dr. Emara","1009":"Dr. Rahim","1010":"Dr. Mamdouh","1011":"Dr. Slam","1012":"Dr. Ezz","1013":"Dr. R Gamal","1014":"Dr. Moghl","1015":"Dr. Darwish","1016":"Dr. Omar","1017":"Dr. Sajid","1018":"Dr. Ali","1019":"Dr. Eyad","1020":"Dr. Mongy","1021":"Dr. Bahlol","9999":"Admin" };
+var docPINsHashed = {"fe675fe7aaee830b6fed09b64e034f84dcbdaeb429d9cccd4ebb90e15af8dd71":"Dr. Rehan","b281bc2c616cb3c3a097215fdc9397ae87e6e06b156cc34e656be7a1a9ce8839":"Dr. Ramy","8c9a013ab70c0434313e3e881c310b9ff24aff1075255ceede3f2c239c231623":"Dr. Badawy","75992a5ac67ff644d3063976c2effd10bdd93fcc109798e3d5c1acf2e530d01a":"Dr. Sharkawy","7f861bcee185de001377d79e08af62e94b1e7718e2470e08520c917f8d953602":"Dr. Mostafa","478c4ffb1cbcea37956a748e6c19d8eadd0a47e86f5e308d26cad39453b5d1ab":"Dr. Ibrahim","2c8b871e52d4e5f5db5ff84a82a45327e20df77edef961c4b6fa0e9c3d97ce5b":"Dr. Hadad","9aaf689fbcdfe9f64a071f9cbe28ae44193fa218e72af24456f44bed64583b4d":"Dr. Emara","6ad4a6b1e5ea5569795e516d71909e0ce4809d9dc983d2c219144f684f816e12":"Dr. Rahim","7a5df5ffa0dec2228d90b8d0a0f1b0767b748b0a41314c123075b8289e4e053f":"Dr. Mamdouh","3dd9c0995d54c0abd51a90f1d57b1ce77bc885fc8a7cea52dcad3c2540dda5ee":"Dr. Slam","165940940a02a187e4463ff467090930038c5af8fc26107bf301e714f599a1da":"Dr. Ezz","2ec42bc1f3e672fc1cf7fdcfc23246415dcf20f03c0d4a5bbbd92a185708f5b7":"Dr. R Gamal","df4865fca1f159162557359ef967f9502087f57527b0e030e139933e54f3061e":"Dr. Moghl","9553627933b214db60798fe40d2b4f8497781d024f53d62dc1b12469b7d53784":"Dr. Darwish","ef32cc5c2b7c62093d3ec4844b36a02b08bb83eee2efa6b6b5e85ad605790192":"Dr. Omar","b0ab628c9e14621846c58b4eb35060ef3885253a457d2d76136716d4850bad45":"Dr. Sajid","9989a37538faecc495bbe774b30fb447a1582b8f1bc14ac88dfd84996a7b799a":"Dr. Ali","61ab550f4c85a975cd46f8606ede483d8ee720a76f627773de1bc1dd8ce5fb35":"Dr. Eyad","f296867839c8befafed32b55a7c11ab4ad14387d2434b970a55237d537bc9353":"Dr. Mongy","cdad86ca9450d1c143675a8436131cabaf55905c114fa4524bf6a9ec5662cad7":"Dr. Bahlol","888df25ae35772424a560c7152a1de794440e0ea5cfee62828333a456a506e05":"Admin"};
+var ADMIN_HASH = "b2b2f104d32c638903e151a9b20d6e27b41d8c0c84cf8458738f83ca2f1dd744";
+var CLERK_HASH = "158a323a7ba44870f23d96f1516dd70aa48e9a72db4ebb026b0a89e212a208ab";
+
+// SHA-256 helper using Web Crypto API — returns a hex string
+async function sha256(str){
+  const buf = new TextEncoder().encode(str);
+  const hashBuf = await crypto.subtle.digest("SHA-256", buf);
+  return Array.from(new Uint8Array(hashBuf)).map(b=>b.toString(16).padStart(2,"0")).join("");
+}
+// Synchronous lookup helper: returns registrar name if hash matches, else undefined
+async function lookupDocPIN(pin){
+  if(!pin) return undefined;
+  const h = await sha256(String(pin));
+  return docPINsHashed[h];
+}
 var CL = [{d:"Hisham",r:"Room 10",days:["Sun"]},{d:"Maged",r:"Room 11",days:["Tue"]},{d:"Hisham",r:"Room 10",days:["Sun"]},{d:"Maged",r:"Room 11",days:["Tue"]},{d:"Fahd",r:"Room 24",days:["Mon"]},{d:"Akmal",r:"Room 10",days:["Mon"]},{d:"Hisham",r:"Room 10",days:["Sun"]},{d:"Maged",r:"Room 11",days:["Tue"]},{d:"Fahd",r:"Room 24",days:["Mon"]},{d:"Farag",r:"Room 8",days:["Mon"]},{d:"Akmal",r:"Room 10",days:["Mon"]},{d:"Farag",r:"Room 8",days:["Mon"]},{d:"Ehab",r:"Room 25",days:["Mon"]},{d:"Ehab",r:"Room 25",days:["Mon"]},{d:"Maged",r:"Room 20",days:["Sun"]},{d:"Hisham",r:"Room 8",days:["Tue"]},{d:"Zaher",r:"Room 20",days:["Tue"]},{d:"Nazanin",r:"Room 25",days:["Sun"]},{d:"Farag",r:"Room 10",days:["Wed"]},{d:"Ali",r:"Room 11",days:["Wed"]},{d:"Fawzy",r:"Room 20",days:["Wed"]},{d:"Shafie",r:"Room 25",days:["Thu"]},{d:"Ibrahim",r:"Room 13",days:["Thu"]},{d:"Ibrahim",r:"Room 10",days:["Tue"]},{d:"Arab",r:"Room 25",days:["Tue"]},{d:"Ashraf",r:"Room 20",days:["Thu"]},{d:"Hany",r:"Room 16",days:["Sun"]}];
 var EP_CLINICS = [{id:"ep-sun", name:"EP Device Clinic", room:"Room 21", day:"Sun", dayNum:0, label:"Sunday"},{id:"ep-tue", name:"EP Ablation Clinic", room:"Room 5", day:"Tue", dayNum:2, label:"Tuesday"}];
 var EP_MAX_PER_DATE = 12;
@@ -190,21 +205,107 @@ function isDuplicate(val) {
 
 function getGlobalMin() { let min = Infinity; for(let i=0;i<27;i++) if(!isDocOff(CL[i].d,'ip')) min = Math.min(min, cCnt(i)); return min===Infinity?-1:min; }
 function getNextSlotIp() { let min = getGlobalMin(); if(min===-1) return -1; for(let i=0;i<27;i++) if(!isDocOff(CL[i].d,'ip') && cCnt(i)===min) return i; return -1; }
-function getNextSlotOp() { let today=tn(), valid=[]; for(let i=0;i<27;i++) if(CL[i].days.includes(today) && !isDocOff(CL[i].d,'op')) valid.push(i); if(!valid.length) return -1; let min=Infinity; valid.forEach(i=>min=Math.min(min,cCnt(i))); return valid.find(i=>cCnt(i)===min); }
+
+// Returns today's date in the FULL format used by `apt` (e.g. "Sun, 20 Apr 2026")
+function getTodayFullDateStr(){ return new Date().toLocaleDateString("en-GB", {weekday:'short', day:'2-digit', month:'short', year:'numeric'}); }
+
+// OP walk-in picker: skip slots that are already at 5/5 capacity for today
+function getNextSlotOp() {
+  let today=tn(), todayFull=getTodayFullDateStr(), valid=[];
+  for(let i=0;i<27;i++){
+    if(!CL[i].days.includes(today)) continue;
+    if(isDocOff(CL[i].d,'op')) continue;
+    let counts = getBookingCountsForSlot(CL[i].d, CL[i].r, todayFull);
+    if(counts.total >= MAX_TOTAL_PER_DATE) continue; // skip clinics already fully booked today
+    valid.push(i);
+  }
+  if(!valid.length) return -1;
+  let min=Infinity; valid.forEach(i=>min=Math.min(min,cCnt(i)));
+  return valid.find(i=>cCnt(i)===min);
+}
 function getManualSlotIndex(indices) { let min=Infinity, best=-1; indices.forEach(idx=>{ if(!isDocOff(CL[idx].d,'ip')){ let cnt=cCnt(idx); if(cnt<min){min=cnt;best=idx;}} }); return best; }
 
-function updateFutureDates(daysArr) { let dayMap={Sun:0,Mon:1,Tue:2,Wed:3,Thu:4,Fri:5,Sat:6}, targets=daysArr.map(d=>dayMap[d]), opts='<option value="" disabled selected>Select Follow-up Date...</option>', d=new Date(); for(let i=0;i<120;i++){ if(targets.includes(d.getDay())) opts+=`<option value="${d.toLocaleDateString("en-GB",{weekday:'short',day:'2-digit',month:'short',year:'numeric'})}">${d.toLocaleDateString("en-GB",{weekday:'short',day:'2-digit',month:'short',year:'numeric'})}</option>`; d.setDate(d.getDate()+1); } document.getElementById("fd-sel").innerHTML=opts; }
+// ===== CAPACITY LIMITS =====
+// Per (doctor + room + date): max 3 from IP/Interventional flows, max 5 total
+const MAX_IP_PER_DATE = 3;
+const MAX_TOTAL_PER_DATE = 5;
 
-window.doAssign = function(type, manualSlotIndex=null) {
+// Convert a full date string like "Sun, 27 Apr 2026" to the short "27 Apr" format used by walk-in `ad` fields
+function toShortDate(fullDateStr){
+  if(!fullDateStr) return "";
+  // Try parsing as Date first
+  let d = new Date(fullDateStr);
+  if(!isNaN(d)) return d.toLocaleDateString("en-GB", {day:"numeric", month:"short"});
+  // Fallback: extract "DD Mon" by regex if Date parsing fails
+  let m = fullDateStr.match(/(\d{1,2})\s+([A-Za-z]{3})/);
+  return m ? `${m[1]} ${m[2]}` : fullDateStr;
+}
+
+// Count bookings at (doctor+room) on a given follow-up date. Returns {ip, op, total}.
+// - ip  counts: window.S.logs entries (IP discharge + Interventional) with matching apt
+// - op counts: window.S.oplogs booked appointments with matching apt, PLUS walk-ins (apt="") whose `ad` equals that date in short form
+function getBookingCountsForSlot(doctor, room, fullDateStr){
+  if(!fullDateStr) return {ip:0, op:0, total:0};
+  const shortDate = toShortDate(fullDateStr);
+  const ipCount = (window.S.logs||[]).filter(e =>
+    e.doc===doctor && e.room===room && e.apt===fullDateStr
+  ).length;
+  const opCount = (window.S.oplogs||[]).filter(e => {
+    if(e.doc!==doctor || e.room!==room) return false;
+    if(e.apt && e.apt===fullDateStr) return true;         // booked appointment for that date
+    if(!e.apt && e.ad===shortDate) return true;            // walk-in that was assigned on that date
+    return false;
+  }).length;
+  return {ip:ipCount, op:opCount, total:ipCount+opCount};
+}
+
+// Check whether a new booking would exceed the caps. type = 'ip' or 'op'.
+// Returns {ok: bool, reason: string} — `reason` is only set when ok is false.
+function checkCapacity(doctor, room, fullDateStr, type){
+  const c = getBookingCountsForSlot(doctor, room, fullDateStr);
+  if(c.total >= MAX_TOTAL_PER_DATE) return {ok:false, reason:`Fully booked — Dr. ${doctor} / ${room} already has ${c.total}/${MAX_TOTAL_PER_DATE} patients on ${fullDateStr}. Please try another date.`};
+  if(type==='ip' && c.ip >= MAX_IP_PER_DATE) return {ok:false, reason:`Inpatient cap reached — Dr. ${doctor} / ${room} already has ${c.ip}/${MAX_IP_PER_DATE} inpatient/interventional discharges on ${fullDateStr}. Please try another date.`};
+  return {ok:true};
+}
+// ===== END CAPACITY LIMITS =====
+
+
+function updateFutureDates(daysArr, doctor, room) {
+  let dayMap={Sun:0,Mon:1,Tue:2,Wed:3,Thu:4,Fri:5,Sat:6};
+  let targets=daysArr.map(d=>dayMap[d]);
+  let opts='<option value="" disabled selected>Select Follow-up Date...</option>';
+  let d=new Date();
+  for(let i=0;i<120;i++){
+    if(targets.includes(d.getDay())){
+      let ds = d.toLocaleDateString("en-GB",{weekday:'short',day:'2-digit',month:'short',year:'numeric'});
+      let counts = (doctor && room) ? getBookingCountsForSlot(doctor, room, ds) : {ip:0,op:0,total:0};
+      let ipFull = counts.ip >= MAX_IP_PER_DATE;
+      let totalFull = counts.total >= MAX_TOTAL_PER_DATE;
+      // IP flow is blocked if either cap is reached
+      let blocked = ipFull || totalFull;
+      let badge = blocked ? (totalFull ? " — FULL (5/5)" : ` — IP FULL (${counts.ip}/${MAX_IP_PER_DATE})`) : ` [${counts.ip} IP / ${counts.total} total]`;
+      opts += `<option value="${ds}"${blocked?" disabled":""}>${ds}${badge}</option>`;
+    }
+    d.setDate(d.getDate()+1);
+  }
+  document.getElementById("fd-sel").innerHTML=opts;
+}
+
+window.doAssign = async function(type, manualSlotIndex=null) {
   if(type==='ip'){
     let fn=document.getElementById("fi").value.trim(), pin=document.getElementById("rpin").value.trim(), apt=document.getElementById("fd-sel").value;
-    if(!/^\d{6}$/.test(fn) || !docPINs[pin]) return alert("Check File (6 digits) and PIN");
+    if(!/^\d{6}$/.test(fn)) return alert("Check File (6 digits) and PIN");
+    let reg=await lookupDocPIN(pin);
+    if(!reg) return alert("Check File (6 digits) and PIN");
     if(!apt) return alert("Select Follow-up Date.");
     if(isDuplicate(fn)) return alert("STOP: Duplicate Patient detected.");
     let i = manualSlotIndex!==null ? manualSlotIndex : getNextSlotIp();
     if(i===-1) return alert("No valid clinics scheduled.");
     if(manualSlotIndex!==null && isDocOff(CL[i].d,'ip')) return alert("Doctor is OFF");
-    let c=CL[i], reg=docPINs[pin];
+    let c=CL[i];
+    // Capacity check for the selected follow-up date (IP cap 3, total cap 5)
+    let cap = checkCapacity(c.d, c.r, apt, 'ip');
+    if(!cap.ok) return alert(cap.reason);
     if(!confirm(manualSlotIndex ? `Manual assign to Dr.${c.d}?` : `Assign IP: ${fn} → Dr.${c.d}`)) return;
     window.S.logs.push({fn, reg, doc:c.d, room:c.r, si:i, cd:tn(), ad:nd(), time:nt(), apt, ts:Date.now()});
     dbRef.set(window.S);
@@ -220,8 +321,11 @@ window.doAssign = function(type, manualSlotIndex=null) {
   else finalId = rawFn || rawPh;
   if(!isDuplicate(finalId)){
     let i=getNextSlotOp();
-    if(i===-1) return alert("No OP clinics available today.");
+    if(i===-1) return alert("No OP clinics available today — all clinics running today are already fully booked (5/5).");
     let c=CL[i];
+    // Final safety check (walk-in adds to today's date)
+    let cap = checkCapacity(c.d, c.r, getTodayFullDateStr(), 'op');
+    if(!cap.ok) return alert(cap.reason);
     window.S.oplogs.push({fn:finalId, reg:"Clerk", doc:c.d, room:c.r, si:i, cd:tn(), ad:nd(), time:nt(), apt:"", ts:Date.now()});
     dbRef.set(window.S);
     document.getElementById("opfi").value=""; document.getElementById("opphone").value="";
@@ -230,7 +334,7 @@ window.doAssign = function(type, manualSlotIndex=null) {
   } else alert("Duplicate patient ID (or same identifier already used).");
 };
 
-window.doSpecificAssign = function() { if(!selectedSpecificDoc) return alert("Select doctor."); let fn=document.getElementById("spec-fi").value.trim(), pin=document.getElementById("spec-pin").value.trim(), apt=document.getElementById("spec-date").value; if(!/^\d{6}$/.test(fn)||!docPINs[pin]||!apt) return alert("Invalid fields"); if(isDuplicate(fn)) return alert("Duplicate"); let idx=getManualSlotIndex(selectedSpecificDoc.indices); if(idx===-1) return alert("Doctor off"); let c=CL[idx]; window.S.logs.push({fn, reg:docPINs[pin], doc:c.d, room:c.r, si:idx, cd:tn(), ad:nd(), time:nt(), apt, ts:Date.now()}); dbRef.set(window.S); document.getElementById("spec-fi").value=""; document.getElementById("spec-pin").value=""; document.getElementById("spec-date").value=""; document.querySelectorAll('.spec-card').forEach(el=>el.classList.remove('selected')); document.getElementById("spec-form").classList.remove("on"); selectedSpecificDoc=null; rAll(); alert("Assigned"); };
+window.doSpecificAssign = async function() { if(!selectedSpecificDoc) return alert("Select doctor."); let fn=document.getElementById("spec-fi").value.trim(), pin=document.getElementById("spec-pin").value.trim(), apt=document.getElementById("spec-date").value; if(!/^\d{6}$/.test(fn)||!apt) return alert("Invalid fields"); let reg=await lookupDocPIN(pin); if(!reg) return alert("Invalid fields"); if(isDuplicate(fn)) return alert("Duplicate"); let idx=getManualSlotIndex(selectedSpecificDoc.indices); if(idx===-1) return alert("Doctor off"); let c=CL[idx]; let cap=checkCapacity(c.d, c.r, apt, 'ip'); if(!cap.ok) return alert(cap.reason); window.S.logs.push({fn, reg, doc:c.d, room:c.r, si:idx, cd:tn(), ad:nd(), time:nt(), apt, ts:Date.now()}); dbRef.set(window.S); document.getElementById("spec-fi").value=""; document.getElementById("spec-pin").value=""; document.getElementById("spec-date").value=""; document.querySelectorAll('.spec-card').forEach(el=>el.classList.remove('selected')); document.getElementById("spec-form").classList.remove("on"); selectedSpecificDoc=null; rAll(); alert("Assigned"); };
 
 window.doFixAssign = function() {
   if(!selectedFixDoc) return alert("Select a clinic first.");
@@ -244,6 +348,9 @@ window.doFixAssign = function() {
   else patId = rawFn || rawPh;
   if(isDuplicate(patId)) return alert("Duplicate patient.");
   let c = CL[selectedFixDoc.idx];
+  // Capacity check for the chosen booking date (OP booking counts against total cap of 5)
+  let cap = checkCapacity(c.d, c.r, apt, 'op');
+  if(!cap.ok) return alert(cap.reason);
   if(!confirm(`Book appointment: ${patId==="—"?"Anonymous":patId} → Dr.${c.d} (${c.r}) on ${apt}`)) return;
   window.S.oplogs.push({fn:patId, reg:"Clerk", doc:c.d, room:c.r, si:selectedFixDoc.idx, cd:tn(), ad:nd(), time:nt(), apt, ts:Date.now()});
   dbRef.set(window.S);
@@ -253,12 +360,12 @@ window.doFixAssign = function() {
   rAll(); alert("Appointment booked!");
 };
 
-function renderFixClinics() { let today=tn(), container=document.getElementById("fix-clinic-grid"); if(!container) return; container.innerHTML=""; document.getElementById("fix-form").style.display="none"; selectedFixDoc=null; let seen={}; for(let i=0;i<27;i++){ if(!CL[i].days.includes(today) && !isDocOff(CL[i].d,'op')){ let key=CL[i].d+"_"+CL[i].r+"_"+CL[i].days.join(""); if(!seen[key]) seen[key]={idx:i, doc:CL[i]}; } } Object.values(seen).forEach(item=>{ let card=document.createElement("div"); card.className="spec-card"; card.innerHTML=`<div class="rl" style="margin-bottom:4px">CLINIC</div><div class="spec-name">Dr. ${item.doc.d}</div><div class="spec-meta">${item.doc.r} • ${item.doc.days.join(", ")}</div>`; card.onclick=()=>{ document.querySelectorAll("#fix-clinic-grid .spec-card").forEach(c=>c.classList.remove("selected")); card.classList.add("selected"); selectedFixDoc=item; let dayMap={"Sun":0,"Mon":1,"Tue":2,"Wed":3,"Thu":4,"Fri":5,"Sat":6}, targets=item.doc.days.map(d=>dayMap[d]), opts='<option value="" disabled selected>Select Date...</option>', d=new Date(), count=0; for(let j=0;j<120;j++){ if(targets.includes(d.getDay())){ opts+=`<option value="${d.toLocaleDateString("en-GB",{weekday:'short',day:'2-digit',month:'short',year:'numeric'})}">${d.toLocaleDateString("en-GB",{weekday:'short',day:'2-digit',month:'short',year:'numeric'})}</option>`; if(++count>=16) break;} d.setDate(d.getDate()+1); } document.getElementById("fix-date").innerHTML=opts; document.getElementById("fix-hint").innerHTML=`Dr. ${item.doc.d} (${item.doc.r}) — runs on ${item.doc.days.join(", ")}`; document.getElementById("fix-form").style.display="block"; }; container.appendChild(card); }); }
+function renderFixClinics() { let today=tn(), container=document.getElementById("fix-clinic-grid"); if(!container) return; container.innerHTML=""; document.getElementById("fix-form").style.display="none"; selectedFixDoc=null; let seen={}; for(let i=0;i<27;i++){ if(!CL[i].days.includes(today) && !isDocOff(CL[i].d,'op')){ let key=CL[i].d+"_"+CL[i].r+"_"+CL[i].days.join(""); if(!seen[key]) seen[key]={idx:i, doc:CL[i]}; } } Object.values(seen).forEach(item=>{ let card=document.createElement("div"); card.className="spec-card"; card.innerHTML=`<div class="rl" style="margin-bottom:4px">CLINIC</div><div class="spec-name">Dr. ${item.doc.d}</div><div class="spec-meta">${item.doc.r} • ${item.doc.days.join(", ")}</div>`; card.onclick=()=>{ document.querySelectorAll("#fix-clinic-grid .spec-card").forEach(c=>c.classList.remove("selected")); card.classList.add("selected"); selectedFixDoc=item; let dayMap={"Sun":0,"Mon":1,"Tue":2,"Wed":3,"Thu":4,"Fri":5,"Sat":6}, targets=item.doc.days.map(d=>dayMap[d]), opts='<option value="" disabled selected>Select Date...</option>', d=new Date(), count=0; for(let j=0;j<120;j++){ if(targets.includes(d.getDay())){ let ds=d.toLocaleDateString("en-GB",{weekday:'short',day:'2-digit',month:'short',year:'numeric'}); let counts=getBookingCountsForSlot(item.doc.d,item.doc.r,ds); let totalFull=counts.total>=MAX_TOTAL_PER_DATE; let badge=totalFull?" — FULL (5/5)":` [${counts.total}/${MAX_TOTAL_PER_DATE}]`; opts+=`<option value="${ds}"${totalFull?" disabled":""}>${ds}${badge}</option>`; if(++count>=16) break;} d.setDate(d.getDate()+1); } document.getElementById("fix-date").innerHTML=opts; document.getElementById("fix-hint").innerHTML=`Dr. ${item.doc.d} (${item.doc.r}) — runs on ${item.doc.days.join(", ")}`; document.getElementById("fix-form").style.display="block"; }; container.appendChild(card); }); }
 
 function renderEpTab() { let grid=document.getElementById("ep-clinic-grid"); grid.innerHTML=""; document.getElementById("ep-form").style.display="none"; selectedEpClinic=null; EP_CLINICS.forEach(clinic=>{ let card=document.createElement("div"); card.className="spec-card ep-card"; card.innerHTML=`<div class="rl" style="margin-bottom:4px">EP CLINIC</div><div class="spec-name" style="color:var(--ep)!important;font-size:18px">${clinic.name}</div><div class="spec-meta">${clinic.room} • ${clinic.label}</div>`; card.onclick=()=>{ document.querySelectorAll("#ep-clinic-grid .spec-card").forEach(c=>c.classList.remove("selected")); card.classList.add("selected"); selectedEpClinic=clinic; renderEpDates(clinic); document.getElementById("ep-hint").innerHTML=`EP Clinic — ${clinic.room} every ${clinic.label}. Max ${EP_MAX_PER_DATE} patients per date.`; document.getElementById("ep-form").style.display="block"; }; grid.appendChild(card); }); }
 function getEpCountForDate(clinicId, dateStr) { return (window.S.eplogs||[]).filter(e=>e.epClinicId===clinicId && e.apt===dateStr).length; }
 function renderEpDates(clinic){ let sel=document.getElementById("ep-date"), opts='<option value="" disabled selected>Select '+clinic.label+' Date...</option>', d=new Date(), sixMonths=new Date(); sixMonths.setMonth(sixMonths.getMonth()+6); while(d<=sixMonths){ if(d.getDay()===clinic.dayNum){ let ds=d.toLocaleDateString("en-GB",{weekday:'short',day:'2-digit',month:'short',year:'numeric'}), cnt=getEpCountForDate(clinic.id,ds), full=cnt>=EP_MAX_PER_DATE; opts+=`<option value="${ds}"${full?" disabled":""}>${ds} [${cnt}/${EP_MAX_PER_DATE}]${full?" FULL":""}</option>`; } d.setDate(d.getDate()+1); } sel.innerHTML=opts; }
-window.doEpAssign=function(){ if(!selectedEpClinic) return alert("Select EP clinic"); let fn=document.getElementById("ep-fi").value.trim(), pin=document.getElementById("ep-pin").value.trim(), apt=document.getElementById("ep-date").value; if(!/^\d{6}$/.test(fn)||!docPINs[pin]||!apt) return alert("Invalid data"); let cnt=getEpCountForDate(selectedEpClinic.id,apt); if(cnt>=EP_MAX_PER_DATE) return alert("Fully booked"); let regName=docPINs[pin]; if((window.S.eplogs||[]).some(e=>e.fn===fn)) return alert("Duplicate EP booking"); if(!confirm(`Confirm EP: ${fn} → ${selectedEpClinic.room} (${selectedEpClinic.label}) ${apt}`)) return; window.S.eplogs.push({fn, reg:regName, doc:"EP", room:selectedEpClinic.room, epClinicId:selectedEpClinic.id, epLabel:selectedEpClinic.label, cd:tn(), ad:nd(), time:nt(), apt, ts:Date.now()}); dbRef.set(window.S); document.getElementById("ep-fi").value=""; document.getElementById("ep-pin").value=""; renderEpDates(selectedEpClinic); alert("EP booked"); };
+window.doEpAssign=async function(){ if(!selectedEpClinic) return alert("Select EP clinic"); let fn=document.getElementById("ep-fi").value.trim(), pin=document.getElementById("ep-pin").value.trim(), apt=document.getElementById("ep-date").value; if(!/^\d{6}$/.test(fn)||!apt) return alert("Invalid data"); let regName=await lookupDocPIN(pin); if(!regName) return alert("Invalid data"); let cnt=getEpCountForDate(selectedEpClinic.id,apt); if(cnt>=EP_MAX_PER_DATE) return alert("Fully booked"); if((window.S.eplogs||[]).some(e=>e.fn===fn)) return alert("Duplicate EP booking"); if(!confirm(`Confirm EP: ${fn} → ${selectedEpClinic.room} (${selectedEpClinic.label}) ${apt}`)) return; window.S.eplogs.push({fn, reg:regName, doc:"EP", room:selectedEpClinic.room, epClinicId:selectedEpClinic.id, epLabel:selectedEpClinic.label, cd:tn(), ad:nd(), time:nt(), apt, ts:Date.now()}); dbRef.set(window.S); document.getElementById("ep-fi").value=""; document.getElementById("ep-pin").value=""; renderEpDates(selectedEpClinic); alert("EP booked"); };
 
 function rDist(){ let g=document.getElementById("dg"); g.innerHTML=""; let ipNext=getNextSlotIp(); CL.forEach((c,i)=>{ let ipO=isDocOff(c.d,'ip'), opO=isDocOff(c.d,'op'), isN=(i===ipNext), d=document.createElement("div"); d.className="dc"+(isN?" nx":""); d.innerHTML=`<div class="dd">Dr. ${c.d}</div><div style="font-size:10px;color:var(--dim)">${c.r} • ${c.days.join(", ")}</div><div class="dn2">${cCnt(i)}</div><div class="stbox"><div class="stb ${ipO?'stb-off':'stb-ok'}">IP:${ipO?'OFF':'OK'}</div><div class="stb ${opO?'stb-off':'stb-ok'}">OP:${opO?'OFF':'OK'}</div></div>`; d.onclick=()=>openMo(i); g.appendChild(d); }); }
 function openMo(i){ if(!adm) return; let c=CL[i], pts=(window.S.logs||[]).concat(window.S.oplogs||[]).filter(e=>e.si===i); document.getElementById("mt").innerHTML=`Dr. ${c.d} — ${c.r}`; document.getElementById("mc2").innerHTML=pts.length+" patients (this slot)"; let b=document.getElementById("mbody"); b.innerHTML=""; pts.forEach(p=>{let div=document.createElement("div"); div.className="mr"; div.innerHTML=`<div>${p.fn}</div><div style="text-align:right">${p.time}</div>`; b.appendChild(div);}); let pb=document.getElementById("mprint"); pb.innerHTML=""; if(pts.length){ let btn=document.createElement("button"); btn.className="btn"; btn.textContent="Print This Slot"; btn.onclick=()=>exportPDF(`Dr. ${c.d} — ${c.r}`, pts); pb.appendChild(btn); } document.getElementById("mo").classList.add("on"); }
@@ -339,7 +446,7 @@ function rAll(){
     return;
   }
   let ipI=getNextSlotIp();
-  if(ipI!==-1){ let c=CL[ipI]; document.getElementById("nd").innerText="Dr. "+c.d; document.getElementById("nr").innerText=c.r+" • "+c.days.join(", "); updateFutureDates(c.days); } else { document.getElementById("nd").innerText="All Offline"; document.getElementById("nr").innerText="—"; }
+  if(ipI!==-1){ let c=CL[ipI]; document.getElementById("nd").innerText="Dr. "+c.d; document.getElementById("nr").innerText=c.r+" • "+c.days.join(", "); updateFutureDates(c.days, c.d, c.r); } else { document.getElementById("nd").innerText="All Offline"; document.getElementById("nr").innerText="—"; }
   let opI=getNextSlotOp();
   if(opI!==-1){ document.getElementById("opd").innerText="Dr. "+CL[opI].d; document.getElementById("opr").innerText=CL[opI].r; } else { document.getElementById("opd").innerText="No Match Today"; document.getElementById("opr").innerText="—"; }
   let rb=document.getElementById("rb"); rb.innerHTML="";
@@ -374,7 +481,12 @@ function renderSpecificTab(){
         while(current <= sixMonthsLater) { 
           if(current.getDay() === targetDay) { 
             let formatted = current.toLocaleDateString("en-GB", {weekday:'short', day:'2-digit', month:'short', year:'numeric'}); 
-            opts += `<option value="${formatted}">${formatted}</option>`; 
+            let counts = getBookingCountsForSlot(doc.name, doc.room, formatted);
+            let ipFull = counts.ip >= MAX_IP_PER_DATE;
+            let totalFull = counts.total >= MAX_TOTAL_PER_DATE;
+            let blocked = ipFull || totalFull;
+            let badge = blocked ? (totalFull ? " — FULL (5/5)" : ` — IP FULL (${counts.ip}/${MAX_IP_PER_DATE})`) : ` [${counts.ip} IP / ${counts.total} total]`;
+            opts += `<option value="${formatted}"${blocked?" disabled":""}>${formatted}${badge}</option>`;
           } 
           current.setDate(current.getDate() + 1); 
         } 
@@ -407,8 +519,8 @@ window.deleteAnonymousOpd = function() {
 window.goTab=(id,btn)=>{ document.querySelectorAll(".pg").forEach(p=>p.classList.remove("on")); document.querySelectorAll(".tabs>.tab").forEach(t=>t.classList.remove("on")); document.getElementById("pg-"+id).classList.add("on"); btn.classList.add("on"); if(id==="ep") renderEpTab(); rAll(); };
 window.goAdmTab=(id,btn)=>{ document.querySelectorAll(".adm-tab").forEach(t=>t.classList.remove("on")); document.querySelectorAll(".adm-sec").forEach(s=>s.classList.remove("on")); btn.classList.add("on"); document.getElementById("adm-"+id).classList.add("on"); if(id==="export") renderClinicExportGrid(); };
 window.filterLog=(f,b)=>{ document.querySelectorAll(".fb").forEach(x=>x.classList.remove("on")); b.classList.add("on"); window.lf=f; rLog(); };
-window.clerkLogin=()=>{ if(document.getElementById("opi").value==="2026"){ document.getElementById("opgate").style.display="none"; document.getElementById("opc").style.display="block"; } };
-window.adminLogin=(id)=>{ if(document.getElementById(id).value==="2025"){ adm=true; document.querySelectorAll(".apgate").forEach(e=>e.style.display="none"); document.querySelectorAll(".ac-content").forEach(e=>e.style.display="block"); rAll(); } };
+window.clerkLogin=async ()=>{ let v=document.getElementById("opi").value; if(!v) return; let h=await sha256(v); if(h===CLERK_HASH){ document.getElementById("opgate").style.display="none"; document.getElementById("opc").style.display="block"; } else { alert("Incorrect PIN"); document.getElementById("opi").value=""; } };
+window.adminLogin=async (id)=>{ let v=document.getElementById(id).value; if(!v) return; let h=await sha256(v); if(h===ADMIN_HASH){ adm=true; document.querySelectorAll(".apgate").forEach(e=>e.style.display="none"); document.querySelectorAll(".ac-content").forEach(e=>e.style.display="block"); rAll(); } else { alert("Incorrect PIN"); document.getElementById(id).value=""; } };
 window.goOpTab=(tab,btn)=>{ document.querySelectorAll("#opc .tab").forEach(t=>t.classList.remove("on")); btn.classList.add("on"); document.getElementById("op-walkin").style.display=tab==="walkin"?"block":"none"; document.getElementById("op-fix").style.display=tab==="fix"?"block":"none"; if(tab==="fix") renderFixClinics(); };
 window.closeMo=()=>document.getElementById("mo").classList.remove("on");
 window.delEntry=()=>{ let s=document.getElementById("dfi").value.trim(); if(!s) return; let idxL=window.S.logs.findIndex(e=>e.fn.toString().includes(s)), idxO=window.S.oplogs.findIndex(e=>e.fn.toString().includes(s)), idxE=(window.S.eplogs||[]).findIndex(e=>e.fn.toString().includes(s)); if(idxL===-1 && idxO===-1 && idxE===-1) return alert("Not found"); if(confirm("Delete?")){ if(idxL!==-1) window.S.logs.splice(idxL,1); else if(idxO!==-1) window.S.oplogs.splice(idxO,1); else window.S.eplogs.splice(idxE,1); dbRef.set(window.S); rAll(); } };
