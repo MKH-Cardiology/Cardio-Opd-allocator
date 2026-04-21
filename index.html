@@ -179,7 +179,7 @@ async function lookupDocPIN(pin){
   return docPINsHashed[h];
 }
 var CL = [
-  {d:"Fahd",    r:"Room 24", days:["Mon"], dist: 0},   // 1
+  {d:"Fahad",    r:"Room 24", days:["Mon"], dist: 0},   // 1
   {d:"Akmal",   r:"Room 10", days:["Mon"], dist: 0},   // 2
   {d:"Farag",   r:"Room 8",  days:["Mon"], dist: 0},   // 3
   {d:"Ehab",    r:"Room 25", days:["Mon"], dist: 0},   // 4
@@ -201,12 +201,12 @@ var CL = [
 ];
 var EP_CLINICS = [{id:"ep-sun", name:"EP Device Clinic", room:"Room 21", day:"Sun", dayNum:0, label:"Sunday"},{id:"ep-tue", name:"EP Ablation Clinic", room:"Room 5", day:"Tue", dayNum:2, label:"Tuesday"}];
 var EP_MAX_PER_DATE = 12;
-var specificDocs = [{name:"Fahd", indices:[0], room:"Room 24", day:"Mon", label:"Monday"},{name:"Ali", indices:[9], room:"Room 11", day:"Wed", label:"Wednesday"},{name:"Arab", indices:[14], room:"Room 25", day:"Tue", label:"Tuesday"},{name:"Nazanin", indices:[7], room:"Room 25", day:"Sun", label:"Sunday"}];
+var specificDocs = [{name:"Fahad", indices:[0], room:"Room 24", day:"Mon", label:"Monday"},{name:"Ali", indices:[9], room:"Room 11", day:"Wed", label:"Wednesday"},{name:"Arab", indices:[14], room:"Room 25", day:"Tue", label:"Tuesday"},{name:"Nazanin", indices:[7], room:"Room 25", day:"Sun", label:"Sunday"}];
 var selectedSpecificDoc = null, selectedFixDoc = null, selectedEpClinic = null;
 window.S = {logs:[], oplogs:[], eplogs:[], leave:{}, skipped:{}, blockedDates:{}};
 // Doctors who can be temporarily skipped on the Inpatient (auto) tab when
 // the current patient was not catheterized by them. Keyed by doctor name.
-var SKIP_DOCS = ["Fahd","Arab","Ali","Nazanin"];
+var SKIP_DOCS = ["Fahad","Arab","Ali","Nazanin"];
 var adm = false;
 window.lf = "all";
 var dataLoaded = false;  // tracks Firebase initial sync to prevent flash of wrong doctor
@@ -364,7 +364,7 @@ function updateFutureDates(daysArr, doctor, room) {
   document.getElementById("fd-sel").innerHTML=opts;
 }
 
-// Temporarily skip a cath-specific doctor (Fahd / Arab / Ali / Nazanin) when
+// Temporarily skip a cath-specific doctor (Fahad / Arab / Ali / Nazanin) when
 // the current auto-next patient was NOT catheterized by them. Persisted to
 // Firebase so all registrars see the same skip state. Cleared via Restore
 // button when the doctor's next real cath patient arrives.
