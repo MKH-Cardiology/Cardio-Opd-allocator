@@ -6,11 +6,11 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>MKH Cardiology Command · Department Operations Platform</title>
+<title>MKH Cardiology App · Department Operations Platform</title>
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<meta name="apple-mobile-web-app-title" content="MKH Command">
+<meta name="apple-mobile-web-app-title" content="MKH Cardiology">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#0f172a">
@@ -346,7 +346,7 @@ header p{font-size:9px;color:#64748b;font-family:'DM Mono',monospace;letter-spac
 <div class="role-gate" id="roleGate">
   <div class="role-box">
     <div class="role-logo">🫀</div>
-    <div class="role-title">MKH Cardiology Command</div>
+    <div class="role-title">MKH Cardiology App</div>
     <div class="role-sub">Department Operations Platform</div>
     <div id="roleStage1" class="role-btns">
       <button class="role-btn role-btn-clerk" onclick="pickRole('clerk')">
@@ -360,7 +360,7 @@ header p{font-size:9px;color:#64748b;font-family:'DM Mono',monospace;letter-spac
         <div class="role-btn-icon">👨‍⚕️</div>
         <div class="role-btn-text">
           <div class="role-btn-label">Doctor</div>
-          <div class="role-btn-desc">Endorsement · Census · Cathlab · IP</div>
+          <div class="role-btn-desc">Patients · Census · Cathlab · IP</div>
         </div>
       </button>
       <button class="role-btn role-btn-adm" onclick="pickRole('admin')">
@@ -386,14 +386,14 @@ header p{font-size:9px;color:#64748b;font-family:'DM Mono',monospace;letter-spac
   <img id="imgViewerSrc" src="" alt="">
 </div>
 
-<header><div class="hi">🫀</div><div><h1>MKH Cardiology Command</h1><p>MUBARAK AL-KABEER HOSPITAL</p></div><div class="db"><strong id="dayName">—</strong><span id="dateStr">—</span></div><span class="role-chip" id="roleChip" style="display:none">—</span><button class="logout-btn" id="logoutBtn" onclick="logoutRole()" style="display:none">Logout</button></header>
+<header><div class="hi">🫀</div><div><h1>MKH Cardiology App</h1><p>MUBARAK AL-KABEER HOSPITAL</p></div><div class="db"><strong id="dayName">—</strong><span id="dateStr">—</span></div><span class="role-chip" id="roleChip" style="display:none">—</span><button class="logout-btn" id="logoutBtn" onclick="logoutRole()" style="display:none">Logout</button></header>
 <div class="sb"><div class="sd" id="syncDot"></div><span id="syncText">Connecting...</span><span style="margin-left:auto;color:var(--dim);font-size:10px">v3.0</span></div>
 <div class="tabs" id="mainTabs">
   <button class="tab" data-role="registrar admin" onclick="goTab('ip',this)">IP Allocator</button>
   <button class="tab" data-role="registrar admin" onclick="goTab('spec',this)">Interventional</button>
   <button class="tab" data-role="clerk admin" onclick="goTab('op',this)">OPD Appointments</button>
   <button class="tab ep-tab" data-role="registrar admin" onclick="goTab('ep',this)">EP Clinics</button>
-  <button class="tab" data-role="registrar admin" onclick="goTab('endo',this)">IP Endorsement</button>
+  <button class="tab" data-role="registrar admin" onclick="goTab('endo',this)">IP Patient's List</button>
   <button class="tab" data-role="registrar admin" onclick="goTab('census',this)">Census</button>
   <button class="tab" data-role="registrar admin" onclick="goTab('cath',this)">Cathlab</button>
   <button class="tab" data-role="admin" onclick="goTab('adm',this)">Admin</button>
@@ -429,7 +429,7 @@ header p{font-size:9px;color:#64748b;font-family:'DM Mono',monospace;letter-spac
   <div class="mo" id="endoMo">
     <div class="mb" style="max-width:520px;max-height:92vh">
       <div class="mh">
-        <h2 id="endoMoTitle" style="font-family:'DM Serif Display',serif;font-size:18px">New Patient Endorsement</h2>
+        <h2 id="endoMoTitle" style="font-family:'DM Serif Display',serif;font-size:18px">New Patient Entry</h2>
         <button onclick="closeEndoMo()" style="background:none;border:none;color:var(--dim);font-size:20px;cursor:pointer">✕</button>
       </div>
       <div class="mbody">
@@ -483,7 +483,7 @@ header p{font-size:9px;color:#64748b;font-family:'DM Mono',monospace;letter-spac
           <label>Doctor PIN (to save)</label>
           <input type="password" id="endo-pin" maxlength="4" inputmode="numeric" required>
 
-          <button type="submit" class="btn" style="margin-top:10px">💾 Save Endorsement</button>
+          <button type="submit" class="btn" style="margin-top:10px">💾 Save Patient</button>
         </form>
       </div>
     </div>
@@ -1377,21 +1377,19 @@ window.deleteAnonymousOpd = function() {
 // ROLE GATE — top-level access control
 // ============================================================
 window.currentRole = null; // 'clerk' | 'registrar' | 'admin' | null
+window.currentDoctor = null; // name of logged-in doctor e.g. "Dr. Ali"
 var pendingRole = null;
 
 window.pickRole = function(role){
   pendingRole = role;
-  if(role === 'registrar'){
-    // Registrar: no PIN here — use their assignment-time PIN (unchanged).
-    // We just grant tab access.
-    enterApp('registrar');
-    return;
-  }
-  // clerk + admin require PIN
+  // All roles now require PIN at main-screen login (doctors included)
   document.getElementById('roleStage1').style.display = 'none';
   let stage2 = document.getElementById('roleStage2');
   stage2.style.display = 'block';
-  document.getElementById('roleStage2Label').innerText = (role === 'clerk' ? 'CLERK ACCESS PIN' : 'ADMIN PIN');
+  let label = 'DOCTOR PIN';
+  if(role === 'clerk') label = 'CLERK ACCESS PIN';
+  else if(role === 'admin') label = 'ADMIN PIN';
+  document.getElementById('roleStage2Label').innerText = label;
   document.getElementById('roleStage2Pin').value = '';
   setTimeout(()=>document.getElementById('roleStage2Pin').focus(), 50);
 };
@@ -1412,6 +1410,16 @@ window.submitRolePin = async function(){
   } else if(pendingRole === 'admin'){
     if(h === ADMIN_HASH){ adm = true; enterApp('admin'); }
     else { alert('Incorrect PIN'); document.getElementById('roleStage2Pin').value=''; }
+  } else if(pendingRole === 'registrar'){
+    // Doctor login — check against docPINsHashed table
+    let docName = docPINsHashed[h];
+    if(docName){
+      window.currentDoctor = docName;
+      enterApp('registrar');
+    } else {
+      alert('Incorrect PIN');
+      document.getElementById('roleStage2Pin').value='';
+    }
   }
 };
 
@@ -1428,7 +1436,12 @@ function enterApp(role){
   // Update header chip + logout button
   let chip = document.getElementById('roleChip');
   chip.style.display = 'inline-block';
-  chip.innerText = role === 'clerk' ? 'CLERK' : (role === 'registrar' ? 'DOCTOR' : 'ADMIN');
+  // For doctors, show their name instead of generic "DOCTOR"
+  let chipLabel;
+  if(role === 'clerk') chipLabel = 'CLERK';
+  else if(role === 'registrar') chipLabel = (window.currentDoctor || 'DOCTOR').toUpperCase();
+  else chipLabel = 'ADMIN';
+  chip.innerText = chipLabel;
   chip.style.background = role === 'clerk' ? 'rgba(52,211,153,.12)' : (role === 'registrar' ? 'rgba(96,165,250,.12)' : 'rgba(251,191,36,.12)');
   chip.style.color = role === 'clerk' ? 'var(--ok)' : (role === 'registrar' ? 'var(--acc)' : 'var(--warn)');
   chip.style.borderColor = role === 'clerk' ? 'rgba(52,211,153,.3)' : (role === 'registrar' ? 'rgba(96,165,250,.3)' : 'rgba(251,191,36,.3)');
@@ -1476,6 +1489,7 @@ function applyRoleUI(role){
 window.logoutRole = function(){
   if(!confirm('Logout and return to role selection?')) return;
   window.currentRole = null;
+  window.currentDoctor = null;
   adm = false;
   document.getElementById('roleGate').classList.remove('hidden');
   backToRoleSelect();
@@ -1605,11 +1619,12 @@ window.openEndoForm = function(id){
     document.getElementById('endo-plan').value = e.plan || '';
     imgBuffers.endo = (e.images || []).slice();
   } else {
-    document.getElementById('endoMoTitle').innerText = 'New Patient Endorsement';
+    document.getElementById('endoMoTitle').innerText = 'New Patient Entry';
     document.getElementById('endo-ward-other').value = '';
   }
   toggleWardOther();
   renderImgPreview('endo');
+  hidePinFieldIfLoggedIn('endo-pin');
   document.getElementById('endoMo').classList.add('on');
 };
 
@@ -1622,10 +1637,8 @@ window.closeEndoMo = function(){
 window.saveEndo = async function(ev){
   ev.preventDefault();
   ensureExtState();
-  let pin = document.getElementById('endo-pin').value.trim();
-  if(!/^\d{4}$/.test(pin)){ alert('Enter your 4-digit Doctor PIN'); return false; }
-  let reg = await lookupDocPIN(pin);
-  if(!reg){ alert('Incorrect PIN'); return false; }
+  let reg = await resolveDoctor('endo-pin');
+  if(!reg) return false;
 
   // Resolve ward — if "Others" chosen, use the custom text
   let wardSel = document.getElementById('endo-ward').value.trim();
@@ -1667,7 +1680,7 @@ window.deleteEndo = function(id){
   ensureExtState();
   let e = window.S.endorsements[id];
   if(!e) return;
-  if(!confirm(`Discharge / remove endorsement for ${e.name} (${e.ward||''} Bed ${e.bed})? This is permanent.`)) return;
+  if(!confirm(`Discharge / remove ${e.name} (${e.ward||''} Bed ${e.bed}) from the IP list? This is permanent.`)) return;
   delete window.S.endorsements[id];
   dbRef.set(window.S);
   renderEndoList();
@@ -1748,7 +1761,7 @@ function renderEndoList(){
   if(countEl) countEl.innerText = all.length ? `Showing ${all.length} patient${all.length>1?'s':''}${q?' matching search':''}${currentWardFilter!=='all'?' in '+currentWardFilter:''}` : '';
 
   if(!all.length){
-    c.innerHTML = '<div class="endo-empty">' + (q||currentWardFilter!=='all' ? 'No patients match this filter.' : 'No endorsements yet. Click <b>＋ New Patient</b> to add the first handover entry.') + '</div>';
+    c.innerHTML = '<div class="endo-empty">' + (q||currentWardFilter!=='all' ? 'No patients match this filter.' : 'No patients in the list yet. Click <b>＋ New Patient</b> to add the first one.') + '</div>';
     return;
   }
   c.innerHTML = all.map(e => {
@@ -1787,6 +1800,47 @@ function renderEndoList(){
 
 // Accordion state — set of expanded endorsement IDs (persists across re-renders within session)
 var expandedEndoIds = new Set();
+
+// ============================================================
+// resolveDoctor — pick the "who did this" stamp for save operations.
+// If a doctor is already logged in at the main gate, use that; otherwise
+// validate the PIN entered in the form field (legacy fallback for admin or
+// when a different doctor wants to sign this specific action).
+// Returns the doctor name string, or null if PIN invalid / empty.
+// ============================================================
+async function resolveDoctor(pinFieldId){
+  // If doctor is already logged in, return their name directly
+  if(window.currentDoctor) return window.currentDoctor;
+  // Otherwise, fall back to PIN entry (admin, or doctor who logged in as admin)
+  let pinEl = document.getElementById(pinFieldId);
+  let pin = pinEl ? pinEl.value.trim() : '';
+  if(!/^\d{4}$/.test(pin)){
+    alert('Enter a 4-digit Doctor PIN to sign this action.');
+    return null;
+  }
+  let name = await lookupDocPIN(pin);
+  if(!name){ alert('Incorrect PIN'); if(pinEl) pinEl.value=''; return null; }
+  return name;
+}
+
+// Hide PIN-entry field and its label when a doctor is already logged in.
+// pinFieldId = e.g. 'endo-pin', 'cath-sch-pin', 'cath-p-pin', 'cens-pin'.
+function hidePinFieldIfLoggedIn(pinFieldId){
+  let pinEl = document.getElementById(pinFieldId);
+  if(!pinEl) return;
+  // The label is the <label> element immediately preceding the input
+  let label = pinEl.previousElementSibling;
+  if(window.currentDoctor){
+    pinEl.style.display = 'none';
+    pinEl.required = false;
+    pinEl.value = '';
+    if(label && label.tagName === 'LABEL') label.style.display = 'none';
+  } else {
+    pinEl.style.display = '';
+    pinEl.required = true;
+    if(label && label.tagName === 'LABEL') label.style.display = '';
+  }
+}
 
 window.toggleEndoCard = function(id){
   if(expandedEndoIds.has(id)) expandedEndoIds.delete(id);
@@ -1907,6 +1961,7 @@ window.resetCathSchForm = function(quiet){
   document.getElementById('cathSchSaveBtn').innerText = '💾 Save Appointment';
   let badge = document.getElementById('cathSchDateBadge');
   if(badge) badge.innerHTML = '';
+  hidePinFieldIfLoggedIn('cath-sch-pin');
   if(!quiet){
     // Switch back to Today sub-tab
     clickCathSubtab('today');
@@ -1921,16 +1976,15 @@ window.openCathAddPending = function(){
   document.getElementById('cath-p-proc').selectedIndex = 0;
   imgBuffers['cath-p'] = [];
   renderImgPreview('cath-p');
+  hidePinFieldIfLoggedIn('cath-p-pin');
 };
 window.closeCathPendMo = function(){ document.getElementById('cathPendMo').classList.remove('on'); };
 
 window.saveCathPending = async function(ev){
   ev.preventDefault();
   ensureExtState();
-  let pin = document.getElementById('cath-p-pin').value.trim();
-  if(!/^\d{4}$/.test(pin)){ alert('Enter 4-digit PIN'); return false; }
-  let reg = await lookupDocPIN(pin);
-  if(!reg){ alert('Incorrect PIN'); return false; }
+  let reg = await resolveDoctor('cath-p-pin');
+  if(!reg) return false;
   let id = 'pend_' + Date.now() + '_' + Math.floor(Math.random()*1000);
   window.S.cathPending[id] = {
     id: id,
@@ -2026,10 +2080,8 @@ window.deletePending = function(pid){
 window.saveCathSched = async function(ev){
   ev.preventDefault();
   ensureExtState();
-  let pin = document.getElementById('cath-sch-pin').value.trim();
-  if(!/^\d{4}$/.test(pin)){ alert('Enter 4-digit PIN'); return false; }
-  let reg = await lookupDocPIN(pin);
-  if(!reg){ alert('Incorrect PIN'); return false; }
+  let reg = await resolveDoctor('cath-sch-pin');
+  if(!reg) return false;
   let pendingId = document.getElementById('cath-sch-pending-id').value;
   let editId = document.getElementById('cath-sch-edit-id').value;
   let id = editId || ('sch_' + Date.now() + '_' + Math.floor(Math.random()*1000));
@@ -2407,6 +2459,7 @@ window.openCensusMo = function(unit){
   document.getElementById('cens-grn').value = existing?.stable || '';
   document.getElementById('cens-pin').value = '';
   updateCensAvail();
+  hidePinFieldIfLoggedIn('cens-pin');
   document.getElementById('censusMo').classList.add('on');
 };
 window.closeCensusMo = function(){ document.getElementById('censusMo').classList.remove('on'); };
@@ -2427,10 +2480,8 @@ document.addEventListener('input', function(ev){
 window.saveCensus = async function(ev){
   ev.preventDefault();
   ensureExtState();
-  let pin = document.getElementById('cens-pin').value.trim();
-  if(!/^\d{4}$/.test(pin)){ alert('Enter 4-digit Doctor PIN'); return false; }
-  let reg = await lookupDocPIN(pin);
-  if(!reg){ alert('Incorrect PIN'); return false; }
+  let reg = await resolveDoctor('cens-pin');
+  if(!reg) return false;
   let unit = document.getElementById('cens-unit').value;
   let cap = WARD_CAPACITIES[unit] || 0;
   let occupied = parseInt(document.getElementById('cens-occ').value) || 0;
