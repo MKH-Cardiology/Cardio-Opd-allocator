@@ -233,8 +233,40 @@ header p{font-size:9px;color:#64748b;font-family:'DM Mono',monospace;letter-spac
 .cath-btn-row{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
 .cath-empty{text-align:center;padding:36px 20px;color:var(--dim);font-family:'DM Mono',monospace;font-size:11px}
 
-/* Small mobile tweaks */
-@media (max-width: 480px){
+/* ============= ON CALL ============= */
+.oncall-badge{display:inline-block;font-family:'DM Mono',monospace;font-size:8px;font-weight:700;letter-spacing:.5px;padding:1px 4px;border-radius:3px;margin-top:2px;line-height:1.2}
+.oncall-b-first{background:rgba(96,165,250,.2);color:var(--acc);border:1px solid rgba(96,165,250,.35)}
+.oncall-b-ccu{background:rgba(251,191,36,.18);color:var(--warn);border:1px solid rgba(251,191,36,.35)}
+.oncall-b-second{background:rgba(52,211,153,.18);color:var(--ok);border:1px solid rgba(52,211,153,.35)}
+.oncall-b-interv{background:rgba(167,139,250,.18);color:var(--ep);border:1px solid rgba(167,139,250,.35)}
+.oncall-cell-dot{width:5px;height:5px;border-radius:50%;margin:1px}
+.oncall-dots{display:flex;flex-wrap:wrap;justify-content:center;gap:1px;margin-top:2px;max-width:40px}
+.oncall-detail-card{background:var(--sur);border:1px solid var(--bor);border-radius:11px;padding:14px;margin-bottom:8px}
+.oncall-role-block{margin-bottom:10px}
+.oncall-role-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--dim);margin-bottom:4px}
+.oncall-role-docs{display:flex;flex-wrap:wrap;gap:6px}
+.oncall-doc-chip{font-family:'DM Mono',monospace;font-size:11px;padding:4px 10px;border-radius:6px;font-weight:600;background:var(--sur2);border:1px solid var(--bor);color:var(--txt)}
+.oncall-doc-chip.first{background:rgba(96,165,250,.12);border-color:rgba(96,165,250,.35);color:var(--acc)}
+.oncall-doc-chip.ccu{background:rgba(251,191,36,.12);border-color:rgba(251,191,36,.35);color:var(--warn)}
+.oncall-doc-chip.second{background:rgba(52,211,153,.12);border-color:rgba(52,211,153,.35);color:var(--ok)}
+.oncall-doc-chip.interv{background:rgba(167,139,250,.12);border-color:rgba(167,139,250,.35);color:var(--ep)}
+.oncall-doc-chip.empty{color:var(--dim);font-style:italic;opacity:.7}
+.oncall-edit-btn{background:linear-gradient(135deg,#2563eb,#0891b2);border:none;border-radius:7px;padding:7px 14px;color:#fff;cursor:pointer;font-family:'DM Mono',monospace;font-size:10px;font-weight:600;letter-spacing:.5px;text-transform:uppercase}
+.oncall-empty{text-align:center;padding:30px 18px;color:var(--dim);font-family:'DM Mono',monospace;font-size:11px}
+.cal-cell.has-oncall{background:linear-gradient(135deg,rgba(96,165,250,.06),rgba(56,189,248,.04))}
+
+/* ============= REMOVALS LOG ============= */
+.rem-card{background:var(--sur);border:1px solid var(--bor);border-radius:10px;padding:12px 14px}
+.rem-card-head{display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap}
+.rem-badge{font-family:'DM Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.8px;padding:2px 7px;border-radius:4px}
+.rem-badge-ip{background:rgba(96,165,250,.15);color:var(--acc);border:1px solid rgba(96,165,250,.35)}
+.rem-badge-csch{background:rgba(52,211,153,.15);color:var(--ok);border:1px solid rgba(52,211,153,.35)}
+.rem-badge-cpend{background:rgba(251,191,36,.15);color:var(--warn);border:1px solid rgba(251,191,36,.35)}
+.rem-badge-log{background:rgba(167,139,250,.15);color:var(--ep);border:1px solid rgba(167,139,250,.35)}
+.rem-name{font-family:'DM Serif Display',serif;font-size:15px;color:var(--txt);flex:1;min-width:0}
+.rem-meta{font-family:'DM Mono',monospace;font-size:10px;color:var(--dim);line-height:1.5}
+.rem-meta b{color:var(--mid)}
+
   .endo-edit-two{grid-template-columns:1fr}
   .cath-row{grid-template-columns:1fr;gap:2px}
   .cath-row-label{padding-top:0}
@@ -403,7 +435,7 @@ header p{font-size:9px;color:#64748b;font-family:'DM Mono',monospace;letter-spac
     </div>
     <div id="roleStage2" class="role-pin-box" style="display:none">
       <label id="roleStage2Label">PIN</label>
-      <input class="pi" type="password" id="roleStage2Pin" maxlength="4" inputmode="numeric" autocomplete="off">
+      <input class="pi" type="password" id="roleStage2Pin" maxlength="6" inputmode="numeric" autocomplete="off">
       <button class="btn" onclick="submitRolePin()" id="roleStage2Btn">Unlock</button>
       <button class="role-back" onclick="backToRoleSelect()">← Back</button>
     </div>
@@ -419,27 +451,39 @@ header p{font-size:9px;color:#64748b;font-family:'DM Mono',monospace;letter-spac
 <header><div class="hi">🫀</div><div><h1>MKH Cardiology App</h1><p>MUBARAK AL-KABEER HOSPITAL</p></div><div class="db"><strong id="dayName">—</strong><span id="dateStr">—</span></div><span class="role-chip" id="roleChip" style="display:none">—</span><button class="logout-btn" id="logoutBtn" onclick="logoutRole()" style="display:none">Logout</button></header>
 <div class="sb"><div class="sd" id="syncDot"></div><span id="syncText">Connecting...</span><span style="margin-left:auto;color:var(--dim);font-size:10px">v3.0</span></div>
 <div class="tabs" id="mainTabs">
-  <button class="tab" data-role="registrar admin" onclick="goTab('ip',this)">IP Allocator</button>
-  <button class="tab" data-role="registrar admin" onclick="goTab('spec',this)">Interventional</button>
+  <button class="tab" data-role="registrar admin" onclick="goTab('opdal',this)">OPD Allocator</button>
   <button class="tab" data-role="clerk admin" onclick="goTab('op',this)">OPD Appointments</button>
-  <button class="tab ep-tab" data-role="registrar admin" onclick="goTab('ep',this)">EP Clinics</button>
   <button class="tab" data-role="registrar admin" onclick="goTab('endo',this)">IP Patient's List</button>
   <button class="tab" data-role="registrar admin" onclick="goTab('census',this)">Census</button>
   <button class="tab" data-role="registrar admin" onclick="goTab('cath',this)">Cathlab</button>
+  <button class="tab" data-role="registrar admin" onclick="goTab('oncall',this)">On Call</button>
+  <button class="tab" data-role="registrar" onclick="goTab('profile',this)">My PIN</button>
   <button class="tab" data-role="admin" onclick="goTab('adm',this)">Admin</button>
 </div>
 
+<!-- OPD ALLOCATOR (wraps IP + Interventional + EP) -->
+<div class="pg" id="pg-opdal">
+  <div class="cath-subtabs" style="margin-bottom:14px">
+    <button class="cath-subtab on" onclick="goOpdalTab('ip',this)">IP Allocator</button>
+    <button class="cath-subtab" onclick="goOpdalTab('spec',this)">Interventional</button>
+    <button class="cath-subtab" onclick="goOpdalTab('ep',this)">EP Clinics</button>
+  </div>
+  <div class="cath-sub on" id="opdal-ip"></div>
+  <div class="cath-sub" id="opdal-spec"></div>
+  <div class="cath-sub" id="opdal-ep"></div>
+</div>
+
 <!-- INPATIENT -->
-<div class="pg" id="pg-ip"><div class="card"><div id="skip-banner" style="display:none;background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.45);border-radius:8px;padding:10px 12px;margin-bottom:12px;font-size:11px;color:#fbbf24;line-height:1.5"></div><div class="cbox"><div class="rl">NEXT AVAILABLE CLINIC (AUTO)</div><div class="rd" id="nd">—</div><div class="rr" id="nr">—</div><div id="skip-panel" style="display:none;margin-top:12px;padding-top:12px;border-top:1px dashed var(--bor)"><div style="font-size:10px;color:var(--dim);margin-bottom:6px;text-align:left">⚠ Cath-specific doctor. If this patient was NOT catheterized by <span id="skip-doc-name" style="color:#fbbf24;font-weight:600"></span>, skip to pass this patient to the next doctor. Skipped doctor auto-returns to queue after the next assignment.</div><button class="btn" id="skip-btn" style="background:rgba(251,191,36,0.15);border:1px solid rgba(251,191,36,0.5);color:#fbbf24;margin-top:0" onclick="skipCurrentDoc()">⏭ Skip — Not Cathed by This Doctor</button></div><div style="margin-top:15px;border-top:1px dashed var(--bor);padding-top:12px;"><label style="color:var(--dim);font-size:9px;">AVAILABLE FOLLOW-UP DATES (NEXT 4 MONTHS)</label><select id="fd-sel" class="fd-sel"></select></div></div><div class="rb" id="rb"></div><label>File Number (6 Digits)</label><input type="text" id="fi" maxlength="6" inputmode="numeric" placeholder="e.g. 123456"><label>Registrar PIN</label><input type="password" id="rpin" maxlength="4" inputmode="numeric"><button class="btn" onclick="doAssign('ip')">Assign IP Discharge (Auto) →</button></div></div>
+<div class="pg" id="pg-ip"><div class="card"><div id="skip-banner" style="display:none;background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.45);border-radius:8px;padding:10px 12px;margin-bottom:12px;font-size:11px;color:#fbbf24;line-height:1.5"></div><div class="cbox"><div class="rl">NEXT AVAILABLE CLINIC (AUTO)</div><div class="rd" id="nd">—</div><div class="rr" id="nr">—</div><div id="skip-panel" style="display:none;margin-top:12px;padding-top:12px;border-top:1px dashed var(--bor)"><div style="font-size:10px;color:var(--dim);margin-bottom:6px;text-align:left">⚠ Cath-specific doctor. If this patient was NOT catheterized by <span id="skip-doc-name" style="color:#fbbf24;font-weight:600"></span>, skip to pass this patient to the next doctor. Skipped doctor auto-returns to queue after the next assignment.</div><button class="btn" id="skip-btn" style="background:rgba(251,191,36,0.15);border:1px solid rgba(251,191,36,0.5);color:#fbbf24;margin-top:0" onclick="skipCurrentDoc()">⏭ Skip — Not Cathed by This Doctor</button></div><div style="margin-top:15px;border-top:1px dashed var(--bor);padding-top:12px;"><label style="color:var(--dim);font-size:9px;">AVAILABLE FOLLOW-UP DATES (NEXT 4 MONTHS)</label><select id="fd-sel" class="fd-sel"></select></div></div><div class="rb" id="rb"></div><label>File Number (6 Digits)</label><input type="text" id="fi" maxlength="6" inputmode="numeric" placeholder="e.g. 123456"><label>Registrar PIN</label><input type="password" id="rpin" maxlength="6" inputmode="numeric"><button class="btn" onclick="doAssign('ip')">Assign IP Discharge (Auto) →</button></div></div>
 
 <!-- INTERVENTIONAL -->
-<div class="pg" id="pg-spec"><div class="card"><div class="spec-grid" id="spec-grid"></div><div class="spec-form" id="spec-form"><div class="spec-hint" id="spec-hint">Loading dates...</div><label>Follow-up Date</label><select id="spec-date" class="fd-sel" style="margin-bottom:15px;"></select><label>File Number (6 Digits)</label><input type="text" id="spec-fi" maxlength="6" inputmode="numeric" placeholder="e.g. 123456" style="margin-bottom:11px;"><label>Registrar PIN</label><input type="password" id="spec-pin" maxlength="4" inputmode="numeric" style="margin-bottom:15px;"><button class="btn" onclick="doSpecificAssign()">Assign to Selected Clinic →</button></div></div></div>
+<div class="pg" id="pg-spec"><div class="card"><div class="spec-grid" id="spec-grid"></div><div class="spec-form" id="spec-form"><div class="spec-hint" id="spec-hint">Loading dates...</div><label>Follow-up Date</label><select id="spec-date" class="fd-sel" style="margin-bottom:15px;"></select><label>File Number (6 Digits)</label><input type="text" id="spec-fi" maxlength="6" inputmode="numeric" placeholder="e.g. 123456" style="margin-bottom:11px;"><label>Registrar PIN</label><input type="password" id="spec-pin" maxlength="6" inputmode="numeric" style="margin-bottom:15px;"><button class="btn" onclick="doSpecificAssign()">Assign to Selected Clinic →</button></div></div></div>
 
 <!-- OUTPATIENT (mandatory fields removed) -->
 <div class="pg" id="pg-op"><div id="opc"><div class="tabs" style="margin-bottom:14px;border-radius:10px;overflow:hidden;"><button class="tab on" id="optab-walkin" onclick="goOpTab('walkin',this)">Walk-in Today</button><button class="tab" id="optab-fix" onclick="goOpTab('fix',this)">Book Appointment</button></div><div id="op-walkin"><div class="card"><div class="cbox"><div class="rl">AUTO — Next Available Today</div><div class="rd" id="opd">—</div><div class="rr" id="opr">—</div></div><label>Patient File Number <span style="font-weight:normal;">(optional)</span></label><input type="text" id="opfi" maxlength="20" placeholder="e.g. 123456 or leave empty"><div class="opt-hint">Not required — you can leave blank</div><label>Patient Phone Number <span style="font-weight:normal;">(optional)</span></label><input type="text" id="opphone" maxlength="20" placeholder="e.g. 99887766 or leave empty"><div class="opt-hint">Not required — you can leave blank</div><button class="btn" onclick="doAssign('op')">Assign OP Walk-in →</button></div></div><div id="op-fix" style="display:none"><div class="card"><div class="rl" style="margin-bottom:12px;">CLINICS NOT RUNNING TODAY — SELECT TO BOOK</div><div id="fix-clinic-grid" class="spec-grid" style="margin-bottom:16px;"></div><div id="fix-form" style="display:none"><div class="spec-hint" id="fix-hint"></div><label>Follow-up Date</label><select id="fix-date" class="fd-sel" style="margin-bottom:14px;"></select><label>Patient File Number <span style="font-weight:normal;">(optional)</span></label><input type="text" id="fix-fi" maxlength="20" placeholder="e.g. 123456 or leave empty"><div class="opt-hint">Not required — you can leave blank</div><label>Patient Phone Number <span style="font-weight:normal;">(optional)</span></label><input type="text" id="fix-phone" maxlength="20" placeholder="e.g. 99887766 or leave empty"><div class="opt-hint">Not required — you can leave blank</div><button class="btn" onclick="doFixAssign()">Book Appointment →</button></div></div></div></div></div>
 
 <!-- EP CLINICS TAB -->
-<div class="pg" id="pg-ep"><div class="ep-notice"><div class="ep-notice-icon">⚠️</div><div class="ep-notice-text"><strong>Before booking an EP Clinic appointment</strong><br>You must contact <strong>Dr. Mahmoud Rehan</strong> for approval before registering any patient in this clinic.</div></div><div class="card"><div class="rl" style="margin-bottom:12px;">SELECT EP CLINIC</div><div class="spec-grid" id="ep-clinic-grid" style="margin-bottom:16px;"></div><div id="ep-form" style="display:none"><div class="spec-hint" id="ep-hint" style="border-left-color:var(--ep);background:rgba(167,139,250,0.05);color:var(--ep2);"></div><label>Follow-up Date <span id="ep-date-count-label" style="color:var(--dim);font-style:normal;text-transform:none;font-size:10px;"></span></label><select id="ep-date" class="ep-sel" style="margin-bottom:15px;"></select><label>File Number (6 Digits)</label><input type="text" id="ep-fi" maxlength="6" inputmode="numeric" placeholder="e.g. 123456" style="margin-bottom:11px;"><label>Registrar PIN</label><input type="password" id="ep-pin" maxlength="4" inputmode="numeric" style="margin-bottom:15px;"><button class="btn btn-ep" onclick="doEpAssign()">Book EP Clinic Appointment →</button></div></div></div>
+<div class="pg" id="pg-ep"><div class="ep-notice"><div class="ep-notice-icon">⚠️</div><div class="ep-notice-text"><strong>Before booking an EP Clinic appointment</strong><br>You must contact <strong>Dr. Mahmoud Rehan</strong> for approval before registering any patient in this clinic.</div></div><div class="card"><div class="rl" style="margin-bottom:12px;">SELECT EP CLINIC</div><div class="spec-grid" id="ep-clinic-grid" style="margin-bottom:16px;"></div><div id="ep-form" style="display:none"><div class="spec-hint" id="ep-hint" style="border-left-color:var(--ep);background:rgba(167,139,250,0.05);color:var(--ep2);"></div><label>Follow-up Date <span id="ep-date-count-label" style="color:var(--dim);font-style:normal;text-transform:none;font-size:10px;"></span></label><select id="ep-date" class="ep-sel" style="margin-bottom:15px;"></select><label>File Number (6 Digits)</label><input type="text" id="ep-fi" maxlength="6" inputmode="numeric" placeholder="e.g. 123456" style="margin-bottom:11px;"><label>Registrar PIN</label><input type="password" id="ep-pin" maxlength="6" inputmode="numeric" style="margin-bottom:15px;"><button class="btn btn-ep" onclick="doEpAssign()">Book EP Clinic Appointment →</button></div></div></div>
 
 <!-- IP ENDORSEMENT -->
 <div class="pg" id="pg-endo">
@@ -541,7 +585,7 @@ header p{font-size:9px;color:#64748b;font-family:'DM Mono',monospace;letter-spac
           <textarea id="endo-plan" rows="3" placeholder="e.g. 1) Continue ACS protocol 2) Diuresis, daily weights 3) For cath workup"></textarea>
 
           <label>Doctor PIN (to save)</label>
-          <input type="password" id="endo-pin" maxlength="4" inputmode="numeric" required>
+          <input type="password" id="endo-pin" maxlength="6" inputmode="numeric" required>
 
           <button type="submit" class="btn" style="margin-top:10px">💾 Save Patient</button>
         </form>
@@ -691,7 +735,7 @@ header p{font-size:9px;color:#64748b;font-family:'DM Mono',monospace;letter-spac
         <input type="date" id="cath-sch-date" class="pi" required style="margin-bottom:6px">
         <div id="cathSchDateBadge"></div>
         <label>Doctor PIN</label>
-        <input type="password" id="cath-sch-pin" maxlength="4" inputmode="numeric" required>
+        <input type="password" id="cath-sch-pin" maxlength="6" inputmode="numeric" required>
         <button type="submit" class="btn" style="margin-top:6px" id="cathSchSaveBtn">💾 Save Appointment</button>
         <button type="button" class="btn" style="margin-top:6px;background:var(--sur2);border:1px solid var(--bor)" onclick="resetCathSchForm()">Cancel</button>
       </form>
@@ -768,11 +812,86 @@ header p{font-size:9px;color:#64748b;font-family:'DM Mono',monospace;letter-spac
             <option>Other</option>
           </select>
           <label>Added By (Doctor / OPD Dr. PIN)</label>
-          <input type="password" id="cath-p-pin" maxlength="4" inputmode="numeric" required>
+          <input type="password" id="cath-p-pin" maxlength="6" inputmode="numeric" required>
           <button type="submit" class="btn" style="margin-top:6px">＋ Add to Waiting List</button>
         </form>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- ON CALL SCHEDULE -->
+<div class="pg" id="pg-oncall">
+  <div class="card">
+    <div class="rl" style="margin-bottom:6px">ON CALL SCHEDULE</div>
+    <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--dim);line-height:1.6;margin-bottom:12px">
+      Tap any day in the calendar to view its on-call team. <strong style="color:var(--warn)">Admin</strong> can edit the roster for each day (3 First on-call, 1 CCU, 1 Second on-call, 1 Interventionist on-call).
+    </div>
+    <div class="cal-toolbar">
+      <button class="cal-nav-btn" onclick="shiftOncallMonth(-1)">◀</button>
+      <div class="cal-month-label" id="oncallMonthLabel">—</div>
+      <button class="cal-nav-btn" onclick="shiftOncallMonth(1)">▶</button>
+      <button class="cal-today-btn" onclick="jumpOncallToday()">Today</button>
+    </div>
+    <div class="cal-weekdays">
+      <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+    </div>
+    <div class="cal-grid" id="oncallGrid"></div>
+    <div id="oncallDayDetail"></div>
+  </div>
+
+  <!-- On-call editor modal (admin) -->
+  <div class="mo" id="oncallMo">
+    <div class="mb" style="max-width:480px;max-height:92vh">
+      <div class="mh">
+        <h2 id="oncallMoTitle" style="font-family:'DM Serif Display',serif;font-size:18px">On-call Schedule</h2>
+        <button onclick="closeOncallMo()" style="background:none;border:none;color:var(--dim);font-size:20px;cursor:pointer">✕</button>
+      </div>
+      <div class="mbody">
+        <div id="oncallMoDate" style="font-family:'DM Mono',monospace;font-size:12px;color:var(--acc2);margin-bottom:14px"></div>
+        <form onsubmit="return saveOncall(event)">
+          <input type="hidden" id="oncall-iso">
+          <div class="rl" style="margin-bottom:6px;color:var(--acc)">FIRST ON-CALL (3 doctors)</div>
+          <label>First on-call #1</label>
+          <select id="oncall-first1" class="fd-sel" style="margin-bottom:10px"></select>
+          <label>First on-call #2</label>
+          <select id="oncall-first2" class="fd-sel" style="margin-bottom:10px"></select>
+          <label>First on-call #3</label>
+          <select id="oncall-first3" class="fd-sel" style="margin-bottom:14px"></select>
+          <div class="rl" style="margin-bottom:6px;color:var(--warn)">CCU (1 doctor)</div>
+          <label>CCU on-call</label>
+          <select id="oncall-ccu" class="fd-sel" style="margin-bottom:14px"></select>
+          <div class="rl" style="margin-bottom:6px;color:var(--ok)">SECOND ON-CALL (1 doctor)</div>
+          <label>Second on-call</label>
+          <select id="oncall-second" class="fd-sel" style="margin-bottom:14px"></select>
+          <div class="rl" style="margin-bottom:6px;color:var(--ep)">INTERVENTIONIST ON-CALL (1 doctor)</div>
+          <label>Interventionist on-call</label>
+          <select id="oncall-interv" class="fd-sel" style="margin-bottom:14px"></select>
+          <button type="submit" class="btn" style="margin-top:6px">💾 Save Roster</button>
+          <button type="button" class="btn" style="margin-top:6px;background:var(--sur2);border:1px solid var(--bor)" onclick="clearOncallDay()">🗑 Clear Day</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MY PIN (doctor profile) -->
+<div class="pg" id="pg-profile">
+  <div class="card">
+    <div class="rl" style="margin-bottom:6px">CHANGE MY PIN</div>
+    <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--dim);line-height:1.6;margin-bottom:14px">
+      Set a new <strong style="color:var(--acc)">6-digit PIN</strong> for your account. The new PIN will be required the next time you log in. If the new PIN is already used by another doctor, the change will be refused.
+    </div>
+    <div id="profileDocLabel" style="background:var(--sur2);border:1px solid var(--bor);border-radius:8px;padding:10px 12px;margin-bottom:14px;font-family:'DM Mono',monospace;font-size:12px;color:var(--acc2)">—</div>
+    <form onsubmit="return changeMyPin(event)">
+      <label>Current PIN</label>
+      <input type="password" id="prof-old-pin" maxlength="6" inputmode="numeric" autocomplete="off" required placeholder="Enter current PIN">
+      <label>New PIN (6 digits)</label>
+      <input type="password" id="prof-new-pin" maxlength="6" inputmode="numeric" autocomplete="off" required placeholder="e.g. 123456">
+      <label>Confirm New PIN</label>
+      <input type="password" id="prof-new-pin2" maxlength="6" inputmode="numeric" autocomplete="off" required placeholder="Re-enter new PIN">
+      <button type="submit" class="btn" style="margin-top:6px">🔐 Update PIN</button>
+    </form>
   </div>
 </div>
 
@@ -838,7 +957,7 @@ header p{font-size:9px;color:#64748b;font-family:'DM Mono',monospace;letter-spac
           </div>
 
           <label>Doctor PIN</label>
-          <input type="password" id="cens-pin" maxlength="4" inputmode="numeric" required>
+          <input type="password" id="cens-pin" maxlength="6" inputmode="numeric" required>
           <button type="submit" class="btn" style="margin-top:6px">💾 Save Census Update</button>
         </form>
       </div>
@@ -847,7 +966,114 @@ header p{font-size:9px;color:#64748b;font-family:'DM Mono',monospace;letter-spac
 </div>
 
 
-<div class="pg" id="pg-adm"><div class="card apgate" style="text-align:center"><label>ADMIN PIN</label><input class="pi" type="password" id="api-adm" maxlength="4"><button class="btn" onclick="adminLogin('api-adm')">Unlock</button></div><div class="ac-content"><div class="adm-tabs"><button class="adm-tab on" onclick="goAdmTab('leave',this)">Doctor Leave</button><button class="adm-tab" onclick="goAdmTab('blocked',this)">Blocked Dates</button><button class="adm-tab" onclick="goAdmTab('dist',this)">Distribution</button><button class="adm-tab" onclick="goAdmTab('log',this)">Log</button><button class="adm-tab" onclick="goAdmTab('export',this)">Export / Print</button><button class="adm-tab" onclick="goAdmTab('danger',this)">⚠ Danger Zone</button></div><div class="adm-sec on" id="adm-leave"><div class="adm-section-title">Doctor Leave / Status</div><div class="adm-section-sub">Toggle IP and OP availability for each doctor. Changes are saved live.</div><div id="leave-grid" class="dg"></div></div><div class="adm-sec" id="adm-blocked"><div class="adm-section-title">Blocked Date Ranges (Per Doctor)</div><div class="adm-section-sub">Block a date range for a specific doctor. All of that doctor's clinic dates within the range will be hidden from follow-up dropdowns (Inpatient, Interventional, Outpatient, EP). Use for travel, leave, conferences, etc. For a single day, set From and To to the same date.</div><div style="display:grid;grid-template-columns:1fr;gap:10px;margin-bottom:14px"><div><label>Doctor / Clinic</label><select id="blocked-doc-input" class="fd-sel" style="margin-top:5px"></select></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div><label>From</label><input type="date" id="blocked-from-input" class="pi" style="margin-bottom:0"></div><div><label>To</label><input type="date" id="blocked-to-input" class="pi" style="margin-bottom:0"></div></div><button class="btn" style="margin:0" onclick="addBlockedDate()">🚫 Block Range</button></div><div class="rl" style="margin-bottom:8px">CURRENTLY BLOCKED RANGES</div><div id="blocked-list" style="display:flex;flex-direction:column;gap:6px"></div></div><div class="adm-sec" id="adm-dist"><div class="adm-section-title">Slot Distribution</div><div class="adm-section-sub">Click any slot card to view its patient list and print.</div><div class="dg" id="dg"></div></div><div class="adm-sec" id="adm-log"><div class="adm-section-title">Assignment Log</div><div class="adm-section-sub">Last 50 entries across all assignment types.</div><div class="lf"><button class="fb on" onclick="filterLog('all',this)">All</button><button class="fb" onclick="filterLog('Sun',this)">Sun</button><button class="fb" onclick="filterLog('Mon',this)">Mon</button><button class="fb" onclick="filterLog('Tue',this)">Tue</button><button class="fb" onclick="filterLog('Wed',this)">Wed</button><button class="fb" onclick="filterLog('Thu',this)">Thu</button></div><div class="lt"><div class="lh"><div>Date</div><div>File / Phone</div><div>Doctor / Room</div><div>Follow-up</div><div>By</div><div></div></div><div id="lb"></div></div></div><div class="adm-sec" id="adm-export"><div class="adm-section-title">Export &amp; Print</div><div class="adm-section-sub">Select a clinic card to export all its patients as PDF. Patients are grouped by doctor + room + day.</div><button class="btn" style="margin-bottom:18px" onclick="exportWeekly()">📊 Export Master Log (All Entries)</button><div class="rl" style="margin-bottom:10px;">CLINIC PATIENT LISTS</div><div class="clinic-export-grid" id="clinic-export-grid"></div></div><div class="adm-sec" id="adm-danger"><div class="adm-section-title">Danger Zone</div><div class="adm-section-sub">Irreversible actions. Use with caution.</div><label>Remove Patient Row</label><input type="text" id="dfi" placeholder="Enter File or Phone Number" inputmode="numeric"><button class="btn" style="background:#fbbf24;color:#000;margin-bottom:10px" onclick="delEntry()">🗑 Remove Entry</button><button class="btn btn-warn" style="margin-top:0;margin-bottom:10px" onclick="deleteAnonymousOpd()">🧹 Remove All Anonymous OPD Entries</button><button class="btn btn-warn" onclick="resetAll()">⚠ Wipe All Database Data</button></div></div></div></div>
+<div class="pg" id="pg-adm">
+  <div class="card apgate" style="text-align:center">
+    <label>ADMIN PIN</label>
+    <input class="pi" type="password" id="api-adm" maxlength="4">
+    <button class="btn" onclick="adminLogin('api-adm')">Unlock</button>
+  </div>
+  <div class="ac-content">
+    <div class="adm-tabs">
+      <button class="adm-tab on" onclick="goAdmTab('leave',this)">Doctor Leave</button>
+      <button class="adm-tab" onclick="goAdmTab('blocked',this)">Blocked Dates</button>
+      <button class="adm-tab" onclick="goAdmTab('pinreset',this)">Reset PIN</button>
+      <button class="adm-tab" onclick="goAdmTab('removals',this)">Removals</button>
+      <button class="adm-tab" onclick="goAdmTab('dist',this)">Distribution</button>
+      <button class="adm-tab" onclick="goAdmTab('log',this)">Log</button>
+      <button class="adm-tab" onclick="goAdmTab('export',this)">Export / Print</button>
+      <button class="adm-tab" onclick="goAdmTab('danger',this)">⚠ Danger Zone</button>
+    </div>
+
+    <div class="adm-sec on" id="adm-leave">
+      <div class="adm-section-title">Doctor Leave / Status</div>
+      <div class="adm-section-sub">Toggle IP and OP availability for each doctor. Changes are saved live.</div>
+      <div id="leave-grid" class="dg"></div>
+    </div>
+
+    <div class="adm-sec" id="adm-blocked">
+      <div class="adm-section-title">Blocked Date Ranges (Per Doctor)</div>
+      <div class="adm-section-sub">Block a date range for a specific doctor. All of that doctor's clinic dates within the range will be hidden from follow-up dropdowns. Use for travel, leave, conferences, etc. For a single day, set From and To to the same date.</div>
+      <div style="display:grid;grid-template-columns:1fr;gap:10px;margin-bottom:14px">
+        <div><label>Doctor / Clinic</label><select id="blocked-doc-input" class="fd-sel" style="margin-top:5px"></select></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <div><label>From</label><input type="date" id="blocked-from-input" class="pi" style="margin-bottom:0"></div>
+          <div><label>To</label><input type="date" id="blocked-to-input" class="pi" style="margin-bottom:0"></div>
+        </div>
+        <button class="btn" style="margin:0" onclick="addBlockedDate()">🚫 Block Range</button>
+      </div>
+      <div class="rl" style="margin-bottom:8px">CURRENTLY BLOCKED RANGES</div>
+      <div id="blocked-list" style="display:flex;flex-direction:column;gap:6px"></div>
+    </div>
+
+    <div class="adm-sec" id="adm-pinreset">
+      <div class="adm-section-title">Reset Doctor PIN</div>
+      <div class="adm-section-sub">Use when a doctor forgets their PIN. Set a new 6-digit PIN for any doctor. If the new PIN is already used by another doctor, the change will be refused.</div>
+      <label>Doctor</label>
+      <select id="pinreset-doc" class="fd-sel" style="margin-bottom:11px"></select>
+      <label>New PIN (6 digits)</label>
+      <input type="password" id="pinreset-new" maxlength="6" inputmode="numeric" placeholder="e.g. 123456" autocomplete="off">
+      <label>Confirm New PIN</label>
+      <input type="password" id="pinreset-new2" maxlength="6" inputmode="numeric" placeholder="Re-enter new PIN" autocomplete="off">
+      <button class="btn" onclick="adminResetPin()">🔐 Reset PIN</button>
+      <hr class="adm-hr">
+      <div class="rl" style="margin-bottom:8px">RECENT PIN CHANGES</div>
+      <div id="pinreset-log" style="display:flex;flex-direction:column;gap:6px"></div>
+    </div>
+
+    <div class="adm-sec" id="adm-removals">
+      <div class="adm-section-title">Patient Data Removals</div>
+      <div class="adm-section-sub">Track every patient record removed from the IP Patient's List and Cathlab (scheduled cases &amp; waiting list). Shows who removed it and when.</div>
+      <div class="lf" id="removals-filter">
+        <button class="fb on" onclick="filterRemovals('all',this)">All</button>
+        <button class="fb" onclick="filterRemovals('ip',this)">IP List</button>
+        <button class="fb" onclick="filterRemovals('cath-sched',this)">Cath Scheduled</button>
+        <button class="fb" onclick="filterRemovals('cath-pending',this)">Cath Waiting</button>
+      </div>
+      <div id="removals-list" style="display:flex;flex-direction:column;gap:8px"></div>
+    </div>
+
+    <div class="adm-sec" id="adm-dist">
+      <div class="adm-section-title">Slot Distribution</div>
+      <div class="adm-section-sub">Click any slot card to view its patient list and print.</div>
+      <div class="dg" id="dg"></div>
+    </div>
+
+    <div class="adm-sec" id="adm-log">
+      <div class="adm-section-title">Assignment Log</div>
+      <div class="adm-section-sub">Last 50 entries across all assignment types.</div>
+      <div class="lf">
+        <button class="fb on" onclick="filterLog('all',this)">All</button>
+        <button class="fb" onclick="filterLog('Sun',this)">Sun</button>
+        <button class="fb" onclick="filterLog('Mon',this)">Mon</button>
+        <button class="fb" onclick="filterLog('Tue',this)">Tue</button>
+        <button class="fb" onclick="filterLog('Wed',this)">Wed</button>
+        <button class="fb" onclick="filterLog('Thu',this)">Thu</button>
+      </div>
+      <div class="lt">
+        <div class="lh"><div>Date</div><div>File / Phone</div><div>Doctor / Room</div><div>Follow-up</div><div>By</div><div></div></div>
+        <div id="lb"></div>
+      </div>
+    </div>
+
+    <div class="adm-sec" id="adm-export">
+      <div class="adm-section-title">Export &amp; Print</div>
+      <div class="adm-section-sub">Select a clinic card to export all its patients as PDF. Patients are grouped by doctor + room + day.</div>
+      <button class="btn" style="margin-bottom:18px" onclick="exportWeekly()">📊 Export Master Log (All Entries)</button>
+      <div class="rl" style="margin-bottom:10px;">CLINIC PATIENT LISTS</div>
+      <div class="clinic-export-grid" id="clinic-export-grid"></div>
+    </div>
+
+    <div class="adm-sec" id="adm-danger">
+      <div class="adm-section-title">Danger Zone</div>
+      <div class="adm-section-sub">Irreversible actions. Use with caution.</div>
+      <label>Remove Patient Row</label>
+      <input type="text" id="dfi" placeholder="Enter File or Phone Number" inputmode="numeric">
+      <button class="btn" style="background:#fbbf24;color:#000;margin-bottom:10px" onclick="delEntry()">🗑 Remove Entry</button>
+      <button class="btn btn-warn" style="margin-top:0;margin-bottom:10px" onclick="deleteAnonymousOpd()">🧹 Remove All Anonymous OPD Entries</button>
+      <button class="btn btn-warn" onclick="resetAll()">⚠ Wipe All Database Data</button>
+    </div>
+  </div>
+</div>
 
 <div class="mo" id="mo"><div class="mb"><div class="mh"><h2 id="mt">—</h2><button onclick="closeMo()">Close</button></div><div class="mbody"><div id="mc2" style="font-size:12px;color:var(--acc2);margin-bottom:10px"></div><div id="mbody"></div><div id="mprint"></div></div></div></div>
 
@@ -870,10 +1096,23 @@ async function sha256(str){
   const hashBuf = await crypto.subtle.digest("SHA-256", buf);
   return Array.from(new Uint8Array(hashBuf)).map(b=>b.toString(16).padStart(2,"0")).join("");
 }
-// Synchronous lookup helper: returns registrar name if hash matches, else undefined
+// Synchronous lookup helper: returns registrar name if hash matches, else undefined.
+// Checks the live docPins override (new 6-digit PINs) FIRST. If a doctor has an
+// entry there (either as their new hash OR as a tombstone marking the original
+// 4-digit PIN as invalidated), that mapping wins. Falls back to the original
+// docPINsHashed table for any doctor who hasn't changed their PIN yet.
 async function lookupDocPIN(pin){
   if(!pin) return undefined;
   const h = await sha256(String(pin));
+  // 1) Live overrides take priority. Shape: { "<hash>": "Dr. Name" }
+  const live = (window.S && window.S.docPins) || {};
+  if(live[h]) return live[h];
+  // 2) Check tombstones — if the original hash maps to a doctor whose PIN has
+  // been changed, invalidate the old PIN so the doctor CAN'T log in with it.
+  // Tombstones are stored under the key `retired:<oldHash>` = "<docName>".
+  const retiredKey = "retired:" + h;
+  if(live[retiredKey]) return undefined; // old PIN disabled
+  // 3) Fall back to the hardcoded seed table.
   return docPINsHashed[h];
 }
 var CL = [
@@ -901,7 +1140,7 @@ var EP_CLINICS = [{id:"ep-sun", name:"EP Device Clinic", room:"Room 21", day:"Su
 var EP_MAX_PER_DATE = 12;
 var specificDocs = [{name:"Fahad", indices:[0], room:"Room 24", day:"Mon", label:"Monday"},{name:"Ali", indices:[9], room:"Room 11", day:"Wed", label:"Wednesday"},{name:"Arab", indices:[14], room:"Room 25", day:"Tue", label:"Tuesday"},{name:"Nazanin", indices:[7], room:"Room 25", day:"Sun", label:"Sunday"}];
 var selectedSpecificDoc = null, selectedFixDoc = null, selectedEpClinic = null;
-window.S = {logs:[], oplogs:[], eplogs:[], leave:{}, skipped:{}, blockedDates:{}};
+window.S = {logs:[], oplogs:[], eplogs:[], leave:{}, skipped:{}, blockedDates:{}, onCall:{}, docPins:{}, pinChanges:[], removals:[]};
 // Doctors who can be temporarily skipped on the Inpatient (auto) tab when
 // the current patient was not catheterized by them. Keyed by doctor name.
 var SKIP_DOCS = ["Fahad","Arab","Ali","Nazanin"];
@@ -1606,7 +1845,7 @@ function applyRoleUI(role){
   let defaultId;
   if(role === 'clerk') defaultId = 'op';
   else if(role === 'registrar') defaultId = 'endo';
-  else defaultId = 'ip';
+  else defaultId = 'opdal';
   let defaultTab = document.querySelector(`#mainTabs .tab[onclick*="'${defaultId}'"]`);
   if(defaultTab){
     defaultTab.classList.add('on');
@@ -1615,6 +1854,7 @@ function applyRoleUI(role){
     if(defaultId === 'cath') renderCathAll();
     if(defaultId === 'census'){ renderCensus(); renderCensusAlert(); }
     if(defaultId === 'ep') renderEpTab();
+    if(defaultId === 'opdal') mountOpdalSubtab(window.currentOpdalSub || 'ip');
   }
 
   // Hide PIN fields in the legacy IP Allocator / Interventional / EP forms
@@ -1664,6 +1904,10 @@ function ensureExtState(){
   if(!window.S.cathScheduled) window.S.cathScheduled = {};
   if(!window.S.cathPending) window.S.cathPending = {};
   if(!window.S.census) window.S.census = { ward4: null, ccu: null };
+  if(!window.S.onCall) window.S.onCall = {};
+  if(!window.S.docPins) window.S.docPins = {};
+  if(!window.S.pinChanges) window.S.pinChanges = [];
+  if(!window.S.removals) window.S.removals = [];
 }
 
 // Compress image to ~80KB max, return base64 data URL
@@ -1830,6 +2074,22 @@ window.deleteEndo = function(id){
   let e = window.S.endorsements[id];
   if(!e) return;
   if(!confirm(`Discharge / remove ${e.name} (${e.ward||''} Bed ${e.bed}) from the IP list? This is permanent.`)) return;
+  // Log removal for admin tracking
+  let who = window.currentDoctor || (window.currentRole === 'admin' ? 'Admin' : (window.currentRole||'Unknown'));
+  window.S.removals.push({
+    type: 'ip',
+    ts: Date.now(),
+    by: who,
+    patientName: e.name || '—',
+    mrn: e.mrn || '—',
+    ward: e.ward || '—',
+    bed: e.bed || '—',
+    reason: e.reason || '—',
+    createdBy: e.createdBy || '—',
+    createdAt: e.createdAt || null
+  });
+  // Cap at 500 entries
+  if(window.S.removals.length > 500) window.S.removals = window.S.removals.slice(-500);
   delete window.S.endorsements[id];
   dbRef.set(window.S);
   renderEndoList();
@@ -1963,8 +2223,8 @@ async function resolveDoctor(pinFieldId){
   // Otherwise, fall back to PIN entry (admin, or doctor who logged in as admin)
   let pinEl = document.getElementById(pinFieldId);
   let pin = pinEl ? pinEl.value.trim() : '';
-  if(!/^\d{4}$/.test(pin)){
-    alert('Enter a 4-digit Doctor PIN to sign this action.');
+  if(!/^\d{4,6}$/.test(pin)){
+    alert('Enter your Doctor PIN (4-6 digits) to sign this action.');
     return null;
   }
   let name = await lookupDocPIN(pin);
@@ -3025,6 +3285,19 @@ window.deletePending = function(pid){
   let p = window.S.cathPending[pid];
   if(!p) return;
   if(!confirm(`Remove ${p.name} from waiting list?`)) return;
+  let who = window.currentDoctor || (window.currentRole === 'admin' ? 'Admin' : (window.currentRole||'Unknown'));
+  window.S.removals.push({
+    type: 'cath-pending',
+    ts: Date.now(),
+    by: who,
+    patientName: p.name || '—',
+    cid: p.cid || '—',
+    file: p.file || '—',
+    proc: p.proc || '—',
+    createdBy: p.createdBy || '—',
+    createdAt: p.createdAt || null
+  });
+  if(window.S.removals.length > 500) window.S.removals = window.S.removals.slice(-500);
   delete window.S.cathPending[pid];
   dbRef.set(window.S);
   renderCathAll();
@@ -3071,6 +3344,21 @@ window.deleteScheduled = function(sid){
   let s = window.S.cathScheduled[sid];
   if(!s) return;
   if(!confirm(`Delete scheduled appointment for ${s.name} on ${s.date}?`)) return;
+  let who = window.currentDoctor || (window.currentRole === 'admin' ? 'Admin' : (window.currentRole||'Unknown'));
+  window.S.removals.push({
+    type: 'cath-sched',
+    ts: Date.now(),
+    by: who,
+    patientName: s.name || '—',
+    cid: s.cid || '—',
+    file: s.file || '—',
+    proc: s.proc || '—',
+    operator: s.operator || '—',
+    date: s.date || '—',
+    createdBy: s.createdBy || '—',
+    createdAt: s.createdAt || null
+  });
+  if(window.S.removals.length > 500) window.S.removals = window.S.removals.slice(-500);
   delete window.S.cathScheduled[sid];
   dbRef.set(window.S);
   renderCathAll();
@@ -3580,21 +3868,25 @@ window.goTab=(id,btn)=>{
   if(window.currentRole && !allowed.includes(window.currentRole)) { alert('Access denied for your role.'); return; }
   document.querySelectorAll(".pg").forEach(p=>p.classList.remove("on"));
   document.querySelectorAll("#mainTabs>.tab").forEach(t=>t.classList.remove("on"));
-  document.getElementById("pg-"+id).classList.add("on");
+  let pg = document.getElementById("pg-"+id);
+  if(pg) pg.classList.add("on");
   btn.classList.add("on");
+  if(id==="opdal"){ mountOpdalSubtab(window.currentOpdalSub || 'ip'); }
   if(id==="ep") renderEpTab();
   if(id==="endo") renderEndoList();
   if(id==="cath") renderCathAll();
   if(id==="census"){ renderCensus(); renderCensusAlert(); }
+  if(id==="oncall") renderOncallCalendar();
+  if(id==="profile") renderProfileTab();
   rAll();
 };
-window.goAdmTab=(id,btn)=>{ document.querySelectorAll(".adm-tab").forEach(t=>t.classList.remove("on")); document.querySelectorAll(".adm-sec").forEach(s=>s.classList.remove("on")); btn.classList.add("on"); document.getElementById("adm-"+id).classList.add("on"); if(id==="export") renderClinicExportGrid(); if(id==="blocked") renderBlockedList(); };
+window.goAdmTab=(id,btn)=>{ document.querySelectorAll(".adm-tab").forEach(t=>t.classList.remove("on")); document.querySelectorAll(".adm-sec").forEach(s=>s.classList.remove("on")); btn.classList.add("on"); document.getElementById("adm-"+id).classList.add("on"); if(id==="export") renderClinicExportGrid(); if(id==="blocked") renderBlockedList(); if(id==="pinreset"){ renderPinResetTab(); } if(id==="removals") renderRemovalsList(); };
 window.filterLog=(f,b)=>{ document.querySelectorAll(".fb").forEach(x=>x.classList.remove("on")); b.classList.add("on"); window.lf=f; rLog(); };
 window.adminLogin=async (id)=>{ let v=document.getElementById(id).value; if(!v) return; let h=await sha256(v); if(h===ADMIN_HASH){ adm=true; document.querySelectorAll(".apgate").forEach(e=>e.style.display="none"); document.querySelectorAll(".ac-content").forEach(e=>e.style.display="block"); rAll(); } else { alert("Incorrect PIN"); document.getElementById(id).value=""; } };
 window.goOpTab=(tab,btn)=>{ document.querySelectorAll("#opc .tab").forEach(t=>t.classList.remove("on")); btn.classList.add("on"); document.getElementById("op-walkin").style.display=tab==="walkin"?"block":"none"; document.getElementById("op-fix").style.display=tab==="fix"?"block":"none"; if(tab==="fix") renderFixClinics(); };
 window.closeMo=()=>document.getElementById("mo").classList.remove("on");
 window.delEntry=()=>{ let s=document.getElementById("dfi").value.trim(); if(!s) return; let idxL=window.S.logs.findIndex(e=>e.fn.toString().includes(s)), idxO=window.S.oplogs.findIndex(e=>e.fn.toString().includes(s)), idxE=(window.S.eplogs||[]).findIndex(e=>e.fn.toString().includes(s)); if(idxL===-1 && idxO===-1 && idxE===-1) return alert("Not found"); if(confirm("Delete?")){ if(idxL!==-1) window.S.logs.splice(idxL,1); else if(idxO!==-1) window.S.oplogs.splice(idxO,1); else window.S.eplogs.splice(idxE,1); dbRef.set(window.S); rAll(); } };
-window.resetAll=()=>{ if(confirm("WIPE EVERYTHING?")){ window.S={logs:[], oplogs:[], eplogs:[], leave:{}, skipped:{}, blockedDates:{}, endorsements:{}, cathScheduled:{}, cathPending:{}, census:{ward4:null,ccu:null}}; dbRef.set(window.S); rAll(); } };
+window.resetAll=()=>{ if(confirm("WIPE EVERYTHING?")){ window.S={logs:[], oplogs:[], eplogs:[], leave:{}, skipped:{}, blockedDates:{}, endorsements:{}, cathScheduled:{}, cathPending:{}, census:{ward4:null,ccu:null}, onCall:{}, docPins:{}, pinChanges:[], removals:[]}; dbRef.set(window.S); rAll(); } };
 window.exportWeekly=()=>{ let all=(window.S.logs||[]).concat(window.S.oplogs||[]).concat(window.S.eplogs||[]).sort((a,b)=>b.ts-a.ts); if(!all.length) return alert("No data"); exportPDF("Master Log — All Entries", all); };
 
 dbRef.on('value',(snap)=>{
@@ -3610,6 +3902,10 @@ dbRef.on('value',(snap)=>{
     window.S.cathScheduled=d.cathScheduled||{};
     window.S.cathPending=d.cathPending||{};
     window.S.census=d.census||{ward4:null,ccu:null};
+    window.S.onCall=d.onCall||{};
+    window.S.docPins=d.docPins||{};
+    window.S.pinChanges=d.pinChanges||[];
+    window.S.removals=d.removals||[];
   }
   ensureExtState();
 
@@ -3633,11 +3929,519 @@ dbRef.on('value',(snap)=>{
   if(document.getElementById('pg-endo')?.classList.contains('on')) renderEndoList();
   if(document.getElementById('pg-cath')?.classList.contains('on')) renderCathAll();
   if(document.getElementById('pg-census')?.classList.contains('on')){ renderCensus(); renderCensusAlert(); }
+  if(document.getElementById('pg-oncall')?.classList.contains('on')) renderOncallCalendar();
+  if(document.getElementById('pg-adm')?.classList.contains('on')){
+    if(document.getElementById('adm-pinreset')?.classList.contains('on')) renderPinResetTab();
+    if(document.getElementById('adm-removals')?.classList.contains('on')) renderRemovalsList();
+  }
 });
+
+// ============================================================
+// OPD ALLOCATOR — mount sub-tab content
+// ============================================================
+window.currentOpdalSub = 'ip';
+
+function mountOpdalSubtab(sub){
+  window.currentOpdalSub = sub;
+  // Toggle sub-tab buttons
+  let tabs = document.querySelectorAll('#pg-opdal .cath-subtab');
+  tabs.forEach((t,i) => {
+    let subs = ['ip','spec','ep'];
+    t.classList.toggle('on', subs[i] === sub);
+  });
+  // Toggle sub containers
+  ['ip','spec','ep'].forEach(s => {
+    let el = document.getElementById('opdal-' + s);
+    if(el) el.classList.toggle('on', s === sub);
+  });
+  // Move the original panel content into the sub-container if not already
+  let sourceMap = { ip:'pg-ip', spec:'pg-spec', ep:'pg-ep' };
+  let sourceId = sourceMap[sub];
+  let target = document.getElementById('opdal-' + sub);
+  let source = document.getElementById(sourceId);
+  if(target && source && target.childElementCount === 0){
+    // Move all children from the original page into the sub container
+    while(source.firstChild){
+      target.appendChild(source.firstChild);
+    }
+    // Hide the now-empty original page so it doesn't show again
+    source.style.display = 'none';
+  }
+  if(sub === 'ep') renderEpTab();
+  if(sub === 'spec') renderSpecificTab();
+  if(sub === 'ip') rAll();
+}
+
+window.goOpdalTab = function(sub, btn){
+  mountOpdalSubtab(sub);
+};
+
+// ============================================================
+// ON CALL CALENDAR
+// ============================================================
+var oncallState = { year: new Date().getFullYear(), month: new Date().getMonth(), selected: null };
+
+// Build the full list of doctors for dropdowns (sorted, unique).
+function getAllDoctorNames(){
+  let names = new Set();
+  Object.values(docPINsHashed).forEach(n => { if(n && n !== 'Admin') names.add(n); });
+  // Also include any current live-pinned doctors
+  Object.values((window.S && window.S.docPins) || {}).forEach(n => { if(n && typeof n === 'string' && n !== 'Admin') names.add(n); });
+  return [...names].sort();
+}
+
+function buildDocOptions(selectedValue, includeNone){
+  let opts = includeNone ? '<option value="">— Not assigned —</option>' : '<option value="" disabled selected>Select doctor...</option>';
+  getAllDoctorNames().forEach(n => {
+    let sel = (n === selectedValue) ? ' selected' : '';
+    opts += `<option value="${n}"${sel}>${n}</option>`;
+  });
+  return opts;
+}
+
+function oncallIso(y,m,d){
+  let mm = String(m+1).padStart(2,'0');
+  let dd = String(d).padStart(2,'0');
+  return `${y}-${mm}-${dd}`;
+}
+
+function getOncallForDay(iso){
+  ensureExtState();
+  return (window.S.onCall && window.S.onCall[iso]) || null;
+}
+
+function oncallHasAny(roster){
+  if(!roster) return false;
+  return !!(roster.first1 || roster.first2 || roster.first3 || roster.ccu || roster.second || roster.interv);
+}
+
+function oncallCount(roster){
+  if(!roster) return 0;
+  let n = 0;
+  ['first1','first2','first3','ccu','second','interv'].forEach(k => { if(roster[k]) n++; });
+  return n;
+}
+
+window.renderOncallCalendar = function(){
+  let grid = document.getElementById('oncallGrid');
+  let label = document.getElementById('oncallMonthLabel');
+  if(!grid || !label) return;
+  let y = oncallState.year, m = oncallState.month;
+  let first = new Date(y, m, 1);
+  let firstDow = first.getDay();
+  let daysInMonth = new Date(y, m+1, 0).getDate();
+  let todayIso_ = new Date().toISOString().slice(0,10);
+  label.innerText = first.toLocaleDateString('en-GB', { month:'long', year:'numeric' });
+  let html = '';
+  // leading blanks
+  for(let i=0;i<firstDow;i++){ html += `<div class="cal-cell outside"></div>`; }
+  for(let d=1; d<=daysInMonth; d++){
+    let iso = oncallIso(y,m,d);
+    let roster = getOncallForDay(iso);
+    let cnt = oncallCount(roster);
+    let isToday = (iso === todayIso_);
+    let isSelected = (iso === oncallState.selected);
+    let past = iso < todayIso_;
+    let cls = 'cal-cell';
+    if(isToday) cls += ' today';
+    if(isSelected) cls += ' selected';
+    if(past) cls += ' past';
+    if(cnt) cls += ' has-oncall';
+    let dots = '';
+    if(roster){
+      // Small colored pills representing filled roles
+      if(roster.first1 || roster.first2 || roster.first3) dots += '<span class="oncall-cell-dot" style="background:var(--acc)"></span>';
+      if(roster.ccu) dots += '<span class="oncall-cell-dot" style="background:var(--warn)"></span>';
+      if(roster.second) dots += '<span class="oncall-cell-dot" style="background:var(--ok)"></span>';
+      if(roster.interv) dots += '<span class="oncall-cell-dot" style="background:var(--ep)"></span>';
+    }
+    html += `<div class="${cls}" onclick="selectOncallDay('${iso}')"><div class="cal-date">${d}</div>${dots?`<div class="oncall-dots">${dots}</div>`:''}${cnt?`<div class="cal-count" style="background:var(--sur2);color:var(--acc2);min-width:18px;font-size:9px">${cnt}/6</div>`:''}</div>`;
+  }
+  grid.innerHTML = html;
+  renderOncallDetail();
+};
+
+window.selectOncallDay = function(iso){
+  oncallState.selected = iso;
+  renderOncallCalendar();
+};
+
+function renderOncallDetail(){
+  let box = document.getElementById('oncallDayDetail');
+  if(!box) return;
+  let iso = oncallState.selected;
+  if(!iso){ box.innerHTML = ''; return; }
+  let roster = getOncallForDay(iso) || {};
+  let dateLabel = new Date(iso+'T00:00:00').toLocaleDateString('en-GB', { weekday:'long', day:'2-digit', month:'long', year:'numeric' });
+  let isAdmin = (window.currentRole === 'admin');
+  let editBtn = isAdmin ? `<button class="oncall-edit-btn" onclick="openOncallMo('${iso}')">✎ ${oncallHasAny(roster)?'Edit':'Assign'} Roster</button>` : '';
+  function chip(name, cls){
+    if(!name) return `<span class="oncall-doc-chip empty">— not assigned —</span>`;
+    return `<span class="oncall-doc-chip ${cls}">${name}</span>`;
+  }
+  box.innerHTML = `
+    <div class="oncall-detail-card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding-bottom:10px;border-bottom:1px dashed var(--bor);flex-wrap:wrap;gap:8px">
+        <div style="font-family:'DM Serif Display',serif;font-size:17px;color:var(--txt)">${dateLabel}</div>
+        ${editBtn}
+      </div>
+      <div class="oncall-role-block">
+        <div class="oncall-role-label" style="color:var(--acc)">First On-call (3)</div>
+        <div class="oncall-role-docs">${chip(roster.first1,'first')} ${chip(roster.first2,'first')} ${chip(roster.first3,'first')}</div>
+      </div>
+      <div class="oncall-role-block">
+        <div class="oncall-role-label" style="color:var(--warn)">CCU (1)</div>
+        <div class="oncall-role-docs">${chip(roster.ccu,'ccu')}</div>
+      </div>
+      <div class="oncall-role-block">
+        <div class="oncall-role-label" style="color:var(--ok)">Second On-call (1)</div>
+        <div class="oncall-role-docs">${chip(roster.second,'second')}</div>
+      </div>
+      <div class="oncall-role-block" style="margin-bottom:0">
+        <div class="oncall-role-label" style="color:var(--ep)">Interventionist On-call (1)</div>
+        <div class="oncall-role-docs">${chip(roster.interv,'interv')}</div>
+      </div>
+    </div>`;
+}
+
+window.shiftOncallMonth = function(delta){
+  let d = new Date(oncallState.year, oncallState.month + delta, 1);
+  oncallState.year = d.getFullYear();
+  oncallState.month = d.getMonth();
+  renderOncallCalendar();
+};
+
+window.jumpOncallToday = function(){
+  let n = new Date();
+  oncallState.year = n.getFullYear();
+  oncallState.month = n.getMonth();
+  oncallState.selected = n.toISOString().slice(0,10);
+  renderOncallCalendar();
+};
+
+window.openOncallMo = function(iso){
+  if(window.currentRole !== 'admin'){ alert('Only admin can edit the on-call roster.'); return; }
+  let roster = getOncallForDay(iso) || {};
+  document.getElementById('oncall-iso').value = iso;
+  let pretty = new Date(iso+'T00:00:00').toLocaleDateString('en-GB', { weekday:'long', day:'2-digit', month:'long', year:'numeric' });
+  document.getElementById('oncallMoDate').innerText = pretty;
+  document.getElementById('oncall-first1').innerHTML = buildDocOptions(roster.first1, true);
+  document.getElementById('oncall-first2').innerHTML = buildDocOptions(roster.first2, true);
+  document.getElementById('oncall-first3').innerHTML = buildDocOptions(roster.first3, true);
+  document.getElementById('oncall-ccu').innerHTML    = buildDocOptions(roster.ccu, true);
+  document.getElementById('oncall-second').innerHTML = buildDocOptions(roster.second, true);
+  document.getElementById('oncall-interv').innerHTML = buildDocOptions(roster.interv, true);
+  document.getElementById('oncallMo').classList.add('on');
+};
+
+window.closeOncallMo = function(){ document.getElementById('oncallMo').classList.remove('on'); };
+
+window.saveOncall = function(ev){
+  ev.preventDefault();
+  if(window.currentRole !== 'admin'){ alert('Admin only.'); return false; }
+  let iso = document.getElementById('oncall-iso').value;
+  let roster = {
+    first1: document.getElementById('oncall-first1').value || '',
+    first2: document.getElementById('oncall-first2').value || '',
+    first3: document.getElementById('oncall-first3').value || '',
+    ccu:    document.getElementById('oncall-ccu').value || '',
+    second: document.getElementById('oncall-second').value || '',
+    interv: document.getElementById('oncall-interv').value || '',
+    updatedAt: Date.now(),
+    updatedBy: 'Admin'
+  };
+  // Warn if any First On-call doctor is duplicated across the three slots
+  let firsts = [roster.first1, roster.first2, roster.first3].filter(x=>x);
+  let uniqFirsts = new Set(firsts);
+  if(uniqFirsts.size !== firsts.length){
+    if(!confirm('The same doctor is assigned to more than one First On-call slot. Save anyway?')) return false;
+  }
+  ensureExtState();
+  if(!window.S.onCall) window.S.onCall = {};
+  window.S.onCall[iso] = roster;
+  dbRef.set(window.S);
+  closeOncallMo();
+  renderOncallCalendar();
+  return false;
+};
+
+window.clearOncallDay = function(){
+  let iso = document.getElementById('oncall-iso').value;
+  if(!iso) return;
+  if(!confirm('Clear the entire on-call roster for this day?')) return;
+  ensureExtState();
+  if(window.S.onCall && window.S.onCall[iso]) delete window.S.onCall[iso];
+  dbRef.set(window.S);
+  closeOncallMo();
+  renderOncallCalendar();
+};
+
+// ============================================================
+// MY PIN — doctor self-service PIN change (6 digits)
+// ============================================================
+window.renderProfileTab = function(){
+  let label = document.getElementById('profileDocLabel');
+  if(!label) return;
+  if(!window.currentDoctor){
+    label.innerText = '⚠ You must be logged in as a doctor to change your PIN.';
+    label.style.color = 'var(--warn)';
+  } else {
+    label.innerText = 'Logged in as: ' + window.currentDoctor;
+    label.style.color = 'var(--acc2)';
+  }
+  ['prof-old-pin','prof-new-pin','prof-new-pin2'].forEach(id=>{ let el=document.getElementById(id); if(el) el.value=''; });
+};
+
+// Returns true if the given hash is currently in use by ANY other doctor
+// (either the seed table or the live override). Used to refuse duplicate PINs.
+function hashInUseByOther(hash, myName){
+  // Check seed table
+  for(let h in docPINsHashed){
+    if(h === hash && docPINsHashed[h] !== myName) return docPINsHashed[h];
+  }
+  // Check live overrides
+  let live = (window.S && window.S.docPins) || {};
+  for(let key in live){
+    if(key.startsWith('retired:')) continue; // tombstones don't count as active usage
+    if(key === hash && live[key] !== myName) return live[key];
+  }
+  return null;
+}
+
+window.changeMyPin = async function(ev){
+  ev.preventDefault();
+  if(!window.currentDoctor){ alert('You must be logged in as a doctor to change your PIN.'); return false; }
+  let oldPin = document.getElementById('prof-old-pin').value.trim();
+  let newPin = document.getElementById('prof-new-pin').value.trim();
+  let newPin2 = document.getElementById('prof-new-pin2').value.trim();
+  if(!/^\d{4,6}$/.test(oldPin)){ alert('Enter your current PIN (4–6 digits).'); return false; }
+  if(!/^\d{6}$/.test(newPin)){ alert('New PIN must be exactly 6 digits.'); return false; }
+  if(newPin !== newPin2){ alert('The two new PIN entries do not match.'); return false; }
+  if(oldPin === newPin){ alert('New PIN must be different from your current PIN.'); return false; }
+  // Verify current PIN belongs to this doctor
+  let verifyName = await lookupDocPIN(oldPin);
+  if(verifyName !== window.currentDoctor){
+    alert('Current PIN is incorrect.');
+    document.getElementById('prof-old-pin').value='';
+    return false;
+  }
+  let newHash = await sha256(newPin);
+  // Refuse if the new PIN is already used by another doctor
+  let conflict = hashInUseByOther(newHash, window.currentDoctor);
+  if(conflict){
+    alert(`❌ This PIN is already used by another doctor (${conflict}). Please choose a different 6-digit PIN.`);
+    document.getElementById('prof-new-pin').value='';
+    document.getElementById('prof-new-pin2').value='';
+    return false;
+  }
+  // Find and retire the old hash of this doctor (both from seed table and live)
+  ensureExtState();
+  if(!window.S.docPins) window.S.docPins = {};
+  // Tombstone any old hashes mapped to this doctor
+  // (a) seed table
+  for(let h in docPINsHashed){
+    if(docPINsHashed[h] === window.currentDoctor){
+      window.S.docPins['retired:' + h] = window.currentDoctor;
+    }
+  }
+  // (b) previous live override (if any)
+  Object.keys(window.S.docPins).forEach(k => {
+    if(k.startsWith('retired:')) return;
+    if(window.S.docPins[k] === window.currentDoctor){
+      // Move active -> retired, then delete the active entry
+      window.S.docPins['retired:' + k] = window.currentDoctor;
+      delete window.S.docPins[k];
+    }
+  });
+  // Install the new hash
+  window.S.docPins[newHash] = window.currentDoctor;
+  // Audit
+  if(!window.S.pinChanges) window.S.pinChanges = [];
+  window.S.pinChanges.push({ ts: Date.now(), doc: window.currentDoctor, by: window.currentDoctor + ' (self)', action: 'change' });
+  if(window.S.pinChanges.length > 200) window.S.pinChanges = window.S.pinChanges.slice(-200);
+  dbRef.set(window.S);
+  alert('✅ PIN updated. Use your new 6-digit PIN next time you log in.');
+  renderProfileTab();
+  return false;
+};
+
+// ============================================================
+// ADMIN — Reset doctor PIN
+// ============================================================
+window.renderPinResetTab = function(){
+  let sel = document.getElementById('pinreset-doc');
+  if(sel){
+    let cur = sel.value;
+    sel.innerHTML = buildDocOptions(cur, false);
+  }
+  ['pinreset-new','pinreset-new2'].forEach(id=>{ let el=document.getElementById(id); if(el) el.value=''; });
+  let logBox = document.getElementById('pinreset-log');
+  if(logBox){
+    let changes = ((window.S && window.S.pinChanges) || []).slice().sort((a,b)=>b.ts-a.ts).slice(0,30);
+    if(!changes.length){
+      logBox.innerHTML = '<div style="color:var(--dim);font-size:11px;padding:8px 0;font-family:\'DM Mono\',monospace">No PIN changes logged yet.</div>';
+    } else {
+      logBox.innerHTML = changes.map(c => {
+        let when = new Date(c.ts).toLocaleString('en-GB', { day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' });
+        let icon = c.action === 'reset' ? '🔐' : '🔄';
+        let actionLabel = c.action === 'reset' ? 'Admin reset' : 'Self change';
+        return `<div style="background:var(--sur);border:1px solid var(--bor);border-radius:8px;padding:10px 12px;font-family:'DM Mono',monospace;font-size:11px;line-height:1.6">
+          <div style="color:var(--txt);font-weight:600">${icon} ${c.doc}</div>
+          <div style="color:var(--dim)">${actionLabel} by ${c.by}</div>
+          <div style="color:var(--acc2);font-size:10px">${when}</div>
+        </div>`;
+      }).join('');
+    }
+  }
+};
+
+window.adminResetPin = async function(){
+  if(!adm && window.currentRole !== 'admin'){ alert('Admin access required.'); return; }
+  let docName = document.getElementById('pinreset-doc').value;
+  let newPin = document.getElementById('pinreset-new').value.trim();
+  let newPin2 = document.getElementById('pinreset-new2').value.trim();
+  if(!docName){ alert('Select a doctor.'); return; }
+  if(!/^\d{6}$/.test(newPin)){ alert('New PIN must be exactly 6 digits.'); return; }
+  if(newPin !== newPin2){ alert('The two new PIN entries do not match.'); return; }
+  let newHash = await sha256(newPin);
+  // Refuse if another doctor already uses this PIN
+  let conflict = hashInUseByOther(newHash, docName);
+  if(conflict){
+    alert(`❌ This PIN is already used by another doctor (${conflict}). Please choose a different 6-digit PIN.`);
+    document.getElementById('pinreset-new').value='';
+    document.getElementById('pinreset-new2').value='';
+    return;
+  }
+  if(!confirm(`Reset PIN for ${docName}?\n\nThey will need to use the new 6-digit PIN to log in.`)) return;
+  ensureExtState();
+  if(!window.S.docPins) window.S.docPins = {};
+  // Tombstone any old hashes for this doctor
+  for(let h in docPINsHashed){
+    if(docPINsHashed[h] === docName){
+      window.S.docPins['retired:' + h] = docName;
+    }
+  }
+  Object.keys(window.S.docPins).forEach(k => {
+    if(k.startsWith('retired:')) return;
+    if(window.S.docPins[k] === docName){
+      window.S.docPins['retired:' + k] = docName;
+      delete window.S.docPins[k];
+    }
+  });
+  // Install new
+  window.S.docPins[newHash] = docName;
+  // Audit
+  if(!window.S.pinChanges) window.S.pinChanges = [];
+  window.S.pinChanges.push({ ts: Date.now(), doc: docName, by: 'Admin', action: 'reset' });
+  if(window.S.pinChanges.length > 200) window.S.pinChanges = window.S.pinChanges.slice(-200);
+  dbRef.set(window.S);
+  alert(`✅ PIN reset for ${docName}. Share the new 6-digit PIN with them securely.`);
+  renderPinResetTab();
+};
+
+// ============================================================
+// ADMIN — Removals log (IP discharges / cath cases)
+// ============================================================
+window.removalsFilter = 'all';
+
+window.filterRemovals = function(f, btn){
+  window.removalsFilter = f;
+  document.querySelectorAll('#removals-filter .fb').forEach(x=>x.classList.remove('on'));
+  if(btn) btn.classList.add('on');
+  renderRemovalsList();
+};
+
+window.renderRemovalsList = function(){
+  let c = document.getElementById('removals-list');
+  if(!c) return;
+  let all = ((window.S && window.S.removals) || []).slice().sort((a,b)=>b.ts-a.ts);
+  let f = window.removalsFilter || 'all';
+  if(f !== 'all') all = all.filter(r => r.type === f);
+  if(!all.length){
+    c.innerHTML = '<div style="color:var(--dim);font-size:11px;padding:12px 0;font-family:\'DM Mono\',monospace;text-align:center">No removals logged' + (f!=='all'?' in this category':'') + '.</div>';
+    return;
+  }
+  c.innerHTML = all.map(r => {
+    let when = new Date(r.ts).toLocaleString('en-GB', { day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' });
+    let badgeClass, badgeText;
+    if(r.type === 'ip'){ badgeClass = 'rem-badge-ip'; badgeText = 'IP LIST'; }
+    else if(r.type === 'cath-sched'){ badgeClass = 'rem-badge-csch'; badgeText = 'CATH SCHEDULED'; }
+    else if(r.type === 'cath-pending'){ badgeClass = 'rem-badge-cpend'; badgeText = 'CATH WAITING'; }
+    else { badgeClass = 'rem-badge-log'; badgeText = (r.type||'OTHER').toUpperCase(); }
+    let details = '';
+    if(r.type === 'ip'){
+      details = `<div class="rem-meta"><b>MRN:</b> ${escapeHtml(r.mrn||'—')} · <b>Ward:</b> ${escapeHtml(r.ward||'—')} · <b>Bed:</b> ${escapeHtml(r.bed||'—')}</div>
+        ${r.reason && r.reason !== '—' ? `<div class="rem-meta"><b>Reason:</b> ${escapeHtml(r.reason)}</div>` : ''}
+        <div class="rem-meta"><b>Originally created by:</b> ${escapeHtml(r.createdBy||'—')}</div>`;
+    } else if(r.type === 'cath-sched'){
+      details = `<div class="rem-meta"><b>Civil ID:</b> ${escapeHtml(r.cid||'—')} · <b>File:</b> ${escapeHtml(r.file||'—')}</div>
+        <div class="rem-meta"><b>Procedure:</b> ${escapeHtml(r.proc||'—')} · <b>Operator:</b> ${escapeHtml(r.operator||'—')}</div>
+        <div class="rem-meta"><b>Was scheduled for:</b> ${escapeHtml(r.date||'—')}</div>
+        <div class="rem-meta"><b>Originally created by:</b> ${escapeHtml(r.createdBy||'—')}</div>`;
+    } else if(r.type === 'cath-pending'){
+      details = `<div class="rem-meta"><b>Civil ID:</b> ${escapeHtml(r.cid||'—')} · <b>File:</b> ${escapeHtml(r.file||'—')}</div>
+        <div class="rem-meta"><b>Suggested procedure:</b> ${escapeHtml(r.proc||'—')}</div>
+        <div class="rem-meta"><b>Originally added by:</b> ${escapeHtml(r.createdBy||'—')}</div>`;
+    }
+    return `<div class="rem-card">
+      <div class="rem-card-head">
+        <span class="rem-badge ${badgeClass}">${badgeText}</span>
+        <div class="rem-name">${escapeHtml(r.patientName||'—')}</div>
+      </div>
+      ${details}
+      <div class="rem-meta" style="margin-top:6px;padding-top:6px;border-top:1px dashed var(--bor)"><b>🗑 Removed by:</b> <span style="color:var(--err)">${escapeHtml(r.by||'—')}</span> · ${when}</div>
+    </div>`;
+  }).join('');
+};
+
+// ============================================================
+// Enhance delEntry to log removals to admin audit too
+// ============================================================
+(function(){
+  let origDelEntry = window.delEntry;
+  window.delEntry = function(){
+    let s = document.getElementById('dfi').value.trim();
+    if(!s) return;
+    let idxL = window.S.logs.findIndex(e=>e.fn.toString().includes(s));
+    let idxO = window.S.oplogs.findIndex(e=>e.fn.toString().includes(s));
+    let idxE = (window.S.eplogs||[]).findIndex(e=>e.fn.toString().includes(s));
+    if(idxL===-1 && idxO===-1 && idxE===-1) return alert('Not found');
+    if(!confirm('Delete?')) return;
+    let who = window.currentDoctor || (window.currentRole === 'admin' ? 'Admin' : (window.currentRole||'Unknown'));
+    ensureExtState();
+    let entry;
+    if(idxL!==-1){
+      entry = window.S.logs[idxL];
+      window.S.logs.splice(idxL,1);
+    } else if(idxO!==-1){
+      entry = window.S.oplogs[idxO];
+      window.S.oplogs.splice(idxO,1);
+    } else {
+      entry = window.S.eplogs[idxE];
+      window.S.eplogs.splice(idxE,1);
+    }
+    window.S.removals.push({
+      type: 'log',
+      ts: Date.now(),
+      by: who,
+      patientName: entry.fn || '—',
+      mrn: entry.fn || '—',
+      originDoc: entry.doc || '—',
+      originRoom: entry.room || '—',
+      apt: entry.apt || '—',
+      createdBy: entry.reg || '—',
+      createdAt: entry.ts || null
+    });
+    if(window.S.removals.length > 500) window.S.removals = window.S.removals.slice(-500);
+    dbRef.set(window.S);
+    rAll();
+  };
+})();
 
 // Initialize
 ensureExtState();
 rAll();
 </script>
+
 </body>
 </html>
