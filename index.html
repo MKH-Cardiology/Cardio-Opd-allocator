@@ -499,6 +499,114 @@ header p{font-size:9px;color:#64748b;font-family:'DM Mono',monospace;letter-spac
   <div id="endoCount" class="endo-count-bar"></div>
   <div id="endoList" class="endo-grid"></div>
 
+  <!-- Heart Failure Team Section — shown when HF Team filter active -->
+  <div id="hfTeamSection" style="display:none;margin-top:12px">
+    <div style="background:linear-gradient(135deg,rgba(20,184,166,.1),rgba(20,184,166,.05));border:1px solid rgba(20,184,166,.35);border-left:4px solid #14b8a6;border-radius:12px;padding:14px 16px;margin-bottom:10px">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px">
+        <div>
+          <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:#2dd4bf;margin-bottom:2px">🫀 HEART FAILURE TEAM</div>
+          <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--dim)">Patients under HF team care · Individual PDF export per patient</div>
+        </div>
+        <button onclick="openHFForm(null)" style="background:linear-gradient(135deg,#0d9488,#14b8a6);border:none;border-radius:8px;padding:8px 14px;color:#fff;font-weight:600;cursor:pointer;font-size:11px;font-family:'DM Mono',monospace;letter-spacing:.5px">＋ Add HF Patient</button>
+      </div>
+      <div id="hfCount" class="endo-count-bar" style="margin-bottom:8px;color:#2dd4bf"></div>
+      <div id="hfList" class="endo-grid"></div>
+    </div>
+  </div>
+
+  <!-- HF Patient Form Modal -->
+  <div class="mo" id="hfMo">
+    <div class="mb" style="max-width:520px;max-height:92vh">
+      <div class="mh">
+        <h2 id="hfMoTitle" style="font-family:'DM Serif Display',serif;font-size:18px">Heart Failure Team — New Patient</h2>
+        <button onclick="closeHFMo()" style="background:none;border:none;color:var(--dim);font-size:20px;cursor:pointer">✕</button>
+      </div>
+      <div class="mbody">
+        <form id="hfForm" class="endo-edit-form" onsubmit="return saveHFPatient(event)">
+          <input type="hidden" id="hf-id">
+          <div class="endo-edit-two" style="grid-template-columns:1fr 1fr">
+            <div><label>Ward</label>
+              <select id="hf-ward" required style="width:100%;background:var(--sur2);border:1px solid var(--bor);border-radius:7px;padding:11px;color:var(--txt);font-family:'DM Mono',monospace;font-size:13px;outline:none;margin-bottom:11px">
+                <option value="">Select...</option>
+                <option value="Ward 4">W4 — Ward 4</option>
+                <option value="CCU">CCU</option>
+                <option value="ICU">ICU (→ Others)</option>
+                <option value="Others">Others / Specify</option>
+              </select>
+            </div>
+            <div><label>Bed No.</label><input type="text" id="hf-bed" maxlength="10" required placeholder="e.g. 7"></div>
+          </div>
+          <div id="hf-ward-other-wrap" style="display:none;margin-bottom:4px">
+            <label>Specify Ward</label>
+            <input type="text" id="hf-ward-other" maxlength="30" placeholder="e.g. Ward 7...">
+          </div>
+          <label>Patient Name</label>
+          <input type="text" id="hf-name" required placeholder="Full name">
+          <label>Civil ID <span style="font-weight:normal;color:var(--dim)">(auto-calculates age &amp; sex)</span></label>
+          <input type="text" id="hf-cid" maxlength="12" inputmode="numeric" placeholder="12-digit Civil ID" oninput="autoAgeFromCid('hf-cid','hf-age','hf-sex')" style="width:100%;background:var(--sur2);border:1px solid var(--bor);border-radius:7px;padding:11px;color:var(--txt);font-family:'DM Mono',monospace;font-size:14px;outline:none;margin-bottom:11px">
+          <label>MRN (File Number)</label>
+          <input type="text" id="hf-mrn" maxlength="12" placeholder="6-digit MRN">
+          <div class="endo-edit-two" style="grid-template-columns:70px 90px 1fr">
+            <div><label>Age</label><input type="text" id="hf-age" maxlength="3" inputmode="numeric" placeholder="e.g. 65"></div>
+            <div><label>Sex</label>
+              <select id="hf-sex" style="width:100%;background:var(--sur2);border:1px solid var(--bor);border-radius:7px;padding:11px;color:var(--txt);font-family:'DM Mono',monospace;font-size:13px;outline:none;margin-bottom:11px">
+                <option value="">—</option><option value="Male">Male</option><option value="Female">Female</option>
+              </select>
+            </div>
+            <div><label>Nationality</label>
+              <select id="hf-nat" style="width:100%;background:var(--sur2);border:1px solid var(--bor);border-radius:7px;padding:11px;color:var(--txt);font-family:'DM Mono',monospace;font-size:13px;outline:none;margin-bottom:11px">
+                <option value="">— Select —</option>
+            <option>Kuwaiti</option><option>Saudi</option><option>Emirati</option><option>Qatari</option><option>Bahraini</option><option>Omani</option>
+            <option>Egyptian</option><option>Jordanian</option><option>Palestinian</option><option>Syrian</option><option>Lebanese</option><option>Iraqi</option><option>Yemeni</option><option>Sudanese</option>
+            <option>Indian</option><option>Pakistani</option><option>Bangladeshi</option><option>Sri Lankan</option><option>Nepali</option><option>Filipino</option><option>Indonesian</option>
+            <option>Ethiopian</option><option>Eritrean</option><option>Somali</option><option>Nigerian</option><option>Ghanaian</option>
+            <option>British</option><option>American</option><option>Canadian</option><option>Australian</option><option>French</option><option>German</option>
+            <option>Iranian</option><option>Turkish</option><option>Afghan</option>
+            <option>Other</option>
+              </select>
+            </div>
+          </div>
+          <label>HF Type / EF</label>
+          <select id="hf-hftype" style="width:100%;background:var(--sur2);border:1px solid var(--bor);border-radius:7px;padding:11px;color:var(--txt);font-family:'DM Mono',monospace;font-size:13px;outline:none;margin-bottom:11px">
+            <option value="">Select HF type...</option>
+            <option>HFrEF (EF &lt;40%)</option><option>HFmrEF (EF 40–49%)</option><option>HFpEF (EF ≥50%)</option>
+            <option>Acute Decompensated HF</option><option>Cardiogenic Shock</option><option>End-Stage HF</option>
+          </select>
+          <label>Past History / Risk Factors</label>
+          <select id="hf-hx-pick" onchange="applyHFPick('hf-hx-pick','hf-hx')" style="width:100%;background:var(--sur2);border:1px solid rgba(20,184,166,.4);border-radius:7px;padding:10px;color:#2dd4bf;font-family:'DM Mono',monospace;font-size:12px;outline:none;margin-bottom:6px">
+            <option value="">— Add risk factor / comorbidity —</option>
+            <option>HTN</option><option>DM</option><option>T2DM</option><option>DLP</option>
+            <option>CAD</option><option>IHD</option><option>AF</option><option>CKD</option><option>ESRD on HD</option>
+            <option>CVA / TIA</option><option>PAD</option><option>COPD</option><option>OSA</option><option>Obesity</option>
+            <option>Smoker</option><option>Ex-smoker</option>
+            <option>s/p CABG</option><option>s/p PCI</option><option>s/p PPM</option><option>s/p ICD</option><option>s/p TAVI</option>
+          </select>
+          <textarea id="hf-hx" rows="3" placeholder="HTN, DM, CAD, s/p PCI, CKD stage 3, AF..."></textarea>
+          <label>Reason for Admission / Diagnosis</label>
+          <select id="hf-reason-pick" onchange="applyHFPick('hf-reason-pick','hf-reason')" style="width:100%;background:var(--sur2);border:1px solid rgba(20,184,166,.4);border-radius:7px;padding:10px;color:#2dd4bf;font-family:'DM Mono',monospace;font-size:12px;outline:none;margin-bottom:6px">
+            <option value="">— Quick pick HF diagnosis —</option>
+            <option>Acute Decompensated HFrEF</option><option>Acute Decompensated HFpEF</option><option>Acute Decompensated HFmrEF</option>
+            <option>Cardiogenic Shock</option><option>Acute Pulmonary Edema</option><option>ACS + HF</option>
+            <option>STEMI + Cardiogenic Shock</option><option>Myocarditis + HF</option><option>Takotsubo CM</option>
+            <option>End-Stage HF — Palliative</option><option>HF + CKD / Cardiorenal syndrome</option>
+            <option>New-onset HF workup</option>
+          </select>
+          <textarea id="hf-reason" rows="2" placeholder="e.g. Acute decompensated HFrEF, ACS + HF, Cardiogenic shock..."></textarea>
+          <label>Investigations</label>
+          <textarea id="hf-ix" rows="3" placeholder="NT-proBNP, echo EF, Cr, CBC, CXR findings..."></textarea>
+          <label>Active Issues</label>
+          <textarea id="hf-active" rows="2" placeholder="e.g. Fluid overload, low EF, renal impairment..."></textarea>
+          <label>Plan</label>
+          <textarea id="hf-plan" rows="3" placeholder="e.g. IV diuresis, uptitrate BB, repeat echo, follow-up HF clinic..."></textarea>
+          <label>Doctor PIN (to save)</label>
+          <input type="password" id="hf-pin" maxlength="6" inputmode="numeric" required>
+          <button type="submit" class="btn" style="margin-top:10px;background:linear-gradient(135deg,#7c3aed,#6d28d9)">💾 Save HF Patient</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
   <!-- Endorsement form modal -->
   <div class="mo" id="endoMo">
     <div class="mb" style="max-width:520px;max-height:92vh">
@@ -549,10 +657,10 @@ header p{font-size:9px;color:#64748b;font-family:'DM Mono',monospace;letter-spac
               <label>Ward</label>
               <select id="endo-ward" required style="width:100%;background:var(--sur2);border:1px solid var(--bor);border-radius:7px;padding:11px;color:var(--txt);font-family:'DM Mono',monospace;font-size:13px;outline:none;margin-bottom:11px" onchange="toggleWardOther()">
                 <option value="">Select...</option>
-                <option value="Ward 4">Ward 4</option>
+                <option value="Ward 4">W4 — Ward 4</option>
                 <option value="CCU">CCU</option>
-                <option value="ICU">ICU</option>
-                <option value="Others">Others</option>
+                <option value="ICU">ICU (→ Others)</option>
+                <option value="Others">Others / Specify</option>
               </select>
             </div>
             <div>
@@ -566,6 +674,8 @@ header p{font-size:9px;color:#64748b;font-family:'DM Mono',monospace;letter-spac
           </div>
           <label>Patient Name</label>
           <input type="text" id="endo-name" required placeholder="Full name">
+          <label>Civil ID <span style="font-weight:normal;color:var(--dim)">(auto-calculates age)</span></label>
+          <input type="text" id="endo-cid" maxlength="12" inputmode="numeric" placeholder="12-digit Civil ID" oninput="autoAgeFromCid('endo-cid','endo-age','endo-sex')" style="width:100%;background:var(--sur2);border:1px solid var(--bor);border-radius:7px;padding:11px;color:var(--txt);font-family:'DM Mono',monospace;font-size:14px;outline:none;margin-bottom:11px">
           <label>MRN (File Number)</label>
           <input type="text" id="endo-mrn" maxlength="12" required placeholder="6-digit MRN">
 
@@ -584,14 +694,53 @@ header p{font-size:9px;color:#64748b;font-family:'DM Mono',monospace;letter-spac
             </div>
             <div>
               <label>Nationality</label>
-              <input type="text" id="endo-nat" maxlength="30" placeholder="e.g. Kuwaiti">
+              <select id="endo-nat" style="width:100%;background:var(--sur2);border:1px solid var(--bor);border-radius:7px;padding:11px;color:var(--txt);font-family:'DM Mono',monospace;font-size:13px;outline:none;margin-bottom:11px">
+              <option value="">— Select —</option>
+              <option>Kuwaiti</option><option>Saudi</option><option>Emirati</option><option>Qatari</option><option>Bahraini</option><option>Omani</option>
+              <option>Egyptian</option><option>Jordanian</option><option>Palestinian</option><option>Syrian</option><option>Lebanese</option><option>Iraqi</option><option>Yemeni</option><option>Sudanese</option>
+              <option>Indian</option><option>Pakistani</option><option>Bangladeshi</option><option>Sri Lankan</option><option>Nepali</option><option>Filipino</option><option>Indonesian</option>
+              <option>Ethiopian</option><option>Eritrean</option><option>Somali</option><option>Nigerian</option><option>Ghanaian</option>
+              <option>British</option><option>American</option><option>Canadian</option><option>Australian</option><option>French</option><option>German</option>
+              <option>Iranian</option><option>Turkish</option><option>Afghan</option>
+              <option>Other</option>
+            </select>
             </div>
           </div>
 
-          <label>Past History</label>
+          <label>Past History / Risk Factors</label>
+          <select id="endo-hx-pick" onchange="applyEndoHxPick()" style="width:100%;background:var(--sur2);border:1px solid rgba(96,165,250,.4);border-radius:7px;padding:10px;color:var(--acc2);font-family:'DM Mono',monospace;font-size:12px;outline:none;margin-bottom:6px">
+            <option value="">— Add common risk factor / comorbidity —</option>
+            <option>HTN</option><option>DM</option><option>T2DM</option><option>T1DM</option><option>DLP</option>
+            <option>CAD</option><option>IHD</option><option>AF</option><option>HF</option><option>HFrEF</option><option>HFpEF</option>
+            <option>CKD</option><option>ESRD on HD</option><option>CVA / TIA</option><option>PAD</option><option>COPD</option><option>OSA</option>
+            <option>Obesity</option><option>Smoker</option><option>Ex-smoker</option>
+            <option>s/p CABG</option><option>s/p PCI</option><option>s/p PPM</option><option>s/p ICD</option><option>s/p TAVI</option><option>s/p MVR / AVR</option>
+          </select>
           <textarea id="endo-hx" rows="3" placeholder="HTN, DM, CAD s/p PCI LAD 2022, CKD stage 3..."></textarea>
 
-          <label>Reason of Admission</label>
+          <label>Reason of Admission / Diagnosis</label>
+          <select id="endo-reason-pick" onchange="applyEndoDiagPick()" style="width:100%;background:var(--sur2);border:1px solid rgba(96,165,250,.4);border-radius:7px;padding:10px;color:var(--acc2);font-family:'DM Mono',monospace;font-size:12px;outline:none;margin-bottom:6px">
+            <option value="">— Quick pick common diagnosis —</option>
+            <optgroup label="Coronary / ACS">
+              <option>STEMI</option><option>NSTEMI</option><option>Unstable Angina</option><option>ACS — type unspecified</option><option>Stable Angina</option><option>CAD</option>
+            </optgroup>
+            <optgroup label="Heart Failure">
+              <option>Acute Decompensated HFrEF</option><option>Acute Decompensated HFpEF</option><option>Acute Decompensated HFmrEF</option><option>Cardiogenic Shock</option><option>Acute Pulmonary Edema</option>
+            </optgroup>
+            <optgroup label="Rhythm">
+              <option>AF — New onset</option><option>AF — Rapid ventricular response</option><option>VT — Sustained</option><option>SVT</option><option>CHB — High-degree AV block</option><option>Brady-arrhythmia</option>
+            </optgroup>
+            <optgroup label="Valvular">
+              <option>Severe AS</option><option>Severe MR</option><option>Severe AR</option><option>Infective Endocarditis</option>
+            </optgroup>
+            <optgroup label="Other Cardiac">
+              <option>Hypertensive Emergency</option><option>Acute Pericarditis</option><option>Cardiac Tamponade</option><option>Pulmonary Embolism (massive)</option><option>Aortic Dissection</option>
+              <option>Myocarditis</option><option>HCM — Symptomatic</option><option>Syncope — Cardiac workup</option>
+            </optgroup>
+            <optgroup label="Device / Procedure">
+              <option>Post-PCI monitoring</option><option>Post-PPM / device</option><option>Post-TAVI</option><option>Elective cath workup</option>
+            </optgroup>
+          </select>
           <textarea id="endo-reason" rows="2" placeholder="e.g. NSTEMI, acute decompensated HF Class III..."></textarea>
 
           <label>Investigations</label>
@@ -694,18 +843,33 @@ header p{font-size:9px;color:#64748b;font-family:'DM Mono',monospace;letter-spac
         </div>
         <label>Patient Name</label>
         <input type="text" id="cath-sch-name" required>
-        <div class="endo-edit-two">
+        <label>Civil ID <span style="font-weight:normal;color:var(--dim)">(auto-fills age &amp; sex)</span></label>
+        <input type="text" id="cath-sch-cid" required placeholder="12-digit Civil ID" oninput="autoAgeFromCid('cath-sch-cid','cath-sch-age','cath-sch-sex')" style="width:100%;background:var(--sur2);border:1px solid var(--bor);border-radius:7px;padding:11px;color:var(--txt);font-family:'DM Mono',monospace;font-size:14px;outline:none;margin-bottom:11px">
+        <div style="display:grid;grid-template-columns:70px 90px 1fr;gap:8px">
           <div>
             <label>Age</label>
             <input type="text" id="cath-sch-age" inputmode="numeric" maxlength="3" placeholder="e.g. 58">
           </div>
           <div>
+            <label>Sex</label>
+            <select id="cath-sch-sex" style="width:100%;background:var(--sur2);border:1px solid var(--bor);border-radius:7px;padding:11px;color:var(--txt);font-family:'DM Mono',monospace;font-size:13px;outline:none;margin-bottom:11px">
+              <option value="">—</option><option value="Male">Male</option><option value="Female">Female</option>
+            </select>
+          </div>
+          <div>
             <label>Nationality</label>
-            <input type="text" id="cath-sch-nat" placeholder="e.g. Kuwaiti">
+            <select id="cath-sch-nat" style="width:100%;background:var(--sur2);border:1px solid var(--bor);border-radius:7px;padding:11px;color:var(--txt);font-family:'DM Mono',monospace;font-size:13px;outline:none;margin-bottom:11px">
+              <option value="">— Select —</option>
+              <option>Kuwaiti</option><option>Saudi</option><option>Emirati</option><option>Qatari</option><option>Bahraini</option><option>Omani</option>
+              <option>Egyptian</option><option>Jordanian</option><option>Palestinian</option><option>Syrian</option><option>Lebanese</option><option>Iraqi</option><option>Yemeni</option><option>Sudanese</option>
+              <option>Indian</option><option>Pakistani</option><option>Bangladeshi</option><option>Sri Lankan</option><option>Nepali</option><option>Filipino</option><option>Indonesian</option>
+              <option>Ethiopian</option><option>Eritrean</option><option>Somali</option><option>Nigerian</option><option>Ghanaian</option>
+              <option>British</option><option>American</option><option>Canadian</option><option>Australian</option><option>French</option><option>German</option>
+              <option>Iranian</option><option>Turkish</option><option>Afghan</option>
+              <option>Other</option>
+            </select>
           </div>
         </div>
-        <label>Civil ID</label>
-        <input type="text" id="cath-sch-cid" required placeholder="12 digits">
         <label>Phone Number</label>
         <input type="text" id="cath-sch-phone" inputmode="tel">
         <label>File Number <span style="font-weight:normal">(optional)</span></label>
@@ -794,18 +958,33 @@ header p{font-size:9px;color:#64748b;font-family:'DM Mono',monospace;letter-spac
           </div>
           <label>Patient Name</label>
           <input type="text" id="cath-p-name" required>
-          <div class="endo-edit-two">
+          <label>Civil ID <span style="font-weight:normal;color:var(--dim)">(auto-fills age &amp; sex)</span></label>
+          <input type="text" id="cath-p-cid" required placeholder="12-digit Civil ID" oninput="autoAgeFromCid('cath-p-cid','cath-p-age','cath-p-sex')" style="width:100%;background:var(--sur2);border:1px solid var(--bor);border-radius:7px;padding:11px;color:var(--txt);font-family:'DM Mono',monospace;font-size:14px;outline:none;margin-bottom:11px">
+          <div style="display:grid;grid-template-columns:70px 90px 1fr;gap:8px;margin-bottom:0">
             <div>
               <label>Age</label>
               <input type="text" id="cath-p-age" inputmode="numeric" maxlength="3" placeholder="e.g. 58">
             </div>
             <div>
+              <label>Sex</label>
+              <select id="cath-p-sex" style="width:100%;background:var(--sur2);border:1px solid var(--bor);border-radius:7px;padding:11px;color:var(--txt);font-family:'DM Mono',monospace;font-size:13px;outline:none;margin-bottom:11px">
+              <option value="">—</option><option value="Male">Male</option><option value="Female">Female</option>
+            </select>
+            </div>
+            <div>
               <label>Nationality</label>
-              <input type="text" id="cath-p-nat" placeholder="e.g. Kuwaiti">
+              <select id="cath-p-nat" style="width:100%;background:var(--sur2);border:1px solid var(--bor);border-radius:7px;padding:11px;color:var(--txt);font-family:'DM Mono',monospace;font-size:13px;outline:none;margin-bottom:11px">
+              <option value="">— Select —</option>
+              <option>Kuwaiti</option><option>Saudi</option><option>Emirati</option><option>Qatari</option><option>Bahraini</option><option>Omani</option>
+              <option>Egyptian</option><option>Jordanian</option><option>Palestinian</option><option>Syrian</option><option>Lebanese</option><option>Iraqi</option><option>Yemeni</option><option>Sudanese</option>
+              <option>Indian</option><option>Pakistani</option><option>Bangladeshi</option><option>Sri Lankan</option><option>Nepali</option><option>Filipino</option><option>Indonesian</option>
+              <option>Ethiopian</option><option>Eritrean</option><option>Somali</option><option>Nigerian</option><option>Ghanaian</option>
+              <option>British</option><option>American</option><option>Canadian</option><option>Australian</option><option>French</option><option>German</option>
+              <option>Iranian</option><option>Turkish</option><option>Afghan</option>
+              <option>Other</option>
+            </select>
             </div>
           </div>
-          <label>Civil ID</label>
-          <input type="text" id="cath-p-cid" required placeholder="12 digits">
           <label>Phone Number</label>
           <input type="text" id="cath-p-phone" inputmode="tel">
           <label>File Number <span style="font-weight:normal">(optional)</span></label>
@@ -927,7 +1106,7 @@ header p{font-size:9px;color:#64748b;font-family:'DM Mono',monospace;letter-spac
   <div class="card">
     <div class="rl" style="margin-bottom:10px">WARD &amp; CCU CENSUS</div>
     <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--dim);line-height:1.6;margin-bottom:14px">
-      Updated <strong style="color:var(--warn)">twice daily</strong> by the assigned cardiologist. Ward 4 = 20 beds. CCU = 15 beds. An advisory alert will appear if <strong>scheduled cath cases</strong> for a day exceed available Ward 4 beds — scheduling is not blocked; it just reminds the cathlab doctor to free a bed or reschedule elective patients.
+      Updated <strong style="color:var(--warn)">twice daily</strong> by the assigned cardiologist. Ward 4 = 20 beds. CCU = 15 beds. The bed advisory alert is active <strong>9 pm – 9 am only</strong>: if tomorrow's non-IP scheduled cath cases exceed available Ward 4 beds, an alert fires. It silences automatically at 9 am. Scheduling is never blocked.
     </div>
     <div id="censusAlertBox"></div>
     <div id="censusCards"></div>
@@ -1083,7 +1262,7 @@ header p{font-size:9px;color:#64748b;font-family:'DM Mono',monospace;letter-spac
         <button class="fb" onclick="filterLog('Thu',this)">Thu</button>
       </div>
       <div class="lt">
-        <div class="lh"><div>Date</div><div>File / Phone</div><div>Doctor / Room</div><div>Follow-up</div><div>By</div><div></div></div>
+        <div class="lh"><div>Date</div><div>File / Phone</div><div>Doctor / R</div><div>Follow-up</div><div>By</div><div></div></div>
         <div id="lb"></div>
       </div>
     </div>
@@ -1525,9 +1704,9 @@ window.doFixAssign = function() {
   rAll(); alert("Appointment booked!");
 };
 
-function renderFixClinics() { let today=tn(), container=document.getElementById("fix-clinic-grid"); if(!container) return; container.innerHTML=""; document.getElementById("fix-form").style.display="none"; selectedFixDoc=null; let seen={}; for(let i=0;i<CL.length;i++){ if(!CL[i].days.includes(today) && !isDocOff(CL[i].d,'op')){ let key=CL[i].d+"_"+CL[i].r+"_"+CL[i].days.join(""); if(!seen[key]) seen[key]={idx:i, doc:CL[i]}; } } Object.values(seen).forEach(item=>{ let card=document.createElement("div"); card.className="spec-card"; card.innerHTML=`<div class="rl" style="margin-bottom:4px">CLINIC</div><div class="spec-name">Dr. ${item.doc.d}</div><div class="spec-meta">${item.doc.r} • ${item.doc.days.join(", ")}</div>`; card.onclick=()=>{ document.querySelectorAll("#fix-clinic-grid .spec-card").forEach(c=>c.classList.remove("selected")); card.classList.add("selected"); selectedFixDoc=item; let dayMap={"Sun":0,"Mon":1,"Tue":2,"Wed":3,"Thu":4,"Fri":5,"Sat":6}, targets=item.doc.days.map(d=>dayMap[d]), opts='<option value="" disabled selected>Select Date...</option>', d=new Date(), count=0; for(let j=0;j<120;j++){ if(targets.includes(d.getDay())){ let ds=d.toLocaleDateString("en-GB",{weekday:'short',day:'2-digit',month:'short',year:'numeric'}); if(!isBlocked(ds, item.doc.d)){ let counts=getBookingCountsForSlot(item.doc.d,item.doc.r,ds); let totalFull=counts.total>=MAX_TOTAL_PER_DATE; let badge=totalFull?" — FULL (5/5)":` [${counts.total}/${MAX_TOTAL_PER_DATE}]`; opts+=`<option value="${ds}"${totalFull?" disabled":""}>${ds}${badge}</option>`; if(++count>=16) break;}} d.setDate(d.getDate()+1); } document.getElementById("fix-date").innerHTML=opts; document.getElementById("fix-hint").innerHTML=`Dr. ${item.doc.d} (${item.doc.r}) — runs on ${item.doc.days.join(", ")}`; document.getElementById("fix-form").style.display="block"; }; container.appendChild(card); }); }
+function renderFixClinics() { let today=tn(), container=document.getElementById("fix-clinic-grid"); if(!container) return; container.innerHTML=""; document.getElementById("fix-form").style.display="none"; selectedFixDoc=null; let seen={}; for(let i=0;i<CL.length;i++){ if(!CL[i].days.includes(today) && !isDocOff(CL[i].d,'op')){ let key=CL[i].d+"_"+CL[i].r+"_"+CL[i].days.join(""); if(!seen[key]) seen[key]={idx:i, doc:CL[i]}; } } Object.values(seen).forEach(item=>{ let card=document.createElement("div"); card.className="spec-card"; card.innerHTML=`<div class="rl" style="margin-bottom:4px">CLINIC</div><div class="spec-name">Dr. ${item.doc.d}</div><div class="spec-meta">${abbrevRoom(item.doc.r)} • ${item.doc.days.join(", ")}</div>`; card.onclick=()=>{ document.querySelectorAll("#fix-clinic-grid .spec-card").forEach(c=>c.classList.remove("selected")); card.classList.add("selected"); selectedFixDoc=item; let dayMap={"Sun":0,"Mon":1,"Tue":2,"Wed":3,"Thu":4,"Fri":5,"Sat":6}, targets=item.doc.days.map(d=>dayMap[d]), opts='<option value="" disabled selected>Select Date...</option>', d=new Date(), count=0; for(let j=0;j<120;j++){ if(targets.includes(d.getDay())){ let ds=d.toLocaleDateString("en-GB",{weekday:'short',day:'2-digit',month:'short',year:'numeric'}); if(!isBlocked(ds, item.doc.d)){ let counts=getBookingCountsForSlot(item.doc.d,item.doc.r,ds); let totalFull=counts.total>=MAX_TOTAL_PER_DATE; let badge=totalFull?" — FULL (5/5)":` [${counts.total}/${MAX_TOTAL_PER_DATE}]`; opts+=`<option value="${ds}"${totalFull?" disabled":""}>${ds}${badge}</option>`; if(++count>=16) break;}} d.setDate(d.getDate()+1); } document.getElementById("fix-date").innerHTML=opts; document.getElementById("fix-hint").innerHTML=`Dr. ${item.doc.d} (${abbrevRoom(item.doc.r)}) — runs on ${item.doc.days.join(", ")}`; document.getElementById("fix-form").style.display="block"; }; container.appendChild(card); }); }
 
-function renderEpTab() { let grid=document.getElementById("ep-clinic-grid"); grid.innerHTML=""; document.getElementById("ep-form").style.display="none"; selectedEpClinic=null; EP_CLINICS.forEach(clinic=>{ let card=document.createElement("div"); card.className="spec-card ep-card"; card.innerHTML=`<div class="rl" style="margin-bottom:4px">EP CLINIC</div><div class="spec-name" style="color:var(--ep)!important;font-size:18px">${clinic.name}</div><div class="spec-meta">${clinic.room} • ${clinic.label}</div>`; card.onclick=()=>{ document.querySelectorAll("#ep-clinic-grid .spec-card").forEach(c=>c.classList.remove("selected")); card.classList.add("selected"); selectedEpClinic=clinic; renderEpDates(clinic); document.getElementById("ep-hint").innerHTML=`EP Clinic — ${clinic.room} every ${clinic.label}. Max ${EP_MAX_PER_DATE} patients per date.`; document.getElementById("ep-form").style.display="block"; }; grid.appendChild(card); }); }
+function renderEpTab() { let grid=document.getElementById("ep-clinic-grid"); grid.innerHTML=""; document.getElementById("ep-form").style.display="none"; selectedEpClinic=null; EP_CLINICS.forEach(clinic=>{ let card=document.createElement("div"); card.className="spec-card ep-card"; card.innerHTML=`<div class="rl" style="margin-bottom:4px">EP CLINIC</div><div class="spec-name" style="color:var(--ep)!important;font-size:18px">${clinic.name}</div><div class="spec-meta">${abbrevRoom(clinic.room)} • ${clinic.label}</div>`; card.onclick=()=>{ document.querySelectorAll("#ep-clinic-grid .spec-card").forEach(c=>c.classList.remove("selected")); card.classList.add("selected"); selectedEpClinic=clinic; renderEpDates(clinic); document.getElementById("ep-hint").innerHTML=`EP Clinic — ${clinic.room} every ${clinic.label}. Max ${EP_MAX_PER_DATE} patients per date.`; document.getElementById("ep-form").style.display="block"; }; grid.appendChild(card); }); }
 function getEpCountForDate(clinicId, dateStr) { return (window.S.eplogs||[]).filter(e=>e.epClinicId===clinicId && e.apt===dateStr).length; }
 function renderEpDates(clinic){ let sel=document.getElementById("ep-date"), opts='<option value="" disabled selected>Select '+clinic.label+' Date...</option>', d=new Date(), sixMonths=new Date(); sixMonths.setMonth(sixMonths.getMonth()+6); while(d<=sixMonths){ if(d.getDay()===clinic.dayNum){ let ds=d.toLocaleDateString("en-GB",{weekday:'short',day:'2-digit',month:'short',year:'numeric'}); if(!isBlocked(ds, clinic.id)){ let cnt=getEpCountForDate(clinic.id,ds), full=cnt>=EP_MAX_PER_DATE; opts+=`<option value="${ds}"${full?" disabled":""}>${ds} [${cnt}/${EP_MAX_PER_DATE}]${full?" FULL":""}</option>`; } } d.setDate(d.getDate()+1); } sel.innerHTML=opts; }
 window.doEpAssign=async function(){
@@ -1556,8 +1735,8 @@ window.doEpAssign=async function(){
   alert("EP booked");
 };
 
-function rDist(){ let g=document.getElementById("dg"); g.innerHTML=""; let ipNext=getNextSlotIp(); CL.forEach((c,i)=>{ let ipO=isDocOff(c.d,'ip'), opO=isDocOff(c.d,'op'), isN=(i===ipNext), sk=isSkipped(c.d), d=document.createElement("div"); d.className="dc"+(isN?" nx":""); let distTxt = (c.dist>0?`+${c.dist}`:(c.dist<0?`${c.dist}`:"0")); let distColor = c.dist>0?"#34d399":(c.dist<0?"#f87171":"var(--dim)"); let skipBadge = sk ? `<div class="stb" style="background:rgba(251,191,36,0.15);border:1px solid rgba(251,191,36,0.5);color:#fbbf24;margin-top:3px">SKIP</div>` : ""; d.innerHTML=`<div class="dd">Dr. ${c.d}</div><div style="font-size:10px;color:var(--dim)">${c.r} • ${c.days.join(", ")}</div><div style="font-size:10px;color:${distColor};font-family:'DM Mono',monospace;margin-top:2px">dist ${distTxt}</div><div class="dn2">${cCnt(i)}</div><div class="stbox"><div class="stb ${ipO?'stb-off':'stb-ok'}">IP:${ipO?'OFF':'OK'}</div><div class="stb ${opO?'stb-off':'stb-ok'}">OP:${opO?'OFF':'OK'}</div></div>${skipBadge}`; d.onclick=()=>openMo(i); g.appendChild(d); }); }
-function openMo(i){ if(!adm) return; let c=CL[i], pts=(window.S.logs||[]).concat(window.S.oplogs||[]).filter(e=>e.si===i); document.getElementById("mt").innerHTML=`Dr. ${c.d} — ${c.r}`; document.getElementById("mc2").innerHTML=pts.length+" patients (this slot)"; let b=document.getElementById("mbody"); b.innerHTML=""; pts.forEach(p=>{let div=document.createElement("div"); div.className="mr"; div.innerHTML=`<div>${p.fn}</div><div style="text-align:right">${p.time}</div>`; b.appendChild(div);}); let pb=document.getElementById("mprint"); pb.innerHTML=""; if(pts.length){ let btn=document.createElement("button"); btn.className="btn"; btn.textContent="Print This Slot"; btn.onclick=()=>exportPDF(`Dr. ${c.d} — ${c.r}`, pts); pb.appendChild(btn); } document.getElementById("mo").classList.add("on"); }
+function rDist(){ let g=document.getElementById("dg"); g.innerHTML=""; let ipNext=getNextSlotIp(); CL.forEach((c,i)=>{ let ipO=isDocOff(c.d,'ip'), opO=isDocOff(c.d,'op'), isN=(i===ipNext), sk=isSkipped(c.d), d=document.createElement("div"); d.className="dc"+(isN?" nx":""); let distTxt = (c.dist>0?`+${c.dist}`:(c.dist<0?`${c.dist}`:"0")); let distColor = c.dist>0?"#34d399":(c.dist<0?"#f87171":"var(--dim)"); let skipBadge = sk ? `<div class="stb" style="background:rgba(251,191,36,0.15);border:1px solid rgba(251,191,36,0.5);color:#fbbf24;margin-top:3px">SKIP</div>` : ""; d.innerHTML=`<div class="dd">Dr. ${c.d}</div><div style="font-size:10px;color:var(--dim)">${abbrevRoom(c.r)} • ${c.days.join(", ")}</div><div style="font-size:10px;color:${distColor};font-family:'DM Mono',monospace;margin-top:2px">dist ${distTxt}</div><div class="dn2">${cCnt(i)}</div><div class="stbox"><div class="stb ${ipO?'stb-off':'stb-ok'}">IP:${ipO?'OFF':'OK'}</div><div class="stb ${opO?'stb-off':'stb-ok'}">OP:${opO?'OFF':'OK'}</div></div>${skipBadge}`; d.onclick=()=>openMo(i); g.appendChild(d); }); }
+function openMo(i){ if(!adm) return; let c=CL[i], pts=(window.S.logs||[]).concat(window.S.oplogs||[]).filter(e=>e.si===i); document.getElementById("mt").innerHTML=`Dr. ${c.d} — ${abbrevRoom(c.r)}`; document.getElementById("mc2").innerHTML=pts.length+" patients (this slot)"; let b=document.getElementById("mbody"); b.innerHTML=""; pts.forEach(p=>{let div=document.createElement("div"); div.className="mr"; div.innerHTML=`<div>${p.fn}</div><div style="text-align:right">${p.time}</div>`; b.appendChild(div);}); let pb=document.getElementById("mprint"); pb.innerHTML=""; if(pts.length){ let btn=document.createElement("button"); btn.className="btn"; btn.textContent="Print This Slot"; btn.onclick=()=>exportPDF(`Dr. ${c.d} — ${c.r}`, pts); pb.appendChild(btn); } document.getElementById("mo").classList.add("on"); }
 function exportPDF(title, data){
   if(!data || !data.length){ alert("No data to export."); return; }
   // Use jsPDF + autoTable to generate a real downloadable PDF file
@@ -1571,13 +1750,13 @@ function exportPDF(title, data){
   const stamp = new Date().toLocaleString("en-GB", { day:"2-digit", month:"short", year:"numeric", hour:"2-digit", minute:"2-digit" });
   doc.text(`Mubarak Al-Kabeer Hospital — Cardio OPD     Generated: ${stamp}     Total: ${data.length}`, 40, 52);
   // Table
-  const head = [["Date","Time","File / Phone","Doctor","Room","Follow-up","By"]];
+  const head = [["Date","Time","File / Phone","Doctor","R","Follow-up","By"]];
   const body = data.map(e => [
     e.ad || "—",
     e.time || "—",
     (e.fn!==undefined && e.fn!==null ? String(e.fn) : "—"),
     e.epClinicId ? ("EP / " + e.room) : ("Dr. " + (e.doc||"—")),
-    e.room || "—",
+    abbrevRoom(e.room) || "—",
     e.apt || "—",
     e.reg || "—"
   ]);
@@ -1600,160 +1779,183 @@ function exportPDF(title, data){
   doc.save(`${safeTitle}_${today}.pdf`);
 }
 
+
 // ============================================================
-// Export today's cath list as a PDF (one-tap from the Cathlab → Today tab)
+// CATH LIST PDF EXPORT — non-table sequential format
+// Works for today's list AND any calendar-selected day
 // ============================================================
-window.exportCathToday = function(){
+window.exportCathListPDF = function(isoDate){
   ensureExtState();
   if(typeof window.jspdf === "undefined"){ alert("PDF library still loading. Please try again in a second."); return; }
-  let iso = todayIso();
+  let iso = isoDate || todayIso();
   let cases = Object.values(window.S.cathScheduled||{}).filter(s => s.date === iso);
-  if(!cases.length){ alert("No cath cases scheduled for today."); return; }
-  cases.sort((a,b) => (a.operator||'zzzz').localeCompare(b.operator||'zzzz') || (a.proc||'').localeCompare(b.proc||''));
+  if(!cases.length){ alert("No cath cases scheduled for " + (fmtDate ? fmtDate(iso) : iso)); return; }
+  cases.sort((a,b) => {
+    // IP cases first, then by operator
+    if(a.caseType==='IP' && b.caseType!=='IP') return -1;
+    if(b.caseType==='IP' && a.caseType!=='IP') return 1;
+    return (a.operator||'zzzz').localeCompare(b.operator||'zzzz');
+  });
+
   const { jsPDF } = window.jspdf;
-  const doc = new jsPDF({ orientation: "landscape", unit: "pt", format: "a4" });
+  const doc = new jsPDF({ orientation: "portrait", unit: "pt", format: "a4" });
   const pageW = doc.internal.pageSize.getWidth();
-  const leftMargin = 40;
-  const rightMargin = 40;
-
-  // ===== TITLE BAND (navy rectangle with white title) =====
-  doc.setFillColor(30, 64, 175);
-  doc.rect(0, 0, pageW, 56, "F");
-  doc.setTextColor(255, 255, 255);
-  doc.setFont("helvetica", "bold"); doc.setFontSize(17);
-  doc.text("CATHLAB — TODAY'S CASE LIST", leftMargin, 26);
-  doc.setFont("helvetica", "normal"); doc.setFontSize(10);
+  const pageH = doc.internal.pageSize.getHeight();
+  const lm = 40, rm = 40, usableW = pageW - lm - rm;
   const dateLabel = new Date(iso+"T00:00:00").toLocaleDateString("en-GB",{weekday:"long",day:"2-digit",month:"long",year:"numeric"});
-  doc.text(dateLabel, leftMargin, 44);
-  // Hospital name on right of band
-  doc.setFont("helvetica", "bold"); doc.setFontSize(10);
-  let hospital = "Mubarak Al-Kabeer Hospital";
-  doc.text(hospital, pageW - rightMargin, 26, { align: "right" });
-  doc.setFont("helvetica", "normal"); doc.setFontSize(9);
-  doc.text("Cardiology Department", pageW - rightMargin, 42, { align: "right" });
-
-  // ===== INFO CHIPS ROW =====
-  let ipCount = cases.filter(s => s.caseType === 'IP').length;
-  let electiveCount = cases.length - ipCount;
-
-  // Helper to draw a single rounded-rect chip
-  function drawChip(x, y, label, value, fill, text){
-    let pad = 8, lineH = 13;
-    doc.setFont("helvetica","bold"); doc.setFontSize(8.5);
-    let labelW = doc.getTextWidth(label);
-    doc.setFont("helvetica","bold"); doc.setFontSize(11);
-    let valW = doc.getTextWidth(String(value));
-    let w = Math.max(labelW, valW) + pad*2;
-    let h = 34;
-    doc.setFillColor(fill[0], fill[1], fill[2]);
-    doc.roundedRect(x, y, w, h, 4, 4, "F");
-    doc.setTextColor(text[0], text[1], text[2]);
-    doc.setFont("helvetica","bold"); doc.setFontSize(7.5);
-    doc.text(label, x + pad, y + 12);
-    doc.setFont("helvetica","bold"); doc.setFontSize(13);
-    doc.text(String(value), x + pad, y + 28);
-    return w;
-  }
-  let chipY = 68;
-  let cx = leftMargin;
-  // Total — blue
-  cx += drawChip(cx, chipY, "TOTAL CASES", cases.length, [219, 234, 254], [30, 64, 175]) + 8;
-  // IP — green
-  cx += drawChip(cx, chipY, "IP CASES", ipCount, [220, 252, 231], [5, 112, 73]) + 8;
-  // Elective — light slate
-  cx += drawChip(cx, chipY, "ELECTIVE", electiveCount, [226, 232, 240], [51, 65, 85]) + 8;
-
-  // Generated timestamp — subtle, right-aligned, same row
   const stamp = new Date().toLocaleString("en-GB",{day:"2-digit",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"});
-  doc.setFont("helvetica","normal"); doc.setFontSize(8.5);
-  doc.setTextColor(100, 116, 139);
-  doc.text(`Generated: ${stamp}`, pageW - rightMargin, chipY + 28, { align: "right" });
 
-  let tableStartY = 114;
+  // ===== DRAW HEADER (called once per page) =====
+  function drawHeader(pgNum){
+    doc.setFillColor(30, 64, 175);
+    doc.rect(0, 0, pageW, 52, "F");
+    doc.setTextColor(255,255,255);
+    doc.setFont("helvetica","bold"); doc.setFontSize(15);
+    doc.text("CATHLAB CASE LIST", lm, 22);
+    doc.setFont("helvetica","normal"); doc.setFontSize(9);
+    doc.text(dateLabel, lm, 38);
+    doc.setFont("helvetica","bold"); doc.setFontSize(9);
+    doc.text("Mubarak Al-Kabeer Hospital · Cardiology", pageW-rm, 22, {align:"right"});
+    doc.setFont("helvetica","normal"); doc.setFontSize(8);
+    doc.text("Generated: " + stamp, pageW-rm, 36, {align:"right"});
+    // Summary chips on line below header
+    let ipCt = cases.filter(s=>s.caseType==='IP').length;
+    doc.setFillColor(219,234,254); doc.roundedRect(lm, 58, 70, 18, 3, 3, "F");
+    doc.setTextColor(30,64,175); doc.setFont("helvetica","bold"); doc.setFontSize(8);
+    doc.text("TOTAL: " + cases.length, lm+5, 70);
+    doc.setFillColor(220,252,231); doc.roundedRect(lm+76, 58, 60, 18, 3, 3, "F");
+    doc.setTextColor(5,112,73);
+    doc.text("IP: " + ipCt, lm+81, 70);
+    doc.setFillColor(226,232,240); doc.roundedRect(lm+142, 58, 75, 18, 3, 3, "F");
+    doc.setTextColor(51,65,85);
+    doc.text("ELECTIVE: " + (cases.length-ipCt), lm+147, 70);
+  }
 
-  // ===== TABLE =====
-  const head = [["#","Patient","Age/Sex/Nat","Civil ID","Procedure","Operator","Type","History","Done / Result"]];
-  const body = cases.map((s, i) => {
-    let demo = [];
-    if(s.age) demo.push(s.age + "y");
-    if(s.sex) demo.push(s.sex === "Male" ? "M" : (s.sex === "Female" ? "F" : s.sex));
-    if(s.nationality) demo.push(s.nationality);
-    return [
-      String(i+1),
-      s.name || "—",
-      demo.join(" · ") || "—",
-      s.cid || "—",
-      s.proc || "—",
-      s.operator || "To be assigned",
-      s.caseType === 'IP' ? "IP" : "Elective",
-      (s.hx || "").slice(0, 200),
-      (s.result || "").slice(0, 250)
-    ];
-  });
-  doc.autoTable({
-    head, body, startY: tableStartY,
-    styles: {
-      font:"helvetica", fontSize: 8.5, cellPadding: 5, overflow: "linebreak",
-      valign:"top", textColor: [30, 41, 59], lineColor: [203, 213, 225], lineWidth: 0.25
-    },
-    headStyles: {
-      fillColor: [30, 64, 175], textColor: 255, fontStyle: "bold",
-      fontSize: 9, halign: "left", cellPadding: 6, lineWidth: 0
-    },
-    alternateRowStyles: { fillColor: [241, 245, 249] },
-    columnStyles: {
-      0: { cellWidth: 22, halign: "center", fontStyle: "bold", textColor: [100, 116, 139] },
-      1: { cellWidth: 115, fontStyle: "bold", textColor: [15, 23, 42] },
-      2: { cellWidth: 68, fontSize: 8 },
-      3: { cellWidth: 68, fontSize: 8, textColor: [71, 85, 105] },
-      4: { cellWidth: 110, fontStyle: "bold", textColor: [30, 64, 175] },
-      5: { cellWidth: 72, fontSize: 8 },
-      6: { cellWidth: 50, halign: "center", fontStyle: "bold", fontSize: 8 },
-      7: { cellWidth: 150, fontSize: 8, textColor: [51, 65, 85] },
-      8: { cellWidth: 'auto', fontStyle: 'bold', fontSize: 8.5 }
-    },
-    didParseCell: function(data){
-      if(data.section !== 'body') return;
-      let col = data.column.index;
-      let raw = (data.cell.raw || "").toString();
-      // Type column: IP = green pill, Elective = blue pill
-      if(col === 6){
-        if(raw === "IP"){
-          data.cell.styles.textColor = [5, 112, 73];
-          data.cell.styles.fillColor = [220, 252, 231];
-        } else {
-          data.cell.styles.textColor = [30, 64, 175];
-          data.cell.styles.fillColor = [219, 234, 254];
-        }
-      }
-      // Operator column: muted italic when "To be assigned"
-      if(col === 5 && raw === "To be assigned"){
-        data.cell.styles.textColor = [148, 163, 184];
-        data.cell.styles.fontStyle = "italic";
-      }
-      // Done / Result column: green fill + bold when present
-      if(col === 8){
-        if(raw && raw !== "—"){
-          data.cell.styles.textColor = [5, 112, 73];
-          data.cell.styles.fillColor = [220, 252, 231];
-        }
-      }
-    },
-    margin: { left: leftMargin, right: rightMargin },
-    didDrawPage: function(d){
-      const pageCount = doc.internal.getNumberOfPages();
-      const pageSize = doc.internal.pageSize;
-      // Footer — left: hospital label, right: page number
-      doc.setFont("helvetica","normal"); doc.setFontSize(8);
-      doc.setTextColor(148, 163, 184);
-      doc.text("Mubarak Al-Kabeer Hospital · Cardiology Department", leftMargin, pageSize.getHeight() - 20);
-      doc.text(`Page ${d.pageNumber} of ${pageCount}`, pageSize.getWidth() - rightMargin, pageSize.getHeight() - 20, { align: "right" });
+  drawHeader(1);
+  let y = 84;
+  const LINE = 13, SMALL = 9, NORMAL = 10, BOLD_SIZE = 11;
+  const CARD_PAD = 10, CARD_GAP = 10;
+
+  for(let i=0; i<cases.length; i++){
+    let s = cases[i];
+    // Estimate card height
+    let hxLines = s.hx ? doc.splitTextToSize(s.hx, usableW - CARD_PAD*2 - 60).length : 0;
+    let resLines = s.result ? doc.splitTextToSize(s.result, usableW - CARD_PAD*2 - 60).length : 0;
+    let estH = 20 + LINE*2 + (hxLines ? LINE*(hxLines+1)+4 : 0) + (resLines ? LINE*(resLines+1)+6 : 0) + CARD_PAD*2 + 4;
+
+    // Page break if needed (leave 40pt margin at bottom)
+    if(y + estH > pageH - 40){
+      doc.addPage();
+      drawHeader(doc.internal.getNumberOfPages());
+      y = 84;
     }
-  });
-  doc.save(`Cathlab_Today_${iso}.pdf`);
+
+    // --- Card background ---
+    let isIP = s.caseType === 'IP';
+    let cardFill = isIP ? [240,253,244] : [248,250,252];
+    let borderColor = isIP ? [5,150,105] : [148,163,184];
+    doc.setFillColor(...cardFill);
+    // approximate card height for drawing
+    let cardH = estH;
+    doc.roundedRect(lm, y, usableW, cardH, 5, 5, "F");
+    doc.setDrawColor(...borderColor);
+    doc.setLineWidth(isIP ? 1.5 : 0.5);
+    doc.roundedRect(lm, y, usableW, cardH, 5, 5, "S");
+    // Left accent bar for IP
+    if(isIP){ doc.setFillColor(5,150,105); doc.rect(lm, y, 4, cardH, "F"); }
+
+    let cx = lm + CARD_PAD + (isIP ? 4 : 0);
+    let cy = y + CARD_PAD;
+
+    // --- Row 1: Serial number · Patient name ---
+    doc.setFont("helvetica","bold"); doc.setFontSize(BOLD_SIZE); doc.setTextColor(30,30,60);
+    doc.text(String(i+1) + ".  " + (s.name||"—"), cx, cy + 10);
+    if(isIP){
+      doc.setFillColor(5,150,105); doc.roundedRect(pageW-rm-34, cy, 34, 14, 3, 3, "F");
+      doc.setTextColor(255,255,255); doc.setFont("helvetica","bold"); doc.setFontSize(7.5);
+      doc.text("IP", pageW-rm-21, cy+10);
+    }
+    cy += LINE + 4;
+
+    // --- Row 2: Gender · Age · Nationality ---
+    let demo = [];
+    if(s.sex) demo.push(s.sex);
+    if(s.age) demo.push(s.age + "y");
+    if(s.nationality) demo.push(s.nationality);
+    doc.setFont("helvetica","normal"); doc.setFontSize(SMALL); doc.setTextColor(100,100,130);
+    if(demo.length) { doc.text(demo.join("  ·  "), cx, cy+9); cy += LINE; }
+
+    // --- Row 3: Civil ID · File number ---
+    let idParts = [];
+    if(s.cid) idParts.push("Civil ID: " + s.cid);
+    if(s.file) idParts.push("File: " + s.file);
+    if(s.phone) idParts.push("Tel: " + s.phone);
+    if(idParts.length){
+      doc.setFont("helvetica","normal"); doc.setFontSize(SMALL); doc.setTextColor(80,90,110);
+      doc.text(idParts.join("   "), cx, cy+9); cy += LINE;
+    }
+
+    // --- Divider ---
+    cy += 3;
+    doc.setDrawColor(200,210,225); doc.setLineWidth(0.3);
+    doc.line(cx, cy, pageW-rm-CARD_PAD, cy);
+    cy += 5;
+
+    // --- Risk factors / Past history ---
+    if(s.hx){
+      doc.setFont("helvetica","bold"); doc.setFontSize(SMALL-0.5); doc.setTextColor(80,80,140);
+      doc.text("Risk Factors / History", cx, cy+9);
+      cy += LINE;
+      doc.setFont("helvetica","normal"); doc.setFontSize(SMALL); doc.setTextColor(50,50,80);
+      let hxLines = doc.splitTextToSize(s.hx, usableW - CARD_PAD*2 - (isIP?4:0));
+      doc.text(hxLines, cx, cy+9); cy += hxLines.length * LINE;
+    }
+
+    // --- Procedure & Operator ---
+    cy += 3;
+    doc.setFont("helvetica","bold"); doc.setFontSize(NORMAL); doc.setTextColor(30,64,175);
+    doc.text("Procedure: " + (s.proc||"—"), cx, cy+10);
+    cy += LINE;
+    doc.setFont("helvetica","normal"); doc.setFontSize(SMALL); doc.setTextColor(60,80,100);
+    doc.text("Operator: " + (s.operator||"To be assigned"), cx, cy+9);
+    cy += LINE;
+
+    // --- Outcome / Result ---
+    if(s.result){
+      cy += 4;
+      doc.setFillColor(220,252,231);
+      let resLines = doc.splitTextToSize(s.result, usableW - CARD_PAD*2 - (isIP?4:0) - 4);
+      let resH = resLines.length * LINE + 14;
+      doc.roundedRect(cx, cy, usableW - CARD_PAD*2 - (isIP?4:0), resH, 3, 3, "F");
+      doc.setFont("helvetica","bold"); doc.setFontSize(SMALL-0.5); doc.setTextColor(5,112,73);
+      doc.text("OUTCOME / RESULT", cx+4, cy+10);
+      doc.setFont("helvetica","normal"); doc.setFontSize(NORMAL); doc.setTextColor(5,90,60);
+      doc.text(resLines, cx+4, cy+10+LINE);
+      cy += resH + 4;
+    }
+
+    y = y + cardH + CARD_GAP;
+  }
+
+  // ===== FOOTER =====
+  let totalPgs = doc.internal.getNumberOfPages();
+  for(let pg=1; pg<=totalPgs; pg++){
+    doc.setPage(pg);
+    doc.setFont("helvetica","normal"); doc.setFontSize(8); doc.setTextColor(160);
+    doc.text("MKH Cardiology · Cathlab", lm, pageH-16);
+    doc.text("Page " + pg + " of " + totalPgs, pageW-rm, pageH-16, {align:"right"});
+  }
+
+  doc.save("Cathlab_" + iso + ".pdf");
 };
 
-function rLog(){ let b=document.getElementById("lb"); b.innerHTML=""; let combined=(window.S.logs||[]).concat(window.S.oplogs||[]).concat(window.S.eplogs||[]).sort((a,b)=>b.ts-a.ts).slice(0,50); if(window.lf!=="all") combined=combined.filter(x=>x.cd===window.lf); combined.forEach(x=>{ let r=document.createElement("div"); r.className="lr"; let docLabel=x.epClinicId?`EP/${x.room}`:`Dr. ${x.doc}`; let delCell = adm ? `<button class="log-del" title="Delete this entry" onclick="deleteLogEntry(${x.ts})">🗑</button>` : `<div></div>`; r.innerHTML=`<div class="lti">${x.ad}<br><span>${x.time}</span></div><div class="lm">${x.fn}</div><div>${docLabel}<br><span class="rt">${x.room}</span></div><div class="lgx" style="color:var(--acc)">${x.apt||"—"}</div><div class="lgx">${x.reg}</div>${delCell}`; b.appendChild(r); }); }
+// Keep exportCathToday as alias calling the new function
+window.exportCathToday = function(){
+  window.exportCathListPDF(todayIso());
+};
+
+
+function rLog(){ let b=document.getElementById("lb"); b.innerHTML=""; let combined=(window.S.logs||[]).concat(window.S.oplogs||[]).concat(window.S.eplogs||[]).sort((a,b)=>b.ts-a.ts).slice(0,50); if(window.lf!=="all") combined=combined.filter(x=>x.cd===window.lf); combined.forEach(x=>{ let r=document.createElement("div"); r.className="lr"; let docLabel=x.epClinicId?`EP/${abbrevRoom(x.room)}`:`Dr. ${x.doc}`; let delCell = adm ? `<button class="log-del" title="Delete this entry" onclick="deleteLogEntry(${x.ts})">🗑</button>` : `<div></div>`; r.innerHTML=`<div class="lti">${x.ad}<br><span>${x.time}</span></div><div class="lm">${x.fn}</div><div>${docLabel}<br><span class="rt">${abbrevRoom(x.room)}</span></div><div class="lgx" style="color:var(--acc)">${x.apt||"—"}</div><div class="lgx">${x.reg}</div>${delCell}`; b.appendChild(r); }); }
 window.deleteLogEntry = function(ts){
   if(!adm){ alert("Admin access required."); return; }
   ts = Number(ts);
@@ -2101,7 +2303,7 @@ function applyRoleUI(role){
   if(defaultTab){
     defaultTab.classList.add('on');
     document.getElementById('pg-'+defaultId).classList.add('on');
-    if(defaultId === 'endo') renderEndoList();
+    if(defaultId === 'endo') { renderEndoList(); renderHFList(); }
     if(defaultId === 'cath') renderCathAll();
     if(defaultId === 'census'){ renderCensus(); renderCensusAlert(); }
     if(defaultId === 'ep') renderEpTab();
@@ -2159,6 +2361,7 @@ function ensureExtState(){
   if(!window.S.docPins) window.S.docPins = {};
   if(!window.S.pinChanges) window.S.pinChanges = [];
   if(!window.S.removals) window.S.removals = [];
+  if(!window.S.hfPatients) window.S.hfPatients = {};
 }
 
 // Compress image to ~80KB max, return base64 data URL
@@ -2249,9 +2452,9 @@ window.openEndoForm = function(id){
   if(id && window.S.endorsements[id]){
     let e = window.S.endorsements[id];
     let wardDisplay = e.ward || '';
-    let fixed = ['Ward 4','CCU','ICU'];
+    let fixed = ['Ward 4','CCU'];
     let isOther = wardDisplay && !fixed.includes(wardDisplay);
-    document.getElementById('endoMoTitle').innerText = `Edit · ${wardDisplay||''} Bed ${e.bed}`;
+    document.getElementById('endoMoTitle').innerText = `Edit · ${wardDisplay||''} B${normBed(e.bed)}`;
     document.getElementById('endo-ward').value = isOther ? 'Others' : wardDisplay;
     document.getElementById('endo-ward-other').value = isOther ? wardDisplay : '';
     document.getElementById('endo-bed').value = e.bed || '';
@@ -2260,6 +2463,7 @@ window.openEndoForm = function(id){
     document.getElementById('endo-age').value = e.age || '';
     document.getElementById('endo-sex').value = e.sex || '';
     document.getElementById('endo-nat').value = e.nationality || '';
+    let cidEl = document.getElementById('endo-cid'); if(cidEl) cidEl.value = e.cid || '';
     document.getElementById('endo-hx').value = e.hx || '';
     document.getElementById('endo-reason').value = e.reason || '';
     document.getElementById('endo-ix').value = e.ix || '';
@@ -2269,6 +2473,7 @@ window.openEndoForm = function(id){
   } else {
     document.getElementById('endoMoTitle').innerText = 'New Patient Entry';
     document.getElementById('endo-ward-other').value = '';
+    let cidResetEl = document.getElementById('endo-cid'); if(cidResetEl) cidResetEl.value = '';
   }
   toggleWardOther();
   renderImgPreview('endo');
@@ -2309,6 +2514,7 @@ window.saveEndo = async function(ev){
     age: document.getElementById('endo-age').value.trim(),
     sex: document.getElementById('endo-sex').value.trim(),
     nationality: document.getElementById('endo-nat').value.trim(),
+    cid: document.getElementById('endo-cid')?.value.trim() || '',
     hx: document.getElementById('endo-hx').value.trim(),
     reason: document.getElementById('endo-reason').value.trim(),
     ix: document.getElementById('endo-ix').value.trim(),
@@ -2331,7 +2537,7 @@ window.deleteEndo = function(id){
   ensureExtState();
   let e = window.S.endorsements[id];
   if(!e) return;
-  if(!confirm(`Discharge / remove ${e.name} (${e.ward||''} Bed ${e.bed}) from the IP list? This is permanent.`)) return;
+  if(!confirm(`Discharge / remove ${e.name} (${abbrevWard(e.ward||'')} · B${normBed(e.bed)}) from the IP list? This is permanent.`)) return;
   // Log removal for admin tracking
   let who = window.currentDoctor || (window.currentRole === 'admin' ? 'Admin' : (window.currentRole||'Unknown'));
   window.S.removals.push({
@@ -2357,6 +2563,232 @@ window.deleteEndo = function(id){
   renderEndoList();
 };
 
+
+// ============================================================
+// HEART FAILURE TEAM — Patient Management
+// ============================================================
+function ensureHFState(){
+  if(!window.S.hfPatients) window.S.hfPatients = {};
+}
+
+window.openHFForm = function(id){
+  ensureHFState();
+  document.getElementById('hfForm').reset();
+  document.getElementById('hf-id').value = id || '';
+  let titleEl = document.getElementById('hfMoTitle');
+  if(id && window.S.hfPatients[id]){
+    let p = window.S.hfPatients[id];
+    titleEl.innerText = 'Edit HF Patient · ' + (p.name||'');
+    let wardSel = document.getElementById('hf-ward');
+    let fixed = ['Ward 4','CCU'];
+    let isOther = p.ward && !fixed.includes(p.ward);
+    wardSel.value = isOther ? 'Others' : (p.ward||'');
+    document.getElementById('hf-ward-other').value = isOther ? p.ward : '';
+    document.getElementById('hf-ward-other-wrap').style.display = isOther ? 'block' : 'none';
+    document.getElementById('hf-bed').value = p.bed||'';
+    document.getElementById('hf-name').value = p.name||'';
+    document.getElementById('hf-mrn').value = p.mrn||'';
+    document.getElementById('hf-age').value = p.age||'';
+    document.getElementById('hf-sex').value = p.sex||'';
+    document.getElementById('hf-nat').value = p.nationality||'';
+    let hfCidEl = document.getElementById('hf-cid'); if(hfCidEl) hfCidEl.value = p.cid||'';
+    document.getElementById('hf-hftype').value = p.hftype||'';
+    document.getElementById('hf-hx').value = p.hx||'';
+    document.getElementById('hf-reason').value = p.reason||'';
+    document.getElementById('hf-ix').value = p.ix||'';
+    document.getElementById('hf-active').value = p.active||'';
+    document.getElementById('hf-plan').value = p.plan||'';
+  } else {
+    titleEl.innerText = 'Heart Failure Team — New Patient';
+    document.getElementById('hf-ward-other-wrap').style.display = 'none';
+    let hfCidReset = document.getElementById('hf-cid'); if(hfCidReset) hfCidReset.value = '';
+  }
+  hidePinFieldIfLoggedIn('hf-pin');
+  document.getElementById('hfMo').classList.add('on');
+};
+window.closeHFMo = function(){ document.getElementById('hfMo').classList.remove('on'); };
+document.getElementById('hf-ward').addEventListener('change', function(){
+  document.getElementById('hf-ward-other-wrap').style.display = this.value === 'Others' ? 'block' : 'none';
+});
+
+window.saveHFPatient = async function(ev){
+  ev.preventDefault();
+  ensureHFState();
+  let reg = await resolveDoctor('hf-pin');
+  if(!reg) return false;
+  let wardSel = document.getElementById('hf-ward').value.trim();
+  let wardFinal = wardSel;
+  if(wardSel === 'Others'){
+    let other = document.getElementById('hf-ward-other').value.trim();
+    if(!other){ alert('Please specify the ward.'); return false; }
+    wardFinal = other;
+  }
+  let id = document.getElementById('hf-id').value || ('hf_' + Date.now() + '_' + Math.floor(Math.random()*1000));
+  let existing = window.S.hfPatients[id];
+  let now = Date.now();
+  let entry = {
+    id, ward: wardFinal,
+    bed: document.getElementById('hf-bed').value.trim(),
+    name: document.getElementById('hf-name').value.trim(),
+    cid: document.getElementById('hf-cid')?.value.trim() || '',
+    mrn: document.getElementById('hf-mrn').value.trim(),
+    age: document.getElementById('hf-age').value.trim(),
+    sex: document.getElementById('hf-sex').value.trim(),
+    nationality: document.getElementById('hf-nat').value.trim(),
+    hftype: document.getElementById('hf-hftype').value.trim(),
+    hx: document.getElementById('hf-hx').value.trim(),
+    reason: document.getElementById('hf-reason').value.trim(),
+    ix: document.getElementById('hf-ix').value.trim(),
+    active: document.getElementById('hf-active').value.trim(),
+    plan: document.getElementById('hf-plan').value.trim(),
+    createdAt: existing?.createdAt || now,
+    createdBy: existing?.createdBy || reg,
+    updatedAt: now, updatedBy: reg
+  };
+  window.S.hfPatients[id] = entry;
+  dbWriteAt('hfPatients/' + id, entry);
+  closeHFMo();
+  renderHFList();
+  return false;
+};
+
+window.deleteHFPatient = function(id){
+  ensureHFState();
+  let p = window.S.hfPatients[id];
+  if(!p) return;
+  if(!confirm('Remove ' + (p.name||'this patient') + ' from Heart Failure Team list?')) return;
+  delete window.S.hfPatients[id];
+  dbUpdate({ ['hfPatients/' + id]: null });
+  renderHFList();
+};
+
+window.exportHFPatientPDF = function(id){
+  ensureHFState();
+  let p = window.S.hfPatients[id];
+  if(!p){ alert('Patient not found.'); return; }
+  if(typeof window.jspdf === 'undefined'){ alert('PDF library still loading. Please try again.'); return; }
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation: 'portrait', unit: 'pt', format: 'a4' });
+  const pageW = doc.internal.pageSize.getWidth();
+  const lm = 40, rm = 40, usableW = pageW - lm - rm;
+  let y = 40;
+
+  // Header bar
+  doc.setFillColor(124, 58, 237);
+  doc.rect(0, 0, pageW, 56, 'F');
+  doc.setFont('helvetica','bold'); doc.setFontSize(15); doc.setTextColor(255,255,255);
+  doc.text('MKH Cardiology — Heart Failure Team', lm, 22);
+  doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(220,200,255);
+  const stamp = new Date().toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  doc.text('Generated: ' + stamp, lm, 36);
+  doc.text('Mubarak Al-Kabeer Hospital · Cardiology Dept.', lm, 48);
+
+  y = 72;
+  // Patient name block
+  doc.setFont('helvetica','bold'); doc.setFontSize(18); doc.setTextColor(30,30,60);
+  doc.text(p.name || '—', lm, y); y += 6;
+  // Demographics line
+  let demoLine = [p.age ? p.age+'y' : '', p.sex||'', p.nationality||''].filter(Boolean).join(' · ');
+  doc.setFont('helvetica','normal'); doc.setFontSize(10); doc.setTextColor(80,80,120);
+  if(demoLine){ doc.text(demoLine, lm, y+12); y += 12; }
+
+  // Civil ID / MRN / Ward / Bed
+  y += 14;
+  doc.setFillColor(245,240,255); doc.roundedRect(lm, y, usableW, 36, 4, 4, 'F');
+  doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(100,60,180);
+  doc.text('MRN / File', lm+8, y+13);
+  doc.setFont('helvetica','normal'); doc.setTextColor(30,30,30);
+  doc.text(p.mrn||'—', lm+8, y+26);
+  doc.setFont('helvetica','bold'); doc.setTextColor(100,60,180);
+  doc.text('Ward / Bed', lm+120, y+13);
+  doc.setFont('helvetica','normal'); doc.setTextColor(30,30,30);
+  doc.text((abbrevWard(p.ward)||'—') + ' · B' + normBed(p.bed), lm+120, y+26);
+  if(p.hftype){
+    doc.setFont('helvetica','bold'); doc.setTextColor(100,60,180);
+    doc.text('HF Type', lm+270, y+13);
+    doc.setFont('helvetica','normal'); doc.setTextColor(30,30,30);
+    doc.text(p.hftype, lm+270, y+26);
+  }
+  y += 46;
+
+  function section(title, text, accent){
+    if(!text || !text.trim()) return;
+    y += 8;
+    // Title pill
+    doc.setFillColor(...accent); doc.roundedRect(lm, y, usableW, 16, 3, 3, 'F');
+    doc.setFont('helvetica','bold'); doc.setFontSize(8); doc.setTextColor(255,255,255);
+    doc.text(title.toUpperCase(), lm+8, y+11);
+    y += 20;
+    doc.setFont('helvetica','normal'); doc.setFontSize(10); doc.setTextColor(40,40,40);
+    let lines = doc.splitTextToSize(text, usableW-4);
+    let blockH = lines.length * 13;
+    doc.setFillColor(252,252,255); doc.rect(lm, y, usableW, blockH+6, 'F');
+    doc.text(lines, lm+4, y+12);
+    y += blockH + 10;
+  }
+
+  section('Past History / Risk Factors', p.hx, [60,80,160]);
+  section('Reason for Admission / Diagnosis', p.reason, [150,60,60]);
+  section('Investigations', p.ix, [20,100,100]);
+  section('Active Issues', p.active, [180,100,20]);
+  section('Plan', p.plan, [40,140,80]);
+
+  // Footer
+  let totalPages = doc.internal.getNumberOfPages();
+  for(let pg=1; pg<=totalPages; pg++){
+    doc.setPage(pg);
+    doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(160);
+    doc.text('MKH Cardiology · HF Team · Page ' + pg + ' of ' + totalPages, lm, doc.internal.pageSize.getHeight()-16);
+    doc.text('Updated: ' + (p.updatedBy||'—') + ' · ' + (p.updatedAt ? new Date(p.updatedAt).toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}) : '—'), pageW-rm-220, doc.internal.pageSize.getHeight()-16, {maxWidth:220});
+  }
+
+  let safeName = (p.name||'HF_Patient').replace(/[^a-z0-9]/gi,'_').slice(0,40);
+  doc.save('HF_' + safeName + '_' + new Date().toISOString().slice(0,10) + '.pdf');
+};
+
+function renderHFList(){
+  ensureHFState();
+  let c = document.getElementById('hfList');
+  let countEl = document.getElementById('hfCount');
+  if(!c) return;
+  let all = Object.values(window.S.hfPatients||{});
+  all.sort((a,b)=>{
+    let bedA = parseInt(a.bed)||999, bedB = parseInt(b.bed)||999;
+    return bedA - bedB;
+  });
+  if(countEl) countEl.innerText = all.length ? all.length + ' patient' + (all.length>1?'s':'') + ' under HF team' : '';
+  if(!all.length){
+    c.innerHTML = '<div class="endo-empty" style="color:#2dd4bf">No Heart Failure Team patients yet. Click ＋ Add HF Patient above.</div>';
+    return;
+  }
+  // Refresh chips to update HF count badge
+  if(currentWardFilter === 'hf'){ let chipsEl2 = document.getElementById('endoWardChips'); if(chipsEl2){ let all2=Object.values(window.S.endorsements||{}); let fc2=['Ward 4','CCU']; let wc2={},oc2=0; all2.forEach(e=>{let w=e.ward||'Others';fc2.includes(w)?wc2[w]=(wc2[w]||0)+1:oc2++;}); let hfCt=Object.keys(window.S.hfPatients||{}).length; let html2=`<button class="endo-ward-chip" onclick="filterByWard('all')">All <span class="endo-ward-chip-badge">${all2.length}</span></button>`; fc2.forEach(w=>{html2+=`<button class="endo-ward-chip${currentWardFilter===w?' on':''}" onclick="filterByWard('${w.replace(/'/g,"\\'")}')">${{"Ward 4":"W4","CCU":"CCU"}[w]||w} <span class="endo-ward-chip-badge">${wc2[w]||0}</span></button>`;}); html2+=`<button class="endo-ward-chip" style="border-color:rgba(251,191,36,.35)" onclick="filterByWard('Others')">Others / ICU <span class="endo-ward-chip-badge">${oc2}</span></button><button class="endo-ward-chip on" style="background:linear-gradient(135deg,rgba(20,184,166,.22),rgba(20,184,166,.12));border-color:rgba(20,184,166,.5);color:#2dd4bf;box-shadow:0 2px 8px rgba(20,184,166,.2)" onclick="filterByWard('hf')">🫀 HF Team <span class="endo-ward-chip-badge">${hfCt}</span></button>`; chipsEl2.innerHTML=html2; } }
+  c.innerHTML = all.map(p => {
+    let demo = [p.age ? p.age+'y':'', p.sex||'', p.nationality||''].filter(Boolean).join(' · ');
+    let hftypeBadge = p.hftype ? `<span style="background:rgba(20,184,166,.18);color:#2dd4bf;border:1px solid rgba(20,184,166,.4);border-radius:4px;padding:2px 7px;font-family:'DM Mono',monospace;font-size:9px;margin-left:6px">${escapeHtml(p.hftype)}</span>` : '';
+    return `<div class="endo-card" style="border-left:3px solid rgba(167,139,250,.5)">
+      <div class="endo-card-head">
+        <div class="endo-bed" style="background:linear-gradient(135deg,#0d9488,#14b8a6)">${escapeHtml(abbrevWard(p.ward)||'—')} · <span style="opacity:.8">B</span>${escapeHtml(normBed(p.bed))}</div>
+        <div style="flex:1;min-width:0">
+          <div class="endo-name">${escapeHtml(p.name||'—')}${hftypeBadge}</div>
+          <div class="endo-mrn">MRN · ${escapeHtml(p.mrn||'—')}${demo?' · <span style="color:var(--dim)">'+escapeHtml(demo)+'</span>':''}</div>
+          ${p.reason ? '<div style="font-size:11px;color:var(--dim);margin-top:3px">'+escapeHtml(p.reason.slice(0,70))+(p.reason.length>70?'…':'')+'</div>' : ''}
+        </div>
+      </div>
+      ${p.hx ? '<div class="endo-field"><div class="endo-field-label">Past History</div><div class="endo-field-text">'+escapeHtml(p.hx)+'</div></div>' : ''}
+      ${p.ix ? '<div class="endo-field"><div class="endo-field-label">Investigations</div><div class="endo-field-text">'+escapeHtml(p.ix)+'</div></div>' : ''}
+      ${p.active ? '<div class="endo-field"><div class="endo-field-label">Active Issues</div><div class="endo-field-text">'+escapeHtml(p.active)+'</div></div>' : ''}
+      ${p.plan ? '<div class="endo-field"><div class="endo-field-label">Plan</div><div class="endo-field-text">'+escapeHtml(p.plan)+'</div></div>' : ''}
+      <div class="endo-meta-row"><div>Updated: ${fmtDateTime(p.updatedAt)} · ${escapeHtml(p.updatedBy||'—')}</div></div>
+      <div class="endo-actions">
+        <button class="endo-act-btn" onclick="openHFForm('${p.id}')">✎ Edit</button>
+        <button class="endo-act-btn" style="border-color:rgba(20,184,166,.45);color:#2dd4bf" onclick="exportHFPatientPDF('${p.id}')">⬇ Export PDF</button>
+        <button class="endo-act-btn danger" onclick="deleteHFPatient('${p.id}')">✕ Remove</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
 function fmtDateTime(ts){
   if(!ts) return '—';
   let d = new Date(ts);
@@ -2365,8 +2797,97 @@ function fmtDateTime(ts){
 
 window.filterByWard = function(ward){
   currentWardFilter = ward;
-  renderEndoList();
+  // Show/hide HF team section based on filter
+  let hfSec = document.getElementById('hfTeamSection');
+  let endoListEl = document.getElementById('endoList');
+  let endoCountEl = document.getElementById('endoCount');
+  let wardChipsEl = document.getElementById('endoWardChips');
+  if(ward === 'hf'){
+    // Show HF section, hide main endo list
+    if(hfSec) hfSec.style.display = 'block';
+    if(endoListEl) endoListEl.style.display = 'none';
+    if(endoCountEl) endoCountEl.style.display = 'none';
+    renderHFList();
+  } else {
+    if(hfSec) hfSec.style.display = 'none';
+    if(endoListEl) endoListEl.style.display = '';
+    if(endoCountEl) endoCountEl.style.display = '';
+    renderEndoList();
+  }
 };
+
+
+// ============================================================
+// CIVIL ID AUTO-AGE & NATIONALITY HELPERS
+// Kuwait Civil ID: first digit = gender (2=female born ≥2000, 3=male born ≥2000,
+// 1=female born 1900s, 2=male born 1900s — simplified: digit 2 = year century)
+// Format: [century][YY][MM][DD][4 digits]
+// ============================================================
+window.autoAgeFromCid = function(cidFieldId, ageFieldId, sexFieldId){
+  // Age calculation from Kuwait Civil ID — sex detection removed (unreliable)
+  let cid = (document.getElementById(cidFieldId)?.value || '').replace(/\s/g,'');
+  if(!/^\d{12}$/.test(cid)) return;
+  // Kuwait Civil ID: first digit encodes century
+  //   2 or 3 → born 1900s  |  4 or 5 → born 2000s
+  let d1 = parseInt(cid[0]);
+  let yy = parseInt(cid.slice(1,3));
+  let century = (d1 <= 3) ? 1900 : 2000;
+  let birthYear = century + yy;
+  let age = new Date().getFullYear() - birthYear;
+  if(age < 0 || age > 120) return; // sanity check
+  let ageEl = document.getElementById(ageFieldId);
+  if(ageEl) ageEl.value = age;
+  // Sex is NOT auto-filled — too unreliable, user must select manually
+};
+
+window.applyEndoDiagPick = function(){
+  let pick = document.getElementById('endo-reason-pick');
+  let ta = document.getElementById('endo-reason');
+  if(!pick || !ta || !pick.value) return;
+  let cur = ta.value.trim();
+  ta.value = cur ? cur + ', ' + pick.value : pick.value;
+  pick.selectedIndex = 0;
+  ta.focus();
+};
+
+window.applyHFPick = function(pickId, taId){
+  let pick = document.getElementById(pickId);
+  let ta = document.getElementById(taId);
+  if(!pick || !ta || !pick.value) return;
+  let cur = ta.value.trim();
+  ta.value = cur ? cur + ', ' + pick.value : pick.value;
+  pick.selectedIndex = 0;
+  ta.focus();
+};
+
+window.applyEndoHxPick = function(){
+  let pick = document.getElementById('endo-hx-pick');
+  let ta = document.getElementById('endo-hx');
+  if(!pick || !ta || !pick.value) return;
+  let cur = ta.value.trim();
+  ta.value = cur ? cur + ', ' + pick.value : pick.value;
+  pick.selectedIndex = 0;
+  ta.focus();
+};
+
+// Abbreviate ward name: "Ward 4" → "W4", "CCU" → "CCU", others as-is
+function abbrevWard(ward){
+  if(!ward) return "—";
+  return ward.replace(/\bWard\s+(\d+[A-Za-z]?)\b/gi, "W$1").replace(/\bWard\s+([A-Za-z]+)\b/gi, "W-$1");
+}
+
+// Abbreviate room: "Room 8" → "R8"
+function abbrevRoom(room){
+  if(!room) return "—";
+  return room.replace(/\bRoom\s+(\d+[A-Za-z]?)\b/gi, "R$1");
+}
+
+// Normalize bed value: strip any "Bed " / "bed " prefix so we always get the number
+// e.g. "Bed 3" → "3", "Bed 11" → "11", "3" → "3"
+function normBed(bed){
+  if(!bed) return "—";
+  return String(bed).replace(/^bed\s*/i, "").trim() || bed;
+}
 
 function renderEndoList(){
   ensureExtState();
@@ -2376,7 +2897,7 @@ function renderEndoList(){
   let all = Object.values(window.S.endorsements || {});
 
   // Build ward chips from unique wards in data + fixed set
-  let fixedWards = ['Ward 4','CCU','ICU'];
+  let fixedWards = ['Ward 4','CCU'];
   let wardCounts = {};
   let othersCount = 0;
   all.forEach(e => {
@@ -2391,11 +2912,12 @@ function renderEndoList(){
   let chipsEl = document.getElementById('endoWardChips');
   if(chipsEl){
     let chipsHtml = `<button class="endo-ward-chip${currentWardFilter==='all'?' on':''}" onclick="filterByWard('all')">All <span class="endo-ward-chip-badge">${all.length}</span></button>`;
-    fixedWards.forEach(w => {
+    let _wl = {"Ward 4":"W4","CCU":"CCU"}; fixedWards.forEach(w => {
       let ct = wardCounts[w]||0;
-      chipsHtml += `<button class="endo-ward-chip${currentWardFilter===w?' on':''}" onclick="filterByWard('${w.replace(/'/g,"\\'")}')">${w} <span class="endo-ward-chip-badge">${ct}</span></button>`;
+      chipsHtml += `<button class="endo-ward-chip${currentWardFilter===w?' on':''}" onclick="filterByWard('${w.replace(/'/g,"\\'")}')">${_wl[w]||w} <span class="endo-ward-chip-badge">${ct}</span></button>`;
     });
-    chipsHtml += `<button class="endo-ward-chip${currentWardFilter==='Others'?' on':''}" onclick="filterByWard('Others')">Others <span class="endo-ward-chip-badge">${othersCount}</span></button>`;
+    let hfPtCount = Object.keys(window.S.hfPatients||{}).length;
+    chipsHtml += `<button class="endo-ward-chip${currentWardFilter==='Others'?' on':''}" style="border-color:rgba(251,191,36,.35)" onclick="filterByWard('Others')">Others / ICU <span class="endo-ward-chip-badge">${othersCount}</span></button><button class="endo-ward-chip${currentWardFilter==='hf'?' on':''}" style="background:${currentWardFilter==='hf'?'linear-gradient(135deg,rgba(20,184,166,.22),rgba(20,184,166,.12))':'linear-gradient(135deg,rgba(20,184,166,.1),rgba(20,184,166,.05))'};border-color:rgba(20,184,166,.5);color:#2dd4bf${currentWardFilter==='hf'?';box-shadow:0 2px 8px rgba(20,184,166,.2)':''}" onclick="filterByWard('hf')">🫀 HF Team <span class="endo-ward-chip-badge">${hfPtCount}</span></button>`;
     chipsEl.innerHTML = chipsHtml;
   }
 
@@ -2415,7 +2937,7 @@ function renderEndoList(){
     );
   }
   // Sort: ward (Ward 4 first, then CCU, then ICU, then others alphabetic), then bed numeric
-  let wardOrder = {'Ward 4':0,'CCU':1,'ICU':2};
+  let wardOrder = {'Ward 4':0,'CCU':1};
   all.sort((a,b)=>{
     let wa = wardOrder[a.ward] ?? 3;
     let wb = wardOrder[b.ward] ?? 3;
@@ -2451,7 +2973,7 @@ function renderEndoList(){
     return `
     <div class="endo-card${isOpen?' open':''}">
       <div class="endo-card-head endo-card-toggle" onclick="toggleEndoCard('${e.id}')">
-        <div class="endo-bed">${escapeHtml((e.ward ? (e.ward + ' · '): '') + (e.bed||'—'))}</div>
+        <div class="endo-bed">${escapeHtml(e.ward ? abbrevWard(e.ward) : '—')} · <span style="opacity:.8">B</span>${escapeHtml(normBed(e.bed))}</div>
         <div style="flex:1;min-width:0">
           <div class="endo-name">${escapeHtml(e.name||'—')}</div>
           <div class="endo-mrn">MRN · ${escapeHtml(e.mrn||'—')}${summary?' · <span style="color:var(--dim)">'+escapeHtml(summary)+'</span>':''}</div>
@@ -3452,7 +3974,7 @@ window.resetCathSchForm = function(quiet){
   document.getElementById('cath-sch-edit-id').value = '';
   let endoIdEl = document.getElementById('cath-sch-endo-id'); if(endoIdEl) endoIdEl.value = '';
   let caseTypeEl = document.getElementById('cath-sch-case-type'); if(caseTypeEl) caseTypeEl.value = '';
-  ['cath-sch-name','cath-sch-age','cath-sch-nat','cath-sch-cid','cath-sch-phone','cath-sch-file','cath-sch-hx','cath-sch-result','cath-sch-pin','cath-sch-date'].forEach(id=>{
+  ['cath-sch-name','cath-sch-age','cath-sch-sex','cath-sch-nat','cath-sch-cid','cath-sch-phone','cath-sch-file','cath-sch-hx','cath-sch-result','cath-sch-pin','cath-sch-date'].forEach(id=>{
     let el = document.getElementById(id); if(el) el.value='';
   });
   document.getElementById('cath-sch-proc').selectedIndex = 0;
@@ -3462,6 +3984,9 @@ window.resetCathSchForm = function(quiet){
   document.getElementById('cathSchFromPending').style.display = 'none';
   document.getElementById('cathSchEditing').style.display = 'none';
   let fromEndoEl = document.getElementById('cathSchFromEndo'); if(fromEndoEl) fromEndoEl.style.display = 'none';
+  // Clear any stored IP structured fields
+  let _schFormReset = document.querySelector('.cath-form');
+  if(_schFormReset){ delete _schFormReset.dataset.ipHx; delete _schFormReset.dataset.ipReason; delete _schFormReset.dataset.ipIx; delete _schFormReset.dataset.ipActive; delete _schFormReset.dataset.ipPlan; delete _schFormReset.dataset.ipWard; delete _schFormReset.dataset.ipBed; }
   let ipNoteEl = document.getElementById('cathSchResultIpNote'); if(ipNoteEl) ipNoteEl.style.display = 'none';
   document.getElementById('cathSchFormTitle').innerText = 'SCHEDULE A CATH APPOINTMENT';
   document.getElementById('cathSchSaveBtn').innerText = '💾 Save Appointment';
@@ -3478,7 +4003,7 @@ window.resetCathSchForm = function(quiet){
 
 window.openCathAddPending = function(){
   document.getElementById('cathPendMo').classList.add('on');
-  ['cath-p-name','cath-p-age','cath-p-nat','cath-p-cid','cath-p-phone','cath-p-file','cath-p-hx','cath-p-pin'].forEach(id=>{
+  ['cath-p-name','cath-p-age','cath-p-sex','cath-p-nat','cath-p-cid','cath-p-phone','cath-p-file','cath-p-hx','cath-p-pin'].forEach(id=>{
     let el = document.getElementById(id); if(el) el.value='';
   });
   document.getElementById('cath-p-proc').selectedIndex = 0;
@@ -3499,6 +4024,7 @@ window.saveCathPending = async function(ev){
     name: document.getElementById('cath-p-name').value.trim(),
     age: document.getElementById('cath-p-age').value.trim(),
     nationality: document.getElementById('cath-p-nat').value.trim(),
+    sex: document.getElementById('cath-p-sex')?.value || '',
     cid: document.getElementById('cath-p-cid').value.trim(),
     phone: document.getElementById('cath-p-phone').value.trim(),
     file: document.getElementById('cath-p-file').value.trim(),
@@ -3527,6 +4053,7 @@ window.schedulePending = function(pid){
   document.getElementById('cath-sch-name').value = p.name || '';
   document.getElementById('cath-sch-age').value = p.age || '';
   document.getElementById('cath-sch-nat').value = p.nationality || '';
+  let pendSexEl = document.getElementById('cath-sch-sex'); if(pendSexEl) pendSexEl.value = p.sex||'';
   document.getElementById('cath-sch-cid').value = p.cid || '';
   document.getElementById('cath-sch-phone').value = p.phone || '';
   document.getElementById('cath-sch-file').value = p.file || '';
@@ -3554,6 +4081,7 @@ window.editScheduled = function(sid){
   document.getElementById('cath-sch-name').value = s.name || '';
   document.getElementById('cath-sch-age').value = s.age || '';
   document.getElementById('cath-sch-nat').value = s.nationality || '';
+  let schSexEl = document.getElementById('cath-sch-sex'); if(schSexEl) schSexEl.value = s.sex||'';
   document.getElementById('cath-sch-cid').value = s.cid || '';
   document.getElementById('cath-sch-phone').value = s.phone || '';
   document.getElementById('cath-sch-file').value = s.file || '';
@@ -3577,6 +4105,17 @@ window.editScheduled = function(sid){
     if(op.options[i].value === s.operator){ op.selectedIndex = i; break; }
   }
   document.getElementById('cathSchEditing').style.display = 'block';
+  // Restore structured IP fields to dataset so they're preserved on save
+  let _editForm = document.querySelector('.cath-form');
+  if(_editForm && s.caseType === 'IP'){
+    _editForm.dataset.ipHx = s.ipHx || '';
+    _editForm.dataset.ipReason = s.ipReason || '';
+    _editForm.dataset.ipIx = s.ipIx || '';
+    _editForm.dataset.ipActive = s.ipActive || '';
+    _editForm.dataset.ipPlan = s.ipPlan || '';
+    _editForm.dataset.ipWard = s.ipWard || '';
+    _editForm.dataset.ipBed = s.ipBed || '';
+  }
   // Also show IP banner if this is an IP case + relax validation + show the
   // result-sync reminder note above the PIN field.
   if(s.caseType === 'IP'){
@@ -3637,11 +4176,24 @@ window.saveCathSched = async function(ev){
   let resultEl = document.getElementById('cath-sch-result');
   let resultVal = resultEl ? resultEl.value.trim() : '';
   let previousResult = existing ? (existing.result || '') : '';
+  // Capture structured IP fields if this was sent from IP list
+  let schFormEl = document.querySelector('.cath-form');
+  let ipFields = schFormEl && schFormEl.dataset.ipHx !== undefined ? {
+    ipHx: schFormEl.dataset.ipHx || '',
+    ipReason: schFormEl.dataset.ipReason || '',
+    ipIx: schFormEl.dataset.ipIx || '',
+    ipActive: schFormEl.dataset.ipActive || '',
+    ipPlan: schFormEl.dataset.ipPlan || '',
+    ipWard: schFormEl.dataset.ipWard || '',
+    ipBed: schFormEl.dataset.ipBed || ''
+  } : (existing ? { ipHx: existing.ipHx||'', ipReason: existing.ipReason||'', ipIx: existing.ipIx||'', ipActive: existing.ipActive||'', ipPlan: existing.ipPlan||'', ipWard: existing.ipWard||'', ipBed: existing.ipBed||'' } : null);
+
   window.S.cathScheduled[id] = {
     id: id,
     name: document.getElementById('cath-sch-name').value.trim(),
     age: document.getElementById('cath-sch-age').value.trim(),
     nationality: document.getElementById('cath-sch-nat').value.trim(),
+    sex: document.getElementById('cath-sch-sex')?.value || '',
     cid: document.getElementById('cath-sch-cid').value.trim(),
     phone: document.getElementById('cath-sch-phone').value.trim(),
     file: document.getElementById('cath-sch-file').value.trim(),
@@ -3654,6 +4206,7 @@ window.saveCathSched = async function(ev){
     resultBy: resultVal ? (resultVal === previousResult && existing?.resultBy ? existing.resultBy : reg) : null,
     sourceEndoId: finalEndoId,
     caseType: finalCaseType,
+    ...(ipFields || {}),
     createdAt: existing?.createdAt || Date.now(),
     createdBy: existing?.createdBy || reg,
     updatedAt: Date.now(),
@@ -3834,6 +4387,7 @@ function renderCathToday(){
   listEl.innerHTML = all.map((s, idx) => {
     let demo = [];
     if(s.age) demo.push(s.age + 'y');
+    if(s.sex) demo.push(s.sex === 'Male' ? 'M' : (s.sex === 'Female' ? 'F' : s.sex));
     if(s.nationality) demo.push(s.nationality);
     let demoStr = demo.join(' · ');
     let ipBadge = (s.caseType === 'IP') ? `<span style="background:rgba(52,211,153,.15);color:var(--ok);border:1px solid rgba(52,211,153,.4);border-radius:4px;padding:2px 7px;font-family:'DM Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.5px;margin-left:6px">🏥 IP</span>` : '';
@@ -3842,11 +4396,49 @@ function renderCathToday(){
       <div class="cath-card-head">
         <div style="background:var(--acc);color:#fff;font-family:'DM Mono',monospace;font-size:11px;font-weight:700;padding:4px 9px;border-radius:5px;letter-spacing:.5px">#${idx+1}</div>
         <div class="cath-name" style="flex:1">${escapeHtml(s.name||'—')}${ipBadge}${demoStr?' <span class="cath-demo">· '+escapeHtml(demoStr)+'</span>':''}</div>
+        ${(()=>{
+        if(s.caseType==='IP' && s.sourceEndoId && window.S.endorsements && window.S.endorsements[s.sourceEndoId]){
+          let _e=window.S.endorsements[s.sourceEndoId];
+          if(_e.ward||_e.bed) return `<div style="background:linear-gradient(135deg,#0891b2,#0e7490);color:#fff;font-family:'DM Serif Display',serif;font-size:14px;padding:5px 11px;border-radius:7px;min-width:44px;text-align:center;white-space:nowrap;box-shadow:0 2px 8px rgba(8,145,178,.3)">${escapeHtml(abbrevWard(_e.ward||''))} · B${escapeHtml(normBed(_e.bed||'—'))}</div>`;
+        }
+        return '';
+      })()}
       </div>
-      <div class="cath-row"><div class="cath-row-label">Civil ID</div><div class="cath-row-val">${escapeHtml(s.cid||'—')}</div></div>
-      ${s.file?`<div class="cath-row"><div class="cath-row-label">File</div><div class="cath-row-val">${escapeHtml(s.file)}</div></div>`:''}
-      <div class="cath-row"><div class="cath-row-label">Phone</div><div class="cath-row-val">${escapeHtml(s.phone||'—')}</div></div>
-      <div class="cath-row"><div class="cath-row-label">History</div><div class="cath-row-val">${escapeHtml(s.hx||'—')}</div></div>
+      ${(()=>{
+        // For IP cases: use stored ipFields OR fall back to live endorsement data
+        let ip = null; let wardBed = '';
+        if(s.caseType === 'IP'){
+          if(s.ipHx||s.ipReason||s.ipIx||s.ipActive||s.ipPlan){
+            ip = {hx:s.ipHx,reason:s.ipReason,ix:s.ipIx,active:s.ipActive,plan:s.ipPlan};
+          } else if(s.sourceEndoId && window.S.endorsements && window.S.endorsements[s.sourceEndoId]){
+            let e2=window.S.endorsements[s.sourceEndoId];
+            ip = {hx:e2.hx,reason:e2.reason,ix:e2.ix,active:e2.active,plan:e2.plan};
+            if(!s.sex && e2.sex) s._sex=e2.sex;
+            if(!s.cid && e2.cid) s._cid=e2.cid;
+            if(e2.ward || e2.bed){ wardBed = (abbrevWard(e2.ward)||'') + (e2.bed?' · B'+normBed(e2.bed):''); }
+          }
+          // Also try stored ward/bed on the cath record itself (for new records)
+          if(!wardBed && (s.ipWard||s.ipBed)){ wardBed = (abbrevWard(s.ipWard)||'') + (s.ipBed?' · B'+normBed(s.ipBed):''); }
+        }
+        let sexVal = s.sex || s._sex || '';
+        let cidVal = s.cid || s._cid || '';
+        let rows = '';
+        if(wardBed) rows+=`<div class="cath-row"><div class="cath-row-label" style="color:var(--ok)">Location</div><div class="cath-row-val" style="font-weight:600;color:var(--ok)">${escapeHtml(wardBed)}</div></div>`;
+        if(sexVal||s.age||s.nationality){ let d=[];if(s.age)d.push(s.age+'y');if(sexVal)d.push(sexVal==='Male'?'Male':(sexVal==='Female'?'Female':sexVal));if(s.nationality)d.push(s.nationality);if(d.length)rows+=`<div class="cath-row"><div class="cath-row-label">Demographics</div><div class="cath-row-val">${escapeHtml(d.join(' · '))}</div></div>`;}
+        if(cidVal&&cidVal!=='—') rows+=`<div class="cath-row"><div class="cath-row-label">Civil ID</div><div class="cath-row-val">${escapeHtml(cidVal)}</div></div>`;
+        if(s.file) rows+=`<div class="cath-row"><div class="cath-row-label">File</div><div class="cath-row-val">${escapeHtml(s.file)}</div></div>`;
+        if(s.phone&&s.phone!=='—') rows+=`<div class="cath-row"><div class="cath-row-label">Phone</div><div class="cath-row-val">${escapeHtml(s.phone)}</div></div>`;
+        if(ip){
+          if(ip.hx) rows+=`<div class="cath-row"><div class="cath-row-label" style="color:var(--dim)">Past History</div><div class="cath-row-val">${escapeHtml(ip.hx)}</div></div>`;
+          if(ip.reason) rows+=`<div class="cath-row"><div class="cath-row-label" style="color:var(--warn)">Reason / Dx</div><div class="cath-row-val" style="font-weight:500">${escapeHtml(ip.reason)}</div></div>`;
+          if(ip.ix) rows+=`<div class="cath-row"><div class="cath-row-label">Investigations</div><div class="cath-row-val">${escapeHtml(ip.ix)}</div></div>`;
+          if(ip.active) rows+=`<div class="cath-row"><div class="cath-row-label" style="color:var(--err)">Active Issues</div><div class="cath-row-val">${escapeHtml(ip.active)}</div></div>`;
+          if(ip.plan) rows+=`<div class="cath-row"><div class="cath-row-label" style="color:var(--ok)">Plan</div><div class="cath-row-val">${escapeHtml(ip.plan)}</div></div>`;
+        } else {
+          if(s.hx) rows+=`<div class="cath-row"><div class="cath-row-label">History</div><div class="cath-row-val">${escapeHtml(s.hx)}</div></div>`;
+        }
+        return rows;
+      })()}
       <div class="cath-row"><div class="cath-row-label">Procedure</div><div class="cath-row-val" style="color:var(--acc2);font-weight:600">${escapeHtml(s.proc||'—')}</div></div>
       <div class="cath-row"><div class="cath-row-label">Operator</div><div class="cath-row-val">${s.operator ? escapeHtml(s.operator) : '<span style="color:var(--dim);font-style:italic">To be assigned</span>'}</div></div>
       ${s.result ? `<div class="cath-row" style="background:rgba(52,211,153,.06);border-radius:6px;padding:7px 9px;margin-top:4px"><div class="cath-row-label" style="color:var(--ok)">Done / Result</div><div class="cath-row-val" style="color:var(--ok);font-weight:600;line-height:1.5">${escapeHtml(s.result)}${s.caseType==='IP'?' <span style="font-weight:normal;color:var(--dim);font-size:10px;font-family:\'DM Mono\',monospace">· synced to IP list</span>':''}</div></div>` : ''}
@@ -3977,6 +4569,7 @@ function renderCathCalendar(){
         <div class="cal-day-detail-stats">
           <span class="cal-day-chip">Total: <b>${selCases.length}</b></span>
           ${typeof ward4Avail==='number' ? `<span class="cal-day-chip">Ward 4 avail: <b style="color:${ward4Avail>=selCases.length?'var(--ok)':'var(--err)'}">${ward4Avail}</b></span>` : ''}
+          ${selCases.length ? `<button onclick="exportCathListPDF('${calState.selected}')" style="background:linear-gradient(135deg,#2563eb,#0891b2);border:none;border-radius:6px;color:#fff;font-family:'DM Mono',monospace;font-size:10px;font-weight:600;padding:4px 12px;cursor:pointer;letter-spacing:.5px">📄 Export PDF</button>` : ''}
         </div>
       </div>
       ${opChips ? `<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">${opChips}</div>` : ''}
@@ -3991,9 +4584,50 @@ function renderCathCalendar(){
               <div class="cath-card-head">
                 <div style="background:var(--acc);color:#fff;font-family:'DM Mono',monospace;font-size:11px;font-weight:700;padding:4px 9px;border-radius:5px;letter-spacing:.5px">#${idx+1}</div>
                 <div class="cath-name" style="flex:1">${escapeHtml(s.name||'—')}${demoStr?' <span class="cath-demo">· '+escapeHtml(demoStr)+'</span>':''}</div>
+                ${(()=>{
+        if(s.caseType==='IP' && s.sourceEndoId && window.S.endorsements && window.S.endorsements[s.sourceEndoId]){
+          let _e=window.S.endorsements[s.sourceEndoId];
+          if(_e.ward||_e.bed) return `<div style="background:linear-gradient(135deg,#0891b2,#0e7490);color:#fff;font-family:'DM Serif Display',serif;font-size:14px;padding:5px 11px;border-radius:7px;min-width:44px;text-align:center;white-space:nowrap;box-shadow:0 2px 8px rgba(8,145,178,.3)">${escapeHtml(abbrevWard(_e.ward||''))} · B${escapeHtml(normBed(_e.bed||'—'))}</div>`;
+        }
+        return '';
+      })()}
               </div>
-              <div class="cath-row"><div class="cath-row-label">Civil ID</div><div class="cath-row-val">${escapeHtml(s.cid||'—')}</div></div>
-              ${s.file?`<div class="cath-row"><div class="cath-row-label">File</div><div class="cath-row-val">${escapeHtml(s.file)}</div></div>`:''}
+              ${(()=>{
+              let ip2 = null;
+              if(s.caseType === 'IP'){
+                if(s.ipHx||s.ipReason||s.ipIx||s.ipActive||s.ipPlan){
+                  ip2={hx:s.ipHx,reason:s.ipReason,ix:s.ipIx,active:s.ipActive,plan:s.ipPlan};
+                } else if(s.sourceEndoId && window.S.endorsements && window.S.endorsements[s.sourceEndoId]){
+                  let e3=window.S.endorsements[s.sourceEndoId];
+                  ip2={hx:e3.hx,reason:e3.reason,ix:e3.ix,active:e3.active,plan:e3.plan};
+                  if(!s.sex && e3.sex) s._sex=e3.sex;
+                  if(!s.cid && e3.cid) s._cid=e3.cid;
+                }
+              }
+              let sexV2=s.sex||s._sex||'', cidV2=s.cid||s._cid||'', wardBed2='';
+              if(s.caseType==='IP'){
+                if(s.sourceEndoId && window.S.endorsements && window.S.endorsements[s.sourceEndoId]){
+                  let e4=window.S.endorsements[s.sourceEndoId];
+                  if(e4.ward||e4.bed) wardBed2=(abbrevWard(e4.ward)||'')+(e4.bed?' · B'+normBed(e4.bed):'');
+                }
+                if(!wardBed2 && (s.ipWard||s.ipBed)) wardBed2=(abbrevWard(s.ipWard)||'')+(s.ipBed?' · B'+normBed(s.ipBed):'');
+              }
+              let rows='';
+              if(wardBed2) rows+=`<div class="cath-row"><div class="cath-row-label" style="color:var(--ok)">Location</div><div class="cath-row-val" style="font-weight:600;color:var(--ok)">${escapeHtml(wardBed2)}</div></div>`;
+              if(sexV2||s.age||s.nationality){let d=[];if(s.age)d.push(s.age+'y');if(sexV2)d.push(sexV2);if(s.nationality)d.push(s.nationality);if(d.length)rows+=`<div class="cath-row"><div class="cath-row-label">Demographics</div><div class="cath-row-val">${escapeHtml(d.join(' · '))}</div></div>`;}
+              if(cidV2&&cidV2!=='—') rows+=`<div class="cath-row"><div class="cath-row-label">Civil ID</div><div class="cath-row-val">${escapeHtml(cidV2)}</div></div>`;
+              if(s.file) rows+=`<div class="cath-row"><div class="cath-row-label">File</div><div class="cath-row-val">${escapeHtml(s.file)}</div></div>`;
+              if(ip2){
+                if(ip2.hx) rows+=`<div class="cath-row"><div class="cath-row-label" style="color:var(--dim)">Past History</div><div class="cath-row-val">${escapeHtml(ip2.hx)}</div></div>`;
+                if(ip2.reason) rows+=`<div class="cath-row"><div class="cath-row-label" style="color:var(--warn)">Reason / Dx</div><div class="cath-row-val" style="font-weight:500">${escapeHtml(ip2.reason)}</div></div>`;
+                if(ip2.ix) rows+=`<div class="cath-row"><div class="cath-row-label">Investigations</div><div class="cath-row-val">${escapeHtml(ip2.ix)}</div></div>`;
+                if(ip2.active) rows+=`<div class="cath-row"><div class="cath-row-label" style="color:var(--err)">Active Issues</div><div class="cath-row-val">${escapeHtml(ip2.active)}</div></div>`;
+                if(ip2.plan) rows+=`<div class="cath-row"><div class="cath-row-label" style="color:var(--ok)">Plan</div><div class="cath-row-val">${escapeHtml(ip2.plan)}</div></div>`;
+              } else {
+                if(s.hx) rows+=`<div class="cath-row"><div class="cath-row-label">History</div><div class="cath-row-val">${escapeHtml(s.hx)}</div></div>`;
+              }
+              return rows;
+            })()}
               <div class="cath-row"><div class="cath-row-label">Procedure</div><div class="cath-row-val" style="color:var(--acc2);font-weight:600">${escapeHtml(s.proc||'—')}</div></div>
               <div class="cath-row"><div class="cath-row-label">Operator</div><div class="cath-row-val">${s.operator ? escapeHtml(s.operator) : '<span style="color:var(--dim);font-style:italic">To be assigned</span>'}</div></div>
       ${s.result ? `<div class="cath-row" style="background:rgba(52,211,153,.06);border-radius:6px;padding:7px 9px;margin-top:4px"><div class="cath-row-label" style="color:var(--ok)">Done / Result</div><div class="cath-row-val" style="color:var(--ok);font-weight:600;line-height:1.5">${escapeHtml(s.result)}${s.caseType==='IP'?' <span style="font-weight:normal;color:var(--dim);font-size:10px;font-family:\'DM Mono\',monospace">· synced to IP list</span>':''}</div></div>` : ''}
@@ -4039,19 +4673,58 @@ function renderCathScheduled(){
   c.innerHTML = all.map(s => {
     let demo = [];
     if(s.age) demo.push(s.age + 'y');
+    if(s.sex) demo.push(s.sex === 'Male' ? 'M' : (s.sex === 'Female' ? 'F' : s.sex));
     if(s.nationality) demo.push(s.nationality);
     let demoStr = demo.join(' · ');
     let ipBadge = (s.caseType === 'IP') ? `<span style="background:rgba(52,211,153,.15);color:var(--ok);border:1px solid rgba(52,211,153,.4);border-radius:4px;padding:2px 7px;font-family:'DM Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.5px;margin-left:6px">🏥 IP</span>` : '';
     return `
     <div class="cath-card"${s.caseType==='IP'?' style="border-left:3px solid var(--ok)"':''}>
       <div class="cath-card-head">
+        ${(()=>{
+        if(s.caseType==='IP' && s.sourceEndoId && window.S.endorsements && window.S.endorsements[s.sourceEndoId]){
+          let _e=window.S.endorsements[s.sourceEndoId];
+          if(_e.ward||_e.bed) return `<div style="background:linear-gradient(135deg,#0891b2,#0e7490);color:#fff;font-family:'DM Serif Display',serif;font-size:14px;padding:5px 11px;border-radius:7px;min-width:44px;text-align:center;white-space:nowrap;box-shadow:0 2px 8px rgba(8,145,178,.3)">${escapeHtml(abbrevWard(_e.ward||''))} · B${escapeHtml(normBed(_e.bed||'—'))}</div>`;
+        }
+        return '';
+      })()}
         <div class="cath-name">${escapeHtml(s.name||'—')}${ipBadge}${demoStr?' <span class="cath-demo">· '+escapeHtml(demoStr)+'</span>':''}</div>
         <div class="cath-date">${fmtDate(s.date)}</div>
       </div>
-      <div class="cath-row"><div class="cath-row-label">Civil ID</div><div class="cath-row-val">${escapeHtml(s.cid||'—')}</div></div>
-      ${s.file?`<div class="cath-row"><div class="cath-row-label">File</div><div class="cath-row-val">${escapeHtml(s.file)}</div></div>`:''}
-      <div class="cath-row"><div class="cath-row-label">Phone</div><div class="cath-row-val">${escapeHtml(s.phone||'—')}</div></div>
-      <div class="cath-row"><div class="cath-row-label">History</div><div class="cath-row-val">${escapeHtml(s.hx||'—')}</div></div>
+      ${(()=>{
+        // For IP cases: use stored ipFields OR fall back to live endorsement data
+        let ip = null; let wardBed = '';
+        if(s.caseType === 'IP'){
+          if(s.ipHx||s.ipReason||s.ipIx||s.ipActive||s.ipPlan){
+            ip = {hx:s.ipHx,reason:s.ipReason,ix:s.ipIx,active:s.ipActive,plan:s.ipPlan};
+          } else if(s.sourceEndoId && window.S.endorsements && window.S.endorsements[s.sourceEndoId]){
+            let e2=window.S.endorsements[s.sourceEndoId];
+            ip = {hx:e2.hx,reason:e2.reason,ix:e2.ix,active:e2.active,plan:e2.plan};
+            if(!s.sex && e2.sex) s._sex=e2.sex;
+            if(!s.cid && e2.cid) s._cid=e2.cid;
+            if(e2.ward || e2.bed){ wardBed = (abbrevWard(e2.ward)||'') + (e2.bed?' · B'+normBed(e2.bed):''); }
+          }
+          // Also try stored ward/bed on the cath record itself (for new records)
+          if(!wardBed && (s.ipWard||s.ipBed)){ wardBed = (abbrevWard(s.ipWard)||'') + (s.ipBed?' · B'+normBed(s.ipBed):''); }
+        }
+        let sexVal = s.sex || s._sex || '';
+        let cidVal = s.cid || s._cid || '';
+        let rows = '';
+        if(wardBed) rows+=`<div class="cath-row"><div class="cath-row-label" style="color:var(--ok)">Location</div><div class="cath-row-val" style="font-weight:600;color:var(--ok)">${escapeHtml(wardBed)}</div></div>`;
+        if(sexVal||s.age||s.nationality){ let d=[];if(s.age)d.push(s.age+'y');if(sexVal)d.push(sexVal==='Male'?'Male':(sexVal==='Female'?'Female':sexVal));if(s.nationality)d.push(s.nationality);if(d.length)rows+=`<div class="cath-row"><div class="cath-row-label">Demographics</div><div class="cath-row-val">${escapeHtml(d.join(' · '))}</div></div>`;}
+        if(cidVal&&cidVal!=='—') rows+=`<div class="cath-row"><div class="cath-row-label">Civil ID</div><div class="cath-row-val">${escapeHtml(cidVal)}</div></div>`;
+        if(s.file) rows+=`<div class="cath-row"><div class="cath-row-label">File</div><div class="cath-row-val">${escapeHtml(s.file)}</div></div>`;
+        if(s.phone&&s.phone!=='—') rows+=`<div class="cath-row"><div class="cath-row-label">Phone</div><div class="cath-row-val">${escapeHtml(s.phone)}</div></div>`;
+        if(ip){
+          if(ip.hx) rows+=`<div class="cath-row"><div class="cath-row-label" style="color:var(--dim)">Past History</div><div class="cath-row-val">${escapeHtml(ip.hx)}</div></div>`;
+          if(ip.reason) rows+=`<div class="cath-row"><div class="cath-row-label" style="color:var(--warn)">Reason / Dx</div><div class="cath-row-val" style="font-weight:500">${escapeHtml(ip.reason)}</div></div>`;
+          if(ip.ix) rows+=`<div class="cath-row"><div class="cath-row-label">Investigations</div><div class="cath-row-val">${escapeHtml(ip.ix)}</div></div>`;
+          if(ip.active) rows+=`<div class="cath-row"><div class="cath-row-label" style="color:var(--err)">Active Issues</div><div class="cath-row-val">${escapeHtml(ip.active)}</div></div>`;
+          if(ip.plan) rows+=`<div class="cath-row"><div class="cath-row-label" style="color:var(--ok)">Plan</div><div class="cath-row-val">${escapeHtml(ip.plan)}</div></div>`;
+        } else {
+          if(s.hx) rows+=`<div class="cath-row"><div class="cath-row-label">History</div><div class="cath-row-val">${escapeHtml(s.hx)}</div></div>`;
+        }
+        return rows;
+      })()}
       <div class="cath-row"><div class="cath-row-label">Procedure</div><div class="cath-row-val" style="color:var(--acc2);font-weight:600">${escapeHtml(s.proc||'—')}</div></div>
       <div class="cath-row"><div class="cath-row-label">Operator</div><div class="cath-row-val">${s.operator ? escapeHtml(s.operator) : '<span style="color:var(--dim);font-style:italic">To be assigned</span>'}</div></div>
       ${s.result ? `<div class="cath-row" style="background:rgba(52,211,153,.06);border-radius:6px;padding:7px 9px;margin-top:4px"><div class="cath-row-label" style="color:var(--ok)">Done / Result</div><div class="cath-row-val" style="color:var(--ok);font-weight:600;line-height:1.5">${escapeHtml(s.result)}${s.caseType==='IP'?' <span style="font-weight:normal;color:var(--dim);font-size:10px;font-family:\'DM Mono\',monospace">· synced to IP list</span>':''}</div></div>` : ''}
@@ -4074,6 +4747,7 @@ function renderCathPending(){
   c.innerHTML = all.map(p => {
     let demo = [];
     if(p.age) demo.push(p.age + 'y');
+    if(p.sex) demo.push(p.sex === 'Male' ? 'M' : (p.sex === 'Female' ? 'F' : p.sex));
     if(p.nationality) demo.push(p.nationality);
     let demoStr = demo.join(' · ');
     return `
@@ -4238,30 +4912,33 @@ function cathScheduledOnDate(isoDate){
   return Object.values(window.S.cathScheduled||{}).filter(s => s.date === isoDate).length;
 }
 
-// Check upcoming cath days against Ward 4 availability; return array of alerts.
+// Check NEXT DAY'S non-IP scheduled cath cases against Ward 4 available beds.
+// Alert is ONLY ACTIVE between 21:00 (9pm) and 09:00 (9am) — the nightly census window.
+// Outside this window the alert is silenced automatically.
+function isCensusAlarmWindow(){
+  let h = new Date().getHours(); // 0-23
+  // Active: 21:00–23:59 OR 00:00–08:59
+  return h >= 21 || h < 9;
+}
+
 function computeBedAlerts(){
   ensureExtState();
   let alerts = [];
+  // Alarm only active in the overnight window (9pm – 9am)
+  if(!isCensusAlarmWindow()) return alerts;
   let ward4 = window.S.census?.ward4;
   if(!ward4 || typeof ward4.available !== 'number') return alerts;
-  // Group scheduled cath by date, today + 7 days ahead
+  // Only look at tomorrow (next calendar day)
   let today = new Date(todayIso()+'T00:00:00');
-  let horizon = new Date(today); horizon.setDate(horizon.getDate() + 7);
-  let byDate = {};
-  Object.values(window.S.cathScheduled||{}).forEach(s => {
-    if(!s.date) return;
-    let d = new Date(s.date+'T00:00:00');
-    if(isNaN(d)) return;
-    if(d >= today && d <= horizon){
-      byDate[s.date] = (byDate[s.date]||0) + 1;
-    }
-  });
-  Object.keys(byDate).sort().forEach(d => {
-    let needed = byDate[d];
-    if(needed > ward4.available){
-      alerts.push({date: d, scheduled: needed, available: ward4.available, shortage: needed - ward4.available});
-    }
-  });
+  let tomorrow = new Date(today); tomorrow.setDate(tomorrow.getDate() + 1);
+  let tomorrowIso = tomorrow.toISOString().slice(0,10);
+  // Count only non-IP scheduled cases for tomorrow
+  let nonIpTomorrow = Object.values(window.S.cathScheduled||{}).filter(s => {
+    return s.date === tomorrowIso && s.caseType !== 'IP';
+  }).length;
+  if(nonIpTomorrow > ward4.available){
+    alerts.push({date: tomorrowIso, scheduled: nonIpTomorrow, available: ward4.available, shortage: nonIpTomorrow - ward4.available});
+  }
   return alerts;
 }
 
@@ -4297,7 +4974,7 @@ window.goTab=(id,btn)=>{
   btn.classList.add("on");
   if(id==="opdal"){ mountOpdalSubtab(window.currentOpdalSub || 'ip'); }
   if(id==="ep") renderEpTab();
-  if(id==="endo") renderEndoList();
+  if(id==="endo"){ renderEndoList(); renderHFList(); }
   if(id==="cath") renderCathAll();
   if(id==="census"){ renderCensus(); renderCensusAlert(); }
   if(id==="oncall") renderOncallCalendar();
@@ -4330,6 +5007,7 @@ dbRef.on('value',(snap)=>{
     window.S.docPins=d.docPins||{};
     window.S.pinChanges=d.pinChanges||[];
     window.S.removals=d.removals||[];
+    window.S.hfPatients=d.hfPatients||{};
   }
   ensureExtState();
 
@@ -4362,7 +5040,7 @@ dbRef.on('value',(snap)=>{
   document.getElementById("syncText").innerText="Live — Synced";
   rAll();
   // Re-render new sections if on them
-  if(document.getElementById('pg-endo')?.classList.contains('on')) renderEndoList();
+  if(document.getElementById('pg-endo')?.classList.contains('on')){ renderEndoList(); renderHFList(); }
   if(document.getElementById('pg-cath')?.classList.contains('on')) renderCathAll();
   if(document.getElementById('pg-census')?.classList.contains('on')){ renderCensus(); renderCensusAlert(); }
   if(document.getElementById('pg-oncall')?.classList.contains('on')) renderOncallCalendar();
@@ -4402,24 +5080,29 @@ window.sendEndoToCath = function(endoId){
   setTimeout(()=>{
     clickCathSubtab('addSch');
     resetCathSchForm(true);
-    // Populate from IP entry
+    // Populate from IP entry — structured fields transferred individually
     document.getElementById('cath-sch-name').value = e.name || '';
     document.getElementById('cath-sch-age').value = e.age || '';
+    let schSexElIP = document.getElementById('cath-sch-sex'); if(schSexElIP) schSexElIP.value = e.sex || '';
     document.getElementById('cath-sch-nat').value = e.nationality || '';
     document.getElementById('cath-sch-file').value = e.mrn || '';
-    // Build a rich history from IP entry fields
-    let hxParts = [];
-    if(e.age || e.sex){
-      let head = '';
-      if(e.age) head += e.age;
-      if(e.sex) head += (e.sex==='Male'?'M':(e.sex==='Female'?'F':e.sex));
-      if(head) hxParts.push(head);
+    let cidElIP = document.getElementById('cath-sch-cid'); if(cidElIP) cidElIP.value = e.cid || '';
+    // Build brief history summary for the hx field (used as fallback display)
+    // Structured fields (hx, reason, ix, active, plan) are stored separately as ipFields
+    let hxSummary = e.hx || '';
+    document.getElementById('cath-sch-hx').value = hxSummary;
+    // Store structured IP fields as hidden data attributes on the form
+    // so saveCathSched can persist them separately
+    let schForm = document.querySelector('.cath-form');
+    if(schForm){
+      schForm.dataset.ipHx = e.hx || '';
+      schForm.dataset.ipReason = e.reason || '';
+      schForm.dataset.ipIx = e.ix || '';
+      schForm.dataset.ipActive = e.active || '';
+      schForm.dataset.ipPlan = e.plan || '';
+      schForm.dataset.ipWard = e.ward || '';
+      schForm.dataset.ipBed = e.bed || '';
     }
-    if(e.hx) hxParts.push('PMHx: ' + e.hx);
-    if(e.reason) hxParts.push('Admitted for: ' + e.reason);
-    if(e.ix) hxParts.push('Ix: ' + e.ix);
-    if(e.active) hxParts.push('Active: ' + e.active);
-    document.getElementById('cath-sch-hx').value = hxParts.join('\n');
     // Link this schedule back to the IP entry
     let endoEl = document.getElementById('cath-sch-endo-id');
     let ctEl = document.getElementById('cath-sch-case-type');
@@ -4432,7 +5115,7 @@ window.sendEndoToCath = function(endoId){
     if(ipNote) ipNote.style.display = 'block';
     // Relax validation: only date + PIN are required for IP cases
     setCathSchRequiredMode(true);
-    document.getElementById('cathSchFormTitle').innerText = `IP CASE: ${e.name} (${e.ward||'—'} · Bed ${e.bed||'—'})`;
+    document.getElementById('cathSchFormTitle').innerText = `IP CASE: ${e.name} (${abbrevWard(e.ward||'—')} · B${normBed(e.bed)})`;
     updateSchDateBadge();
     // Scroll form into view and focus the date input (only required field)
     let dateEl = document.getElementById('cath-sch-date');
@@ -4984,6 +5667,12 @@ window.renderRemovalsList = function(){
 // Initialize
 ensureExtState();
 rAll();
+
+// Auto-refresh census alarm every 60 seconds so it activates at 9pm
+// and deactivates at 9am without needing a page reload.
+setInterval(function(){
+  if(typeof renderCensusAlert === 'function') renderCensusAlert();
+}, 60000);
 </script>
 
 </body>
