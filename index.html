@@ -2076,7 +2076,7 @@ header{background:linear-gradient(180deg,rgba(13,22,40,0.96) 0%,rgba(11,18,32,0.
               <input type="text" id="cens-pend-disc" inputmode="numeric" maxlength="2" placeholder="count" style="border-color:rgba(251,191,36,.35)">
             </div>
             <div>
-              <label style="color:#60a5fa">↪ Other Wards Transfer</label>
+              <label style="color:#60a5fa">↪ Pending Transfer to Other Wards</label>
               <input type="text" id="cens-other-tx" inputmode="numeric" maxlength="2" placeholder="count" style="border-color:rgba(96,165,250,.35)">
             </div>
           </div>
@@ -6270,7 +6270,7 @@ function renderCensus(){
       </div>
       <div class="census-split">
         <div class="census-split-item" style="border-color:rgba(251,191,36,.3);background:rgba(251,191,36,.06)"><span class="census-split-label" style="color:#fbbf24">⏳ Pending Discharges</span><span class="census-split-val" style="color:#fbbf24">${data.pendingDischarges||0}</span></div>
-        <div class="census-split-item" style="border-color:rgba(96,165,250,.3);background:rgba(96,165,250,.06)"><span class="census-split-label" style="color:#60a5fa">↪ Other Wards Transfer</span><span class="census-split-val" style="color:#60a5fa">${data.otherWardsTransfer||0}</span></div>
+        <div class="census-split-item" style="border-color:rgba(96,165,250,.3);background:rgba(96,165,250,.06)"><span class="census-split-label" style="color:#60a5fa">↪ Pending Transfer to Other Wards</span><span class="census-split-val" style="color:#60a5fa">${data.otherWardsTransfer||0}</span></div>
       </div>
       <div class="census-risk">
         <div class="census-risk-tile red"><div class="census-risk-num">${data.critical||0}</div><div class="census-risk-lbl">🔴 CRITICAL</div>${data.criticalBeds?`<div class="census-risk-beds">${escapeHtml(data.criticalBeds)}</div>`:''}</div>
