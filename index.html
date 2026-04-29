@@ -614,6 +614,7 @@ header{background:linear-gradient(180deg,rgba(13,22,40,0.96) 0%,rgba(11,18,32,0.
   <button class="tab" data-role="registrar admin" onclick="goTab('endo',this)">IP Patient's List</button>
   <button class="tab" data-role="registrar admin" onclick="goTab('cath',this)">Cathlab</button>
   <button class="tab" data-role="registrar admin" onclick="goTab('census',this)">Census</button>
+  <button class="tab" data-role="registrar admin" onclick="goTab('echolist',this)">IP Echo List</button>
   <button class="tab" data-role="registrar admin" onclick="goTab('oncall',this)">On Call</button>
   <button class="tab" data-role="registrar admin" onclick="goTab('hosp',this)">Hospital Numbers</button>
   <button class="tab" data-role="admin" onclick="goTab('adm',this)">Admin</button>
@@ -2111,6 +2112,23 @@ header{background:linear-gradient(180deg,rgba(13,22,40,0.96) 0%,rgba(11,18,32,0.
 </div>
 
 
+<!-- ============= IP ECHO LIST ============= -->
+<div class="pg" id="pg-echolist">
+  <div class="endo-toolbar">
+    <input type="text" class="endo-search" id="echoSearch" placeholder="🔍 Search by ward, bed, name, MRN..." oninput="renderEchoList()">
+  </div>
+  <div style="display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap;align-items:center">
+    <button class="endo-mini-btn" onclick="expandAllEcho()">⌄ Expand all</button>
+    <button class="endo-mini-btn" onclick="collapseAllEcho()">⌃ Collapse all</button>
+  </div>
+  <div style="background:rgba(96,165,250,0.06);border:1px solid rgba(96,165,250,0.3);border-left:3px solid var(--acc);border-radius:10px;padding:11px 14px;margin-bottom:10px;font-family:var(--font-mono);font-size:11px;color:var(--mid);line-height:1.55">
+    Patients added from the IP Patient's List for inpatient echocardiography. Click <strong style="color:var(--acc2)">＋ Add to Echo List</strong> on any IP card to send a patient here. Marking echo as <strong>done</strong> removes the patient from this list and shows an <strong>ECHO DONE</strong> badge on the IP card.
+  </div>
+  <div id="echoCount" class="endo-count-bar"></div>
+  <div id="echoList" class="endo-grid"></div>
+</div>
+
+
 <div class="pg" id="pg-adm">
   <div class="card apgate" style="text-align:center">
     <label>ADMIN PIN</label>
@@ -3410,6 +3428,7 @@ function ensureExtState(){
   if(!window.S.pinChanges) window.S.pinChanges = [];
   if(!window.S.removals) window.S.removals = [];
   if(!window.S.hfPatients) window.S.hfPatients = {};
+  if(!window.S.echoList) window.S.echoList = {};
 }
 
 // Compress image to ~80KB max, return base64 data URL
@@ -4177,6 +4196,11 @@ function renderEndoList(){
       cathStillPending = !hasResult && !datePassed;
     }
     let cathBadge = cathStillPending ? `<div style="font-family:var(--font-mono);font-size:9px;letter-spacing:.5px;background:rgba(63,185,140,.15);color:var(--ok);border:1px solid rgba(63,185,140,.35);border-radius:4px;padding:2px 7px;margin-top:4px;display:inline-block">CATH SCHEDULED · ${escapeHtml(inCath.date||'—')}</div>` : '';
+    // Is this patient currently in the IP Echo List?
+    let inEcho = (window.S.echoList||{})[e.id];
+    let echoBadge = inEcho ? `<div style="font-family:var(--font-mono);font-size:9px;letter-spacing:.5px;background:rgba(96,165,250,.15);color:var(--acc2);border:1px solid rgba(96,165,250,.4);border-radius:4px;padding:2px 7px;margin-top:4px;margin-left:4px;display:inline-block">🔬 ECHO SCHEDULED</div>` : '';
+    // Echo completed badge — set when patient was removed from echo list
+    let echoDoneBadge = (e.echoDone && !inEcho) ? `<div style="font-family:var(--font-mono);font-size:9px;letter-spacing:.5px;background:rgba(63,185,140,.15);color:var(--ok);border:1px solid rgba(63,185,140,.4);border-radius:4px;padding:2px 7px;margin-top:4px;margin-left:4px;display:inline-block" title="Echo completed${e.echoCompletedAt?' on '+fmtDateTime(e.echoCompletedAt):''}">✓ ECHO DONE</div>` : '';
 
     // ---- STALE DETECTION (>24h since updatedAt) ----
     let lastUpdate = e.updatedAt || e.createdAt || 0;
@@ -4213,6 +4237,17 @@ function renderEndoList(){
       }
     }
 
+    // ---- ECHO ALARM (Plan mentions echo) ----
+    // Suppress when patient is already on the echo list OR echo has been completed.
+    let echoAlarm = '';
+    if(planSuggestsEcho(e.plan) && !inEcho && !e.echoDone){
+      echoAlarm = `<div class="endo-ca-alarm" style="background:linear-gradient(90deg,rgba(96,165,250,0.18),rgba(96,165,250,0.06));border-color:rgba(96,165,250,0.45);border-left-color:var(--acc2);color:var(--acc2)">
+        <span class="ca-icon" style="background:rgba(96,165,250,0.18);color:var(--acc2)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 6v6l4 2"/></svg></span>
+        <span>Plan mentions <strong>echo</strong> — needs scheduling</span>
+        <button class="endo-ca-alarm-btn" style="background:var(--acc2)" onclick="event.stopPropagation();addEndoToEchoList('${e.id}')">→ Add to Echo List</button>
+      </div>`;
+    }
+
     return `
     <div class="endo-card${isOpen?' open':''}${isStale?' stale':''}">
       <div class="endo-card-head endo-card-toggle" onclick="toggleEndoCard('${e.id}')">
@@ -4222,11 +4257,14 @@ function renderEndoList(){
           <div class="endo-mrn">MRN · ${escapeHtml(e.mrn||'—')}${summary?' · <span style="color:var(--dim)">'+escapeHtml(summary)+'</span>':''}</div>
           ${demoLine}
           ${cathBadge}
+          ${echoBadge}
+          ${echoDoneBadge}
         </div>
         <div class="endo-chevron">▾</div>
       </div>
       ${staleBanner}
       ${caAlarm}
+      ${echoAlarm}
       <div class="endo-card-body">
         ${field('Past History', e.hx)}
         ${field('Reason of Admission', e.reason)}
@@ -4240,6 +4278,7 @@ function renderEndoList(){
         <div class="endo-actions">
           <button class="endo-act-btn" onclick="event.stopPropagation();openEndoForm('${e.id}')">✎ Edit</button>
           <button class="endo-act-btn" style="border-color:rgba(63,185,140,.4);color:var(--ok)" onclick="event.stopPropagation();sendEndoToCath('${e.id}')" title="Schedule this patient as an IP cath case">${cathStillPending?'Re-schedule Cath':'Send to Cathlab'}</button>
+          <button class="endo-act-btn" style="border-color:rgba(96,165,250,.4);color:var(--acc2)" onclick="event.stopPropagation();addEndoToEchoList('${e.id}')" title="${inEcho?'Already on the IP Echo List':'Send this patient to the IP Echo List'}" ${inEcho?'disabled style="opacity:.5;cursor:not-allowed;border-color:rgba(96,165,250,.4);color:var(--acc2)"':''}>${inEcho?'✓ On Echo List':'Add to Echo List'}</button>
           <button class="endo-act-btn danger" onclick="event.stopPropagation();deleteEndo('${e.id}')">✕ Discharge</button>
         </div>
       </div>
@@ -5224,6 +5263,28 @@ function planSuggestsCA(planText){
     /\bprimary\s+pci\b/,
     /\brescue\s+pci\b/,
     /\bstaged\s+pci\b/
+  ];
+  return patterns.some(re => re.test(t));
+}
+
+function planSuggestsEcho(planText){
+  if(!planText) return false;
+  let t = planText.toLowerCase();
+  // Phrases meaning "this patient needs an echo"
+  let patterns = [
+    /\becho\b/,                        // any standalone "echo"
+    /\btte\b/,                         // transthoracic echo
+    /\btee\b/,                         // transesophageal echo
+    /\btrans(?:thoracic|oesophageal|esophageal)\s+echo/,
+    /\bechocardiogra(?:m|phy)/,
+    /\bfor\s+echo/,
+    /\bplan(ned)?\s+for\s+echo/,
+    /\bbedside\s+echo/,
+    /\bfocused\s+echo/,
+    /\bstress\s+echo/,
+    /\bcontrast\s+echo/,
+    /\brepeat\s+echo/,
+    /\bf\/u\s+echo/                    // follow-up echo
   ];
   return patterns.some(re => re.test(t));
 }
@@ -6368,6 +6429,7 @@ window.goTab=(id,btn)=>{
   if(id==="endo"){ renderEndoList(); renderHFList(); }
   if(id==="cath") renderCathAll();
   if(id==="census"){ renderCensus(); renderCensusAlert(); }
+  if(id==="echolist") renderEchoList();
   if(id==="oncall") renderOncallCalendar();
   if(id==="hosp") renderHospNumbers();
   rAll();
@@ -6399,6 +6461,7 @@ dbRef.on('value',(snap)=>{
     window.S.pinChanges=d.pinChanges||[];
     window.S.removals=d.removals||[];
     window.S.hfPatients=d.hfPatients||{};
+    window.S.echoList=d.echoList||{};
   }
   ensureExtState();
 
@@ -6434,6 +6497,7 @@ dbRef.on('value',(snap)=>{
   if(document.getElementById('pg-endo')?.classList.contains('on')){ renderEndoList(); renderHFList(); }
   if(document.getElementById('pg-cath')?.classList.contains('on')) renderCathAll();
   if(document.getElementById('pg-census')?.classList.contains('on')){ renderCensus(); renderCensusAlert(); }
+  if(document.getElementById('pg-echolist')?.classList.contains('on')) renderEchoList();
   if(document.getElementById('pg-oncall')?.classList.contains('on')) renderOncallCalendar();
   if(document.getElementById('pg-adm')?.classList.contains('on')){
     if(document.getElementById('adm-pinreset')?.classList.contains('on')) renderPinResetTab();
@@ -6442,7 +6506,176 @@ dbRef.on('value',(snap)=>{
 });
 
 // ============================================================
-// Send an IP endorsement patient directly to the cathlab schedule form
+// IP ECHO LIST — add an IP patient to the inpatient echo list.
+// Patient stays on the IP Patient's List; an "ECHO SCHEDULED"
+// badge appears on the IP card. The echoList record is keyed
+// by the IP endorsement id (sourceEndoId), so the IP card always
+// reflects live data when the IP entry is edited.
+// ============================================================
+window.addEndoToEchoList = function(endoId){
+  ensureExtState();
+  let e = window.S.endorsements[endoId];
+  if(!e){ alert('Patient not found.'); return; }
+  if(window.S.echoList && window.S.echoList[endoId]){
+    alert(`${e.name} is already on the IP Echo List.`);
+    return;
+  }
+  if(!confirm(`Add ${e.name} (${abbrevWard(e.ward||'—')} · ${bedLabel(e.bed)}) to the IP Echo List?`)) return;
+  let now = Date.now();
+  let record = {
+    id: endoId,                    // same id as the IP entry — one-to-one link
+    sourceEndoId: endoId,
+    addedAt: now,
+    addedBy: window.currentDoctor || ''
+  };
+  window.S.echoList[endoId] = record;
+  // Atomic update — write the echo record AND clear any stale echoDone flag
+  // (re-adding means a new echo is being scheduled, so prior completion is stale)
+  let updates = { ['echoList/' + endoId]: record };
+  if(e.echoDone || e.echoCompletedAt){
+    delete e.echoDone;
+    delete e.echoCompletedAt;
+    updates['endorsements/' + endoId] = e;
+  }
+  dbUpdate(updates);
+  renderEndoList();
+  // Jump to echo list so the user sees the result
+  let echoTab = document.querySelector('#mainTabs .tab[onclick*="\'echolist\'"]');
+  if(echoTab && echoTab.style.display !== 'none'){
+    echoTab.click();
+  }
+};
+
+window.removeFromEchoList = function(endoId){
+  ensureExtState();
+  let e = window.S.endorsements[endoId];
+  let nm = e ? e.name : 'this patient';
+  if(!confirm(`Mark echo as DONE for ${nm}?\n\nThis removes the patient from the IP Echo List and shows an ECHO DONE badge on the IP card.`)) return;
+  if(window.S.echoList) delete window.S.echoList[endoId];
+  // Atomic update — remove the echo record AND stamp echoDone on the IP entry
+  let updates = { ['echoList/' + endoId]: null };
+  if(e){
+    e.echoDone = true;
+    e.echoCompletedAt = Date.now();
+    updates['endorsements/' + endoId] = e;
+  }
+  dbUpdate(updates);
+  renderEchoList();
+  if(document.getElementById('pg-endo')?.classList.contains('on')) renderEndoList();
+};
+
+window.renderEchoList = function(){
+  ensureExtState();
+  let c = document.getElementById('echoList');
+  if(!c) return;
+  let q = (document.getElementById('echoSearch')?.value || '').trim().toLowerCase();
+
+  // Build the list — pull live data from window.S.endorsements via sourceEndoId.
+  // If the source IP entry was discharged, drop the orphan from echoList.
+  let entries = [];
+  let orphans = [];
+  Object.keys(window.S.echoList||{}).forEach(id => {
+    let e = window.S.endorsements[id];
+    if(e){
+      entries.push({ ...e, _echoAddedAt: window.S.echoList[id].addedAt });
+    } else {
+      orphans.push(id);
+    }
+  });
+  // Clean orphans — IP entry was discharged but echo record lingered
+  if(orphans.length){
+    let updates = {};
+    orphans.forEach(id => { delete window.S.echoList[id]; updates['echoList/' + id] = null; });
+    dbUpdate(updates);
+  }
+
+  // Search filter
+  if(q){
+    entries = entries.filter(e =>
+      (e.ward||'').toLowerCase().includes(q) ||
+      (e.bed||'').toLowerCase().includes(q) ||
+      (e.name||'').toLowerCase().includes(q) ||
+      (e.mrn||'').toLowerCase().includes(q)
+    );
+  }
+  // Sort: ward (Ward 4 first, then CCU, then others), then bed numeric
+  let wardOrder = {'Ward 4':0,'CCU':1};
+  entries.sort((a,b)=>{
+    let wa = wardOrder[a.ward] ?? 3;
+    let wb = wardOrder[b.ward] ?? 3;
+    if(wa !== wb) return wa - wb;
+    if(wa === 3 && (a.ward||'') !== (b.ward||'')) return (a.ward||'').localeCompare(b.ward||'');
+    let ab = (a.bed||'').toString(), bb = (b.bed||'').toString();
+    return ab.localeCompare(bb, undefined, {numeric:true});
+  });
+
+  let countEl = document.getElementById('echoCount');
+  if(countEl) countEl.innerText = entries.length ? `${entries.length} patient${entries.length>1?'s':''} on the echo list${q?' matching search':''}` : '';
+
+  if(!entries.length){
+    c.innerHTML = '<div class="endo-empty">' + (q ? 'No patients match this search.' : 'No patients on the echo list yet. From the IP Patient\'s List, click <b>Add to Echo List</b> on any patient card.') + '</div>';
+    return;
+  }
+
+  c.innerHTML = entries.map(e => {
+    let isOpen = expandedEchoIds.has(e.id);
+    let demoParts = [];
+    if(e.age) demoParts.push(escapeHtml(e.age) + 'y');
+    if(e.sex) demoParts.push(escapeHtml(e.sex));
+    if(e.nationality) demoParts.push(escapeHtml(e.nationality));
+    let demoLine = demoParts.length ? `<div class="endo-mrn" style="color:var(--mid)">${demoParts.join(' · ')}</div>` : '';
+    let reasonSummary = (e.reason||'').trim();
+    let summary = reasonSummary ? (reasonSummary.length > 60 ? reasonSummary.slice(0,60).trim()+'…' : reasonSummary) : '';
+    let addedLine = e._echoAddedAt ? `<div class="endo-history-line">Added to echo list: ${fmtDateTime(e._echoAddedAt)}</div>` : '';
+    return `
+    <div class="endo-card${isOpen?' open':''}" style="border-left:3px solid var(--acc)">
+      <div class="endo-card-head endo-card-toggle" onclick="toggleEchoCard('${e.id}')">
+        <div class="endo-bed">${escapeHtml(e.ward ? abbrevWard(e.ward) : '—')} · ${escapeHtml(bedLabel(e.bed))}</div>
+        <div style="flex:1;min-width:0">
+          <div class="endo-name">${escapeHtml(e.name||'—')}</div>
+          <div class="endo-mrn">MRN · ${escapeHtml(e.mrn||'—')}${summary?' · <span style="color:var(--dim)">'+escapeHtml(summary)+'</span>':''}</div>
+          ${demoLine}
+        </div>
+        <div class="endo-chevron">▾</div>
+      </div>
+      <div class="endo-card-body">
+        ${field('Past History', e.hx)}
+        ${field('Reason of Admission', e.reason)}
+        ${bigField('Investigations', e.ix)}
+        ${bigField('Active Issues', e.active, 'active')}
+        ${field('Plan', e.plan)}
+        <div class="endo-meta-row">
+          <div>Created: ${fmtDateTime(e.createdAt)} · ${escapeHtml(e.createdBy||'—')}</div>
+          <div>Updated: ${fmtDateTime(e.updatedAt)} · ${escapeHtml(e.updatedBy||'—')}</div>
+        </div>
+        ${addedLine}
+        <div class="endo-actions">
+          <button class="endo-act-btn" onclick="event.stopPropagation();openEndoForm('${e.id}')">✎ Edit</button>
+          <button class="endo-act-btn" style="border-color:rgba(63,185,140,.4);color:var(--ok)" onclick="event.stopPropagation();removeFromEchoList('${e.id}')" title="Mark echo as completed and remove from this list">✓ Echo Done</button>
+        </div>
+      </div>
+    </div>
+  `;}).join('');
+};
+
+// Echo card collapse state — independent of IP cards so opening one doesn't affect the other
+var expandedEchoIds = new Set();
+window.toggleEchoCard = function(id){
+  if(expandedEchoIds.has(id)) expandedEchoIds.delete(id);
+  else expandedEchoIds.add(id);
+  renderEchoList();
+};
+window.expandAllEcho = function(){
+  ensureExtState();
+  Object.keys(window.S.echoList||{}).forEach(id => expandedEchoIds.add(id));
+  renderEchoList();
+};
+window.collapseAllEcho = function(){
+  expandedEchoIds.clear();
+  renderEchoList();
+};
+
+
 // as an IP case (prefills name/age/nationality/file/hx from the IP entry
 // and opens the Cathlab → ＋ Schedule sub-tab). The saved cath appointment
 // is linked back to the endorsement via sourceEndoId so the IP card shows
