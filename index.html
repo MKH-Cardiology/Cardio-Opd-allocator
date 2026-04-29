@@ -402,35 +402,6 @@ header{background:linear-gradient(180deg,rgba(13,22,40,0.96) 0%,rgba(11,18,32,0.
 .endo-ward-chip{background:var(--sur);border:1px solid var(--bor);color:var(--mid);border-radius:20px;padding:5px 12px;cursor:pointer;font-family:var(--font-mono);font-size:10px;letter-spacing:.5px;font-weight:500;transition:all .15s;display:inline-flex;align-items:center;gap:5px}
 .cath-demo{font-family:var(--font-mono);font-size:10px;color:var(--dim);font-weight:normal}
 
-/* ============= DICTATION MIC ============= */
-.dict-wrap{position:relative}
-.dict-mic{position:absolute;top:8px;right:8px;width:34px;height:34px;border:1px solid var(--bor);background:var(--sur);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .18s;color:var(--mid);z-index:3;padding:0}
-.dict-mic:hover{border-color:var(--acc);color:var(--acc);background:rgba(96,165,250,.06)}
-.dict-mic svg{width:16px;height:16px;fill:currentColor}
-.dict-mic.listening{border-color:var(--err);background:linear-gradient(135deg,rgba(248,113,113,.22),rgba(248,113,113,.08));color:var(--err);animation:micPulse 1.1s ease-in-out infinite}
-.dict-mic.listening:hover{background:rgba(248,113,113,.28)}
-@keyframes micPulse{0%,100%{box-shadow:0 0 0 0 rgba(248,113,113,.55)}50%{box-shadow:0 0 0 8px rgba(248,113,113,0)}}
-.dict-wrap textarea, .dict-wrap input[type=text]{padding-right:48px}
-.dict-preview{position:absolute;bottom:-6px;left:10px;right:10px;background:linear-gradient(135deg,rgba(15,23,42,.97),rgba(30,41,59,.97));border:1px solid rgba(248,113,113,.45);border-radius:7px;padding:7px 11px;font-family:var(--font-mono);font-size:11px;color:var(--mid);line-height:1.45;z-index:4;transform:translateY(100%);box-shadow:0 4px 16px rgba(0,0,0,.35);max-height:80px;overflow-y:auto;pointer-events:none}
-.dict-preview.empty{color:#64748b;font-style:italic}
-.dict-preview-label{font-size:9px;letter-spacing:1px;color:var(--err);margin-bottom:3px;font-weight:600}
-.dict-hint{font-family:var(--font-mono);font-size:10px;color:var(--dim);margin-top:-4px;margin-bottom:8px;letter-spacing:.3px;display:flex;align-items:center;gap:6px}
-.dict-hint-icon{color:var(--acc2)}
-.dict-hint-btn{background:rgba(96,165,250,.08);border:1px solid rgba(96,165,250,.25);color:var(--acc);padding:5px 10px;border-radius:6px;font-family:var(--font-mono);font-size:10px;cursor:pointer;letter-spacing:.3px;display:inline-flex;align-items:center;gap:5px;transition:all .15s}
-.dict-hint-btn:hover{background:rgba(96,165,250,.14);border-color:var(--acc)}
-.dict-hint-btn .chev{transition:transform .2s;display:inline-block}
-.dict-hint-btn.open .chev{transform:rotate(180deg)}
-.dict-cheatsheet{display:none;margin-top:8px;margin-bottom:10px;padding:12px 14px;background:linear-gradient(135deg,rgba(15,23,42,.75),rgba(30,41,59,.55));border:1px solid rgba(96,165,250,.22);border-radius:8px;font-size:11px;color:var(--txt);line-height:1.65}
-.dict-cheatsheet.open{display:block;animation:fadeSlide .2s ease-out}
-@keyframes fadeSlide{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
-.dict-cs-section{margin-bottom:10px}
-.dict-cs-section:last-child{margin-bottom:0}
-.dict-cs-title{font-family:var(--font-mono);font-size:9px;letter-spacing:1px;color:var(--acc2);font-weight:600;margin-bottom:4px}
-.dict-cs-row{font-family:var(--font-mono);font-size:10.5px;color:var(--mid);line-height:1.55}
-.dict-cs-row .said{color:var(--dim)}
-.dict-cs-row .arrow{color:var(--acc);margin:0 6px}
-.dict-cs-row .out{color:var(--ok)}
-.dict-unsupported{color:var(--warn);font-size:9px;font-family:var(--font-mono);margin-top:-4px;margin-bottom:8px}
 .today-header{background:linear-gradient(135deg,rgba(96,165,250,.08),rgba(56,189,248,.05));border:1px solid rgba(96,165,250,.25);border-radius:12px;padding:14px 16px;margin-bottom:12px}
 .today-title{font-family:var(--font-ui);font-size:20px;color:var(--txt);margin-bottom:10px;letter-spacing:.3px}
 .today-strip{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -963,41 +934,6 @@ header{background:linear-gradient(180deg,rgba(13,22,40,0.96) 0%,rgba(11,18,32,0.
       <div class="mbody">
         <form id="endoForm" class="endo-edit-form" onsubmit="return saveEndo(event)">
           <input type="hidden" id="endo-id">
-          <div id="endoDictHint" style="display:none;margin-bottom:10px">
-            <button type="button" class="dict-hint-btn" onclick="toggleCheatSheet('endoCheatSheet',this)">
-              <span class="dict-hint-icon">🎙</span>
-              <span>Dictation tips &amp; shorthand</span>
-              <span class="chev">▾</span>
-            </button>
-            <div id="endoCheatSheet" class="dict-cheatsheet">
-              <div class="dict-cs-section">
-                <div class="dict-cs-title">📝 NARRATIVE GLUE</div>
-                <div class="dict-cs-row"><span class="said">"known case of"</span><span class="arrow">→</span><span class="out">k/c/o</span> &nbsp; <span class="said">"status post"</span><span class="arrow">→</span><span class="out">s/p</span> &nbsp; <span class="said">"history of"</span><span class="arrow">→</span><span class="out">h/o</span></div>
-                <div class="dict-cs-row"><span class="said">"complaining of"</span><span class="arrow">→</span><span class="out">c/o</span> &nbsp; <span class="said">"presented with"</span><span class="arrow">→</span><span class="out">p/w</span> &nbsp; <span class="said">"on examination"</span><span class="arrow">→</span><span class="out">O/E</span></div>
-              </div>
-              <div class="dict-cs-section">
-                <div class="dict-cs-title">🩺 CONDITIONS &amp; DIAGNOSES</div>
-                <div class="dict-cs-row"><span class="said">"hypertensive"</span><span class="arrow">→</span><span class="out">HTN</span> &nbsp; <span class="said">"diabetic"</span><span class="arrow">→</span><span class="out">DM</span> &nbsp; <span class="said">"type 2 diabetes"</span><span class="arrow">→</span><span class="out">T2DM</span></div>
-                <div class="dict-cs-row"><span class="said">"atrial fibrillation"</span><span class="arrow">→</span><span class="out">AF</span> &nbsp; <span class="said">"acute coronary syndrome"</span><span class="arrow">→</span><span class="out">ACS</span> &nbsp; <span class="said">"ischemic heart disease"</span><span class="arrow">→</span><span class="out">IHD</span></div>
-                <div class="dict-cs-row"><span class="said">"heart failure with reduced EF"</span><span class="arrow">→</span><span class="out">HFrEF</span> &nbsp; <span class="said">"chronic kidney disease stage 3"</span><span class="arrow">→</span><span class="out">CKD stage 3</span></div>
-              </div>
-              <div class="dict-cs-section">
-                <div class="dict-cs-title">📊 VITALS &amp; LABS (with values)</div>
-                <div class="dict-cs-row"><span class="said">"BP 120 over 80"</span><span class="arrow">→</span><span class="out">BP 120/80</span> &nbsp; <span class="said">"heart rate 88"</span><span class="arrow">→</span><span class="out">HR 88</span> &nbsp; <span class="said">"EF 35"</span><span class="arrow">→</span><span class="out">EF 35%</span></div>
-                <div class="dict-cs-row"><span class="said">"troponin 450"</span><span class="arrow">→</span><span class="out">Trop 450</span> &nbsp; <span class="said">"creatinine 1.8"</span><span class="arrow">→</span><span class="out">Cr 1.8</span> &nbsp; <span class="said">"potassium 3.2"</span><span class="arrow">→</span><span class="out">K 3.2</span></div>
-              </div>
-              <div class="dict-cs-section">
-                <div class="dict-cs-title">💊 DRUGS &amp; DOSING</div>
-                <div class="dict-cs-row"><span class="said">"bisoprolol 5 milligrams twice daily"</span><span class="arrow">→</span><span class="out">bisoprolol 5 mg BD</span></div>
-                <div class="dict-cs-row"><span class="said">"once daily"</span><span class="arrow">→</span><span class="out">OD</span> &nbsp; <span class="said">"three times a day"</span><span class="arrow">→</span><span class="out">TDS</span> &nbsp; <span class="said">"as needed"</span><span class="arrow">→</span><span class="out">PRN</span></div>
-              </div>
-              <div class="dict-cs-section">
-                <div class="dict-cs-title">⚙️ PUNCTUATION &amp; STRUCTURE</div>
-                <div class="dict-cs-row"><span class="said">"full stop"</span><span class="arrow">→</span><span class="out">.</span> &nbsp; <span class="said">"comma"</span><span class="arrow">→</span><span class="out">,</span> &nbsp; <span class="said">"new line"</span><span class="arrow">→</span><span class="out">↵</span> &nbsp; <span class="said">"next point"</span><span class="arrow">→</span><span class="out">↵ •</span></div>
-                <div class="dict-cs-row" style="color:var(--dim);margin-top:4px">Tip: in the Plan field, items separated by "new line" are auto-numbered (1. 2. 3.).</div>
-              </div>
-            </div>
-          </div>
           <div class="endo-edit-two">
             <div>
               <label>Ward</label>
@@ -1361,20 +1297,6 @@ header{background:linear-gradient(180deg,rgba(13,22,40,0.96) 0%,rgba(11,18,32,0.
         <input type="hidden" id="cath-sch-edit-id">
         <input type="hidden" id="cath-sch-endo-id">
         <input type="hidden" id="cath-sch-case-type">
-        <div id="cathSchDictHint" style="display:none;margin-bottom:10px">
-          <button type="button" class="dict-hint-btn" onclick="toggleCheatSheet('cathSchCheatSheet',this)">
-            <span class="dict-hint-icon">🎙</span>
-            <span>Dictation tips &amp; shorthand</span>
-            <span class="chev">▾</span>
-          </button>
-          <div id="cathSchCheatSheet" class="dict-cheatsheet">
-            <div class="dict-cs-section">
-              <div class="dict-cs-title">COMMON SHORTHAND</div>
-              <div class="dict-cs-row"><span class="said">"known case of"</span><span class="arrow">→</span><span class="out">k/c/o</span> &nbsp; <span class="said">"status post"</span><span class="arrow">→</span><span class="out">s/p</span> &nbsp; <span class="said">"hypertensive"</span><span class="arrow">→</span><span class="out">HTN</span> &nbsp; <span class="said">"diabetic"</span><span class="arrow">→</span><span class="out">DM</span></div>
-              <div class="dict-cs-row"><span class="said">"BP 140 over 90"</span><span class="arrow">→</span><span class="out">BP 140/90</span> &nbsp; <span class="said">"EF 40"</span><span class="arrow">→</span><span class="out">EF 40%</span> &nbsp; <span class="said">"positive stress test"</span><span class="arrow">→</span><span class="out">positive stress test</span></div>
-            </div>
-          </div>
-        </div>
         <label>Patient Name</label>
         <input type="text" id="cath-sch-name" required>
         <label>Civil ID <span style="font-weight:normal;color:var(--dim)">(auto-fills age &amp; sex)</span></label>
@@ -1659,20 +1581,6 @@ header{background:linear-gradient(180deg,rgba(13,22,40,0.96) 0%,rgba(11,18,32,0.
       </div>
       <div class="mbody">
         <form onsubmit="return saveCathPending(event)">
-          <div id="cathPDictHint" style="display:none;margin-bottom:10px">
-            <button type="button" class="dict-hint-btn" onclick="toggleCheatSheet('cathPCheatSheet',this)">
-              <span class="dict-hint-icon">🎙</span>
-              <span>Dictation tips &amp; shorthand</span>
-              <span class="chev">▾</span>
-            </button>
-            <div id="cathPCheatSheet" class="dict-cheatsheet">
-              <div class="dict-cs-section">
-                <div class="dict-cs-title">COMMON SHORTHAND</div>
-                <div class="dict-cs-row"><span class="said">"known case of"</span><span class="arrow">→</span><span class="out">k/c/o</span> &nbsp; <span class="said">"status post"</span><span class="arrow">→</span><span class="out">s/p</span> &nbsp; <span class="said">"hypertensive"</span><span class="arrow">→</span><span class="out">HTN</span> &nbsp; <span class="said">"diabetic"</span><span class="arrow">→</span><span class="out">DM</span></div>
-                <div class="dict-cs-row"><span class="said">"BP 140 over 90"</span><span class="arrow">→</span><span class="out">BP 140/90</span> &nbsp; <span class="said">"EF 40"</span><span class="arrow">→</span><span class="out">EF 40%</span></div>
-              </div>
-            </div>
-          </div>
           <label>Patient Name</label>
           <input type="text" id="cath-p-name" required>
           <label>Civil ID <span style="font-weight:normal;color:var(--dim)">(auto-fills age &amp; sex)</span></label>
@@ -3512,6 +3420,14 @@ window.toggleWardOther = function(){
 
 window.openEndoForm = function(id){
   ensureExtState();
+  // The endoMo modal is nested inside pg-endo in the markup, so when the user
+  // is on a different tab (e.g. IP Echo List), pg-endo's display:none hides
+  // the modal too. Move it out to <body> on first open — once moved, it can
+  // open from any tab. Idempotent: safe to call multiple times.
+  let endoMoEl = document.getElementById('endoMo');
+  if(endoMoEl && endoMoEl.parentNode !== document.body){
+    document.body.appendChild(endoMoEl);
+  }
   editingEndoId = id;
   imgBuffers.endo = [];
   document.getElementById('endoForm').reset();
@@ -3621,6 +3537,8 @@ window.saveEndo = async function(ev){
   dbWriteAt('endorsements/' + id, entry);
   closeEndoMo();
   renderEndoList();
+  // If the user opened this edit from the IP Echo List tab, refresh that view too
+  if(document.getElementById('pg-echolist')?.classList.contains('on')) renderEchoList();
   return false;
 };
 
@@ -4370,810 +4288,6 @@ function hidePinFieldIfLoggedIn(pinFieldId){
   }
 }
 
-// ============================================================
-// MEDICAL DICTATION ENGINE — Web Speech API + post-processing
-// ============================================================
-// Uses the browser's built-in speech recognition. Works best on Chrome
-// (desktop & iOS/Android) and Edge. iOS Safari support is flaky but the
-// mic button stays hidden if the API is unsupported.
-// ============================================================
-
-const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-const DICTATION_SUPPORTED = !!SpeechRecognition;
-
-// Active dictation state (only one field can be dictating at a time)
-var dictState = {
-  recognition: null,
-  targetId: null,
-  baseText: "",           // text that was already in the field before dictation started
-  interim: "",
-  button: null,
-  preview: null,
-};
-
-// ============================================================
-// MEDICAL DICTATION ENGINE v2 — smart shorthand + field-aware
-// ============================================================
-
-// Layer 1: CONFUSABLE WORD CORRECTION
-// The Web Speech API frequently mis-hears medical terms. This maps
-// common wrong transcriptions back to the correct term. Key = what the
-// recognizer heard, value = what it should be.
-// Case-insensitive matching; values preserve their intended case.
-const CONFUSABLE_FIXES = {
-  // Cardiac drugs — common mishearings
-  "furiosamide": "furosemide", "furosimide": "furosemide", "frusomide": "furosemide",
-  "by suppraville": "bisoprolol", "bisopropolol": "bisoprolol", "bisoprolol": "bisoprolol",
-  "carpedilol": "carvedilol", "carbidilol": "carvedilol",
-  "metoproplolol": "metoprolol", "metoporolol": "metoprolol",
-  "amiodaron": "amiodarone", "amiadrone": "amiodarone", "amiadirone": "amiodarone",
-  "clopidagrel": "clopidogrel", "clopidigrel": "clopidogrel", "plavic": "Plavix",
-  "ticagralor": "ticagrelor", "ticagrelore": "ticagrelor", "brilinta": "Brilinta",
-  "apixiban": "apixaban", "apixabin": "apixaban", "eliquid": "Eliquis",
-  "rivaroxabin": "rivaroxaban", "xerelto": "Xarelto", "xarelto": "Xarelto",
-  "ramifril": "ramipril", "ramiprel": "ramipril",
-  "lisinipril": "lisinopril", "lizinopril": "lisinopril",
-  "parendopril": "perindopril", "perindoprel": "perindopril",
-  "enalaprel": "enalapril",
-  "atoravastatin": "atorvastatin", "atorvastin": "atorvastatin",
-  "rosovastatin": "rosuvastatin", "rosuvostatin": "rosuvastatin",
-  "spironolactone": "spironolactone", "aldoctone": "Aldactone",
-  "sacabutral": "sacubitril", "sacubitral": "sacubitril", "entresto": "Entresto",
-  "ivabridine": "ivabradine", "procarolan": "Procorolan", "procorolin": "Procorolan",
-  "empagliflozin": "empagliflozin", "jardians": "Jardiance", "jardiance": "Jardiance",
-  "dapagliflozin": "dapagliflozin", "faxiga": "Forxiga", "forziga": "Forxiga",
-  "heparin": "heparin", "enox oparin": "enoxaparin", "enoxiparin": "enoxaparin",
-  "clexane": "Clexane", "claxane": "Clexane",
-  "warforin": "warfarin", "warfran": "warfarin",
-  "dabigotran": "dabigatran", "pradaxa": "Pradaxa",
-  "amlodipine": "amlodipine", "amlodipeen": "amlodipine",
-  "deltiazem": "diltiazem", "dilteizem": "diltiazem",
-  "verapamel": "verapamil",
-  "nitroglycirine": "nitroglycerin", "nitroglycerine": "nitroglycerin",
-  "isosorbaid": "isosorbide", "imdur": "Imdur",
-  "tickagrelor": "ticagrelor",
-
-  // Conditions / terms
-  "angine": "angina", "angina pectoris": "angina pectoris", "angine pectoris": "angina pectoris",
-  "infraction": "infarction", "infarktion": "infarction",
-  "ischemic": "ischemic", "ischaemic": "ischemic",
-  "rhythmia": "arrhythmia", "aerithmia": "arrhythmia",
-  "bradycardia": "bradycardia", "brady cardia": "bradycardia",
-  "tachycardia": "tachycardia", "tachi cardia": "tachycardia",
-  "hyperdense": "hypertensive",
-  "die a beetus": "diabetes", "diabeetus": "diabetes",
-  "renohl": "renal", "renel": "renal",
-  "myocarditus": "myocarditis", "endocarditus": "endocarditis", "pericarditus": "pericarditis",
-  "cardiomyopothy": "cardiomyopathy", "cardio myopathy": "cardiomyopathy",
-  "stenoses": "stenosis",
-  "regurgitaion": "regurgitation", "regurjitation": "regurgitation",
-  "murmer": "murmur",
-  "paroximal": "paroxysmal", "paroxismal": "paroxysmal",
-  "ejection fraction": "ejection fraction",
-
-  // Anatomy / procedures
-  "stent": "stent", "stance": "stents", "stents": "stents",
-  "angio gram": "angiogram", "angiography": "angiography",
-  "angio plasty": "angioplasty", "angioplasti": "angioplasty",
-  "cabbage": "CABG",   // famously mis-heard
-  "cabbaj": "CABG",
-  "cat lab": "cath lab", "catheter ization": "catheterization", "cathetarization": "catheterization",
-  "pacing maker": "pacemaker", "pace maker": "pacemaker",
-  "ay see ess": "ACS", "n step me": "NSTEMI", "step me": "STEMI",
-  "tavey": "TAVI", "tavi": "TAVI",
-  "mitro clip": "MitraClip", "mitral clip": "MitraClip",
-  "ell ay dee": "LAD", "ell cee ex": "LCX", "are cee ay": "RCA",
-  "or mel": "OM", "ramos": "ramus",
-  "plv": "PLV", "pda": "PDA",
-  "s v g": "SVG", "l ima": "LIMA",
-  "eff f r": "FFR", "eye v us": "IVUS",
-
-  // Labs — recognizer often splits single tokens
-  "troop onion": "troponin", "trope onion": "troponin",
-  "creat in in": "creatinine", "creatanine": "creatinine",
-  "hi moglobin": "hemoglobin", "haemoglobin": "hemoglobin",
-  "hi matocrit": "hematocrit", "haematocrit": "hematocrit",
-  "pottasium": "potassium", "patassium": "potassium",
-  "mag nesium": "magnesium", "magneesium": "magnesium",
-  "b n p": "BNP", "n t pro b n p": "NT-proBNP", "pro b n p": "proBNP",
-  "d dimer": "D-dimer", "dee dimer": "D-dimer",
-  "aitch ba won see": "HbA1c", "hb a 1 c": "HbA1c", "hba1c": "HbA1c",
-  "ell d ell": "LDL", "aitch d ell": "HDL",
-
-  // Common phrase fragments
-  "no one case": "k/c/o",  // "known case" often heard weirdly
-  "status post": "s/p",
-  "chief complaint": "CC",
-  "on examination": "O/E",
-
-  // ===== NSTEMI — the recognizer rarely gets this right =====
-  // Every way it's been observed to mis-hear "NSTEMI":
-  "n stemmy": "NSTEMI", "en stemmy": "NSTEMI", "and stemmy": "NSTEMI",
-  "end stemmy": "NSTEMI", "in stemmy": "NSTEMI", "n stammy": "NSTEMI",
-  "nstemi": "NSTEMI", "n stemi": "NSTEMI", "en stemi": "NSTEMI",
-  "end stemi": "NSTEMI", "and stemi": "NSTEMI", "in stemi": "NSTEMI",
-  "n steamy": "NSTEMI", "en steamy": "NSTEMI", "and steamy": "NSTEMI",
-  "n s t e m i": "NSTEMI", "none stemi": "NSTEMI",
-  "n-stemi": "NSTEMI", "enstemi": "NSTEMI",
-
-  // ===== STEMI — same problem =====
-  "stemmy": "STEMI", "stammy": "STEMI", "stemi": "STEMI",
-  "steamy": "STEMI", "stammy heart attack": "STEMI",
-  "s t e m i": "STEMI", "st emi": "STEMI",
-  // "st elevation" handled by SHORTHAND_DICT below
-
-  // ===== TROPONIN — many misfires =====
-  "tripping in": "troponin", "trippin in": "troponin",
-  "trope in": "troponin", "troop in": "troponin",
-  "tropin": "troponin", "tropenin": "troponin", "tropenon": "troponin",
-  "trippin": "troponin", "tropening": "troponin",
-  "trope nin": "troponin", "troopnin": "troponin",
-  "tropo nin": "troponin", "troponi": "troponin",
-  "troposin": "troponin", "tropolin": "troponin",
-  // High-sensitivity troponin
-  "high sensitivity tropin": "hs-troponin",
-  "high sensitivity troponin": "hs-troponin",
-  "hs tropin": "hs-troponin",
-
-  // ===== CHF and heart failure =====
-  "see h f": "CHF", "sea h f": "CHF", "c h f": "CHF",
-  "c h f": "CHF", "chf": "CHF",
-  // Spoken abbreviations for HF variants
-  "h f": "HF", "h f ref": "HFrEF", "h f r e f": "HFrEF", "hef ref": "HFrEF",
-  "h f pef": "HFpEF", "h f p e f": "HFpEF", "hef pef": "HFpEF",
-  "h f m ref": "HFmrEF", "h f m r e f": "HFmrEF",
-  // Common mishearings of "ejection fraction"
-  "injection fraction": "ejection fraction",
-  "ejection fracture": "ejection fraction",
-  "ejection fractioning": "ejection fraction",
-  // Preserved / reduced / mildly reduced EF shorthand
-  "preserved e f": "preserved EF", "reduced e f": "reduced EF",
-  "mid range e f": "mid-range EF", "mildly reduced e f": "mildly reduced EF",
-  "moderately reduced e f": "moderately reduced EF",
-  "severely reduced e f": "severely reduced EF",
-  "normal e f": "normal EF", "low e f": "low EF",
-
-  // ===== More cardiology term misfires =====
-  // Coronary arteries — letter-by-letter mishearings
-  "left main": "left main", "lmca": "LMCA", "l m c a": "LMCA",
-  "p l a d": "pLAD", "m l a d": "mLAD", "d l a d": "dLAD",  // proximal/mid/distal LAD
-  // Diagonals, OM branches
-  "d 1": "D1", "d 2": "D2", "o m 1": "OM1", "o m 2": "OM2",
-  // Common cath/imaging terms
-  "f f r": "FFR", "i f r": "iFR", "i v u s": "IVUS", "o c t": "OCT",
-  "c t o": "CTO", "c a g": "CAG", "p c i": "PCI",
-  // Echo / imaging terms
-  "t t e": "TTE", "t e e": "TEE", "c m r": "CMR",
-  "m r i": "MRI", "c t": "CT", "c x r": "CXR",
-  // Device/procedure terms
-  "a i c d": "ICD", "c r t d": "CRT-D", "c r t p": "CRT-P",
-  "p p m": "PPM", "t p m": "TPM",
-  "a s d": "ASD", "v s d": "VSD", "p f o": "PFO",
-  // Drug abbreviations as letters
-  "a s a": "ASA", "d a p t": "DAPT",
-  // Rhythm terms
-  "a fib": "AF", "a flutter": "AFL",
-  "v tach": "VT", "v fib": "VF", "s v t": "SVT",
-  "a v n r t": "AVNRT", "a v r t": "AVRT",
-  // Other common clinical shorthand letters
-  "l v h": "LVH", "r v h": "RVH",
-  "l b b b": "LBBB", "r b b b": "RBBB",
-  "c h b": "CHB", "c k d": "CKD", "i h d": "IHD",
-  "h t n": "HTN", "d m": "DM", "t 2 d m": "T2DM", "t 1 d m": "T1DM",
-  "c o p d": "COPD", "o s a": "OSA",
-  "j v p": "JVP",
-
-  // Narrative-glue letter mishearings (only distinct multi-letter tokens to avoid false matches)
-  "p w": "p/w", "k c o": "k/c/o",
-};
-
-// Layer 2: CLINICAL SHORTHAND DICTIONARY
-// Phrases that get aggressively abbreviated regardless of number context.
-// Applied with word-boundaries, case-insensitive.
-// Key = what the doctor said (regex source), value = replacement.
-// Longer phrases listed first so they win over partial matches.
-const SHORTHAND_DICT = [
-  // ===== Narrative glue phrases =====
-  [/\bknown\s+(?:case\s+)?(?:to\s+be\s+)?(?:a\s+)?case\s+of\b/gi, "k/c/o"],
-  [/\bknown\s+(?:case\s+)?(?:to\s+be)\b/gi, "k/c/o"],
-  [/\bknown\s+case\s+of\b/gi, "k/c/o"],
-  [/\bknown\s+case\b/gi, "k/c/o"],
-  [/\bstatus\s+post\b/gi, "s/p"],
-  [/\bfamily\s+history\s+of\b/gi, "FH/o"],
-  [/\bpast\s+history\s+of\b/gi, "PH/o"],
-  [/\bno\s+(?:known\s+)?history\s+of\b/gi, "no h/o"],
-  [/\bhistory\s+of\b/gi, "h/o"],
-  [/\bcase\s+of\b/gi, "c/o"],
-  [/\bcomplaining\s+of\b/gi, "c/o"],
-  [/\bcomplains\s+of\b/gi, "c/o"],
-  [/\bcomplaint\s+of\b/gi, "c/o"],
-  [/\bpresented\s+with\b/gi, "p/w"],
-  [/\bpresenting\s+with\b/gi, "p/w"],
-  [/\bon\s+examination\b/gi, "O/E"],
-  [/\bon\s+arrival\b/gi, "O/A"],
-  [/\bchief\s+complaint\b/gi, "CC"],
-  [/\bin\s+view\s+of\b/gi, "i/v/o"],
-  [/\bto\s+rule\s+out\b/gi, "t/r/o"],
-  [/\brule\s+out\b/gi, "R/O"],
-  [/\bas\s+per\b/gi, "a/p"],
-  [/\bafter\s+that\b/gi, "after"],
-  [/\bsame\s+day\b/gi, "same-day"],
-
-  // ===== Common cardiac conditions — aggressive =====
-  // Order matters: multi-word phrases first
-  [/\bacute\s+coronary\s+syndrome\b/gi, "ACS"],
-  [/\bnon[-\s]?st[-\s]?(?:segment\s+)?elevation\s+(?:myocardial\s+infarction|MI)\b/gi, "NSTEMI"],
-  [/\bnon[-\s]?st[-\s]?(?:segment\s+)?elevation\s+acute\s+coronary\s+syndrome\b/gi, "NSTEMI"],
-  [/\bst[-\s]?(?:segment\s+)?elevation\s+(?:myocardial\s+infarction|MI)\b/gi, "STEMI"],
-  [/\bst[-\s]?(?:segment\s+)?elevation\s+acute\s+coronary\s+syndrome\b/gi, "STEMI"],
-  [/\bst[-\s]?elevation\b/gi, "ST elevation"],
-  [/\bst[-\s]?depression\b/gi, "ST depression"],
-  [/\bmyocardial\s+infarction\b/gi, "MI"],
-  [/\bcoronary\s+artery\s+disease\b/gi, "CAD"],
-  [/\bischemic\s+heart\s+disease\b/gi, "IHD"],
-  [/\bcongestive\s+heart\s+failure\b/gi, "CHF"],
-  [/\bheart\s+failure\s+with\s+(?:reduced|low)\s+ejection\s+fraction\b/gi, "HFrEF"],
-  [/\bheart\s+failure\s+with\s+preserved\s+ejection\s+fraction\b/gi, "HFpEF"],
-  [/\bheart\s+failure\s+with\s+(?:mid[-\s]?range|mildly\s+reduced)\s+ejection\s+fraction\b/gi, "HFmrEF"],
-  [/\bacute\s+(?:decompensated\s+)?heart\s+failure\b/gi, "acute HF"],
-  [/\bheart\s+failure\b/gi, "HF"],
-  [/\batrial\s+fibrillation\b/gi, "AF"],
-  [/\batrial\s+flutter\b/gi, "AFL"],
-  [/\bventricular\s+tachycardia\b/gi, "VT"],
-  [/\bventricular\s+fibrillation\b/gi, "VF"],
-  [/\bsupra[-\s]?ventricular\s+tachycardia\b/gi, "SVT"],
-  [/\bpulmonary\s+embolism\b/gi, "PE"],
-  [/\bdeep\s+vein\s+thrombosis\b/gi, "DVT"],
-  [/\bperipheral\s+(?:arterial|artery|vascular)\s+disease\b/gi, "PAD"],
-  [/\bcerebro[-\s]?vascular\s+accident\b/gi, "CVA"],
-  [/\btransient\s+ischemic\s+attack\b/gi, "TIA"],
-  [/\bpulmonary\s+hypertension\b/gi, "PHT"],
-  [/\baortic\s+stenosis\b/gi, "AS"],
-  [/\baortic\s+regurgitation\b/gi, "AR"],
-  [/\bmitral\s+stenosis\b/gi, "MS"],
-  [/\bmitral\s+regurgitation\b/gi, "MR"],
-  [/\btricuspid\s+regurgitation\b/gi, "TR"],
-  [/\bleft\s+ventricular\s+hypertrophy\b/gi, "LVH"],
-  [/\bright\s+ventricular\s+hypertrophy\b/gi, "RVH"],
-  [/\bleft\s+bundle\s+branch\s+block\b/gi, "LBBB"],
-  [/\bright\s+bundle\s+branch\s+block\b/gi, "RBBB"],
-  [/\bcomplete\s+heart\s+block\b/gi, "CHB"],
-  [/\bfirst\s+degree\s+(?:av\s+)?block\b/gi, "1° AV block"],
-  [/\bsecond\s+degree\s+(?:av\s+)?block\b/gi, "2° AV block"],
-  [/\bthird\s+degree\s+(?:av\s+)?block\b/gi, "3° AV block"],
-  [/\batrial\s+septal\s+defect\b/gi, "ASD"],
-  [/\bventricular\s+septal\s+defect\b/gi, "VSD"],
-  [/\bpatent\s+foramen\s+ovale\b/gi, "PFO"],
-  [/\bhypertrophic\s+cardiomyopathy\b/gi, "HCM"],
-  [/\bdilated\s+cardiomyopathy\b/gi, "DCM"],
-  [/\brestrictive\s+cardiomyopathy\b/gi, "RCM"],
-  [/\btakotsubo\s+cardiomyopathy\b/gi, "Takotsubo CM"],
-  [/\brheumatic\s+heart\s+disease\b/gi, "RHD"],
-  [/\binfective\s+endocarditis\b/gi, "IE"],
-
-  // ===== Risk factors / comorbidities — aggressive =====
-  // "hypertensive" / "hypertension" → HTN
-  [/\bhypertens(?:ion|ive)\b/gi, "HTN"],
-  [/\bhigh\s+blood\s+pressure\b/gi, "HTN"],
-  // "diabetic" / "diabetes mellitus" / "diabetes" → DM
-  [/\bdiabetes\s+mellitus(?:\s+type\s+(?:1|2|one|two))?\b/gi, (m) => {
-    if(/type\s+(?:2|two)/i.test(m)) return "T2DM";
-    if(/type\s+(?:1|one)/i.test(m)) return "T1DM";
-    return "DM";
-  }],
-  [/\btype\s+(?:2|two)\s+diabetes\b/gi, "T2DM"],
-  [/\btype\s+(?:1|one)\s+diabetes\b/gi, "T1DM"],
-  [/\bdiabet(?:ic|es)\b/gi, "DM"],
-  // Kidney
-  [/\bchronic\s+kidney\s+disease(?:\s+stage\s+(\d))?\b/gi, (m, s) => s ? `CKD stage ${s}` : "CKD"],
-  [/\bend[-\s]?stage\s+(?:renal|kidney)\s+disease\b/gi, "ESRD"],
-  [/\bacute\s+kidney\s+injury\b/gi, "AKI"],
-  // Lungs
-  [/\bchronic\s+obstructive\s+pulmonary\s+disease\b/gi, "COPD"],
-  [/\bobstructive\s+sleep\s+apnea\b/gi, "OSA"],
-  [/\binterstitial\s+lung\s+disease\b/gi, "ILD"],
-  // Lipids & others
-  [/\b(?:dys|hyper)\s*lipidemia\b/gi, "dyslipidemia → DLP"],  // we normalize below
-  [/\bdyslipidemia\b/gi, "DLP"],
-  [/\bhypercholesterolemia\b/gi, "DLP"],
-  [/\bmetabolic\s+syndrome\b/gi, "MetS"],
-  [/\bbenign\s+prostatic\s+hyperplasia\b/gi, "BPH"],
-  [/\bgastroesophageal\s+reflux\s+disease\b/gi, "GERD"],
-  [/\bcurrent\s+smoker\b/gi, "smoker+"],
-  [/\bex[-\s]?smoker\b/gi, "ex-smoker"],
-  [/\bnon[-\s]?smoker\b/gi, "non-smoker"],
-  [/\bsmoking\s+history\b/gi, "smoking h/o"],
-
-  // ===== Procedures (no number context needed) =====
-  [/\bcoronary\s+artery\s+bypass\s+(?:graft(?:ing)?)?\b/gi, "CABG"],
-  [/\bpercutaneous\s+coronary\s+intervention\b/gi, "PCI"],
-  [/\bchronic\s+total\s+occlusion\b/gi, "CTO"],
-  [/\btranscatheter\s+aortic\s+valve\s+(?:implantation|replacement)\b/gi, "TAVI"],
-  [/\btransthoracic\s+echo(?:cardiogram)?\b/gi, "TTE"],
-  [/\btransesophageal\s+echo(?:cardiogram)?\b/gi, "TEE"],
-  [/\bmitral\s+valve\s+repair\b/gi, "MV repair"],
-  [/\bmitral\s+valve\s+replacement\b/gi, "MVR"],
-  [/\baortic\s+valve\s+replacement\b/gi, "AVR"],
-  [/\bpermanent\s+pacemaker\b/gi, "PPM"],
-  [/\btemporary\s+pacemaker\b/gi, "TPM"],
-  [/\bimplantable\s+cardioverter[-\s]?defibrillator\b/gi, "ICD"],
-  [/\bcardiac\s+resynchronization\s+therapy\b/gi, "CRT"],
-  [/\bintra[-\s]?aortic\s+balloon\s+pump\b/gi, "IABP"],
-  [/\bextra[-\s]?corporeal\s+membrane\s+oxygenation\b/gi, "ECMO"],
-  [/\brenal\s+denervation\b/gi, "RDN"],
-  [/\bleft\s+atrial\s+appendage\s+(?:closure|occlusion)\b/gi, "LAA occlusion"],
-  [/\bventriculoplasty\b/gi, "ventriculoplasty"],
-  [/\belectrical\s+cardioversion\b/gi, "DC cardioversion"],
-  [/\bchemical\s+cardioversion\b/gi, "chemical cardioversion"],
-  [/\bdual\s+antiplatelet\s+therapy\b/gi, "DAPT"],
-  [/\bsingle\s+antiplatelet\s+therapy\b/gi, "SAPT"],
-
-  // ===== Echo / cath descriptors (kept lowercase) =====
-  [/\bleft\s+ventricular\s+ejection\s+fraction\b/gi, "LVEF"],
-  [/\bejection\s+fraction\b/gi, "EF"],
-  [/\bregional\s+wall\s+motion\s+abnormalit(?:y|ies)\b/gi, "RWMA"],
-  [/\b(?:global|diffuse)\s+hypokinesia\b/gi, "global hypokinesia"],
-  [/\bmildly\s+reduced\s+ef\b/gi, "mildly reduced EF"],
-  [/\bmoderately\s+reduced\s+ef\b/gi, "moderately reduced EF"],
-  [/\bseverely\s+reduced\s+ef\b/gi, "severely reduced EF"],
-  [/\bpreserved\s+ef\b/gi, "preserved EF"],
-  [/\bnormal\s+ef\b/gi, "normal EF"],
-
-  // ===== Physical exam shorthand =====
-  [/\bno\s+(?:added\s+)?heart\s+sounds\b/gi, "no added HS"],
-  [/\bheart\s+sounds?\s+(?:s|one|1)\s+(?:s|two|2)\b/gi, "HS S1+S2"],
-  [/\bdual\s+rhythm\b/gi, "dual rhythm"],
-  [/\bno\s+murmurs\b/gi, "no murmurs"],
-  [/\bpansystolic\s+murmur\b/gi, "PSM"],
-  [/\bejection\s+systolic\s+murmur\b/gi, "ESM"],
-  [/\bearly\s+diastolic\s+murmur\b/gi, "EDM"],
-  [/\bmid\s+diastolic\s+murmur\b/gi, "MDM"],
-  [/\bchest\s+clear\b/gi, "chest clear"],
-  [/\bbasal\s+(?:fine\s+)?crepitations\b/gi, "basal creps"],
-  [/\bfine\s+crepitations\b/gi, "fine creps"],
-  [/\bpedal\s+edema\b/gi, "pedal edema"],
-  [/\bbilateral\s+pedal\s+edema\b/gi, "bilat pedal edema"],
-  [/\bjugular\s+venous\s+pressure\b/gi, "JVP"],
-  [/\braised\s+jvp\b/gi, "raised JVP"],
-
-  // ===== Investigations shorthand =====
-  [/\belectrocardiogram\b/gi, "ECG"],
-  [/\bechocardiogram\b/gi, "echo"],
-  [/\bcardiac\s+mri\b/gi, "CMR"],
-  [/\bcoronary\s+angiogram\b/gi, "CAG"],
-  [/\bcomputed\s+tomography\b/gi, "CT"],
-  [/\bchest\s+x[-\s]?ray\b/gi, "CXR"],
-  [/\bpulmonary\s+function\s+tests?\b/gi, "PFT"],
-  [/\bcomplete\s+blood\s+count\b/gi, "CBC"],
-  [/\brenal\s+function\s+test\b/gi, "RFT"],
-  [/\bliver\s+function\s+test\b/gi, "LFT"],
-
-  // ===== Units / misc =====
-  [/\bbeats\s+per\s+minute\b/gi, "bpm"],
-  [/\bmillimeter(?:s)?\s+of\s+mercury\b/gi, "mmHg"],
-  [/\bmilli\s*equivalents?\b/gi, "mEq"],
-  [/\bmicro\s*liters?\b/gi, "μL"],
-  [/\bmilli\s*grams\s+per\s+deci\s*liter\b/gi, "mg/dL"],
-];
-
-// Layer 3: NUMBER-AWARE RULES (vitals, labs with values)
-const MONTHS_MAP = {
-  "january":"Jan","february":"Feb","march":"Mar","april":"Apr","may":"May","june":"Jun",
-  "july":"Jul","august":"Aug","september":"Sep","october":"Oct","november":"Nov","december":"Dec"
-};
-const ORDINAL_MAP = {
-  "first":"1","second":"2","third":"3","fourth":"4","fifth":"5","sixth":"6","seventh":"7",
-  "eighth":"8","ninth":"9","tenth":"10","eleventh":"11","twelfth":"12","thirteenth":"13",
-  "fourteenth":"14","fifteenth":"15","sixteenth":"16","seventeenth":"17","eighteenth":"18",
-  "nineteenth":"19","twentieth":"20","twenty-first":"21","twenty-second":"22","twenty-third":"23",
-  "twenty-fourth":"24","twenty-fifth":"25","twenty-sixth":"26","twenty-seventh":"27",
-  "twenty-eighth":"28","twenty-ninth":"29","thirtieth":"30","thirty-first":"31"
-};
-
-function applyNumberAwareRules(t){
-  // Dates
-  t = t.replace(/\b(?:the\s+)?(\d{1,2})(?:st|nd|rd|th)?\s+of\s+(january|february|march|april|may|june|july|august|september|october|november|december)\b/gi,
-    (m, d, mo) => `${parseInt(d,10)} ${MONTHS_MAP[mo.toLowerCase()]}`);
-  t = t.replace(/\b(?:the\s+)?(first|second|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth|eleventh|twelfth|thirteenth|fourteenth|fifteenth|sixteenth|seventeenth|eighteenth|nineteenth|twentieth|twenty-first|twenty-second|twenty-third|twenty-fourth|twenty-fifth|twenty-sixth|twenty-seventh|twenty-eighth|twenty-ninth|thirtieth|thirty-first)\s+of\s+(january|february|march|april|may|june|july|august|september|october|november|december)\b/gi,
-    (m, o, mo) => `${ORDINAL_MAP[o.toLowerCase()]} ${MONTHS_MAP[mo.toLowerCase()]}`);
-  t = t.replace(/\b(january|february|march|april|may|june|july|august|september|october|november|december)\s+(\d{1,2})(?:st|nd|rd|th)?\b/gi,
-    (m, mo, d) => `${parseInt(d,10)} ${MONTHS_MAP[mo.toLowerCase()]}`);
-
-  // BP — order matters: with value first, then bare phrase (which the shorthand layer also catches)
-  t = t.replace(/\b(?:BP|blood\s+pressure|pressure)\s+(\d{2,3})\s*(?:over|on|slash|\/|\s)\s*(\d{2,3})\b/gi,
-                "BP $1/$2");
-  // Bare "blood pressure" without numbers → BP (no-op if shorthand already fired)
-  t = t.replace(/\bblood\s+pressure\b/gi, "BP");
-
-  // Vitals
-  t = t.replace(/\b(?:HR|heart\s+rate|pulse)\s+(?:is\s+|of\s+|at\s+|was\s+|=\s*)?(\d{2,3})\b/gi, "HR $1");
-  t = t.replace(/\b(?:RR|resp(?:iratory)?\s+rate|respiration)\s+(?:is\s+|of\s+|at\s+|was\s+|=\s*)?(\d{1,2})\b/gi, "RR $1");
-  t = t.replace(/\b(?:temp(?:erature)?)\s+(?:is\s+|of\s+|was\s+|=\s*)?(\d{2,3}(?:\.\d)?)\b/gi, "Temp $1°C");
-  t = t.replace(/\b(?:SpO2|sat(?:uration)?s?|oxygen\s+sat(?:uration)?s?|O2\s+sat(?:uration)?s?)\s+(?:is\s+|of\s+|at\s+|was\s+|=\s*)?(\d{2,3})\b/gi, "SpO2 $1%");
-  t = t.replace(/\b(?:EF|LVEF|ejection\s+fraction)\s+(?:is\s+|of\s+|at\s+|was\s+|=\s*)?(\d{1,2})\b/gi, "EF $1%");
-  t = t.replace(/\b(?:BMI)\s+(?:is\s+|of\s+|was\s+|=\s*)?(\d+(?:\.\d+)?)\b/gi, "BMI $1");
-  t = t.replace(/\b(?:e?GFR)\s+(?:is\s+|of\s+|was\s+|=\s*)?(\d+)\b/gi, "eGFR $1");
-  t = t.replace(/\bweight\s+(?:is\s+|of\s+|was\s+|=\s*)?(\d+(?:\.\d+)?)\s*(?:kg|kilograms?)?\b/gi, "Weight $1 kg");
-  t = t.replace(/\bheight\s+(?:is\s+|of\s+|was\s+|=\s*)?(\d+(?:\.\d+)?)\s*(?:cm|centimet(?:er|re)s?)?\b/gi, "Height $1 cm");
-
-  // Labs
-  t = t.replace(/\b(?:creatinine|Cr(?:eat)?)\s+(?:is\s+|of\s+|was\s+|=\s*)?(\d+(?:\.\d+)?)\b/gi, "Cr $1");
-  t = t.replace(/\b(?:hs[-\s]?)?troponin\s+(?:is\s+|of\s+|was\s+|=\s*)?(\d+(?:\.\d+)?)\b/gi, (m, v) => {
-    return m.toLowerCase().startsWith('hs') ? `hs-Trop ${v}` : `Trop ${v}`;
-  });
-  t = t.replace(/\bpotassium\s+(?:is\s+|of\s+|was\s+|=\s*)?(\d+(?:\.\d+)?)\b/gi, "K $1");
-  t = t.replace(/\bsodium\s+(?:is\s+|of\s+|was\s+|=\s*)?(\d+(?:\.\d+)?)\b/gi, "Na $1");
-  t = t.replace(/\bmagnesium\s+(?:is\s+|of\s+|was\s+|=\s*)?(\d+(?:\.\d+)?)\b/gi, "Mg $1");
-  t = t.replace(/\bcalcium\s+(?:is\s+|of\s+|was\s+|=\s*)?(\d+(?:\.\d+)?)\b/gi, "Ca $1");
-  t = t.replace(/\bphosphate\s+(?:is\s+|of\s+|was\s+|=\s*)?(\d+(?:\.\d+)?)\b/gi, "PO4 $1");
-  t = t.replace(/\b(?:hemoglobin|haemoglobin|hb|HGB)\s+(?:is\s+|of\s+|was\s+|=\s*)?(\d+(?:\.\d+)?)\b/gi, "Hb $1");
-  t = t.replace(/\b(?:hematocrit|haematocrit|HCT)\s+(?:is\s+|of\s+|was\s+|=\s*)?(\d+(?:\.\d+)?)\b/gi, "Hct $1");
-  t = t.replace(/\b(?:platelets|PLT|platelet\s+count)\s+(?:is\s+|of\s+|was\s+|=\s*)?(\d+)\b/gi, "Plt $1");
-  t = t.replace(/\b(?:white\s+cells|white\s+cell\s+count|WBC|leukocytes)\s+(?:is\s+|of\s+|was\s+|=\s*)?(\d+(?:\.\d+)?)\b/gi, "WBC $1");
-  t = t.replace(/\b(?:INR)\s+(?:is\s+|of\s+|was\s+|=\s*)?(\d+(?:\.\d+)?)\b/gi, "INR $1");
-  t = t.replace(/\b(?:BNP)\s+(?:is\s+|of\s+|was\s+|=\s*)?(\d+)\b/gi, "BNP $1");
-  t = t.replace(/\b(?:NT[-\s]?pro[-\s]?BNP|pro[-\s]?BNP)\s+(?:is\s+|of\s+|was\s+|=\s*)?(\d+)\b/gi, "NT-proBNP $1");
-  t = t.replace(/\b(?:D[-\s]?dimer)\s+(?:is\s+|of\s+|was\s+|=\s*)?(\d+(?:\.\d+)?)\b/gi, "D-dimer $1");
-  t = t.replace(/\b(?:TSH)\s+(?:is\s+|of\s+|was\s+|=\s*)?(\d+(?:\.\d+)?)\b/gi, "TSH $1");
-  t = t.replace(/\b(?:HbA1c|hemoglobin\s+A1c|A1c)\s+(?:is\s+|of\s+|was\s+|=\s*)?(\d+(?:\.\d+)?)\b/gi, "HbA1c $1%");
-  t = t.replace(/\b(?:total\s+cholesterol|TC)\s+(?:is\s+|of\s+|was\s+|=\s*)?(\d+(?:\.\d+)?)\b/gi, "TC $1");
-  t = t.replace(/\b(?:LDL(?:\s*cholesterol)?)\s+(?:is\s+|of\s+|was\s+|=\s*)?(\d+(?:\.\d+)?)\b/gi, "LDL $1");
-  t = t.replace(/\b(?:HDL(?:\s*cholesterol)?)\s+(?:is\s+|of\s+|was\s+|=\s*)?(\d+(?:\.\d+)?)\b/gi, "HDL $1");
-  t = t.replace(/\btriglycerides?\s+(?:is\s+|of\s+|are\s+|was\s+|=\s*)?(\d+(?:\.\d+)?)\b/gi, "TG $1");
-  t = t.replace(/\b(?:(?:random|fasting)\s+)?(?:glucose|blood\s+sugar|RBS|FBS)\s+(?:is\s+|of\s+|was\s+|=\s*)?(\d+(?:\.\d+)?)\b/gi, "Glucose $1");
-  t = t.replace(/\b(?:urea|BUN)\s+(?:is\s+|of\s+|was\s+|=\s*)?(\d+(?:\.\d+)?)\b/gi, "Urea $1");
-
-  // Drug dose units
-  t = t.replace(/\b(\d+(?:\.\d+)?)\s+milligrams?\b/gi, "$1 mg");
-  t = t.replace(/\b(\d+(?:\.\d+)?)\s+grams?\b/gi, "$1 g");
-  t = t.replace(/\b(\d+(?:\.\d+)?)\s+micrograms?\b/gi, "$1 mcg");
-  t = t.replace(/\b(\d+(?:\.\d+)?)\s+millilit(?:er|re)s?\b/gi, "$1 mL");
-  t = t.replace(/\b(\d+(?:\.\d+)?)\s+lit(?:er|re)s?\b/gi, "$1 L");
-
-  // Dosing frequencies
-  t = t.replace(/\bonce\s+(?:a\s+)?daily\b/gi, "OD");
-  t = t.replace(/\b(?:twice\s+(?:a\s+)?daily|twice\s+a\s+day|two\s+times\s+a\s+day|BID)\b/gi, "BD");
-  t = t.replace(/\b(?:three\s+times\s+(?:a\s+)?daily|three\s+times\s+a\s+day|TID)\b/gi, "TDS");
-  t = t.replace(/\b(?:four\s+times\s+(?:a\s+)?daily|four\s+times\s+a\s+day|QID)\b/gi, "QDS");
-  t = t.replace(/\b(?:as\s+needed|PRN)\b/gi, "PRN");
-  t = t.replace(/\b(?:at\s+bedtime|before\s+bed|HS)\b/gi, "HS");
-  // Routes
-  t = t.replace(/\bby\s+mouth\b/gi, "PO");
-  t = t.replace(/\borally\b/gi, "PO");
-  t = t.replace(/\bintravenous(?:ly)?\b/gi, "IV");
-  t = t.replace(/\b(?:sub[-\s]?cutaneous(?:ly)?|subcut)\b/gi, "SC");
-  t = t.replace(/\bintra[-\s]?muscular(?:ly)?\b/gi, "IM");
-  t = t.replace(/\bper\s+rectum\b/gi, "PR");
-
-  // NYHA / Killip
-  t = t.replace(/\bNYHA\s+(?:class\s+)?(?:one|1|I)\b/gi, "NYHA I");
-  t = t.replace(/\bNYHA\s+(?:class\s+)?(?:two|2|II)\b/gi, "NYHA II");
-  t = t.replace(/\bNYHA\s+(?:class\s+)?(?:three|3|III)\b/gi, "NYHA III");
-  t = t.replace(/\bNYHA\s+(?:class\s+)?(?:four|4|IV)\b/gi, "NYHA IV");
-  t = t.replace(/\bKillip\s+(?:class\s+)?(?:one|1|I)\b/gi, "Killip I");
-  t = t.replace(/\bKillip\s+(?:class\s+)?(?:two|2|II)\b/gi, "Killip II");
-  t = t.replace(/\bKillip\s+(?:class\s+)?(?:three|3|III)\b/gi, "Killip III");
-  t = t.replace(/\bKillip\s+(?:class\s+)?(?:four|4|IV)\b/gi, "Killip IV");
-
-  return t;
-}
-
-// Layer 4: ABBREVIATION CASING FIX
-const ABBREV_CASE = [
-  [/\bacs\b/gi, "ACS"],[/\bcad\b/gi, "CAD"],[/\bhtn\b/gi, "HTN"],[/\bdm\b/gi, "DM"],
-  [/\bstemi\b/gi, "STEMI"],[/\bnstemi\b/gi, "NSTEMI"],[/\bmi\b/gi, "MI"],
-  [/\bhfref\b/gi, "HFrEF"],[/\bhfpef\b/gi, "HFpEF"],[/\bhfmref\b/gi, "HFmrEF"],
-  [/\bafib\b/gi, "AFib"],[/\bnyha\b/gi, "NYHA"],[/\bpci\b/gi, "PCI"],[/\bcto\b/gi, "CTO"],
-  [/\btavi\b/gi, "TAVI"],[/\btavr\b/gi, "TAVR"],[/\blad\b/gi, "LAD"],[/\blcx\b/gi, "LCX"],
-  [/\brca\b/gi, "RCA"],[/\bppm\b/gi, "PPM"],[/\btpm\b/gi, "TPM"],[/\bicd\b/gi, "ICD"],
-  [/\bcrt\s*[- ]?p\b/gi, "CRT-P"],[/\bcrt\s*[- ]?d\b/gi, "CRT-D"],
-  [/\bppi\b/gi, "PPI"],[/\bckd\b/gi, "CKD"],[/\bihd\b/gi, "IHD"],[/\bhf\b/gi, "HF"],
-  [/\bcopd\b/gi, "COPD"],[/\bcva\b/gi, "CVA"],[/\btia\b/gi, "TIA"],
-  [/\bdvt\b/gi, "DVT"],[/\bpe\b/gi, "PE"],[/\bpad\b/gi, "PAD"],[/\baf\b/gi, "AF"],
-  [/\bafl\b/gi, "AFL"],[/\bvt\b/gi, "VT"],[/\bvf\b/gi, "VF"],[/\bsvt\b/gi, "SVT"],
-  [/\bosas?\b/gi, "OSA"],[/\biabp\b/gi, "IABP"],[/\becmo\b/gi, "ECMO"],
-  [/\brrt\b/gi, "RRT"],[/\baki\b/gi, "AKI"],[/\bcpr\b/gi, "CPR"],
-  [/\begfr\b/gi, "eGFR"],[/\bEGFR\b/g, "eGFR"],
-  [/\bcabg\b/gi, "CABG"],[/\bbpm\b/gi, "bpm"],[/\bmmhg\b/gi, "mmHg"],
-  [/\blvef\b/gi, "LVEF"],[/\brwma\b/gi, "RWMA"],[/\bcxr\b/gi, "CXR"],
-  [/\becg\b/gi, "ECG"],[/\btte\b/gi, "TTE"],[/\btee\b/gi, "TEE"],[/\bcag\b/gi, "CAG"],
-  [/\bcmr\b/gi, "CMR"],[/\bpft\b/gi, "PFT"],[/\bcbc\b/gi, "CBC"],[/\brft\b/gi, "RFT"],[/\blft\b/gi, "LFT"],
-  [/\bphT\b/g, "PHT"],[/\bph\s*t\b/gi, "PHT"],
-  [/\bpht\b/gi, "PHT"],
-  [/\bchf\b/gi, "CHF"],[/\bhfmr\s*ef\b/gi, "HFmrEF"],
-  [/\bichd\b/gi, "IHD"],
-  [/\blvh\b/gi, "LVH"],[/\brvh\b/gi, "RVH"],
-  [/\blbbb\b/gi, "LBBB"],[/\brbbb\b/gi, "RBBB"],[/\bchb\b/gi, "CHB"],
-  [/\basd\b/gi, "ASD"],[/\bvsd\b/gi, "VSD"],[/\bpfo\b/gi, "PFO"],
-  [/\bhcm\b/gi, "HCM"],[/\bdcm\b/gi, "DCM"],[/\brcm\b/gi, "RCM"],
-  [/\brhd\b/gi, "RHD"],[/\bie\b/gi, "IE"],
-  [/\bdlp\b/gi, "DLP"],[/\bbph\b/gi, "BPH"],[/\bgerd\b/gi, "GERD"],
-  [/\basa\b/gi, "ASA"],
-  [/\bjvp\b/gi, "JVP"],[/\bpsm\b/gi, "PSM"],[/\besm\b/gi, "ESM"],
-  [/\bedm\b/gi, "EDM"],[/\bmdm\b/gi, "MDM"],
-  [/\bdapt\b/gi, "DAPT"],[/\bsapt\b/gi, "SAPT"],
-  [/\brdn\b/gi, "RDN"],
-  [/\bam\s*r\b/gi, "AR"],[/\bmr\b/gi, "MR"],[/\btr\b/gi, "TR"],[/\bas\b/g, "AS"],[/\bms\b/g, "MS"],
-  [/\bmets\b/gi, "MetS"],
-  [/\bildi\b/gi, "ILD"],[/\bild\b/gi, "ILD"],
-  [/\besrd\b/gi, "ESRD"],
-  [/\bt1dm\b/gi, "T1DM"],[/\bt2dm\b/gi, "T2DM"],
-  [/\bavr\b/gi, "AVR"],[/\bmvr\b/gi, "MVR"],
-];
-
-// Layer 5: PUNCTUATION & CLEANUP
-function applyPunctuation(t){
-  t = t.replace(/\s+full\s+stop\b/gi, ".");
-  t = t.replace(/\s+period\b/gi, ".");
-  t = t.replace(/\s+comma\b/gi, ",");
-  t = t.replace(/\s+colon\b/gi, ":");
-  t = t.replace(/\s+semi\s*colon\b/gi, ";");
-  t = t.replace(/\s+question\s+mark\b/gi, "?");
-  t = t.replace(/\s+new\s+(?:line|paragraph)\b/gi, "\n");
-  t = t.replace(/\s+next\s+line\b/gi, "\n");
-  t = t.replace(/\s+next\s+point\b/gi, "\n• ");
-  t = t.replace(/\s+dash\b/gi, " — ");
-  t = t.replace(/\s+open\s+paren(?:thesis)?\b/gi, " (");
-  t = t.replace(/\s+close\s+paren(?:thesis)?\b/gi, ") ");
-  return t;
-}
-
-// ============================================================
-// Main entry point
-// ============================================================
-function postProcessMedical(text, fieldId){
-  if(!text) return "";
-  let t = " " + text + " ";
-
-  // ---- Layer 1: Confusable word correction (before anything else) ----
-  // Sort keys by length desc so multi-word fixes win over single words.
-  let keys = Object.keys(CONFUSABLE_FIXES).sort((a,b) => b.length - a.length);
-  for(let k of keys){
-    let safe = k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    let re = new RegExp('\\b' + safe + '\\b', 'gi');
-    t = t.replace(re, CONFUSABLE_FIXES[k]);
-  }
-
-  // ---- Layer 2: Clinical shorthand (phrase substitution) ----
-  for(let [re, rep] of SHORTHAND_DICT){
-    t = t.replace(re, rep);
-  }
-
-  // ---- Layer 3: Number-aware rules ----
-  t = applyNumberAwareRules(t);
-
-  // ---- Field-specific behavior ----
-  // (Moved below punctuation layer so newlines are normalized first)
-
-  // ---- Layer 4: Abbreviation casing ----
-  for(let [re, rep] of ABBREV_CASE){
-    t = t.replace(re, rep);
-  }
-
-  // ---- Layer 5: Punctuation + cleanup ----
-  t = applyPunctuation(t);
-
-  // Field-specific behavior (after punctuation so newlines are real)
-  if(fieldId === 'endo-plan'){
-    // Plan: number top-level lines if user said items on separate lines
-    if(/\n/.test(t) && !/^\s*\d+[.)]/m.test(t)){
-      let lines = t.split('\n');
-      let numbered = [];
-      let n = 1;
-      for(let line of lines){
-        let trimmed = line.trim();
-        if(!trimmed){ numbered.push(''); continue; }
-        // Don't number bullets, and don't number if already numbered
-        if(/^[-•*]/.test(trimmed) || /^\d+[.)]/.test(trimmed)){
-          numbered.push(trimmed);
-        } else {
-          numbered.push(`${n}. ${trimmed}`);
-          n++;
-        }
-      }
-      t = numbered.join('\n');
-    }
-  }
-
-  // Auto-capitalize after sentence-ending punctuation
-  t = t.replace(/([.?!]\s+|^\s*|\n\s*)([a-z])/g, (m, p1, p2) => p1 + p2.toUpperCase());
-  // Preserve intentionally-lowercase prefixes like hs-Trop, eGFR, pLAD
-  t = t.replace(/\b[Hh][Ss]-/g, "hs-");
-  t = t.replace(/\bEGFR\b/g, "eGFR");
-
-  // Collapse multiple spaces (but NOT newlines)
-  t = t.replace(/[ \t]{2,}/g, " ");
-  // Clean up spaces around punctuation
-  t = t.replace(/\s+([,.;:?!])/g, "$1");
-
-  return t.trim();
-}
-
-
-function getDictMicSVG(){
-  // Simple mic glyph
-  return '<svg viewBox="0 0 24 24"><path d="M12 14a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v5a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-3.08A7 7 0 0 0 19 11z"/></svg>';
-}
-
-// Attach a mic button to a text field (input or textarea).
-function attachDictMic(fieldId){
-  if(!DICTATION_SUPPORTED) return;
-  let field = document.getElementById(fieldId);
-  if(!field) return;
-  // Skip if already wrapped
-  if(field.parentElement?.classList.contains('dict-wrap')) return;
-  // Wrap the field
-  let wrap = document.createElement('div');
-  wrap.className = 'dict-wrap';
-  field.parentNode.insertBefore(wrap, field);
-  wrap.appendChild(field);
-  // Add mic button
-  let btn = document.createElement('button');
-  btn.type = 'button';
-  btn.className = 'dict-mic';
-  btn.setAttribute('aria-label', 'Dictate');
-  btn.setAttribute('title', 'Tap to dictate');
-  btn.innerHTML = getDictMicSVG();
-  btn.onclick = (e) => { e.preventDefault(); e.stopPropagation(); toggleDictation(fieldId); };
-  wrap.appendChild(btn);
-}
-
-// Start/stop dictation for a given field id
-function toggleDictation(fieldId){
-  if(!DICTATION_SUPPORTED){ alert('Dictation is not supported on this browser. Try Chrome.'); return; }
-  if(dictState.targetId === fieldId && dictState.recognition){
-    // Already listening this field — stop
-    stopDictation(true);
-    return;
-  }
-  // If a different field is listening, stop it first (restarts state)
-  if(dictState.recognition){ stopDictation(false); }
-  startDictation(fieldId);
-}
-
-function startDictation(fieldId){
-  let field = document.getElementById(fieldId);
-  if(!field) return;
-  let btn = field.parentElement?.querySelector('.dict-mic');
-  if(!btn) return;
-
-  let rec = new SpeechRecognition();
-  rec.lang = 'en-US';
-  rec.continuous = true;
-  rec.interimResults = true;
-  rec.maxAlternatives = 1;
-
-  dictState.recognition = rec;
-  dictState.targetId = fieldId;
-  dictState.baseText = field.value || "";
-  dictState.interim = "";
-  dictState.button = btn;
-  // Live preview element (appended to wrap)
-  let preview = document.createElement('div');
-  preview.className = 'dict-preview empty';
-  preview.innerHTML = '<div class="dict-preview-label">🎙 LISTENING</div><div id="dict-preview-text">speak now…</div>';
-  field.parentElement.appendChild(preview);
-  dictState.preview = preview;
-
-  btn.classList.add('listening');
-
-  rec.onresult = (ev) => {
-    let finalChunk = "";
-    let interimChunk = "";
-    for(let i = ev.resultIndex; i < ev.results.length; i++){
-      let res = ev.results[i];
-      if(res.isFinal) finalChunk += res[0].transcript;
-      else interimChunk += res[0].transcript;
-    }
-    if(finalChunk){
-      // Process final chunks through medical rules, append to base
-      let processed = postProcessMedical(finalChunk, dictState.targetId);
-      if(processed){
-        // Smart join: add space if base doesn't end with whitespace/punct
-        let base = dictState.baseText;
-        let sep = "";
-        if(base && !/[\s\n]$/.test(base) && !/^[\s,.;:?!]/.test(processed)) sep = " ";
-        dictState.baseText = base + sep + processed;
-        field.value = dictState.baseText;
-        // Trigger input event so any listeners (like date badge) re-run
-        field.dispatchEvent(new Event('input', {bubbles:true}));
-      }
-      dictState.interim = "";
-    } else {
-      dictState.interim = interimChunk;
-    }
-    // Update preview
-    let previewText = document.getElementById('dict-preview-text');
-    if(previewText){
-      let shown = dictState.interim.trim();
-      if(shown){
-        previewText.innerText = shown;
-        preview.classList.remove('empty');
-      } else {
-        previewText.innerText = "speak now…";
-        preview.classList.add('empty');
-      }
-    }
-  };
-
-  rec.onerror = (ev) => {
-    console.warn('Speech recognition error:', ev.error);
-    if(ev.error === 'not-allowed' || ev.error === 'service-not-allowed'){
-      alert('Microphone permission denied. Enable mic access in your browser settings to use dictation.');
-    }
-    stopDictation(false);
-  };
-
-  rec.onend = () => {
-    // Only clean up if this is still the active session
-    if(dictState.recognition === rec){
-      stopDictation(false);
-    }
-  };
-
-  try { rec.start(); }
-  catch(err){
-    console.error('Failed to start recognition:', err);
-    stopDictation(false);
-  }
-}
-
-function stopDictation(userInitiated){
-  if(dictState.recognition){
-    try { dictState.recognition.stop(); } catch(e){}
-    dictState.recognition = null;
-  }
-  if(dictState.button){ dictState.button.classList.remove('listening'); }
-  if(dictState.preview && dictState.preview.parentNode){
-    dictState.preview.parentNode.removeChild(dictState.preview);
-  }
-  dictState.targetId = null;
-  dictState.baseText = "";
-  dictState.interim = "";
-  dictState.button = null;
-  dictState.preview = null;
-}
-
-// Global: stop dictation on Escape key
-document.addEventListener('keydown', (e) => {
-  if(e.key === 'Escape' && dictState.recognition){ stopDictation(true); }
-});
-
-// Fields that should get a mic button. Call after the DOM is ready.
-const DICT_FIELDS = [
-  // Patient's list (IP endorsement)
-  'endo-hx', 'endo-reason', 'endo-ix', 'endo-active', 'endo-plan',
-  // Cath schedule
-  'cath-sch-hx',
-  // Cath waiting list
-  'cath-p-hx',
-];
-
-function installDictMics(){
-  DICT_FIELDS.forEach(id => attachDictMic(id));
-  // Show hint banners only when dictation is supported
-  if(DICTATION_SUPPORTED){
-    ['endoDictHint','cathSchDictHint','cathPDictHint'].forEach(id => {
-      let el = document.getElementById(id);
-      if(el) el.style.display = '';
-    });
-  }
-}
-
-// Toggle cheat-sheet visibility
-window.toggleCheatSheet = function(sheetId, btn){
-  let sheet = document.getElementById(sheetId);
-  if(!sheet) return;
-  let open = sheet.classList.toggle('open');
-  if(btn) btn.classList.toggle('open', open);
-};
-
-// Install mics as soon as the DOM is ready (all forms already present in HTML)
-if(document.readyState === 'loading'){
-  document.addEventListener('DOMContentLoaded', installDictMics);
-} else {
-  installDictMics();
-}
 
 window.toggleEndoCard = function(id){
   if(expandedEndoIds.has(id)) expandedEndoIds.delete(id);
@@ -6546,7 +5660,10 @@ window.addEndoToEchoList = function(endoId){
   }
 };
 
-window.removeFromEchoList = function(endoId){
+// Mark echo as completed for a patient: removes them from the IP Echo List
+// AND stamps echoDone+echoCompletedAt on the IP record so the green
+// "✓ ECHO DONE" badge appears on the IP card.
+window.markEchoDone = function(endoId){
   ensureExtState();
   let e = window.S.endorsements[endoId];
   let nm = e ? e.name : 'this patient';
@@ -6560,6 +5677,20 @@ window.removeFromEchoList = function(endoId){
     updates['endorsements/' + endoId] = e;
   }
   dbUpdate(updates);
+  renderEchoList();
+  if(document.getElementById('pg-endo')?.classList.contains('on')) renderEndoList();
+};
+
+// Plain removal — patient was added by mistake / no longer needs echo.
+// Does NOT set echoDone; IP card returns to neutral (no badge), so the
+// patient can be re-added to the echo list later if needed.
+window.removeFromEchoList = function(endoId){
+  ensureExtState();
+  let e = window.S.endorsements[endoId];
+  let nm = e ? e.name : 'this patient';
+  if(!confirm(`Remove ${nm} from the IP Echo List?\n\nThe patient will simply be taken off the list — no ECHO DONE badge will appear. Use this when a patient was added by mistake or no longer needs an echo.`)) return;
+  if(window.S.echoList) delete window.S.echoList[endoId];
+  dbRemoveAt('echoList/' + endoId);
   renderEchoList();
   if(document.getElementById('pg-endo')?.classList.contains('on')) renderEndoList();
 };
@@ -6651,7 +5782,8 @@ window.renderEchoList = function(){
         ${addedLine}
         <div class="endo-actions">
           <button class="endo-act-btn" onclick="event.stopPropagation();openEndoForm('${e.id}')">✎ Edit</button>
-          <button class="endo-act-btn" style="border-color:rgba(63,185,140,.4);color:var(--ok)" onclick="event.stopPropagation();removeFromEchoList('${e.id}')" title="Mark echo as completed and remove from this list">✓ Echo Done</button>
+          <button class="endo-act-btn" style="border-color:rgba(63,185,140,.4);color:var(--ok)" onclick="event.stopPropagation();markEchoDone('${e.id}')" title="Mark echo as completed and remove from this list">✓ Echo Done</button>
+          <button class="endo-act-btn danger" onclick="event.stopPropagation();removeFromEchoList('${e.id}')" title="Remove from echo list without marking as done (e.g. added by mistake)">✕ Remove</button>
         </div>
       </div>
     </div>
