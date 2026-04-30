@@ -13,7 +13,19 @@
 <meta name="apple-mobile-web-app-title" content="MKH Cardiology">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#0b1220">
+<meta name="theme-color" content="#0b1220" id="themeColorMeta">
+<script>
+/* Apply saved theme as early as possible to avoid flash of wrong theme */
+(function(){
+  try {
+    var saved = localStorage.getItem('mkh-theme');
+    if (saved !== 'light' && saved !== 'dark') saved = 'dark';
+    document.documentElement.setAttribute('data-theme', saved);
+  } catch(e) {
+    document.documentElement.setAttribute('data-theme', 'dark');
+  }
+})();
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 /* ===========================================================
@@ -21,7 +33,7 @@
    Palette: deep slate canvas, clinical teal accent, soft signal hues
    Typography: Inter (UI) + JetBrains Mono (data) — no fancy serif
    =========================================================== */
-:root {
+:root, :root[data-theme="dark"] {
   /* Surfaces — calm slate, easy on the eyes for long shifts */
   --bg:#0b1220;
   --sur:#111a2e;
@@ -52,6 +64,19 @@
   --ep:#6f86d6;
   --ep2:#94a8e0;
 
+  /* Header bg used in backdrop-filter (rgba form) */
+  --header-bg:rgba(11,18,32,0.92);
+  --modal-bg:rgba(3,7,15,.85);
+
+  /* Multi-stop gradients that need to flip per theme */
+  --body-gradient:linear-gradient(180deg,#0d1628 0%,#0b1220 60%,#070d1a 100%);
+  --header-gradient:linear-gradient(180deg,rgba(13,22,40,0.96) 0%,rgba(11,18,32,0.94) 100%);
+  --role-gate-gradient:radial-gradient(ellipse at center,#142035 0%,#0b1220 65%,#050912 100%);
+  --role-logo-gradient:linear-gradient(135deg,#1a3a4a 0%,#0e2532 100%);
+  --header-shadow:0 1px 0 rgba(255,255,255,0.02) inset, 0 4px 24px rgba(0,0,0,0.3);
+  --card-shadow-strong:0 1px 0 rgba(255,255,255,0.02) inset, 0 4px 16px rgba(0,0,0,0.18);
+  --bed-gradient:linear-gradient(135deg,#1c4757,#0e2a36);
+
   /* Fonts */
   --font-ui:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
   --font-mono:'JetBrains Mono','SF Mono',Menlo,monospace;
@@ -62,6 +87,56 @@
   --shadow-card:0 1px 0 rgba(255,255,255,0.02) inset, 0 1px 2px rgba(0,0,0,0.25);
   --shadow-pop:0 4px 16px rgba(0,0,0,0.35);
 }
+
+/* ===== LIGHT THEME — clinical EMR paper, crisp and high-contrast ===== */
+:root[data-theme="light"] {
+  /* Surfaces — cards stay white, page goes meaningfully grey for separation */
+  --bg:#dfe6f0;
+  --sur:#ffffff;
+  --sur2:#f3f6fb;
+  --sur3:#e6ecf4;
+  --bor:#b8c4d4;
+  --bor2:#94a4ba;
+
+  /* Primary clinical accent — deeper saturated teal, EMR-style */
+  --acc:#0c7c8a;
+  --acc2:#075d68;
+  --acc-soft:rgba(12,124,138,0.10);
+  --acc-line:rgba(12,124,138,0.42);
+
+  /* Signal colors — saturated medical alert tones */
+  --ok:#15803d;
+  --warn:#b45309;
+  --err:#b91c1c;
+  --crit:#991b1b;
+
+  /* Text — near-black for primary, strong mid-greys */
+  --txt:#0a1628;
+  --mid:#26334a;
+  --dim:#52617a;
+  --dim2:#7a8699;
+
+  /* EP indigo */
+  --ep:#3b4eaa;
+  --ep2:#2c3d8c;
+
+  /* Header backdrop and modal scrim */
+  --header-bg:rgba(255,255,255,0.95);
+  --modal-bg:rgba(10,22,40,0.55);
+
+  /* Multi-stop gradients for light theme */
+  --body-gradient:linear-gradient(180deg,#e6ecf4 0%,#dfe6f0 60%,#d4dde9 100%);
+  --header-gradient:linear-gradient(180deg,rgba(255,255,255,0.97) 0%,rgba(248,250,253,0.95) 100%);
+  --role-gate-gradient:radial-gradient(ellipse at center,#142035 0%,#0b1220 65%,#050912 100%);
+  --role-logo-gradient:linear-gradient(135deg,#1a3a4a 0%,#0e2532 100%);
+
+  /* Stronger shadow + crisp inner highlight so white cards lift off the page */
+  --header-shadow:0 1px 0 rgba(255,255,255,0.7) inset, 0 2px 10px rgba(10,22,40,0.08), 0 1px 0 rgba(10,22,40,0.05);
+  --card-shadow-strong:0 1px 0 rgba(255,255,255,0.8) inset, 0 2px 4px rgba(10,22,40,0.06), 0 4px 12px rgba(10,22,40,0.08);
+  --shadow-card:0 1px 0 rgba(255,255,255,0.8) inset, 0 1px 3px rgba(10,22,40,0.10);
+  --shadow-pop:0 10px 28px rgba(10,22,40,0.18);
+  --bed-gradient:linear-gradient(135deg,#0c7c8a,#075d68);
+}
 *{margin:0;padding:0;box-sizing:border-box}
 *::-webkit-scrollbar{width:8px;height:8px}
 *::-webkit-scrollbar-track{background:transparent}
@@ -70,8 +145,9 @@
 body{background:var(--bg);color:var(--txt);font-family:var(--font-ui);min-height:100vh;-webkit-font-smoothing:antialiased;letter-spacing:-0.01em}
 
 /* ====== HEADER — clinical, with custom medical SVG mark ====== */
-header{padding:13px 18px;border-bottom:1px solid var(--bor);display:flex;align-items:center;gap:12px;background:rgba(11,18,32,0.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);position:sticky;top:0;z-index:99}
-.hi{width:40px;height:40px;background:linear-gradient(135deg,#1c4757,#0e2a36);border:1px solid var(--acc-line);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 2px 8px rgba(58,166,183,0.18),0 0 0 1px rgba(255,255,255,0.03) inset;color:var(--acc2)}
+header{padding:13px 18px;border-bottom:1px solid var(--bor);display:flex;align-items:center;gap:12px;background:var(--header-bg);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);position:sticky;top:0;z-index:99}
+.hi{width:40px;height:40px;background:var(--bed-gradient);border:1px solid var(--acc-line);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 2px 8px rgba(58,166,183,0.18),0 0 0 1px rgba(255,255,255,0.03) inset;color:#fff}
+:root[data-theme="dark"] .hi{color:var(--acc2)}
 .hi svg{width:22px;height:22px;display:block}
 header h1{font-family:var(--font-ui);font-size:15px;font-weight:600;letter-spacing:-0.02em;color:var(--txt);line-height:1.2}
 header h1 .acc{color:var(--acc2)}
@@ -136,7 +212,23 @@ textarea{font-family:var(--font-ui);font-size:13px;line-height:1.55;resize:verti
 .dn2{font-family:var(--font-mono);font-size:22px;font-weight:600;color:var(--acc2)}
 .pi{background:var(--sur2);border:1px solid var(--bor);border-radius:8px;padding:13px;color:var(--txt);font-family:var(--font-mono);font-size:15px;text-align:center;width:100%;margin-bottom:9px;letter-spacing:0.2em}
 .pi:focus{border-color:var(--acc-line);background:rgba(58,166,183,0.04)}
-.mo{display:none;position:fixed;inset:0;background:rgba(3,7,15,.85);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);z-index:200;align-items:center;justify-content:center;padding:18px}
+.mo{display:none;position:fixed;inset:0;background:var(--modal-bg);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);z-index:200;align-items:center;justify-content:center;padding:18px}
+
+/* ====== THEME TOGGLE (sun/moon) ====== */
+.theme-toggle{width:34px;height:34px;border-radius:8px;border:1px solid var(--bor);background:var(--sur2);color:var(--dim);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:color .15s,border-color .15s,background .15s;flex-shrink:0;padding:0}
+.theme-toggle:hover{color:var(--acc2);border-color:var(--acc-line);background:var(--acc-soft)}
+.theme-toggle svg{width:16px;height:16px;display:block}
+.theme-toggle .icon-sun{display:none}
+.theme-toggle .icon-moon{display:block}
+:root[data-theme="light"] .theme-toggle .icon-sun{display:block}
+:root[data-theme="light"] .theme-toggle .icon-moon{display:none}
+
+/* Smooth color transitions when switching themes (skip transforms/layout) */
+body, header, .card, .cbox, .tabs, .tab, .sb, input, textarea, select,
+.dc, .spec-card, .mb, .mh, .lt, .lh, .lr, .fb, .adm-tab, .lock-icon,
+.theme-toggle, .cex-card, .ep-notice, .pi, .dot, .stb {
+  transition: background-color .25s ease, color .25s ease, border-color .25s ease;
+}
 .mo.on{display:flex}
 .mb{background:var(--sur);border:1px solid var(--bor);border-radius:14px;width:100%;max-width:440px;max-height:84vh;display:flex;flex-direction:column;box-shadow:var(--shadow-pop)}
 .mh{padding:15px 18px;border-bottom:1px solid var(--bor);display:flex;align-items:center;justify-content:space-between}
@@ -181,6 +273,7 @@ textarea{font-family:var(--font-ui);font-size:13px;line-height:1.55;resize:verti
 .ep-notice-icon{font-size:18px;flex-shrink:0;margin-top:1px;color:var(--ep2)}
 .ep-notice-text{font-family:var(--font-mono);font-size:12px;color:var(--ep2);line-height:1.6}
 .ep-notice-text strong{color:#fff;font-size:13px}
+:root[data-theme="light"] .ep-notice-text strong{color:var(--ep)}
 .ep-card{border-color:rgba(111,134,214,0.35)!important}
 .ep-card:hover:not(.disabled){border-color:var(--ep)!important;background:rgba(111,134,214,0.07)!important}
 .ep-card.selected{border-color:var(--ep)!important;background:rgba(111,134,214,0.10)!important;box-shadow:0 0 0 2px rgba(111,134,214,0.4)!important}
@@ -208,6 +301,8 @@ hr.adm-hr{border:0;border-top:1px solid var(--bor);margin:20px 0}
 .endo-ca-alarm .ca-icon{flex-shrink:0;width:22px;height:22px;border-radius:50%;background:var(--acc-soft);display:flex;align-items:center;justify-content:center;color:var(--acc2)}
 .endo-ca-alarm .ca-icon svg{width:13px;height:13px}
 .endo-ca-alarm strong{color:#fff;font-weight:700}
+:root[data-theme="light"] .endo-ca-alarm strong{color:var(--acc2)}
+:root[data-theme="light"] .endo-ca-alarm.scheduled strong{color:var(--ok)}
 .endo-ca-alarm-btn{margin-left:auto;background:var(--acc);border:none;color:#fff;border-radius:5px;padding:5px 11px;font-family:var(--font-mono);font-size:10px;font-weight:600;cursor:pointer;letter-spacing:0.04em;text-transform:uppercase;transition:all .15s;white-space:nowrap}
 .endo-ca-alarm-btn:hover{filter:brightness(1.1)}
 .endo-ca-alarm.scheduled{background:linear-gradient(90deg,rgba(63,185,140,0.15),rgba(63,185,140,0.06));border-color:rgba(63,185,140,0.45);border-left-color:var(--ok);color:var(--ok)}
@@ -238,14 +333,24 @@ hr.adm-hr{border:0;border-top:1px solid var(--bor);margin:20px 0}
 .hosp-toast.show{opacity:1;transform:translateX(-50%) translateY(-4px)}
 
 /* ============= PREMIUM MEDICAL OVERRIDES ============= */
-body{background:linear-gradient(180deg,#0d1628 0%,#0b1220 60%,#070d1a 100%);background-attachment:fixed}
-header{background:linear-gradient(180deg,rgba(13,22,40,0.96) 0%,rgba(11,18,32,0.94) 100%);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--bor);box-shadow:0 1px 0 rgba(255,255,255,0.02) inset, 0 4px 24px rgba(0,0,0,0.3)}
+body{background:var(--body-gradient);background-attachment:fixed}
+header{background:var(--header-gradient);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--bor);box-shadow:var(--header-shadow)}
 .tab{transition:color .18s,border-bottom-color .18s,background .18s}
 .tab:hover:not(.on){color:var(--mid);background:var(--acc-soft)}
-.card{box-shadow:0 1px 0 rgba(255,255,255,0.02) inset, 0 4px 16px rgba(0,0,0,0.18);transition:border-color .2s}
+.card{box-shadow:var(--card-shadow-strong);transition:border-color .2s}
 
-/* ============= ROLE GATE — clinical login ============= */
-.role-gate{position:fixed;inset:0;background:radial-gradient(ellipse at center,#142035 0%,#0b1220 65%,#050912 100%);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px}
+/* ============= ROLE GATE — clinical login (always dark, regardless of theme) ============= */
+.role-gate{
+  position:fixed;inset:0;
+  background:radial-gradient(ellipse at center,#142035 0%,#0b1220 65%,#050912 100%);
+  z-index:500;display:flex;align-items:center;justify-content:center;padding:20px;
+  /* Lock dark colors for the login screen */
+  --txt:#eef2f7; --mid:#c7d0dc; --dim:#8694ab; --dim2:#5d6b82;
+  --sur:#111a2e; --sur2:#172238; --sur3:#1f2c46;
+  --bor:#243352; --bor2:#2d3e60;
+  --acc:#3aa6b7; --acc2:#5dc4d2;
+  --acc-soft:rgba(58,166,183,0.10); --acc-line:rgba(58,166,183,0.32);
+}
 .role-gate.hidden{display:none}
 .role-box{width:100%;max-width:420px;text-align:center}
 .role-logo{width:78px;height:78px;background:linear-gradient(135deg,#1a3a4a 0%,#0e2532 100%);border:1px solid var(--acc-line);border-radius:18px;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;box-shadow:0 12px 40px rgba(58,166,183,0.28),0 0 0 1px rgba(255,255,255,0.04) inset;color:var(--acc2)}
@@ -280,7 +385,8 @@ header{background:linear-gradient(180deg,rgba(13,22,40,0.96) 0%,rgba(11,18,32,0.
 .endo-card{background:var(--sur);border:1px solid var(--bor);border-radius:12px;padding:14px;transition:border-color .2s,box-shadow .2s;box-shadow:var(--shadow-card)}
 .endo-card:hover{border-color:var(--acc-line)}
 .endo-card-head{display:flex;align-items:center;gap:10px;margin-bottom:10px;padding-bottom:10px;border-bottom:1px dashed var(--bor)}
-.endo-bed{background:linear-gradient(135deg,#1c4757,#0e2a36);color:var(--acc2);border:1px solid var(--acc-line);font-family:var(--font-mono);font-size:13px;font-weight:700;padding:8px 12px;border-radius:8px;min-width:60px;text-align:center;letter-spacing:0.04em;white-space:nowrap}
+.endo-bed{background:var(--bed-gradient);color:#fff;border:1px solid var(--acc-line);font-family:var(--font-mono);font-size:13px;font-weight:700;padding:8px 12px;border-radius:8px;min-width:60px;text-align:center;letter-spacing:0.04em;white-space:nowrap}
+:root[data-theme="dark"] .endo-bed{color:var(--acc2)}
 .endo-name{font-family:var(--font-ui);font-size:17px;font-weight:600;color:var(--txt);flex:1;line-height:1.2;letter-spacing:-0.01em}
 .endo-mrn{font-family:var(--font-mono);font-size:11px;color:var(--acc2);margin-top:3px;font-weight:500}
 .endo-meta-row{display:flex;justify-content:space-between;align-items:center;font-family:var(--font-mono);font-size:10px;color:var(--dim);margin-top:8px;padding-top:8px;border-top:1px dashed var(--bor);flex-wrap:wrap;gap:6px}
@@ -496,6 +602,7 @@ header{background:linear-gradient(180deg,rgba(13,22,40,0.96) 0%,rgba(11,18,32,0.
 .census-alert-icon{font-size:22px;flex-shrink:0}
 .census-alert-body{flex:1;font-family:var(--font-mono);font-size:11px;color:#fca5a5;line-height:1.6}
 .census-alert-body strong{color:#fff;font-size:12px;display:block;margin-bottom:3px}
+:root[data-theme="light"] .census-alert-body strong{color:var(--err)}
 </style>
 </head>
 <body>
@@ -573,6 +680,10 @@ header{background:linear-gradient(180deg,rgba(13,22,40,0.96) 0%,rgba(11,18,32,0.
   </div>
   <div class="db"><strong id="dayName">—</strong><span id="dateStr">—</span></div>
   <span class="role-chip" id="roleChip" style="display:none">—</span>
+  <button class="theme-toggle" id="themeToggleBtn" onclick="toggleTheme()" title="Toggle day / night mode" aria-label="Toggle theme">
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+  </button>
   <button class="lock-icon hidden" id="pinLockBtn" onclick="openProfileMo()" title="Change my PIN">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
   </button>
@@ -3300,6 +3411,17 @@ function applyRoleUI(role){
 
   rAll();
 }
+
+window.toggleTheme = function(){
+  var root = document.documentElement;
+  var current = root.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+  var next = current === 'light' ? 'dark' : 'light';
+  root.setAttribute('data-theme', next);
+  try { localStorage.setItem('mkh-theme', next); } catch(e){}
+  // Update the iOS / Android status-bar / browser chrome color
+  var meta = document.getElementById('themeColorMeta');
+  if (meta) meta.setAttribute('content', next === 'light' ? '#dfe6f0' : '#0b1220');
+};
 
 window.logoutRole = function(){
   if(!confirm('Logout and return to role selection?')) return;
