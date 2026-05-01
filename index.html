@@ -2168,7 +2168,7 @@ header{background:var(--header-gradient);backdrop-filter:blur(14px);-webkit-back
   <div class="card">
     <div class="rl" style="margin-bottom:6px">ON CALL SCHEDULE</div>
     <div style="font-family:var(--font-mono);font-size:10px;color:var(--dim);line-height:1.6;margin-bottom:12px">
-      Tap any day in the calendar to view its on-call team. <strong style="color:var(--warn)">Admin</strong> can edit the roster for each day (3 First on-call, 1 CCU, 2 Second on-call, 1 Interventionist on-call).
+      Tap any day in the calendar to view its on-call team.
     </div>
     <div class="cal-legend" style="display:flex;flex-wrap:wrap;gap:8px 14px;font-family:var(--font-mono);font-size:10px;color:var(--dim);margin-bottom:10px;align-items:center">
       <span style="display:inline-flex;align-items:center;gap:5px"><span style="width:12px;height:12px;border-radius:3px;background:rgba(250,204,21,.18);border:1px solid rgba(250,204,21,.35);display:inline-block"></span>Thu</span>
@@ -2305,9 +2305,6 @@ header{background:var(--header-gradient);backdrop-filter:blur(14px);-webkit-back
 <div class="pg" id="pg-census">
   <div class="card">
     <div class="rl" style="margin-bottom:10px">WARD &amp; CCU CENSUS</div>
-    <div style="font-family:var(--font-mono);font-size:10px;color:var(--dim);line-height:1.6;margin-bottom:14px">
-      Updated <strong style="color:var(--warn)">twice daily</strong> by the assigned cardiologist. Ward 4 = 20 beds. CCU = 15 beds. The bed advisory alert is active <strong>9 pm – 9 am only</strong>: if tomorrow's non-IP scheduled cath cases exceed available Ward 4 beds, an alert fires. It silences automatically at 9 am. Scheduling is never blocked.
-    </div>
     <div id="censusAlertBox"></div>
     <div id="censusCards"></div>
     <div class="endo-history-line" id="censusLastUpdate" style="text-align:center;margin-top:14px"></div>
@@ -2391,9 +2388,6 @@ header{background:var(--header-gradient);backdrop-filter:blur(14px);-webkit-back
   <div style="display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap;align-items:center">
     <button class="endo-mini-btn" onclick="expandAllEcho()">⌄ Expand all</button>
     <button class="endo-mini-btn" onclick="collapseAllEcho()">⌃ Collapse all</button>
-  </div>
-  <div style="background:rgba(96,165,250,0.06);border:1px solid rgba(96,165,250,0.3);border-left:3px solid var(--acc);border-radius:10px;padding:11px 14px;margin-bottom:10px;font-family:var(--font-mono);font-size:11px;color:var(--mid);line-height:1.55">
-    Patients added from the IP Patient's List for inpatient echocardiography. Click <strong style="color:var(--acc2)">＋ Add to Echo List</strong> on any IP card to send a patient here. Marking echo as <strong>done</strong> removes the patient from this list and shows an <strong>ECHO DONE</strong> badge on the IP card.
   </div>
   <div id="echoCount" class="endo-count-bar"></div>
   <div id="echoList" class="endo-grid"></div>
@@ -7835,8 +7829,8 @@ window.markReviewed = function(id){
 
 // ============================================================
 // #10 — PERSONAL ON-CALL .ICS CALENDAR EXPORT
-// Exports an iCalendar file containing every upcoming on-call slot
-// (today + next ~120 days) for the currently-logged-in doctor, or the
+// Exports an iCalendar file containing every on-call slot in the
+// current month for the currently-logged-in doctor, or the
 // doctor selected in the admin search box if admin is using the feature.
 // Each role on a given day becomes a separate VEVENT so calendar apps
 // show distinct entries (First / Second / CCU / Interventional).
@@ -7900,14 +7894,14 @@ window.exportMyOncallIcs = function(){
   }
 
   let onCall = window.S.onCall || {};
-  // Walk forward 4 months from today, including today
+  // Export the current month only (1st through last day)
   let today = new Date();
   today.setHours(0,0,0,0);
-  let until = new Date(today);
-  until.setDate(until.getDate() + 120);
+  let start = new Date(today.getFullYear(), today.getMonth(), 1);
+  let until = new Date(today.getFullYear(), today.getMonth() + 1, 0); // last day of current month
 
   let events = [];
-  let cursor = new Date(today);
+  let cursor = new Date(start);
   while(cursor <= until){
     let y = cursor.getFullYear(), m = cursor.getMonth(), d = cursor.getDate();
     let iso = `${y}-${_icsPad(m+1)}-${_icsPad(d)}`;
@@ -7927,7 +7921,8 @@ window.exportMyOncallIcs = function(){
   }
 
   if(!events.length){
-    alert(`No upcoming on-call slots found for ${window.displayDocName(target)} in the next 120 days.\n\nThe admin may not have entered the roster for that period yet.`);
+    let monthLabel = today.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
+    alert(`No on-call slots found for ${window.displayDocName(target)} in ${monthLabel}.\n\nThe admin may not have entered the roster for this month yet.`);
     return;
   }
 
@@ -8013,7 +8008,7 @@ function _injectOncallIcsButton(){
       <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M12 14v4M10 16h4"/></svg>
       Export my on-call to calendar (.ics)
     </button>
-    <span style="font-family:var(--font-mono);font-size:10px;color:var(--dim);letter-spacing:.04em">Imports into Apple / Google Calendar — next 4 months</span>
+    <span style="font-family:var(--font-mono);font-size:10px;color:var(--dim);letter-spacing:.04em">Imports into Apple / Google Calendar — current month</span>
   `;
   // Insert before the grid's parent card if possible
   let parent = grid.parentNode;
