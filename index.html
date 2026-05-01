@@ -711,26 +711,39 @@ header{background:var(--header-gradient);backdrop-filter:blur(14px);-webkit-back
 .gs-row-tag{flex-shrink:0;font-family:var(--font-mono);font-size:9px;color:var(--dim);background:var(--sur2);border:1px solid var(--bor);border-radius:4px;padding:2px 6px;letter-spacing:.5px}
 .gs-empty{text-align:center;padding:40px 20px;color:var(--dim);font-family:var(--font-mono);font-size:11px}
 
-/* === HERO CARD: My Patients Today === */
+/* === HERO CARD: My Patients (named-list version) === */
 .hero-card{background:linear-gradient(135deg,var(--sur),var(--sur2));border:1px solid var(--acc-line);border-left:3px solid var(--acc);border-radius:14px;padding:16px 18px;margin-bottom:16px;box-shadow:0 4px 18px rgba(0,0,0,.18),0 0 0 1px rgba(58,166,183,.06)}
-.hero-card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px}
-.hero-card-title{font-family:var(--font-ui);font-size:15px;font-weight:600;color:var(--txt);letter-spacing:-.01em;display:flex;align-items:center;gap:8px}
-.hero-card-title-sub{font-family:var(--font-mono);font-size:9px;color:var(--dim);letter-spacing:.08em;text-transform:uppercase;font-weight:500;margin-top:2px}
-.hero-card-dismiss{background:var(--sur2);border:1px solid var(--bor);color:var(--dim);width:24px;height:24px;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;transition:all .15s}
+.hero-card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px}
+.hero-card-title{font-family:var(--font-ui);font-size:15px;font-weight:600;color:var(--txt);letter-spacing:-.01em}
+.hero-card-title-sub{font-family:var(--font-mono);font-size:9.5px;color:var(--dim);letter-spacing:.06em;text-transform:uppercase;font-weight:500;margin-top:2px}
+.hero-card-dismiss{background:var(--sur2);border:1px solid var(--bor);color:var(--dim);width:24px;height:24px;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;transition:all .15s;flex-shrink:0}
 .hero-card-dismiss:hover{color:var(--err);border-color:var(--err)}
-.hero-stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-@media (max-width:520px){ .hero-stat-grid{grid-template-columns:1fr} }
-.hero-stat{background:var(--sur2);border:1px solid var(--bor);border-radius:10px;padding:12px 13px;cursor:pointer;transition:all .15s;position:relative;overflow:hidden}
-.hero-stat:hover{border-color:var(--acc-line);transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.18)}
-.hero-stat-lbl{font-family:var(--font-mono);font-size:9px;color:var(--dim);letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px;font-weight:600}
-.hero-stat-val{font-family:var(--font-ui);font-size:24px;font-weight:700;letter-spacing:-.02em;color:var(--acc2);line-height:1.1}
-.hero-stat.warn .hero-stat-val{color:var(--warn)}
-.hero-stat.ok .hero-stat-val{color:var(--ok)}
-.hero-stat.muted .hero-stat-val{color:var(--dim);font-size:14px;font-weight:600}
-.hero-stat-detail{font-family:var(--font-mono);font-size:10px;color:var(--mid);margin-top:5px;line-height:1.4}
-.hero-card-foot{margin-top:11px;font-family:var(--font-mono);font-size:9.5px;color:var(--dim);letter-spacing:.04em;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
-.hero-card-foot a{color:var(--acc2);text-decoration:none;cursor:pointer;font-weight:600}
-.hero-card-foot a:hover{text-decoration:underline}
+
+.hero-row-list{display:flex;flex-direction:column;gap:5px}
+.hero-row{display:flex;align-items:center;gap:9px;padding:9px 11px;background:var(--sur2);border:1px solid var(--bor);border-radius:8px;cursor:pointer;transition:all .15s;min-height:38px}
+.hero-row:hover{border-color:var(--acc-line);background:var(--sur3);transform:translateX(2px)}
+.hero-row-dot{flex-shrink:0;width:8px;height:8px;border-radius:50%;background:transparent;border:1.5px solid var(--bor2)}
+.hero-row-dot.stale{background:var(--warn);border-color:var(--warn);box-shadow:0 0 0 2px rgba(224,161,74,.18)}
+.hero-row-dot.fresh{background:transparent;border-color:var(--bor2)}
+.hero-row-name{flex:1;min-width:0;font-family:var(--font-ui);font-size:13px;font-weight:500;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hero-row-loc{flex-shrink:0;font-family:var(--font-mono);font-size:10px;color:var(--dim);letter-spacing:.02em;white-space:nowrap}
+.hero-row-badge{flex-shrink:0;font-family:var(--font-mono);font-size:9.5px;font-weight:600;color:var(--warn);background:rgba(224,161,74,.12);border:1px solid rgba(224,161,74,.35);border-radius:4px;padding:2px 6px;letter-spacing:.04em}
+:root[data-theme="light"] .hero-row-badge{background:rgba(180,83,9,.10);border-color:rgba(180,83,9,.35);color:var(--warn)}
+.hero-row-arrow{flex-shrink:0;font-family:var(--font-mono);font-size:13px;color:var(--dim);transition:transform .15s,color .15s}
+.hero-row:hover .hero-row-arrow{color:var(--acc2);transform:translateX(2px)}
+
+.hero-row-toggle{text-align:center;font-family:var(--font-mono);font-size:10px;color:var(--acc2);padding:7px;cursor:pointer;border-radius:6px;letter-spacing:.04em;font-weight:500;transition:background .15s;margin-top:2px}
+.hero-row-toggle:hover{background:var(--acc-soft)}
+
+/* Mobile-friendly tightening */
+@media (max-width:520px){
+  .hero-row{padding:8px 10px;gap:7px;flex-wrap:wrap}
+  .hero-row-name{font-size:13px;flex-basis:100%;order:1}
+  .hero-row-dot{order:0}
+  .hero-row-arrow{order:5;margin-left:auto}
+  .hero-row-loc{order:3;font-size:9.5px}
+  .hero-row-badge{order:4}
+}
 
 /* === CRITICAL LAB VALUE FLAGS === */
 .lab-flag{display:inline-block;background:rgba(226,100,100,.18);color:var(--err);border:1px solid rgba(226,100,100,.5);border-radius:4px;padding:1px 5px;font-family:var(--font-mono);font-size:11px;font-weight:600;letter-spacing:.02em;margin:0 1px}
@@ -1830,7 +1843,7 @@ header{background:var(--header-gradient);backdrop-filter:blur(14px);-webkit-back
         <textarea id="cath-sch-hx" rows="3" style="width:100%;background:var(--sur2);border:1px solid var(--bor);border-radius:7px;padding:10px;color:var(--txt);font-family:var(--font-ui);font-size:13px;outline:none;margin-bottom:11px;resize:vertical;line-height:1.5" placeholder="e.g. 58M, HTN, DM, positive stress test..."></textarea>
 
         <label>Type of Procedure</label>
-        <select id="cath-sch-proc" class="fd-sel" style="margin-bottom:11px" required onchange="if(typeof autoSuggestComplexity==='function') autoSuggestComplexity()">
+        <select id="cath-sch-proc" class="fd-sel" style="margin-bottom:11px" required>
           <option value="" disabled selected>Select procedure...</option>
           <option>Diagnostic CA</option>
           <option>PCI — Elective</option>
@@ -1857,15 +1870,6 @@ header{background:var(--header-gradient);backdrop-filter:blur(14px);-webkit-back
           <option>Renal Denervation (RDN)</option>
           <option>Alcohol Septal Ablation</option>
           <option>Other</option>
-        </select>
-        <label>Case Complexity <span style="font-weight:normal;text-transform:none;letter-spacing:0">(auto-suggested from procedure)</span></label>
-        <select id="cath-sch-cx" class="fd-sel" style="margin-bottom:11px">
-          <option value="">— Auto / not tagged —</option>
-          <option value="simple">Simple (Diagnostic CA, RHC, simple PCI)</option>
-          <option value="complex">Complex (CTO, multi-vessel, high-risk PCI)</option>
-          <option value="structural">Structural (TAVI, MitraClip, ASD, LAA)</option>
-          <option value="ep">EP (Study, Ablation)</option>
-          <option value="device">Device (PPM, ICD, CRT, lead extraction)</option>
         </select>
         <label>Operator <span style="font-weight:normal">(optional)</span></label>
         <select id="cath-sch-op" class="fd-sel" style="margin-bottom:11px">
@@ -4967,7 +4971,6 @@ window.resetCathSchForm = function(quiet){
   });
   document.getElementById('cath-sch-proc').selectedIndex = 0;
   document.getElementById('cath-sch-op').selectedIndex = 0;
-  let cxResetEl = document.getElementById('cath-sch-cx'); if(cxResetEl) cxResetEl.selectedIndex = 0;
   imgBuffers['cath-sch'] = [];
   renderImgPreview('cath-sch');
   document.getElementById('cathSchFromPending').style.display = 'none';
@@ -5089,12 +5092,6 @@ window.editScheduled = function(sid){
   for(let i=0; i<proc.options.length; i++){
     if(proc.options[i].value === s.proc){ proc.selectedIndex = i; break; }
   }
-  let cx = document.getElementById('cath-sch-cx');
-  if(cx){
-    // If the saved complexity is empty, auto-derive from the procedure
-    let val = s.complexity || (typeof inferComplexity === 'function' ? inferComplexity(s.proc) : '');
-    cx.value = val || '';
-  }
   let op = document.getElementById('cath-sch-op');
   for(let i=0; i<op.options.length; i++){
     if(op.options[i].value === s.operator){ op.selectedIndex = i; break; }
@@ -5161,16 +5158,18 @@ window.saveCathSched = async function(ev){
   let editId = document.getElementById('cath-sch-edit-id').value;
   let endoIdEl = document.getElementById('cath-sch-endo-id');
   let caseTypeEl = document.getElementById('cath-sch-case-type');
-  let cxEl = document.getElementById('cath-sch-cx');
   let endoId = endoIdEl ? endoIdEl.value : '';
   let caseType = caseTypeEl ? caseTypeEl.value : '';
-  let complexity = cxEl ? cxEl.value : '';
   let id = editId || ('sch_' + Date.now() + '_' + Math.floor(Math.random()*1000));
   let existing = editId ? window.S.cathScheduled[editId] : null;
   // Preserve IP linkage from the existing record if not explicitly set in the form
   let finalEndoId = endoId || (existing && existing.sourceEndoId) || '';
   let finalCaseType = caseType || (existing && existing.caseType) || '';
-  let finalComplexity = complexity || (existing && existing.complexity) || '';
+  // Complexity is no longer manually selected — auto-derive from the procedure
+  // so analytics keeps working. Existing complexity is preserved on edit.
+  let _procVal = document.getElementById('cath-sch-proc').value;
+  let finalComplexity = (existing && existing.complexity) ||
+    (typeof inferComplexity === 'function' ? inferComplexity(_procVal) : '');
   let resultEl = document.getElementById('cath-sch-result');
   let resultVal = resultEl ? resultEl.value.trim() : '';
   let previousResult = existing ? (existing.result || '') : '';
@@ -5398,13 +5397,12 @@ function renderCathToday(){
     if(s.nationality) demo.push(s.nationality);
     let demoStr = demo.join(' · ');
     let ipBadge = (s.caseType === 'IP') ? `<span style="background:rgba(52,211,153,.15);color:var(--ok);border:1px solid rgba(52,211,153,.4);border-radius:4px;padding:2px 7px;font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:.5px;margin-left:6px">🏥 IP</span>` : '';
-    let cxBadge = (typeof complexityBadge==='function') ? complexityBadge(s.complexity, s.proc) : '';
     let isOpen = expandedCathIds.has(s.id);
     return `
     <div class="cath-card collapsible${isOpen?' open':''}"${s.caseType==='IP'?' style="border-left:3px solid var(--ok)"':''}>
       <div class="cath-card-head" onclick="toggleCathCard('${s.id}')">
         <div style="background:var(--acc);color:#fff;font-family:var(--font-mono);font-size:11px;font-weight:700;padding:4px 9px;border-radius:5px;letter-spacing:.5px">#${idx+1}</div>
-        <div class="cath-name" style="flex:1">${escapeHtml(s.name||'—')}${ipBadge}${cxBadge}${demoStr?' <span class="cath-demo">· '+escapeHtml(demoStr)+'</span>':''}</div>
+        <div class="cath-name" style="flex:1">${escapeHtml(s.name||'—')}${ipBadge}${demoStr?' <span class="cath-demo">· '+escapeHtml(demoStr)+'</span>':''}</div>
         ${(()=>{
         if(s.caseType==='IP' && s.sourceEndoId && window.S.endorsements && window.S.endorsements[s.sourceEndoId]){
           let _e=window.S.endorsements[s.sourceEndoId];
@@ -5592,11 +5590,10 @@ function renderCathCalendar(){
             if(s.age) demo.push(s.age + 'y');
             if(s.nationality) demo.push(s.nationality);
             let demoStr = demo.join(' · ');
-            let _cxB = (typeof complexityBadge==='function') ? complexityBadge(s.complexity, s.proc) : '';
             return `<div class="cath-card" style="margin-bottom:8px">
               <div class="cath-card-head">
                 <div style="background:var(--acc);color:#fff;font-family:var(--font-mono);font-size:11px;font-weight:700;padding:4px 9px;border-radius:5px;letter-spacing:.5px">#${idx+1}</div>
-                <div class="cath-name" style="flex:1">${escapeHtml(s.name||'—')}${_cxB}${demoStr?' <span class="cath-demo">· '+escapeHtml(demoStr)+'</span>':''}</div>
+                <div class="cath-name" style="flex:1">${escapeHtml(s.name||'—')}${demoStr?' <span class="cath-demo">· '+escapeHtml(demoStr)+'</span>':''}</div>
                 ${(()=>{
         if(s.caseType==='IP' && s.sourceEndoId && window.S.endorsements && window.S.endorsements[s.sourceEndoId]){
           let _e=window.S.endorsements[s.sourceEndoId];
@@ -5694,7 +5691,6 @@ function renderCathScheduled(){
     if(s.nationality) demo.push(s.nationality);
     let demoStr = demo.join(' · ');
     let ipBadge = (s.caseType === 'IP') ? `<span style="background:rgba(52,211,153,.15);color:var(--ok);border:1px solid rgba(52,211,153,.4);border-radius:4px;padding:2px 7px;font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:.5px;margin-left:6px">🏥 IP</span>` : '';
-    let cxBadge = (typeof complexityBadge==='function') ? complexityBadge(s.complexity, s.proc) : '';
     let isOpen = expandedCathIds.has(s.id);
     return `
     <div class="cath-card collapsible${isOpen?' open':''}"${s.caseType==='IP'?' style="border-left:3px solid var(--ok)"':''}>
@@ -5706,7 +5702,7 @@ function renderCathScheduled(){
         }
         return '';
       })()}
-        <div class="cath-name">${escapeHtml(s.name||'—')}${ipBadge}${cxBadge}${demoStr?' <span class="cath-demo">· '+escapeHtml(demoStr)+'</span>':''}</div>
+        <div class="cath-name">${escapeHtml(s.name||'—')}${ipBadge}${demoStr?' <span class="cath-demo">· '+escapeHtml(demoStr)+'</span>':''}</div>
         <div class="cath-date">${fmtDate(s.date)}</div>
         <div class="cath-chevron">▾</div>
       </div>
@@ -8039,11 +8035,12 @@ console.info('[MKH] v3.2 enhancements loaded — bulk actions · lab flags · st
 
 
 // ============================================================
-// #12 — CATH CASE COMPLEXITY: helpers
-// inferComplexity(procText) — auto-derive a complexity bucket from the
-//                             procedure name when none has been set
-// complexityBadge(cx, proc)  — render a small pill for the cath card
-// autoSuggestComplexity()    — wired to the procedure dropdown's onchange
+// #12 — CATH CASE COMPLEXITY: helpers (analytics + save-time inference)
+// The manual complexity dropdown was deprecated. Complexity is now
+// auto-derived from the procedure name at save time and used by the
+// admin Analytics tab to compute the case-mix breakdown.
+// inferComplexity(procText) — derive a complexity bucket from the procedure
+// complexityBadge(cx, proc)  — render a small pill (still used by analytics)
 // ============================================================
 const COMPLEXITY_LABELS = {
   simple:     { short: 'SIMPLE',     full: 'Simple',     cls: 'cath-cx-simple' },
@@ -8091,14 +8088,9 @@ window.complexityBadge = function(complexity, procText){
 // When the procedure dropdown changes, auto-fill the complexity dropdown
 // IF the complexity field is currently empty (so we never overwrite a
 // manual choice the user has already made).
-window.autoSuggestComplexity = function(){
-  let procEl = document.getElementById('cath-sch-proc');
-  let cxEl   = document.getElementById('cath-sch-cx');
-  if(!procEl || !cxEl) return;
-  if(cxEl.value) return;          // user already picked something — leave it
-  let suggested = window.inferComplexity(procEl.value);
-  if(suggested) cxEl.value = suggested;
-};
+// (Removed: the manual complexity dropdown was deprecated. Complexity is
+// now auto-derived from the procedure at save time, so this helper is no
+// longer needed.)
 
 
 // ============================================================
@@ -8126,118 +8118,114 @@ window.renderHeroCard = function(){
   let meBare = window.bareName(me);
   let now = Date.now();
   const H24 = 24 * 60 * 60 * 1000;
-  let _todayIso = (typeof todayIso === 'function') ? todayIso() : new Date().toISOString().slice(0,10);
 
-  // ---- Stat 1: my stale patients (IP + HF combined) ----
-  // "Mine" = I created OR I last updated. Stale = >24h since last update.
-  // HF Team patients are counted alongside IP patients so doctors see all
-  // their attributable cases in one number.
-  let myStale = [];   // { rec, kind: 'ip' | 'hf' }
-  let myTotal = 0;
+  // Collect every patient (IP + HF) attributable to this doctor.
+  // "Mine" = I created OR I last updated.
+  let mine = [];
   Object.values(window.S.endorsements || {}).forEach(e => {
     let cb = window.canonicalDocName(e.createdBy);
     let ub = window.canonicalDocName(e.updatedBy);
     if(cb === me || ub === me){
-      myTotal++;
       let last = e.updatedAt || e.createdAt || 0;
-      if(last && (now - last) > H24) myStale.push({ rec: e, kind: 'ip' });
+      mine.push({ rec: e, kind: 'ip', last, isStale: last && (now - last) > H24 });
     }
   });
   Object.values(window.S.hfPatients || {}).forEach(p => {
     let cb = window.canonicalDocName(p.createdBy);
     let ub = window.canonicalDocName(p.updatedBy);
     if(cb === me || ub === me){
-      myTotal++;
       let last = p.updatedAt || p.createdAt || 0;
-      if(last && (now - last) > H24) myStale.push({ rec: p, kind: 'hf' });
+      mine.push({ rec: p, kind: 'hf', last, isStale: last && (now - last) > H24 });
     }
   });
 
-  // ---- Stat 2: my cath cases today ----
-  let myCathToday = Object.values(window.S.cathScheduled || {}).filter(s => {
-    if(s.date !== _todayIso) return false;
-    return window.canonicalDocName(s.operator) === me;
-  });
+  // Empty state — show but be quiet about it
+  if(!mine.length){
+    host.innerHTML = `<div class="hero-card">
+      <div class="hero-card-head">
+        <div>
+          <div class="hero-card-title">Welcome back, ${escapeHtml(meBare)}</div>
+          <div class="hero-card-title-sub">No patients attributed to you yet</div>
+        </div>
+        <button class="hero-card-dismiss" onclick="dismissHero()" title="Hide for this session">✕</button>
+      </div>
+    </div>`;
+    return;
+  }
 
-  // ---- Stat 3: my on-call status today ----
-  let onCallToday = (window.S.onCall || {})[_todayIso] || {};
-  let myRoles = [];
-  const ROLE_TO_LBL = {
-    first1: 'First',
-    first2: 'First',
-    first3: 'First',
-    ccu: 'CCU',
-    second: 'Second',
-    second2: 'Second',
-    interv: 'Interventional'
+  // Sort: stale first (oldest update first), then by ward → bed.
+  // This way the most-overdue patient lands at the top.
+  const wardOrder = (w) => {
+    if(w === 'Ward 4') return 0;
+    if(w === 'CCU')    return 1;
+    if(w === 'HF Team') return 2; // synthetic ward used for sort only
+    return 3;
   };
-  Object.keys(ROLE_TO_LBL).forEach(k => {
-    if(window.canonicalDocName(onCallToday[k]) === me) myRoles.push(ROLE_TO_LBL[k]);
+  mine.sort((a,b) => {
+    if(a.isStale !== b.isStale) return a.isStale ? -1 : 1;
+    if(a.isStale && b.isStale) return (a.last||0) - (b.last||0); // oldest stale on top
+    let aw = a.kind === 'hf' ? 'HF Team' : (a.rec.ward||'');
+    let bw = b.kind === 'hf' ? 'HF Team' : (b.rec.ward||'');
+    let wd = wardOrder(aw) - wardOrder(bw);
+    if(wd !== 0) return wd;
+    // Same ward → sort by bed numerically when possible
+    let abed = parseInt((a.rec.bed||'').replace(/\D/g,'')) || 0;
+    let bbed = parseInt((b.rec.bed||'').replace(/\D/g,'')) || 0;
+    return abed - bbed;
   });
-  // Dedupe (e.g. someone won't be First × 2)
-  myRoles = [...new Set(myRoles)];
 
-  // ---- Build the card ----
-  let staleStat = myStale.length
-    ? `<div class="hero-stat warn" onclick="filterMyStaleAndScroll()" title="Click to scroll to your stale patients">
-         <div class="hero-stat-lbl">My Stale Patients</div>
-         <div class="hero-stat-val">${myStale.length}</div>
-         <div class="hero-stat-detail">${myStale.length} of ${myTotal} not updated &gt;24 h</div>
-       </div>`
-    : (myTotal
-        ? `<div class="hero-stat ok" title="All your patients are up to date">
-             <div class="hero-stat-lbl">My Patients</div>
-             <div class="hero-stat-val">${myTotal}</div>
-             <div class="hero-stat-detail">All up to date ✓</div>
-           </div>`
-        : `<div class="hero-stat muted" title="No patients attributed to you yet">
-             <div class="hero-stat-lbl">My Patients</div>
-             <div class="hero-stat-val">0</div>
-             <div class="hero-stat-detail">Nothing assigned to you</div>
-           </div>`);
+  // Format "29 h" / "3 d" stale duration label
+  function staleLbl(last){
+    if(!last) return '';
+    let h = Math.floor((now - last) / (60*60*1000));
+    if(h < 48) return h + ' h';
+    return Math.floor(h/24) + ' d';
+  }
 
-  let cathStat = myCathToday.length
-    ? `<div class="hero-stat ok" onclick="goCathFromHero()" title="Open the cathlab — Today">
-         <div class="hero-stat-lbl">My Cath Cases · Today</div>
-         <div class="hero-stat-val">${myCathToday.length}</div>
-         <div class="hero-stat-detail">${myCathToday.map(c => c.proc||'—').slice(0,2).join(' · ')}${myCathToday.length>2?' …':''}</div>
-       </div>`
-    : `<div class="hero-stat muted" title="No cath cases assigned to you for today">
-         <div class="hero-stat-lbl">My Cath Cases · Today</div>
-         <div class="hero-stat-val">0</div>
-         <div class="hero-stat-detail">Nothing in lab today</div>
-       </div>`;
+  // Render up to 5 rows by default; rest behind a toggle.
+  const VISIBLE = 5;
+  let expanded = !!window._heroExpanded;
+  let visible = (mine.length <= VISIBLE || expanded) ? mine : mine.slice(0, VISIBLE);
 
-  let oncallStat = myRoles.length
-    ? `<div class="hero-stat warn" onclick="goOncallFromHero()" title="Open the on-call calendar">
-         <div class="hero-stat-lbl">My On-Call · Today</div>
-         <div class="hero-stat-val">${escapeHtml(myRoles.join(' · '))}</div>
-         <div class="hero-stat-detail">15:00 → 08:00 next day</div>
-       </div>`
-    : `<div class="hero-stat muted" title="You're not on-call today">
-         <div class="hero-stat-lbl">My On-Call · Today</div>
-         <div class="hero-stat-val">Off</div>
-         <div class="hero-stat-detail">Not on the roster today</div>
-       </div>`;
+  let rows = visible.map((m, idx) => {
+    let r = m.rec;
+    let location = m.kind === 'hf'
+      ? 'HF Team'
+      : `${abbrevWard(r.ward||'')||'—'} · ${bedLabel(r.bed||'—')}`;
+    let dotCls = m.isStale ? 'stale' : 'fresh';
+    let badge = m.isStale ? `<span class="hero-row-badge">${staleLbl(m.last)}</span>` : '';
+    return `<div class="hero-row" onclick="goToMyPatient('${m.kind}','${escapeHtml(r.id)}')" title="Open this patient">
+      <span class="hero-row-dot ${dotCls}"></span>
+      <span class="hero-row-name">${escapeHtml(r.name||'—')}</span>
+      <span class="hero-row-loc">${escapeHtml(location)}</span>
+      ${badge}
+      <span class="hero-row-arrow">→</span>
+    </div>`;
+  }).join('');
 
-  let dayLbl = new Date().toLocaleDateString('en-GB', { weekday:'long', day:'2-digit', month:'short' });
+  let toggleRow = '';
+  if(mine.length > VISIBLE){
+    toggleRow = expanded
+      ? `<div class="hero-row-toggle" onclick="toggleHeroExpanded()">▴ Show less</div>`
+      : `<div class="hero-row-toggle" onclick="toggleHeroExpanded()">+ ${mine.length - VISIBLE} more ▾</div>`;
+  }
+
+  let staleCount = mine.filter(m => m.isStale).length;
+  let subtitle = staleCount
+    ? `${mine.length} patient${mine.length>1?'s':''} · ${staleCount} not updated &gt;24 h`
+    : `${mine.length} patient${mine.length>1?'s':''} · all up to date`;
 
   host.innerHTML = `<div class="hero-card">
     <div class="hero-card-head">
       <div>
         <div class="hero-card-title">Welcome back, ${escapeHtml(meBare)}</div>
-        <div class="hero-card-title-sub">${escapeHtml(dayLbl)} · your day at a glance</div>
+        <div class="hero-card-title-sub">${subtitle}</div>
       </div>
       <button class="hero-card-dismiss" onclick="dismissHero()" title="Hide for this session">✕</button>
     </div>
-    <div class="hero-stat-grid">
-      ${staleStat}
-      ${cathStat}
-      ${oncallStat}
-    </div>
-    <div class="hero-card-foot">
-      <span>Tip: tap any stat to jump to the relevant tab.</span>
-      <span><a onclick="exportMyOncallIcs()">Export my on-call →</a></span>
+    <div class="hero-row-list">
+      ${rows}
+      ${toggleRow}
     </div>
   </div>`;
 };
@@ -8248,111 +8236,66 @@ window.dismissHero = function(){
   if(h) h.innerHTML = '';
 };
 
-// Cycles through ALL of the doctor's stale patients (IP + HF) on repeated taps.
-// Each tap advances to the next stale patient, switching to the HF section
-// if the next one is an HF Team patient. Wraps around at the end.
-window._myStaleCycleIdx = 0;
-window._myStaleCycleStamp = 0;
-window.filterMyStaleAndScroll = function(){
-  let me = window.canonicalDocName(window.currentDoctor);
-  if(!me) return;
+window.toggleHeroExpanded = function(){
+  window._heroExpanded = !window._heroExpanded;
+  if(typeof renderHeroCard === 'function') renderHeroCard();
+};
+
+// Direct jump from a hero-card row to that specific patient's card.
+// Switches tab/filter as needed, scrolls to the card, and highlights it.
+window.goToMyPatient = function(kind, id){
   let now = Date.now();
   const H24 = 24 * 60 * 60 * 1000;
 
-  // Build the same list the hero card built — IP + HF, stale only, mine only.
-  let myStale = [];
-  Object.values(window.S.endorsements || {}).forEach(e => {
-    let last = e.updatedAt || e.createdAt || 0;
-    if((window.canonicalDocName(e.createdBy) === me || window.canonicalDocName(e.updatedBy) === me) &&
-       last && (now - last) > H24){
-      myStale.push({ rec: e, kind: 'ip' });
-    }
-  });
-  Object.values(window.S.hfPatients || {}).forEach(p => {
-    let last = p.updatedAt || p.createdAt || 0;
-    if((window.canonicalDocName(p.createdBy) === me || window.canonicalDocName(p.updatedBy) === me) &&
-       last && (now - last) > H24){
-      myStale.push({ rec: p, kind: 'hf' });
-    }
-  });
-
-  if(!myStale.length){ alert('No stale patients of yours found.'); return; }
-
-  // If the user clicked the tile again within 30 s, advance the cursor.
-  // Otherwise reset to the first one.
-  if(now - window._myStaleCycleStamp < 30000){
-    window._myStaleCycleIdx = (window._myStaleCycleIdx + 1) % myStale.length;
-  } else {
-    window._myStaleCycleIdx = 0;
-  }
-  window._myStaleCycleStamp = now;
-
-  let target = myStale[window._myStaleCycleIdx];
-
-  if(target.kind === 'ip'){
-    if(typeof filterByWard === 'function' && currentWardFilter !== 'all'){
-      filterByWard('all');
+  if(kind === 'ip'){
+    let rec = window.S.endorsements && window.S.endorsements[id];
+    if(!rec) return;
+    let last = rec.updatedAt || rec.createdAt || 0;
+    let highlight = (last && (now - last) > H24) ? 'var(--warn)' : 'var(--acc)';
+    // Make sure we're on the IP tab and All filter so the card is visible
+    if(typeof currentWardFilter !== 'undefined' && currentWardFilter !== 'all'){
+      if(typeof filterByWard === 'function') filterByWard('all');
     }
     setTimeout(()=>{
-      let card = document.querySelector(`.endo-card[data-endo-id="${target.rec.id}"]`);
+      let card = document.querySelector(`.endo-card[data-endo-id="${id}"]`);
       if(card){
         card.scrollIntoView({ behavior:'smooth', block:'center' });
-        card.style.outline = '2px solid var(--warn)';
+        card.style.outline = '2px solid ' + highlight;
         setTimeout(()=>{ card.style.outline = ''; }, 1800);
       }
-      _showStaleCounter();
     }, 80);
-  } else {
-    // HF: switch to HF Team filter, then expand & scroll to the card
-    if(typeof filterByWard === 'function'){
-      filterByWard('hf');
-    }
+  } else if(kind === 'hf'){
+    let rec = window.S.hfPatients && window.S.hfPatients[id];
+    if(!rec) return;
+    let last = rec.updatedAt || rec.createdAt || 0;
+    let highlight = (last && (now - last) > H24) ? 'var(--warn)' : 'var(--acc)';
+    if(typeof filterByWard === 'function') filterByWard('hf');
     setTimeout(()=>{
-      if(window.expandedHFIds && !window.expandedHFIds.has(target.rec.id)){
-        window.expandedHFIds.add(target.rec.id);
+      // Auto-expand the card
+      if(window.expandedHFIds && !window.expandedHFIds.has(id)){
+        window.expandedHFIds.add(id);
         if(typeof renderHFList === 'function') renderHFList();
       }
       setTimeout(()=>{
-        // HF cards don't carry a data-* hook — find by name+MRN as fallback
+        // HF cards don't carry a data-* hook — match by name + MRN
         let cards = document.querySelectorAll('#hfList .endo-card');
         let match = null;
         cards.forEach(c => {
           if(match) return;
           let nm = c.querySelector('.endo-name')?.innerText || '';
           let mr = c.querySelector('.endo-mrn')?.innerText || '';
-          if(nm.includes(target.rec.name||'') && mr.includes(target.rec.mrn||'')) match = c;
+          if(nm.includes(rec.name||'') && mr.includes(rec.mrn||'')) match = c;
         });
         if(match){
           match.scrollIntoView({ behavior:'smooth', block:'center' });
-          match.style.outline = '2px solid var(--warn)';
+          match.style.outline = '2px solid ' + highlight;
           setTimeout(()=>{ match.style.outline = ''; }, 1800);
         }
-        _showStaleCounter();
       }, 80);
     }, 100);
   }
+};
 
-  function _showStaleCounter(){
-    // Tiny toast so the doctor knows there are more to step through
-    let prev = document.getElementById('staleCycleToast');
-    if(prev) prev.remove();
-    if(myStale.length < 2) return;
-    let t = document.createElement('div');
-    t.id = 'staleCycleToast';
-    t.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--sur2);border:1px solid var(--warn);color:var(--txt);padding:8px 14px;border-radius:8px;font-family:var(--font-mono);font-size:11px;z-index:9999;box-shadow:0 4px 14px rgba(0,0,0,.4);letter-spacing:.04em';
-    t.innerText = `Stale ${window._myStaleCycleIdx+1} of ${myStale.length} · tap "My Stale" again for next`;
-    document.body.appendChild(t);
-    setTimeout(()=>{ if(t.parentNode) t.remove(); }, 3500);
-  }
-};
-window.goCathFromHero = function(){
-  let tab = document.querySelector('#mainTabs .tab[onclick*="\'cath\'"]');
-  if(tab) tab.click();
-};
-window.goOncallFromHero = function(){
-  let tab = document.querySelector('#mainTabs .tab[onclick*="\'oncall\'"]');
-  if(tab) tab.click();
-};
 
 
 // ============================================================
@@ -8736,7 +8679,6 @@ window.renderBackupStats = function(){
     { lbl: 'IP Patients',          val: n(window.S.endorsements) },
     { lbl: 'Cath Scheduled',       val: n(window.S.cathScheduled) },
     { lbl: 'Cath Waiting',         val: n(window.S.cathPending) },
-    { lbl: 'On-Call Days',         val: n(window.S.onCall) },
     { lbl: 'OPD Logs',             val: (window.S.logs||[]).length + (window.S.oplogs||[]).length + (window.S.eplogs||[]).length },
     { lbl: 'Echo List',            val: n(window.S.echoList) },
     { lbl: 'HF Patients',          val: n(window.S.hfPatients) },
@@ -8864,11 +8806,6 @@ window.renderAnalytics = function(){
     let t = e.createdAt || 0;
     if(t >= monthStart && t < monthEnd) admitCount++;
   });
-  // Discharges = removals (type ip) with ts in month
-  let dischargeCount = (window.S.removals || []).filter(r => {
-    if(r.type !== 'ip') return false;
-    return r.ts >= monthStart && r.ts < monthEnd;
-  }).length;
 
   // ===== Render =====
   let html = '';
@@ -8879,8 +8816,6 @@ window.renderAnalytics = function(){
     <div class="an-stat-grid">
       <div class="an-stat"><div class="an-stat-lbl">Cath Cases</div><div class="an-stat-val">${cathThisMonth.length}</div><div class="an-stat-sub">${resultEntered} with result entered</div></div>
       <div class="an-stat"><div class="an-stat-lbl">IP Admissions</div><div class="an-stat-val">${admitCount}</div><div class="an-stat-sub">created this month</div></div>
-      <div class="an-stat"><div class="an-stat-lbl">IP Discharges</div><div class="an-stat-val">${dischargeCount}</div><div class="an-stat-sub">removed (incl. auto-72h)</div></div>
-      <div class="an-stat"><div class="an-stat-lbl">On-Call Days</div><div class="an-stat-val">${Object.keys(window.S.onCall||{}).filter(k=>k.startsWith(monthIsoPrefix)).length}</div><div class="an-stat-sub">days with any roster</div></div>
     </div>
   </div>`;
 
