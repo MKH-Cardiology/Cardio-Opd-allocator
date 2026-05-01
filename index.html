@@ -614,6 +614,12 @@ header{background:var(--header-gradient);backdrop-filter:blur(14px);-webkit-back
 .endo-ward-chip:hover{border-color:var(--acc-line);color:var(--acc2)}
 .endo-ward-chip.on{background:var(--acc-soft);border-color:var(--acc);color:var(--acc2);box-shadow:0 0 0 1px var(--acc-line)}
 .endo-ward-chip-badge{background:rgba(0,0,0,.28);border-radius:10px;padding:1px 7px;font-size:9px;font-weight:600}
+.endo-ward-filter-wrap{display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.endo-ward-select{background:var(--sur);border:1px solid var(--bor);color:var(--txt);border-radius:10px;padding:9px 34px 9px 14px;cursor:pointer;font-family:var(--font-mono);font-size:11px;letter-spacing:.6px;font-weight:500;outline:none;transition:all .15s;min-width:200px;appearance:none;-webkit-appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--mid) 50%),linear-gradient(135deg,var(--mid) 50%,transparent 50%);background-position:calc(100% - 16px) 50%,calc(100% - 11px) 50%;background-size:5px 5px,5px 5px;background-repeat:no-repeat}
+.endo-ward-select:hover{border-color:var(--acc-line);color:var(--acc2)}
+.endo-ward-select:focus{border-color:var(--acc);box-shadow:0 0 0 1px var(--acc-line)}
+.endo-ward-select option{background:var(--sur);color:var(--txt);font-family:var(--font-mono)}
+.endo-ward-select-stale{background:var(--err);color:#fff;border-radius:8px;padding:3px 8px;font-family:var(--font-mono);font-size:9.5px;font-weight:700;letter-spacing:.5px;display:inline-flex;align-items:center;gap:3px}
 .endo-count-bar{font-family:var(--font-mono);font-size:10px;color:var(--dim);margin-bottom:8px;letter-spacing:.5px;padding-left:3px}
 
 /* Accordion */
@@ -942,16 +948,13 @@ header{background:var(--header-gradient);backdrop-filter:blur(14px);-webkit-back
 
 <!-- IP ENDORSEMENT -->
 <div class="pg" id="pg-endo">
-  <!-- v3.3: My Patients Today hero card (rendered for doctors only) -->
-  <div id="heroMyPatients"></div>
   <div class="endo-toolbar">
     <button class="endo-add-btn" onclick="openEndoForm(null)">＋ New Patient</button>
   </div>
-  <div style="display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap;align-items:center">
-    <button class="endo-mini-btn" onclick="expandAllEndo()">⌄ Expand all</button>
-    <button class="endo-mini-btn" onclick="collapseAllEndo()">⌃ Collapse all</button>
+  <div class="endo-ward-filter-wrap">
+    <select id="endoWardSelect" class="endo-ward-select" onchange="filterByWard(this.value)"></select>
+    <span id="endoWardStaleBadge" class="endo-ward-select-stale" style="display:none"></span>
   </div>
-  <div class="endo-ward-chips" id="endoWardChips"></div>
   <div id="endoCount" class="endo-count-bar"></div>
   <div id="endoList" class="endo-grid"></div>
 
@@ -4194,8 +4197,8 @@ function renderHFList(){
     c.innerHTML = '<div class="endo-empty">No Heart Failure Team patients yet. Click ＋ Add HF Patient above.</div>';
     return;
   }
-  // Refresh chips to update HF count badge
-  if(currentWardFilter === 'hf'){ let chipsEl2 = document.getElementById('endoWardChips'); if(chipsEl2){ let all2=Object.values(window.S.endorsements||{}); let fc2=['Ward 4','CCU']; let wc2={},oc2=0; all2.forEach(e=>{let w=e.ward||'Others';fc2.includes(w)?wc2[w]=(wc2[w]||0)+1:oc2++;}); let hfCt=Object.keys(window.S.hfPatients||{}).length; let html2=`<button class="endo-ward-chip" onclick="filterByWard('all')">All <span class="endo-ward-chip-badge">${all2.length}</span></button>`; fc2.forEach(w=>{html2+=`<button class="endo-ward-chip${currentWardFilter===w?' on':''}" onclick="filterByWard('${w.replace(/'/g,"\\'")}')">${{"Ward 4":"W4","CCU":"CCU"}[w]||w} <span class="endo-ward-chip-badge">${wc2[w]||0}</span></button>`;}); html2+=`<button class="endo-ward-chip" style="border-color:rgba(224,161,74,.35)" onclick="filterByWard('Others')">Others / ICU <span class="endo-ward-chip-badge">${oc2}</span></button><button class="endo-ward-chip on" style="background:rgba(111,134,214,0.18);border-color:rgba(111,134,214,0.45);color:var(--ep2)" onclick="filterByWard('hf')">HF Team <span class="endo-ward-chip-badge">${hfCt}</span></button>`; chipsEl2.innerHTML=html2; } }
+  // Refresh dropdown to update HF count badge
+  if(currentWardFilter === 'hf'){ let selEl2 = document.getElementById('endoWardSelect'); if(selEl2){ let all2=Object.values(window.S.endorsements||{}); let fc2=['Ward 4','CCU']; let wc2={},oc2=0; all2.forEach(e=>{let w=e.ward||'Others';fc2.includes(w)?wc2[w]=(wc2[w]||0)+1:oc2++;}); let hfCt=Object.keys(window.S.hfPatients||{}).length; let _wl2={"Ward 4":"W4","CCU":"CCU"}; let opts2=`<option value="all">All — ${all2.length} patient${all2.length===1?'':'s'}</option>`; fc2.forEach(w=>{opts2+=`<option value="${w}">${_wl2[w]||w} — ${wc2[w]||0}</option>`;}); opts2+=`<option value="Others">Others / ICU — ${oc2}</option><option value="hf" selected>HF Team — ${hfCt}</option>`; selEl2.innerHTML=opts2; } }
   c.innerHTML = all.map(p => {
     let isOpen = expandedHFIds.has(p.id);
     let demoParts = [];
@@ -4248,7 +4251,6 @@ window.filterByWard = function(ward){
   let hfSec = document.getElementById('hfTeamSection');
   let endoListEl = document.getElementById('endoList');
   let endoCountEl = document.getElementById('endoCount');
-  let wardChipsEl = document.getElementById('endoWardChips');
   if(ward === 'hf'){
     // Show HF section, hide main endo list
     if(hfSec) hfSec.style.display = 'block';
@@ -4463,9 +4465,10 @@ function renderEndoList(){
     }
   });
 
-  let chipsEl = document.getElementById('endoWardChips');
-  if(chipsEl){
-    // Count patients > 48h stale across all (for "All" chip warning)
+  let selEl = document.getElementById('endoWardSelect');
+  let staleBadgeEl = document.getElementById('endoWardStaleBadge');
+  if(selEl){
+    // Count patients > 48h stale across all (for stale-warning badge next to dropdown)
     const H48 = 48 * 60 * 60 * 1000;
     let now = Date.now();
     let stale48Count = 0;
@@ -4473,15 +4476,26 @@ function renderEndoList(){
       let last = e.updatedAt || e.createdAt || 0;
       if(last && (now - last) > H48) stale48Count++;
     });
-    let staleBadge = stale48Count ? `<span class="endo-ward-chip-stale" title="${stale48Count} patient(s) not updated in over 48 h">⚠ ${stale48Count}</span>` : '';
-    let chipsHtml = `<button class="endo-ward-chip${currentWardFilter==='all'?' on':''}" onclick="filterByWard('all')">All <span class="endo-ward-chip-badge">${all.length}</span>${staleBadge}</button>`;
-    let _wl = {"Ward 4":"W4","CCU":"CCU"}; fixedWards.forEach(w => {
-      let ct = wardCounts[w]||0;
-      chipsHtml += `<button class="endo-ward-chip${currentWardFilter===w?' on':''}" onclick="filterByWard('${w.replace(/'/g,"\\'")}')">${_wl[w]||w} <span class="endo-ward-chip-badge">${ct}</span></button>`;
-    });
+    let _wl = {"Ward 4":"W4","CCU":"CCU"};
     let hfPtCount = Object.keys(window.S.hfPatients||{}).length;
-    chipsHtml += `<button class="endo-ward-chip${currentWardFilter==='Others'?' on':''}" style="border-color:rgba(224,161,74,.35)" onclick="filterByWard('Others')">Others / ICU <span class="endo-ward-chip-badge">${othersCount}</span></button><button class="endo-ward-chip${currentWardFilter==='hf'?' on':''}" style="background:${currentWardFilter==='hf'?'rgba(111,134,214,0.18)':'rgba(111,134,214,0.06)'};border-color:rgba(111,134,214,0.45);color:var(--ep2)" onclick="filterByWard('hf')">HF Team <span class="endo-ward-chip-badge">${hfPtCount}</span></button>`;
-    chipsEl.innerHTML = chipsHtml;
+    let opts = '';
+    opts += `<option value="all"${currentWardFilter==='all'?' selected':''}>All — ${all.length} patient${all.length===1?'':'s'}</option>`;
+    fixedWards.forEach(w => {
+      let ct = wardCounts[w]||0;
+      opts += `<option value="${w}"${currentWardFilter===w?' selected':''}>${_wl[w]||w} — ${ct}</option>`;
+    });
+    opts += `<option value="Others"${currentWardFilter==='Others'?' selected':''}>Others / ICU — ${othersCount}</option>`;
+    opts += `<option value="hf"${currentWardFilter==='hf'?' selected':''}>HF Team — ${hfPtCount}</option>`;
+    selEl.innerHTML = opts;
+    if(staleBadgeEl){
+      if(stale48Count){
+        staleBadgeEl.style.display = '';
+        staleBadgeEl.textContent = '⚠ ' + stale48Count + ' stale > 48h';
+        staleBadgeEl.title = stale48Count + ' patient(s) not updated in over 48 h';
+      } else {
+        staleBadgeEl.style.display = 'none';
+      }
+    }
   }
 
   // Apply ward filter
