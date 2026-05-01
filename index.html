@@ -208,6 +208,8 @@ textarea{font-family:var(--font-ui);font-size:13px;line-height:1.55;resize:verti
 .btn:hover{filter:brightness(1.08);transform:translateY(-1px);box-shadow:0 1px 0 rgba(255,255,255,0.1) inset,0 4px 10px rgba(58,166,183,0.25)}
 .btn:active{transform:translateY(0)}
 .btn-warn{background:linear-gradient(180deg,var(--err),#b94747);border-color:var(--err);margin-top:10px}
+.btn-secondary{background:var(--sur2)!important;background-image:none!important;border:1px solid var(--bor)!important;color:var(--mid)!important;box-shadow:none!important}
+.btn-secondary:hover{background:var(--sur3)!important;border-color:var(--bor2)!important;color:var(--txt)!important;filter:none}
 .btn:disabled{opacity:0.4;cursor:not-allowed;filter:grayscale(0.8);transform:none;box-shadow:none}
 .lf{display:flex;gap:7px;margin-bottom:12px;flex-wrap:wrap}
 .fb{background:var(--sur2);border:1px solid var(--bor);color:var(--mid);border-radius:var(--r-sm);padding:6px 12px;cursor:pointer;font-family:var(--font-mono);font-size:11px;transition:all .15s;font-weight:500}
@@ -1887,7 +1889,7 @@ header{background:var(--header-gradient);backdrop-filter:blur(14px);-webkit-back
         <label>Doctor PIN</label>
         <input type="password" id="cath-sch-pin" maxlength="6" inputmode="numeric" required>
         <button type="submit" class="btn" style="margin-top:6px" id="cathSchSaveBtn">💾 Save Appointment</button>
-        <button type="button" class="btn" style="margin-top:6px;background:var(--sur2);border:1px solid var(--bor)" onclick="resetCathSchForm()">Cancel</button>
+        <button type="button" class="btn btn-secondary" style="margin-top:6px" onclick="resetCathSchForm()">Cancel</button>
       </form>
     </div>
   </div>
@@ -2236,7 +2238,7 @@ header{background:var(--header-gradient);backdrop-filter:blur(14px);-webkit-back
           <label>Interventionist on-call</label>
           <select id="oncall-interv" data-doc-jump class="fd-sel" style="margin-bottom:14px"></select>
           <button type="submit" class="btn" style="margin-top:6px">💾 Save Roster</button>
-          <button type="button" class="btn" style="margin-top:6px;background:var(--sur2);border:1px solid var(--bor)" onclick="clearOncallDay()">🗑 Clear Day</button>
+          <button type="button" class="btn btn-secondary" style="margin-top:6px" onclick="clearOncallDay()">🗑 Clear Day</button>
         </form>
       </div>
     </div>
