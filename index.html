@@ -163,7 +163,7 @@
 body{background:var(--bg);color:var(--txt);font-family:var(--font-ui);min-height:100vh;-webkit-font-smoothing:antialiased;letter-spacing:-0.01em}
 
 /* ====== HEADER — clinical, with custom medical SVG mark ====== */
-header{padding:13px 18px;border-bottom:1px solid var(--bor);display:flex;align-items:center;gap:12px;background:var(--header-bg);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);position:sticky;top:0;z-index:99}
+header{padding:13px 18px;padding-top:max(13px, env(safe-area-inset-top));border-bottom:1px solid var(--bor);display:flex;align-items:center;gap:12px;background:var(--header-bg);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);position:sticky;top:0;z-index:99}
 .hi{width:40px;height:40px;background:var(--bed-gradient);border:1px solid var(--acc-line);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 2px 8px rgba(58,166,183,0.18),0 0 0 1px rgba(255,255,255,0.03) inset;color:#fff}
 :root[data-theme="dark"] .hi{color:var(--acc2)}
 .hi svg{width:22px;height:22px;display:block}
@@ -768,6 +768,7 @@ header{background:var(--header-gradient);backdrop-filter:blur(14px);-webkit-back
 
   /* Header: shrink padding, allow wrapping, prevent right-edge cropping */
   header{padding:9px 10px;gap:7px;flex-wrap:wrap;
+         padding-top:max(9px, env(safe-area-inset-top));
          padding-left:max(10px, env(safe-area-inset-left));
          padding-right:max(10px, env(safe-area-inset-right))}
   header h1{font-size:13px;line-height:1.15}
@@ -811,7 +812,10 @@ header{background:var(--header-gradient);backdrop-filter:blur(14px);-webkit-back
 
 /* Even tighter for very narrow phones */
 @media (max-width:380px){
-  header{padding:8px 8px;gap:5px}
+  header{padding:8px 8px;gap:5px;
+         padding-top:max(8px, env(safe-area-inset-top));
+         padding-left:max(8px, env(safe-area-inset-left));
+         padding-right:max(8px, env(safe-area-inset-right))}
   header h1{font-size:12px}
   .db{padding:3px 7px;font-size:8.5px}
   .db strong{font-size:11px}
