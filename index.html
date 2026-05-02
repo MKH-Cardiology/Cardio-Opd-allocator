@@ -34,13 +34,13 @@
    Typography: Inter (UI) + JetBrains Mono (data) — no fancy serif
    =========================================================== */
 :root, :root[data-theme="dark"] {
-  /* Surfaces — calm slate, easy on the eyes for long shifts */
-  --bg:#0b1220;
-  --sur:#111a2e;
-  --sur2:#172238;
-  --sur3:#1f2c46;
-  --bor:#243352;
-  --bor2:#2d3e60;
+  /* Surfaces — soft slate (neutral gray-blue), easy on the eyes for long shifts */
+  --bg:#1a1f26;
+  --sur:#222831;
+  --sur2:#2a313c;
+  --sur3:#323a47;
+  --bor:#3a4150;
+  --bor2:#4a5360;
 
   /* Primary clinical accent — medical teal/cyan (not flashy) */
   --acc:#3aa6b7;
@@ -55,10 +55,10 @@
   --crit:#d4576b;        /* critical red, slightly cooler */
 
   /* Text */
-  --txt:#eef2f7;
-  --mid:#c7d0dc;
-  --dim:#8694ab;
-  --dim2:#5d6b82;
+  --txt:#e8edf3;
+  --mid:#b6c0cf;
+  --dim:#7d8696;
+  --dim2:#525c6c;
 
   /* Subtle "EP" kept as a discreet indigo (was purple) */
   --ep:#6f86d6;
@@ -74,13 +74,13 @@
   --pend-tx-line:rgba(96,165,250,0.35);
 
   /* Header bg used in backdrop-filter (rgba form) */
-  --header-bg:rgba(11,18,32,0.92);
-  --modal-bg:rgba(3,7,15,.85);
+  --header-bg:rgba(26,31,38,0.92);
+  --modal-bg:rgba(13,16,20,.85);
 
   /* Multi-stop gradients that need to flip per theme */
-  --body-gradient:linear-gradient(180deg,#0d1628 0%,#0b1220 60%,#070d1a 100%);
-  --header-gradient:linear-gradient(180deg,rgba(13,22,40,0.96) 0%,rgba(11,18,32,0.94) 100%);
-  --role-gate-gradient:radial-gradient(ellipse at center,#142035 0%,#0b1220 65%,#050912 100%);
+  --body-gradient:linear-gradient(180deg,#1d232b 0%,#1a1f26 60%,#15191f 100%);
+  --header-gradient:linear-gradient(180deg,rgba(30,36,44,0.96) 0%,rgba(26,31,38,0.94) 100%);
+  --role-gate-gradient:radial-gradient(ellipse at center,#252c36 0%,#1a1f26 65%,#13161c 100%);
   --role-logo-gradient:linear-gradient(135deg,#1a3a4a 0%,#0e2532 100%);
   --header-shadow:0 1px 0 rgba(255,255,255,0.02) inset, 0 4px 24px rgba(0,0,0,0.3);
   --card-shadow-strong:0 1px 0 rgba(255,255,255,0.02) inset, 0 4px 16px rgba(0,0,0,0.18);
@@ -3753,7 +3753,7 @@ window.toggleTheme = function(){
   try { localStorage.setItem('mkh-theme', next); } catch(e){}
   // Update the iOS / Android status-bar / browser chrome color
   var meta = document.getElementById('themeColorMeta');
-  if (meta) meta.setAttribute('content', next === 'light' ? '#dfe6f0' : '#0b1220');
+  if (meta) meta.setAttribute('content', next === 'light' ? '#dfe6f0' : '#1a1f26');
   // Once the user has used the toggle, dismiss the hint forever
   try { localStorage.setItem('mkh-theme-hint-seen', '1'); } catch(e){}
   var hint = document.getElementById('themeHint');
