@@ -2548,8 +2548,8 @@ header{background:var(--header-gradient);backdrop-filter:blur(14px);-webkit-back
   </div>
 
   <!-- + Schedule TEE — inline form, mirrors Cathlab schedule panel -->
-  <div class="cath-sub" id="echo-teeAdd">
-    <div class="card">
+  <div class="cath-sub" id="echo-teeAdd" style="width:100%">
+    <div class="card" style="max-width:none;width:100%;box-sizing:border-box">
       <div class="rl" style="margin-bottom:10px" id="teeFormTitle">SCHEDULE A TEE APPOINTMENT</div>
       <div id="teeFormEditing" style="display:none;background:rgba(96,165,250,.08);border:1px solid rgba(96,165,250,.3);border-radius:7px;padding:8px 11px;margin-bottom:10px;font-family:var(--font-mono);font-size:10px;color:var(--acc);line-height:1.6">
         Editing existing TEE appointment.
@@ -2636,15 +2636,11 @@ header{background:var(--header-gradient);backdrop-filter:blur(14px);-webkit-back
         </select>
 
         <label>Date</label>
-        <input type="date" id="tee-date" required class="pi">
+        <input type="date" id="tee-date" required style="background:var(--sur2);border:1px solid var(--bor);border-radius:8px;padding:11px 12px;color:var(--txt);font-family:var(--font-mono);font-size:14px;width:100%;max-width:100%;box-sizing:border-box;margin-bottom:9px;-webkit-appearance:none;appearance:none">
 
-        <div style="display:flex;gap:8px;justify-content:space-between;align-items:center;margin-top:14px;flex-wrap:wrap">
-          <button type="button" id="tee-delete-btn" onclick="deleteTeeCase()" style="display:none;background:transparent;border:1px solid rgba(226,100,100,.45);color:var(--err);border-radius:7px;padding:9px 14px;font-family:var(--font-mono);font-size:11px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;cursor:pointer">✕ Delete</button>
-          <div style="display:flex;gap:8px;margin-left:auto;flex-wrap:wrap">
-            <button type="button" class="btn btn-secondary" onclick="resetTeeForm(true);goEchoTab('teeCal',document.getElementById('echo-subtab-teecal'))">Cancel</button>
-            <button type="submit" id="teeFormSaveBtn" class="btn">💾 Save TEE Appointment</button>
-          </div>
-        </div>
+        <button type="submit" id="teeFormSaveBtn" class="btn" style="margin-top:6px">💾 Save TEE Appointment</button>
+        <button type="button" class="btn btn-secondary" style="margin-top:6px" onclick="resetTeeForm(true);goEchoTab('teeCal',document.getElementById('echo-subtab-teecal'))">Cancel</button>
+        <button type="button" id="tee-delete-btn" onclick="deleteTeeCase()" style="display:none;width:100%;background:transparent;border:1px solid rgba(226,100,100,.45);color:var(--err);border-radius:8px;padding:12px;font-family:var(--font-ui);font-size:13.5px;font-weight:600;letter-spacing:0.01em;cursor:pointer;margin-top:6px">✕ Delete Appointment</button>
       </form>
     </div>
   </div>
@@ -4579,7 +4575,7 @@ function renderHFList(){
     if(p.sex) demoParts.push(escapeHtml(p.sex));
     if(p.nationality) demoParts.push(escapeHtml(p.nationality));
     let demoLine = demoParts.length ? `<div class="endo-mrn" style="color:var(--mid)">${demoParts.join(' · ')}</div>` : '';
-    let hftypeBadge = p.hftype ? `<span style="background:rgba(111,134,214,.15);color:var(--ep2);border:1px solid rgba(111,134,214,.4);border-radius:4px;padding:2px 7px;font-family:var(--font-mono);font-size:9px;margin-left:6px;font-weight:600">${escapeHtml(p.hftype)}</span>` : '';
+    let hftypeBadge = p.hftype ? `<span style="display:inline-block;background:rgba(111,134,214,.15);color:var(--ep2);border:1px solid rgba(111,134,214,.4);border-radius:4px;padding:2px 7px;font-family:var(--font-mono);font-size:9px;margin-left:6px;font-weight:600;white-space:nowrap;vertical-align:middle">${escapeHtml(p.hftype)}</span>` : '';
     let reasonSummary = (p.reason||'').trim();
     let summary = reasonSummary ? (reasonSummary.length > 60 ? reasonSummary.slice(0,60).trim()+'…' : reasonSummary) : '';
     return `
