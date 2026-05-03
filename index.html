@@ -367,12 +367,11 @@ hr.adm-hr{border:0;border-top:1px solid var(--bor);margin:20px 0}
 
 /* ============= HOSPITAL NUMBERS PANEL ============= */
 .hosp-search-bar{display:flex;gap:8px;margin-bottom:14px;align-items:center}
-.hosp-search{flex:1;background:var(--sur2);border:1px solid var(--bor);border-radius:8px;padding:11px 14px;color:var(--txt);font-family:var(--font-ui);font-size:13.5px;outline:none;transition:all .15s}
+.hosp-search{flex:1;background:var(--sur2);border:1px solid var(--bor);border-radius:8px;padding:11px 14px;color:var(--txt);font-family:var(--font-ui);font-size:13.5px;outline:none;transition:all .15s;min-width:0}
 .hosp-search:focus{border-color:var(--acc-line);background:rgba(58,166,183,0.04)}
-.hosp-filter-bar{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
-.hosp-filter{background:var(--sur2);border:1px solid var(--bor);color:var(--mid);border-radius:6px;padding:6px 12px;cursor:pointer;font-family:var(--font-mono);font-size:11px;font-weight:500;transition:all .15s}
-.hosp-filter:hover{border-color:var(--bor2)}
-.hosp-filter.on{border-color:var(--acc);color:var(--acc2);background:var(--acc-soft)}
+.hosp-jump{background:var(--sur2);border:1px solid var(--bor);border-radius:8px;padding:11px 12px;color:var(--txt);font-family:var(--font-ui);font-size:12.5px;outline:none;cursor:pointer;flex-shrink:0;max-width:160px}
+.hosp-jump:focus{border-color:var(--acc-line)}
+
 .hosp-grid{display:grid;gap:10px}
 .hosp-card{background:var(--sur);border:1px solid var(--bor);border-radius:10px;padding:13px 15px;display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;transition:border-color .15s}
 .hosp-card:hover{border-color:var(--acc-line)}
@@ -380,14 +379,21 @@ hr.adm-hr{border:0;border-top:1px solid var(--bor);margin:20px 0}
 .hosp-name{font-family:var(--font-ui);font-size:14px;color:var(--txt);font-weight:600;margin-bottom:2px;letter-spacing:-0.01em}
 .hosp-hn{font-family:var(--font-ui);font-size:12px;color:var(--mid);font-weight:500;margin-top:2px}
 .hosp-numbers{display:flex;flex-direction:column;gap:5px;align-items:flex-end}
-.hosp-num-pill{display:flex;align-items:center;gap:6px;background:var(--sur2);border:1px solid var(--bor);border-radius:6px;padding:5px 9px;font-family:var(--font-mono);font-size:11.5px;color:var(--acc2);cursor:pointer;transition:all .15s;font-weight:500;text-decoration:none}
+.hosp-num-pill{display:inline-flex;align-items:center;gap:6px;background:var(--sur2);border:1px solid var(--bor);border-radius:6px;padding:5px 9px;font-family:var(--font-mono);font-size:11.5px;color:var(--acc2);cursor:pointer;transition:all .15s;font-weight:500;text-decoration:none}
 .hosp-num-pill:hover{border-color:var(--acc-line);background:var(--acc-soft)}
 .hosp-num-pill.ext{color:var(--mid)}
 .hosp-num-pill .lbl{font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:0.05em;font-weight:600}
 .hosp-num-pill svg{width:11px;height:11px;flex-shrink:0;opacity:0.7}
+
 .hosp-empty{text-align:center;padding:36px 20px;color:var(--dim);font-family:var(--font-mono);font-size:11px}
 .hosp-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ok);color:#fff;padding:9px 16px;border-radius:8px;font-family:var(--font-ui);font-size:13px;font-weight:500;box-shadow:var(--shadow-pop);z-index:300;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s}
 .hosp-toast.show{opacity:1;transform:translateX(-50%) translateY(-4px)}
+
+@media (max-width: 480px){
+  .hosp-jump{max-width:130px;font-size:11.5px}
+  .hosp-card{grid-template-columns:1fr;gap:8px}
+  .hosp-numbers{flex-direction:row;flex-wrap:wrap;align-items:flex-start;justify-content:flex-start}
+}
 
 /* ============= PREMIUM MEDICAL OVERRIDES ============= */
 body{background:var(--body-gradient);background-attachment:fixed}
@@ -488,6 +494,8 @@ header{background:var(--header-gradient);backdrop-filter:blur(14px);-webkit-back
 .cath-subtab.on{background:var(--acc-soft);color:var(--acc2);box-shadow:0 1px 4px rgba(0,0,0,.15)}
 .cath-sub{display:none}
 .cath-sub.on{display:block}
+.echo-count-badge{display:inline-flex;align-items:center;justify-content:center;background:var(--sur3);border:1px solid var(--bor);color:var(--mid);font-family:var(--font-mono);font-size:9px;font-weight:600;border-radius:9px;padding:1px 6px;margin-left:6px;letter-spacing:.04em;min-width:18px;text-transform:none}
+.cath-subtab.on .echo-count-badge{background:var(--acc-soft);border-color:var(--acc-line);color:var(--acc2)}
 .cath-card{background:var(--sur);border:1px solid var(--bor);border-radius:12px;padding:14px;margin-bottom:10px}
 .cath-card-head{display:flex;align-items:center;gap:10px;margin-bottom:10px;padding-bottom:10px;border-bottom:1px dashed var(--bor);flex-wrap:wrap}
 .cath-name{font-family:var(--font-ui);font-size:18px;color:var(--txt);flex:1;min-width:140px;line-height:1.15}
@@ -595,6 +603,18 @@ header{background:var(--header-gradient);backdrop-filter:blur(14px);-webkit-back
 .today-stat-val{font-family:var(--font-ui);font-size:26px;line-height:1}
 
 /* ============= CALENDAR ============= */
+/* Accordion bar — collapsed calendar trigger */
+.cal-accordion-bar{display:flex;align-items:center;gap:10px;width:100%;background:var(--sur);border:1px solid var(--bor);border-radius:10px;padding:11px 14px;cursor:pointer;font-family:var(--font-ui);transition:all .15s;margin-bottom:10px;text-align:left}
+.cal-accordion-bar:hover{border-color:var(--acc-line);background:rgba(58,166,183,.04)}
+.cal-accordion-bar:focus{outline:2px solid var(--acc-line);outline-offset:2px}
+.cal-accordion-icon{font-size:17px;line-height:1;flex-shrink:0}
+.cal-accordion-label{font-size:14px;color:var(--txt);font-weight:600;letter-spacing:.2px;flex-shrink:0}
+.cal-accordion-hint{flex:1;font-family:var(--font-mono);font-size:10px;color:var(--dim);letter-spacing:.04em;text-align:right}
+.cal-accordion-chev{font-size:12px;color:var(--mid);transition:transform .2s;flex-shrink:0;margin-left:6px}
+.cal-accordion-bar.expanded{border-color:var(--acc-line);background:var(--acc-soft)}
+.cal-accordion-bar.expanded .cal-accordion-chev{transform:rotate(180deg);color:var(--acc2)}
+.cal-accordion-bar.expanded .cal-accordion-hint{color:var(--acc2)}
+.cal-accordion-body{margin-bottom:10px}
 .cal-toolbar{display:flex;align-items:center;gap:10px;margin-bottom:12px;background:var(--sur);border:1px solid var(--bor);border-radius:10px;padding:8px 10px}
 .cal-month-label{flex:1;text-align:center;font-family:var(--font-ui);font-size:17px;color:var(--txt);letter-spacing:.3px}
 .cal-nav-btn{background:var(--sur2);border:1px solid var(--bor);border-radius:7px;color:var(--mid);width:36px;height:32px;cursor:pointer;font-size:12px;font-family:var(--font-mono);transition:all .15s}
@@ -620,6 +640,17 @@ header{background:var(--header-gradient);backdrop-filter:blur(14px);-webkit-back
 .cal-day-detail-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;padding-bottom:10px;border-bottom:1px dashed var(--bor);flex-wrap:wrap;gap:8px}
 .cal-day-detail-title{font-family:var(--font-ui);font-size:17px;color:var(--txt)}
 .cal-day-detail-stats{display:flex;gap:8px;flex-wrap:wrap}
+
+/* TEE case cards (rendered inside the day-detail pane) */
+.tee-card{background:var(--sur2);border:1px solid var(--bor);border-radius:9px;padding:10px 12px;margin-bottom:8px;cursor:pointer;transition:border-color .15s,background .15s}
+.tee-card:hover{border-color:var(--acc-line);background:var(--sur3)}
+.tee-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:5px}
+.tee-card-name{font-family:var(--font-ui);font-size:14px;font-weight:600;color:var(--txt);min-width:0;flex:1}
+.tee-card-pills{display:flex;gap:5px;flex-wrap:wrap}
+.tee-pill{display:inline-flex;align-items:center;font-family:var(--font-mono);font-size:9.5px;font-weight:600;letter-spacing:.04em;border-radius:5px;padding:2px 7px;white-space:nowrap}
+.tee-card-meta{font-family:var(--font-mono);font-size:10.5px;color:var(--dim);margin-bottom:4px;letter-spacing:.02em}
+.tee-card-ind{font-family:var(--font-ui);font-size:12.5px;color:var(--mid);line-height:1.5;margin-top:5px;padding-top:5px;border-top:1px dashed var(--bor)}
+.tee-card-ind-label{font-family:var(--font-mono);font-size:9.5px;color:var(--dim);letter-spacing:.08em;text-transform:uppercase;font-weight:600;margin-right:4px}
 .cal-day-chip{background:var(--sur2);border:1px solid var(--bor);border-radius:5px;padding:3px 9px;font-family:var(--font-mono);font-size:10px;color:var(--mid)}
 .cal-day-chip b{color:var(--acc2)}
 .endo-ward-chip:hover{border-color:var(--acc-line);color:var(--acc2)}
@@ -639,9 +670,17 @@ header{background:var(--header-gradient);backdrop-filter:blur(14px);-webkit-back
 .endo-card-toggle{cursor:pointer;user-select:none;margin-bottom:0;padding-bottom:10px;border-bottom:0;transition:background .15s}
 .endo-card.open .endo-card-toggle{border-bottom:1px dashed var(--bor);margin-bottom:10px}
 .endo-card-toggle:hover{background:rgba(96,165,250,.03)}
-.endo-chevron{color:var(--dim);font-size:18px;line-height:1;flex-shrink:0;transition:transform .25s,color .15s;padding-left:8px}
+.endo-chevron{color:var(--dim);font-size:18px;line-height:1;flex-shrink:0;transition:transform .25s,color .15s;padding-left:4px}
 .endo-card.open .endo-chevron{transform:rotate(180deg);color:var(--acc)}
 .endo-card-toggle:hover .endo-chevron{color:var(--acc)}
+/* Header icon buttons — small square actions next to the chevron (e.g. PDF export) */
+.endo-head-icons{display:flex;align-items:center;gap:3px;flex-shrink:0;margin-left:auto}
+.endo-icon-btn{background:transparent;border:1px solid transparent;border-radius:6px;width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;color:var(--dim);font-size:14px;line-height:1;padding:0;font-family:inherit}
+.endo-icon-btn:hover{background:rgba(111,134,214,.1);border-color:rgba(111,134,214,.3);color:var(--ep2)}
+.endo-icon-btn:active{transform:scale(.94)}
+.endo-icon-btn:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
+.endo-icon-btn.pdf{width:auto;height:24px;padding:0 8px;font-family:var(--font-mono);font-size:9.5px;font-weight:700;letter-spacing:.06em;border-color:rgba(111,134,214,.3);color:var(--ep2);background:rgba(111,134,214,.06)}
+.endo-icon-btn.pdf:hover{background:rgba(111,134,214,.18);border-color:rgba(111,134,214,.5);color:var(--ep2)}
 .endo-card-body{display:none}
 .endo-card.open .endo-card-body{display:block;animation:fadeIn .18s}
 .endo-mini-btn{background:var(--sur);border:1px solid var(--bor);color:var(--dim);border-radius:6px;padding:5px 11px;font-family:var(--font-mono);font-size:10px;letter-spacing:.4px;cursor:pointer;transition:all .15s}
@@ -997,7 +1036,7 @@ header{background:var(--header-gradient);backdrop-filter:blur(14px);-webkit-back
   <button class="tab" data-role="registrar admin" onclick="goTab('endo',this)">IP Patient's List</button>
   <button class="tab" data-role="registrar admin" onclick="goTab('cath',this)">Cathlab</button>
   <button class="tab" data-role="registrar admin" onclick="goTab('census',this)">Census</button>
-  <button class="tab" data-role="registrar admin" onclick="goTab('echolist',this)">IP Echo List</button>
+  <button class="tab" data-role="registrar admin" onclick="goTab('echolist',this)">Echo List</button>
   <button class="tab" data-role="registrar admin" onclick="goTab('oncall',this)">On Call</button>
   <button class="tab" data-role="registrar admin" onclick="goTab('hosp',this)">Hospital Numbers</button>
   <button class="tab" data-role="admin" onclick="goTab('adm',this)">Admin</button>
@@ -2250,17 +2289,12 @@ header{background:var(--header-gradient);backdrop-filter:blur(14px);-webkit-back
     <div style="font-family:var(--font-mono);font-size:10px;color:var(--dim);line-height:1.6;margin-bottom:12px">
       Tap any day in the calendar to view its on-call team.
     </div>
-    <div class="cal-legend" style="display:flex;flex-wrap:wrap;gap:8px 14px;font-family:var(--font-mono);font-size:10px;color:var(--dim);margin-bottom:10px;align-items:center">
-      <span style="display:inline-flex;align-items:center;gap:5px"><span style="width:12px;height:12px;border-radius:3px;background:rgba(250,204,21,.18);border:1px solid rgba(250,204,21,.35);display:inline-block"></span>Thu</span>
-      <span style="display:inline-flex;align-items:center;gap:5px"><span style="width:12px;height:12px;border-radius:3px;background:rgba(245,158,11,.20);border:1px solid rgba(245,158,11,.45);display:inline-block"></span>Weekend (Fri / Sat)</span>
-      <span style="display:inline-flex;align-items:center;gap:5px"><span style="width:12px;height:12px;border-radius:3px;background:rgba(168,85,247,.20);border:1px solid rgba(168,85,247,.5);display:inline-block"></span>Eid (May 26–30)</span>
-    </div>
-    <div class="cal-toolbar">
-      <button class="cal-nav-btn" onclick="shiftOncallMonth(-1)">◀</button>
-      <div class="cal-month-label" id="oncallMonthLabel">—</div>
-      <button class="cal-nav-btn" onclick="shiftOncallMonth(1)">▶</button>
-      <button class="cal-today-btn" onclick="jumpOncallToday()">Today</button>
-    </div>
+    <button type="button" class="cal-accordion-bar" id="oncallCalBar" onclick="toggleOncallCalendar()">
+      <span class="cal-accordion-icon" style="display:inline-flex;align-items:center;justify-content:center;color:var(--acc2);width:18px;height:18px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18"/><path d="M8 3v4"/><path d="M16 3v4"/></svg></span>
+      <span class="cal-accordion-label" id="oncallCalBarLabel">—</span>
+      <span class="cal-accordion-hint" id="oncallCalBarHint">tap to view calendar</span>
+      <span class="cal-accordion-chev" id="oncallCalBarChev">▾</span>
+    </button>
 
     <!-- Admin-only search: by doctor name, specific date, month, or period -->
     <div id="oncallAdminSearch" class="apgate-content" style="display:none;background:var(--sur2);border:1px solid var(--bor);border-radius:10px;padding:10px 12px;margin:10px 0">
@@ -2288,10 +2322,24 @@ header{background:var(--header-gradient);backdrop-filter:blur(14px);-webkit-back
       </div>
       <div id="oncallSearchResults" style="margin-top:10px;display:none"></div>
     </div>
-    <div class="cal-weekdays">
-      <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+
+    <div class="cal-accordion-body" id="oncallCalBody" style="display:none">
+      <div class="cal-legend" style="display:flex;flex-wrap:wrap;gap:8px 14px;font-family:var(--font-mono);font-size:10px;color:var(--dim);margin-bottom:10px;align-items:center">
+        <span style="display:inline-flex;align-items:center;gap:5px"><span style="width:12px;height:12px;border-radius:3px;background:rgba(250,204,21,.18);border:1px solid rgba(250,204,21,.35);display:inline-block"></span>Thu</span>
+        <span style="display:inline-flex;align-items:center;gap:5px"><span style="width:12px;height:12px;border-radius:3px;background:rgba(245,158,11,.20);border:1px solid rgba(245,158,11,.45);display:inline-block"></span>Weekend (Fri / Sat)</span>
+        <span style="display:inline-flex;align-items:center;gap:5px"><span style="width:12px;height:12px;border-radius:3px;background:rgba(168,85,247,.20);border:1px solid rgba(168,85,247,.5);display:inline-block"></span>Eid (May 26–30)</span>
+      </div>
+      <div class="cal-toolbar">
+        <button class="cal-nav-btn" onclick="shiftOncallMonth(-1)">◀</button>
+        <div class="cal-month-label" id="oncallMonthLabel">—</div>
+        <button class="cal-nav-btn" onclick="shiftOncallMonth(1)">▶</button>
+        <button class="cal-today-btn" onclick="jumpOncallToday()">Today</button>
+      </div>
+      <div class="cal-weekdays">
+        <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+      </div>
+      <div class="cal-grid" id="oncallGrid"></div>
     </div>
-    <div class="cal-grid" id="oncallGrid"></div>
     <div id="oncallDayDetail"></div>
   </div>
 
@@ -2344,8 +2392,10 @@ header{background:var(--header-gradient);backdrop-filter:blur(14px);-webkit-back
     </div>
     <div class="hosp-search-bar">
       <input type="text" class="hosp-search" id="hospSearch" placeholder="Search ward, location, or head nurse…" oninput="renderHospNumbers()">
+      <select class="hosp-jump" id="hospJump" onchange="hospJumpToWard(this.value)" aria-label="Jump to ward">
+        <option value="">Select ward…</option>
+      </select>
     </div>
-    <div class="hosp-filter-bar" id="hospFilterBar"></div>
     <div id="hospGrid" class="hosp-grid"></div>
   </div>
 </div>
@@ -2460,10 +2510,144 @@ header{background:var(--header-gradient);backdrop-filter:blur(14px);-webkit-back
 </div>
 
 
-<!-- ============= IP ECHO LIST ============= -->
+<!-- ============= ECHO LIST (IP Echo + TEE) — Cathlab-style sub-tabs ============= -->
 <div class="pg" id="pg-echolist">
-  <div id="echoCount" class="endo-count-bar"></div>
-  <div id="echoList" class="endo-grid"></div>
+  <div class="cath-subtabs">
+    <button class="cath-subtab on" id="echo-subtab-ip" onclick="goEchoTab('ip',this)">IP Echo List <span class="echo-count-badge" id="echoSubtabIpCount">0</span></button>
+    <button class="cath-subtab" id="echo-subtab-teecal" onclick="goEchoTab('teeCal',this)">TEE Calendar <span class="echo-count-badge" id="echoSubtabTeeCount">0</span></button>
+    <button class="cath-subtab" id="echo-subtab-teeadd" onclick="goEchoTab('teeAdd',this)">＋ Schedule TEE</button>
+  </div>
+
+  <!-- IP Echo List -->
+  <div class="cath-sub on" id="echo-ip">
+    <div id="echoCount" class="endo-count-bar"></div>
+    <div id="echoList" class="endo-grid"></div>
+  </div>
+
+  <!-- TEE Calendar -->
+  <div class="cath-sub" id="echo-teeCal">
+    <button type="button" class="cal-accordion-bar" id="teeCalBar" onclick="toggleTeeCalendar()">
+      <span class="cal-accordion-icon" style="display:inline-flex;align-items:center;justify-content:center;color:var(--acc2);width:18px;height:18px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18"/><path d="M8 3v4"/><path d="M16 3v4"/></svg></span>
+      <span class="cal-accordion-label" id="teeCalBarLabel">—</span>
+      <span class="cal-accordion-hint" id="teeCalBarHint">tap to view calendar</span>
+      <span class="cal-accordion-chev" id="teeCalBarChev">▾</span>
+    </button>
+    <div class="cal-accordion-body" id="teeCalBody" style="display:none">
+      <div class="cal-toolbar">
+        <button class="cal-nav-btn" onclick="changeTeeMonth(-1)">◀</button>
+        <div class="cal-month-label" id="teeCalMonthLabel">—</div>
+        <button class="cal-nav-btn" onclick="changeTeeMonth(1)">▶</button>
+        <button class="cal-today-btn" onclick="goToTeeToday()">Today</button>
+      </div>
+      <div class="cal-weekdays">
+        <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+      </div>
+      <div class="cal-grid" id="teeCalGrid"></div>
+    </div>
+    <div id="teeCalDayDetail"></div>
+  </div>
+
+  <!-- + Schedule TEE — inline form, mirrors Cathlab schedule panel -->
+  <div class="cath-sub" id="echo-teeAdd">
+    <div class="card">
+      <div class="rl" style="margin-bottom:10px" id="teeFormTitle">SCHEDULE A TEE APPOINTMENT</div>
+      <div id="teeFormEditing" style="display:none;background:rgba(96,165,250,.08);border:1px solid rgba(96,165,250,.3);border-radius:7px;padding:8px 11px;margin-bottom:10px;font-family:var(--font-mono);font-size:10px;color:var(--acc);line-height:1.6">
+        Editing existing TEE appointment.
+      </div>
+      <form class="cath-form" onsubmit="return saveTeeCase(event)">
+        <input type="hidden" id="tee-edit-id">
+
+        <label>Patient Name</label>
+        <input type="text" id="tee-name" required>
+
+        <label>Civil ID <span style="font-weight:normal;color:var(--dim)">(auto-fills age)</span></label>
+        <input type="text" id="tee-cid" required placeholder="12-digit Civil ID" inputmode="numeric" maxlength="12" oninput="autoAgeFromCid('tee-cid','tee-age')">
+
+        <div style="display:grid;grid-template-columns:90px 1fr;gap:8px">
+          <div>
+            <label>Age</label>
+            <input type="text" id="tee-age" inputmode="numeric" maxlength="3" placeholder="auto">
+          </div>
+          <div>
+            <label>Phone</label>
+            <input type="text" id="tee-phone" required inputmode="tel" placeholder="e.g. 99887766">
+          </div>
+        </div>
+
+        <label>Indication</label>
+        <select id="tee-indication" required>
+          <option value="">— Select indication —</option>
+          <option>Suspected infective endocarditis</option>
+          <option>Source of embolism / TIA / stroke workup</option>
+          <option>Pre-cardioversion clot screen (LAA thrombus)</option>
+          <option>LAA closure planning</option>
+          <option>TAVR / structural intervention planning</option>
+          <option>Mitral valve assessment (regurgitation / stenosis)</option>
+          <option>Prosthetic valve assessment / dysfunction</option>
+          <option>Aortic dissection / thoracic aorta assessment</option>
+          <option>ASD / PFO assessment</option>
+          <option>Intracardiac mass evaluation</option>
+          <option>Inadequate transthoracic echo windows</option>
+          <option>Other</option>
+        </select>
+
+        <label>Additional details <span style="font-weight:normal;color:var(--dim)">(optional)</span></label>
+        <textarea id="tee-indication-details" rows="2" style="font-family:var(--font-ui);line-height:1.5" placeholder="e.g. specific clinical context, prior imaging findings, anticoag history…"></textarea>
+
+        <label>Operator</label>
+        <select id="tee-operator" required>
+          <option value="">— Select operator —</option>
+          <option>Dr. Samir</option>
+          <option>Dr. Hany</option>
+          <option>Dr. Farouk</option>
+          <option>Dr. Maged</option>
+          <option>Dr. Fawzy</option>
+          <option>Dr. Akmal</option>
+          <option>Dr. Zaher</option>
+          <option>Dr. Shafie</option>
+          <option>Dr. Hamza</option>
+          <option>Dr. Ramy</option>
+          <option>Dr. Ali</option>
+          <option>Dr. Sajid</option>
+          <option>Dr. Ibrahim Hassan</option>
+          <option>Dr. Ihab</option>
+        </select>
+
+        <label>Patient Type</label>
+        <div style="display:flex;gap:14px;margin-bottom:11px;font-family:var(--font-mono);font-size:13px;color:var(--mid)">
+          <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;margin:0;text-transform:none;letter-spacing:0;font-size:13px;color:var(--mid)">
+            <input type="radio" name="tee-ptype" value="IP" onchange="onTeePtypeChange()" required style="width:auto;margin:0"> IP
+          </label>
+          <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;margin:0;text-transform:none;letter-spacing:0;font-size:13px;color:var(--mid)">
+            <input type="radio" name="tee-ptype" value="OP" onchange="onTeePtypeChange()" required style="width:auto;margin:0"> OP
+          </label>
+        </div>
+
+        <div id="tee-ploc-wrap" style="display:none">
+          <label>Patient Location <span style="font-weight:normal;color:var(--dim)">(ward / bed)</span></label>
+          <input type="text" id="tee-ploc" placeholder="e.g. W4 · B12 or CCU · R3">
+        </div>
+
+        <label>Procedure Location</label>
+        <select id="tee-procloc" required>
+          <option value="">— Select location —</option>
+          <option>Echo Lab</option>
+          <option>OT</option>
+        </select>
+
+        <label>Date</label>
+        <input type="date" id="tee-date" required class="pi">
+
+        <div style="display:flex;gap:8px;justify-content:space-between;align-items:center;margin-top:14px;flex-wrap:wrap">
+          <button type="button" id="tee-delete-btn" onclick="deleteTeeCase()" style="display:none;background:transparent;border:1px solid rgba(226,100,100,.45);color:var(--err);border-radius:7px;padding:9px 14px;font-family:var(--font-mono);font-size:11px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;cursor:pointer">✕ Delete</button>
+          <div style="display:flex;gap:8px;margin-left:auto;flex-wrap:wrap">
+            <button type="button" class="btn btn-secondary" onclick="resetTeeForm(true);goEchoTab('teeCal',document.getElementById('echo-subtab-teecal'))">Cancel</button>
+            <button type="submit" id="teeFormSaveBtn" class="btn">💾 Save TEE Appointment</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>
 
 
@@ -3831,6 +4015,7 @@ function ensureExtState(){
   if(!window.S.removals) window.S.removals = [];
   if(!window.S.hfPatients) window.S.hfPatients = {};
   if(!window.S.echoList) window.S.echoList = {};
+  if(!window.S.teeScheduled) window.S.teeScheduled = {};
 }
 
 // Compress image to ~80KB max, return base64 data URL
@@ -4066,7 +4251,6 @@ window.deleteEndo = function(id){
   renderEndoList();
 };
 
-
 // ============================================================
 // HEART FAILURE TEAM — Patient Management
 // ============================================================
@@ -4161,8 +4345,47 @@ window.deleteHFPatient = function(id){
   if(!p) return;
   if(!confirm('Remove ' + (p.name||'this patient') + ' from Heart Failure Team list?')) return;
   delete window.S.hfPatients[id];
-  dbUpdate({ ['hfPatients/' + id]: null });
+  let updates = { ['hfPatients/' + id]: null };
+  // Also drop any echo list entry that was linked to this HF patient
+  let echoKey = 'hf:' + id;
+  if(window.S.echoList && window.S.echoList[echoKey]){
+    delete window.S.echoList[echoKey];
+    updates['echoList/' + echoKey] = null;
+  }
+  dbUpdate(updates);
   renderHFList();
+  if(typeof renderEchoList === 'function') renderEchoList();
+};
+
+// Pre-fill the cath schedule form from an HF patient.
+// We use pre-fill-only (not full link) for cath because the cath schedule
+// model has many downstream consumers tied to sourceEndoId; pre-filling
+// gives the user a fast path to schedule without complicating that schema.
+window.sendHFToCath = function(hfId){
+  ensureHFState();
+  let p = window.S.hfPatients[hfId];
+  if(!p){ alert('HF patient not found.'); return; }
+  // Switch to Cathlab tab
+  let cathBtn = document.querySelector('#mainTabs .tab[onclick*="\'cath\'"]');
+  if(!cathBtn){ alert('Cathlab tab not available for your role.'); return; }
+  cathBtn.click();
+  setTimeout(()=>{
+    if(typeof clickCathSubtab === 'function') clickCathSubtab('addSch');
+    if(typeof resetCathSchForm === 'function') resetCathSchForm(true);
+    let setVal = (id,v)=>{ let el=document.getElementById(id); if(el) el.value = v||''; };
+    setVal('cath-sch-name', p.name);
+    setVal('cath-sch-age', p.age);
+    setVal('cath-sch-sex', p.sex);
+    setVal('cath-sch-nat', p.nationality);
+    setVal('cath-sch-file', p.mrn);
+    setVal('cath-sch-cid', p.cid);
+    // Build a brief history summary so it's not empty
+    let hxBits = [];
+    if(p.hx) hxBits.push(p.hx);
+    if(p.reason) hxBits.push('Reason: ' + p.reason);
+    if(p.active) hxBits.push('Active: ' + p.active);
+    setVal('cath-sch-hx', hxBits.join(' · '));
+  }, 80);
 };
 
 window.exportHFPatientPDF = function(id){
@@ -4249,6 +4472,89 @@ window.exportHFPatientPDF = function(id){
   doc.save('HF_' + safeName + '_' + new Date().toISOString().slice(0,10) + '.pdf');
 };
 
+// Same idea as exportHFPatientPDF but for an IP endorsement record.
+// Uses the medical teal accent so the PDF matches the IP visual identity.
+window.exportEndoPatientPDF = function(id){
+  if(!window.S || !window.S.endorsements) return;
+  let p = window.S.endorsements[id];
+  if(!p){ alert('Patient not found.'); return; }
+  if(typeof window.jspdf === 'undefined'){ alert('PDF library still loading. Please try again.'); return; }
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation: 'portrait', unit: 'pt', format: 'a4' });
+  const pageW = doc.internal.pageSize.getWidth();
+  const lm = 40, rm = 40, usableW = pageW - lm - rm;
+  let y = 40;
+
+  // Header bar — medical teal
+  doc.setFillColor(58,166,183);
+  doc.rect(0, 0, pageW, 56, 'F');
+  doc.setFont('helvetica','bold'); doc.setFontSize(15); doc.setTextColor(255,255,255);
+  doc.text('MKH Cardiology — Inpatient Record', lm, 22);
+  doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(210,238,242);
+  const stamp = new Date().toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  doc.text('Generated: ' + stamp, lm, 36);
+  doc.text('Mubarak Al-Kabeer Hospital · Cardiology Dept.', lm, 48);
+
+  y = 72;
+  doc.setFont('helvetica','bold'); doc.setFontSize(18); doc.setTextColor(20,50,70);
+  doc.text(p.name || '—', lm, y); y += 6;
+  let demoLine = [p.age ? p.age+'y' : '', p.sex||'', p.nationality||''].filter(Boolean).join(' · ');
+  doc.setFont('helvetica','normal'); doc.setFontSize(10); doc.setTextColor(80,100,120);
+  if(demoLine){ doc.text(demoLine, lm, y+12); y += 12; }
+
+  y += 14;
+  doc.setFillColor(232,246,249); doc.roundedRect(lm, y, usableW, 36, 4, 4, 'F');
+  doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(20,90,110);
+  doc.text('MRN / File', lm+8, y+13);
+  doc.setFont('helvetica','normal'); doc.setTextColor(30,30,30);
+  doc.text(p.mrn||'—', lm+8, y+26);
+  doc.setFont('helvetica','bold'); doc.setTextColor(20,90,110);
+  doc.text('Ward / Bed', lm+120, y+13);
+  doc.setFont('helvetica','normal'); doc.setTextColor(30,30,30);
+  doc.text((typeof abbrevWard==='function' ? (abbrevWard(p.ward)||'—') : (p.ward||'—')) + ' · ' + (typeof bedLabel==='function' ? bedLabel(p.bed) : (p.bed||'—')), lm+120, y+26);
+  if(p.cid){
+    doc.setFont('helvetica','bold'); doc.setTextColor(20,90,110);
+    doc.text('Civil ID', lm+270, y+13);
+    doc.setFont('helvetica','normal'); doc.setTextColor(30,30,30);
+    doc.text(p.cid, lm+270, y+26);
+  }
+  y += 46;
+
+  function section(title, text, accent){
+    if(!text || !text.trim()) return;
+    y += 8;
+    doc.setFillColor(...accent); doc.roundedRect(lm, y, usableW, 16, 3, 3, 'F');
+    doc.setFont('helvetica','bold'); doc.setFontSize(8); doc.setTextColor(255,255,255);
+    doc.text(title.toUpperCase(), lm+8, y+11);
+    y += 20;
+    doc.setFont('helvetica','normal'); doc.setFontSize(10); doc.setTextColor(40,40,40);
+    let lines = doc.splitTextToSize(text, usableW-4);
+    let blockH = lines.length * 13;
+    doc.setFillColor(252,253,254); doc.rect(lm, y, usableW, blockH+6, 'F');
+    doc.text(lines, lm+4, y+12);
+    y += blockH + 10;
+  }
+
+  section('Past History / Risk Factors', p.hx, [60,90,140]);
+  section('Reason for Admission / Diagnosis', p.reason, [150,60,60]);
+  section('Investigations', p.ix, [20,100,110]);
+  section('Active Issues', p.active, [180,100,20]);
+  section('Plan', p.plan, [40,140,100]);
+
+  // Footer
+  let totalPages = doc.internal.getNumberOfPages();
+  for(let pg=1; pg<=totalPages; pg++){
+    doc.setPage(pg);
+    doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(160);
+    doc.text('MKH Cardiology · IP Record · Page ' + pg + ' of ' + totalPages, lm, doc.internal.pageSize.getHeight()-16);
+    let updStamp = 'Updated: ' + (p.updatedBy||'—') + ' · ' + (p.updatedAt ? new Date(p.updatedAt).toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}) : '—');
+    doc.text(updStamp, pageW-rm-220, doc.internal.pageSize.getHeight()-16, {maxWidth:220});
+  }
+
+  let safeName = (p.name||'IP_Patient').replace(/[^a-z0-9]/gi,'_').slice(0,40);
+  doc.save('IP_' + safeName + '_' + new Date().toISOString().slice(0,10) + '.pdf');
+};
+
 function renderHFList(){
   ensureHFState();
   let c = document.getElementById('hfList');
@@ -4267,6 +4573,7 @@ function renderHFList(){
   }
   c.innerHTML = all.map(p => {
     let isOpen = expandedHFIds.has(p.id);
+    let pInEcho = !!(window.S.echoList && window.S.echoList['hf:' + p.id]);
     let demoParts = [];
     if(p.age) demoParts.push(escapeHtml(p.age) + 'y');
     if(p.sex) demoParts.push(escapeHtml(p.sex));
@@ -4284,7 +4591,10 @@ function renderHFList(){
           <div class="endo-mrn">MRN · ${escapeHtml(p.mrn||'—')}${summary?' · <span style="color:var(--dim)">'+escapeHtml(summary)+'</span>':''}</div>
           ${demoLine}
         </div>
-        <div class="endo-chevron">▾</div>
+        <div class="endo-head-icons">
+          <button type="button" class="endo-icon-btn pdf" title="Export this patient as PDF" aria-label="Export PDF" onclick="event.stopPropagation();exportHFPatientPDF('${p.id}')">PDF</button>
+          <div class="endo-chevron">▾</div>
+        </div>
       </div>
       <div class="endo-card-body">
         ${field('Past History', p.hx)}
@@ -4297,7 +4607,8 @@ function renderHFList(){
         </div>
         <div class="endo-actions">
           <button class="endo-act-btn" onclick="event.stopPropagation();openHFForm('${p.id}')">✎ Edit</button>
-          <button class="endo-act-btn" style="border-color:rgba(111,134,214,.45);color:var(--ep2)" onclick="event.stopPropagation();exportHFPatientPDF('${p.id}')">⬇ Export PDF</button>
+          <button class="endo-act-btn" style="border-color:rgba(63,185,140,.4);color:var(--ok)" onclick="event.stopPropagation();sendHFToCath('${p.id}')" title="Pre-fill a cath schedule from this HF patient">Send to Cathlab</button>
+          <button class="endo-act-btn" style="border-color:rgba(96,165,250,.4);color:var(--acc2)${pInEcho?';opacity:.5;cursor:not-allowed':''}" ${pInEcho?'disabled':''} onclick="event.stopPropagation();addHFToEchoList('${p.id}')" title="${pInEcho?'Already on the IP Echo List':'Send this HF patient to the IP Echo List'}">${pInEcho?'✓ On Echo List':'Add to Echo List'}</button>
           <button class="endo-act-btn danger" onclick="event.stopPropagation();deleteHFPatient('${p.id}')">✕ Remove</button>
         </div>
       </div>
@@ -4613,7 +4924,7 @@ function renderEndoList(){
   });
 
   let countEl = document.getElementById('endoCount');
-  if(countEl) countEl.innerText = all.length ? `Showing ${all.length} patient${all.length>1?'s':''}${currentWardFilter!=='all'?' in '+currentWardFilter:''}` : '';
+  if(countEl) countEl.innerText = '';
 
   if(!all.length){
     c.innerHTML = '<div class="endo-empty">' + (currentWardFilter!=='all' ? 'No patients match this filter.' : 'No patients in the list yet. Click <b>＋ New Patient</b> to add the first one.') + '</div>';
@@ -4714,7 +5025,9 @@ function renderEndoList(){
           ${echoBadge}
           ${echoDoneBadge}
         </div>
-        <div class="endo-chevron">▾</div>
+        <div class="endo-head-icons">
+          <div class="endo-chevron">▾</div>
+        </div>
       </div>
       ${staleBanner}
       ${caAlarm}
@@ -6121,7 +6434,15 @@ window.goTab=(id,btn)=>{
   if(id==="endo"){ renderEndoList(); renderHFList(); }
   if(id==="cath") renderCathAll();
   if(id==="census"){ renderCensus(); renderCensusAlert(); }
-  if(id==="echolist") renderEchoList();
+  if(id==="echolist"){
+    renderEchoList();
+    // Re-render whichever Echo sub-section is active; refresh both counts
+    if(typeof refreshEchoSubtabCounts === 'function') refreshEchoSubtabCounts();
+    let teeCalSec = document.getElementById('echo-teeCal');
+    if(teeCalSec && teeCalSec.classList.contains('on') && typeof renderTeeCalendar === 'function'){
+      renderTeeCalendar();
+    }
+  }
   if(id==="oncall") renderOncallCalendar();
   if(id==="hosp") renderHospNumbers();
   // v3.4: belt-and-braces — hide all action PIN fields whenever a tab opens
@@ -6156,6 +6477,7 @@ dbRef.on('value',(snap)=>{
     window.S.removals=d.removals||[];
     window.S.hfPatients=d.hfPatients||{};
     window.S.echoList=d.echoList||{};
+    window.S.teeScheduled=d.teeScheduled||{};
   }
   ensureExtState();
 
@@ -6191,7 +6513,14 @@ dbRef.on('value',(snap)=>{
   if(document.getElementById('pg-endo')?.classList.contains('on')){ renderEndoList(); renderHFList(); }
   if(document.getElementById('pg-cath')?.classList.contains('on')) renderCathAll();
   if(document.getElementById('pg-census')?.classList.contains('on')){ renderCensus(); renderCensusAlert(); }
-  if(document.getElementById('pg-echolist')?.classList.contains('on')) renderEchoList();
+  if(document.getElementById('pg-echolist')?.classList.contains('on')){
+    renderEchoList();
+    if(typeof refreshEchoSubtabCounts === 'function') refreshEchoSubtabCounts();
+    let teeCalSec = document.getElementById('echo-teeCal');
+    if(teeCalSec && teeCalSec.classList.contains('on') && typeof renderTeeCalendar === 'function'){
+      renderTeeCalendar();
+    }
+  }
   if(document.getElementById('pg-oncall')?.classList.contains('on')) renderOncallCalendar();
   if(document.getElementById('pg-adm')?.classList.contains('on')){
     if(document.getElementById('adm-pinreset')?.classList.contains('on')) renderPinResetTab();
@@ -6243,36 +6572,78 @@ window.addEndoToEchoList = function(endoId){
 // Mark echo as completed for a patient: removes them from the IP Echo List
 // AND stamps echoDone+echoCompletedAt on the IP record so the green
 // "✓ ECHO DONE" badge appears on the IP card.
-window.markEchoDone = function(endoId){
+window.markEchoDone = function(key){
   ensureExtState();
-  let e = window.S.endorsements[endoId];
-  let nm = e ? e.name : 'this patient';
-  if(!confirm(`Mark echo as DONE for ${nm}?\n\nThis removes the patient from the IP Echo List and shows an ECHO DONE badge on the IP card.`)) return;
-  if(window.S.echoList) delete window.S.echoList[endoId];
-  // Atomic update — remove the echo record AND stamp echoDone on the IP entry
-  let updates = { ['echoList/' + endoId]: null };
-  if(e){
-    e.echoDone = true;
-    e.echoCompletedAt = Date.now();
-    updates['endorsements/' + endoId] = e;
+  let isHF = (typeof key === 'string') && key.startsWith('hf:');
+  let srcId = isHF ? key.replace(/^hf:/,'') : key;
+  let src = isHF ? (window.S.hfPatients||{})[srcId] : (window.S.endorsements||{})[srcId];
+  let nm = src ? src.name : 'this patient';
+  let badgeBlurb = isHF
+    ? `\n\nThis removes the patient from the IP Echo List.`
+    : `\n\nThis removes the patient from the IP Echo List and shows an ECHO DONE badge on the IP card.`;
+  if(!confirm(`Mark echo as DONE for ${nm}?` + badgeBlurb)) return;
+  if(window.S.echoList) delete window.S.echoList[key];
+  let updates = { ['echoList/' + key]: null };
+  // For IP-sourced echoes, stamp echoDone on the IP record so the green badge appears
+  if(!isHF && src){
+    src.echoDone = true;
+    src.echoCompletedAt = Date.now();
+    updates['endorsements/' + srcId] = src;
   }
   dbUpdate(updates);
   renderEchoList();
-  if(document.getElementById('pg-endo')?.classList.contains('on')) renderEndoList();
+  if(document.getElementById('pg-endo')?.classList.contains('on')){
+    renderEndoList();
+    if(typeof renderHFList === 'function') renderHFList();
+  }
 };
 
 // Plain removal — patient was added by mistake / no longer needs echo.
-// Does NOT set echoDone; IP card returns to neutral (no badge), so the
+// Does NOT set echoDone; source card returns to neutral (no badge), so the
 // patient can be re-added to the echo list later if needed.
-window.removeFromEchoList = function(endoId){
+window.removeFromEchoList = function(key){
   ensureExtState();
-  let e = window.S.endorsements[endoId];
-  let nm = e ? e.name : 'this patient';
+  let isHF = (typeof key === 'string') && key.startsWith('hf:');
+  let srcId = isHF ? key.replace(/^hf:/,'') : key;
+  let src = isHF ? (window.S.hfPatients||{})[srcId] : (window.S.endorsements||{})[srcId];
+  let nm = src ? src.name : 'this patient';
   if(!confirm(`Remove ${nm} from the IP Echo List?\n\nThe patient will simply be taken off the list — no ECHO DONE badge will appear. Use this when a patient was added by mistake or no longer needs an echo.`)) return;
-  if(window.S.echoList) delete window.S.echoList[endoId];
-  dbRemoveAt('echoList/' + endoId);
+  if(window.S.echoList) delete window.S.echoList[key];
+  dbRemoveAt('echoList/' + key);
   renderEchoList();
-  if(document.getElementById('pg-endo')?.classList.contains('on')) renderEndoList();
+  if(document.getElementById('pg-endo')?.classList.contains('on')){
+    renderEndoList();
+    if(typeof renderHFList === 'function') renderHFList();
+  }
+};
+
+// HF-aware version of addEndoToEchoList — adds an HF patient to the echo list
+// using composite key 'hf:<id>' so it can never collide with IP entries.
+window.addHFToEchoList = function(hfId){
+  ensureExtState();
+  let p = (window.S.hfPatients||{})[hfId];
+  if(!p){ alert('HF patient not found.'); return; }
+  let key = 'hf:' + hfId;
+  if(window.S.echoList && window.S.echoList[key]){
+    alert(`${p.name} is already on the IP Echo List.`);
+    return;
+  }
+  if(!confirm(`Add ${p.name} (${abbrevWard(p.ward||'—')} · ${bedLabel(p.bed)}) — HF Team — to the IP Echo List?`)) return;
+  let now = Date.now();
+  let record = {
+    sourceType: 'hf',
+    sourceId: hfId,
+    addedAt: now,
+    addedBy: window.currentDoctor || ''
+  };
+  window.S.echoList[key] = record;
+  dbUpdate({ ['echoList/' + key]: record });
+  renderHFList();
+  // Jump to echo list so the user sees the result
+  let echoTab = document.querySelector('#mainTabs .tab[onclick*="\'echolist\'"]');
+  if(echoTab && echoTab.style.display !== 'none'){
+    echoTab.click();
+  }
 };
 
 window.renderEchoList = function(){
@@ -6280,22 +6651,27 @@ window.renderEchoList = function(){
   let c = document.getElementById('echoList');
   if(!c) return;
 
-  // Build the list — pull live data from window.S.endorsements via sourceEndoId.
-  // If the source IP entry was discharged, drop the orphan from echoList.
+  // Build the list — resolve each echo record from its source table.
+  // IP-sourced records use the bare endorsement id as the key.
+  // HF-sourced records use composite key 'hf:<hfPatientId>' to avoid collisions.
+  // If a source record was discharged/removed, drop the orphan from echoList.
   let entries = [];
   let orphans = [];
-  Object.keys(window.S.echoList||{}).forEach(id => {
-    let e = window.S.endorsements[id];
-    if(e){
-      entries.push({ ...e, _echoAddedAt: window.S.echoList[id].addedAt });
+  Object.keys(window.S.echoList||{}).forEach(key => {
+    let rec = window.S.echoList[key];
+    let isHF = (rec && rec.sourceType === 'hf') || key.startsWith('hf:');
+    let srcId = isHF ? (rec.sourceId || key.replace(/^hf:/,'')) : key;
+    let src = isHF ? (window.S.hfPatients||{})[srcId] : (window.S.endorsements||{})[srcId];
+    if(src){
+      entries.push({ ...src, _echoKey: key, _echoSourceType: isHF?'hf':'ip', _echoAddedAt: rec.addedAt });
     } else {
-      orphans.push(id);
+      orphans.push(key);
     }
   });
-  // Clean orphans — IP entry was discharged but echo record lingered
+  // Clean orphans — source record was discharged/removed but echo entry lingered
   if(orphans.length){
     let updates = {};
-    orphans.forEach(id => { delete window.S.echoList[id]; updates['echoList/' + id] = null; });
+    orphans.forEach(key => { delete window.S.echoList[key]; updates['echoList/' + key] = null; });
     dbUpdate(updates);
   }
   // Sort: ward (Ward 4 first, then CCU, then others), then bed numeric
@@ -6313,12 +6689,13 @@ window.renderEchoList = function(){
   if(countEl) countEl.innerText = entries.length ? `${entries.length} patient${entries.length>1?'s':''} on the echo list` : '';
 
   if(!entries.length){
-    c.innerHTML = '<div class="endo-empty">No patients on the echo list yet. From the IP Patient\'s List, click <b>Add to Echo List</b> on any patient card.</div>';
+    c.innerHTML = '<div class="endo-empty">No patients on the echo list yet. Click <b>Add to Echo List</b> on any IP or HF Team patient card.</div>';
     return;
   }
 
   c.innerHTML = entries.map(e => {
-    let isOpen = expandedEchoIds.has(e.id);
+    let isOpen = expandedEchoIds.has(e._echoKey || e.id);
+    let isHF = e._echoSourceType === 'hf';
     let demoParts = [];
     if(e.age) demoParts.push(escapeHtml(e.age) + 'y');
     if(e.sex) demoParts.push(escapeHtml(e.sex));
@@ -6327,16 +6704,21 @@ window.renderEchoList = function(){
     let reasonSummary = (e.reason||'').trim();
     let summary = reasonSummary ? (reasonSummary.length > 60 ? reasonSummary.slice(0,60).trim()+'…' : reasonSummary) : '';
     let addedLine = e._echoAddedAt ? `<div class="endo-history-line">Added to echo list: ${fmtDateTime(e._echoAddedAt)}</div>` : '';
+    let hfBadge = isHF ? `<span style="background:rgba(111,134,214,.15);color:var(--ep2);border:1px solid rgba(111,134,214,.4);border-radius:4px;padding:2px 7px;font-family:var(--font-mono);font-size:9px;margin-left:6px;font-weight:600;letter-spacing:.04em">HF</span>` : '';
+    let editFn = isHF ? `openHFForm` : `openEndoForm`;
+    let cardKey = e._echoKey || e.id;
     return `
-    <div class="endo-card${isOpen?' open':''}" style="border-left:3px solid var(--acc)">
-      <div class="endo-card-head endo-card-toggle" onclick="toggleEchoCard('${e.id}')">
+    <div class="endo-card${isOpen?' open':''}" style="border-left:3px solid ${isHF?'var(--ep)':'var(--acc)'}">
+      <div class="endo-card-head endo-card-toggle" onclick="toggleEchoCard('${cardKey}')">
         <div class="endo-bed">${escapeHtml(e.ward ? abbrevWard(e.ward) : '—')} · ${escapeHtml(bedLabel(e.bed))}</div>
         <div style="flex:1;min-width:0">
-          <div class="endo-name">${escapeHtml(e.name||'—')}</div>
+          <div class="endo-name">${escapeHtml(e.name||'—')}${hfBadge}</div>
           <div class="endo-mrn">MRN · ${escapeHtml(e.mrn||'—')}${summary?' · <span style="color:var(--dim)">'+escapeHtml(summary)+'</span>':''}</div>
           ${demoLine}
         </div>
-        <div class="endo-chevron">▾</div>
+        <div class="endo-head-icons">
+          <div class="endo-chevron">▾</div>
+        </div>
       </div>
       <div class="endo-card-body">
         ${field('Past History', e.hx)}
@@ -6350,9 +6732,9 @@ window.renderEchoList = function(){
         </div>
         ${addedLine}
         <div class="endo-actions">
-          <button class="endo-act-btn" onclick="event.stopPropagation();openEndoForm('${e.id}')">✎ Edit</button>
-          <button class="endo-act-btn" style="border-color:rgba(63,185,140,.4);color:var(--ok)" onclick="event.stopPropagation();markEchoDone('${e.id}')" title="Mark echo as completed and remove from this list">✓ Echo Done</button>
-          <button class="endo-act-btn danger" onclick="event.stopPropagation();removeFromEchoList('${e.id}')" title="Remove from echo list without marking as done (e.g. added by mistake)">✕ Remove</button>
+          <button class="endo-act-btn" onclick="event.stopPropagation();${editFn}('${e.id}')">✎ Edit</button>
+          <button class="endo-act-btn" style="border-color:rgba(63,185,140,.4);color:var(--ok)" onclick="event.stopPropagation();markEchoDone('${cardKey}')" title="Mark echo as completed and remove from this list">✓ Echo Done</button>
+          <button class="endo-act-btn danger" onclick="event.stopPropagation();removeFromEchoList('${cardKey}')" title="Remove from echo list without marking as done (e.g. added by mistake)">✕ Remove</button>
         </div>
       </div>
     </div>
@@ -6377,7 +6759,395 @@ window.collapseAllEcho = function(){
 };
 
 
-// as an IP case (prefills name/age/nationality/file/hx from the IP entry
+// ============================================================
+// TEE SCHEDULING MODULE
+// Lives inside the Echo List tab as a sub-tab. Schedules
+// transesophageal echocardiography cases against a monthly calendar.
+// Storage: window.S.teeScheduled keyed by record id.
+// ============================================================
+
+function _todayIsoLocal(){
+  let d = new Date();
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+
+var teeCalState = {
+  year: new Date().getFullYear(),
+  month: new Date().getMonth(),
+  selected: _todayIsoLocal(),
+  expanded: false
+};
+
+window.toggleTeeCalendar = function(){
+  teeCalState.expanded = !teeCalState.expanded;
+  let body = document.getElementById('teeCalBody');
+  let bar = document.getElementById('teeCalBar');
+  let hint = document.getElementById('teeCalBarHint');
+  if(body) body.style.display = teeCalState.expanded ? '' : 'none';
+  if(bar) bar.classList.toggle('expanded', teeCalState.expanded);
+  if(hint) hint.textContent = teeCalState.expanded ? 'tap to hide calendar' : 'tap to view calendar';
+  if(teeCalState.expanded) renderTeeCalendar();
+};
+
+function ensureTeeState(){
+  if(!window.S) window.S = {};
+  if(!window.S.teeScheduled) window.S.teeScheduled = {};
+}
+
+// goEchoTab — switches sub-tabs inside the Echo List page (IP / TEE Calendar / + Schedule TEE).
+// Mirrors goCathTab but scopes its querySelectorAll to #pg-echolist so the cath sub-tabs aren't
+// touched if the user happens to be on the cath tab when this is called.
+window.goEchoTab = function(name, btn){
+  let pg = document.getElementById('pg-echolist');
+  if(!pg) return;
+  pg.querySelectorAll('.cath-subtab').forEach(t=>t.classList.remove('on'));
+  pg.querySelectorAll('.cath-sub').forEach(s=>s.classList.remove('on'));
+  if(btn) btn.classList.add('on');
+  let panelId = 'echo-' + name;
+  let panel = document.getElementById(panelId);
+  if(panel) panel.classList.add('on');
+  if(name === 'ip'){
+    renderEchoList();
+  } else if(name === 'teeCal'){
+    renderTeeCalendar();
+  } else if(name === 'teeAdd'){
+    // If entering the form via the tab (not via edit), reset to a blank form
+    let editId = document.getElementById('tee-edit-id');
+    if(!editId || !editId.value){
+      resetTeeForm(true);
+    }
+  }
+  refreshEchoSubtabCounts();
+};
+
+function refreshEchoSubtabCounts(){
+  ensureTeeState();
+  let ipCt = document.getElementById('echoSubtabIpCount');
+  let teeCt = document.getElementById('echoSubtabTeeCount');
+  if(ipCt) ipCt.textContent = Object.keys(window.S.echoList||{}).length;
+  if(teeCt) teeCt.textContent = Object.keys(window.S.teeScheduled||{}).length;
+}
+
+window.changeTeeMonth = function(delta){
+  let m = teeCalState.month + delta;
+  let y = teeCalState.year;
+  while(m < 0){ m += 12; y--; }
+  while(m > 11){ m -= 12; y++; }
+  teeCalState.month = m;
+  teeCalState.year = y;
+  teeCalState.selected = null;
+  renderTeeCalendar();
+};
+
+window.goToTeeToday = function(){
+  let now = new Date();
+  teeCalState.month = now.getMonth();
+  teeCalState.year = now.getFullYear();
+  teeCalState.selected = todayIso();
+  renderTeeCalendar();
+};
+
+window.selectTeeDay = function(iso){
+  teeCalState.selected = iso;
+  renderTeeCalendar();
+};
+
+function renderTeeCalendar(){
+  ensureTeeState();
+  let labelEl = document.getElementById('teeCalMonthLabel');
+  let gridEl = document.getElementById('teeCalGrid');
+  let detailEl = document.getElementById('teeCalDayDetail');
+  let barLabelEl = document.getElementById('teeCalBarLabel');
+
+  let monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  let monthLabel = monthNames[teeCalState.month] + ' ' + teeCalState.year;
+  if(labelEl) labelEl.innerText = monthLabel;
+  if(barLabelEl) barLabelEl.innerText = monthLabel;
+
+  // Always render the day-detail panel (today by default), even when the calendar grid is collapsed
+  renderTeeDayDetail();
+  refreshEchoSubtabCounts();
+
+  if(!gridEl) return;
+  if(!teeCalState.expanded){
+    // Calendar grid is collapsed — skip the grid render
+    return;
+  }
+
+  let counts = {};
+  Object.values(window.S.teeScheduled||{}).forEach(s => {
+    if(s.date) counts[s.date] = (counts[s.date]||0) + 1;
+  });
+
+  let firstDay = new Date(teeCalState.year, teeCalState.month, 1);
+  let firstWeekday = firstDay.getDay();
+  let daysInMonth = new Date(teeCalState.year, teeCalState.month+1, 0).getDate();
+  let daysInPrevMonth = new Date(teeCalState.year, teeCalState.month, 0).getDate();
+  let today = todayIso();
+
+  let cells = [];
+  for(let i = firstWeekday - 1; i >= 0; i--){
+    let d = daysInPrevMonth - i;
+    let m = teeCalState.month - 1, y = teeCalState.year;
+    if(m < 0){ m = 11; y--; }
+    cells.push({ iso: isoFromYMD(y, m, d), day: d, outside: true });
+  }
+  for(let d = 1; d <= daysInMonth; d++){
+    cells.push({ iso: isoFromYMD(teeCalState.year, teeCalState.month, d), day: d, outside: false });
+  }
+  let targetLen = cells.length <= 35 ? 35 : 42;
+  let nextDay = 1;
+  while(cells.length < targetLen){
+    let m = teeCalState.month + 1, y = teeCalState.year;
+    if(m > 11){ m = 0; y++; }
+    cells.push({ iso: isoFromYMD(y, m, nextDay), day: nextDay, outside: true });
+    nextDay++;
+  }
+
+  gridEl.innerHTML = cells.map(cell => {
+    let count = counts[cell.iso] || 0;
+    let classes = ['cal-cell'];
+    if(cell.outside) classes.push('outside');
+    if(cell.iso === today) classes.push('today');
+    if(cell.iso < today && cell.iso !== today) classes.push('past');
+    if(cell.iso === teeCalState.selected) classes.push('selected');
+    let countClass = 'cal-count';
+    if(count === 0) countClass += ' hidden';
+    let onclick = cell.outside ? '' : `onclick="selectTeeDay('${cell.iso}')"`;
+    return `<div class="${classes.join(' ')}" ${onclick}>
+      <div class="cal-date">${cell.day}</div>
+      <div class="${countClass}">${count || ''}</div>
+    </div>`;
+  }).join('');
+}
+
+// Render the day-detail panel below the (possibly collapsed) calendar.
+// Shows today by default when on the current month; shows a "pick a day" prompt
+// when the user has navigated to a different month without picking a date.
+function renderTeeDayDetail(){
+  let detailEl = document.getElementById('teeCalDayDetail');
+  if(!detailEl) return;
+  let todayIsoStr = _todayIsoLocal();
+  let now = new Date();
+  let onCurrentMonth = (teeCalState.year === now.getFullYear() && teeCalState.month === now.getMonth());
+
+  let iso = teeCalState.selected;
+  if(!iso && onCurrentMonth) iso = todayIsoStr;
+
+  if(!iso){
+    // Different month, no day picked
+    detailEl.innerHTML = '<div class="cal-day-detail" style="padding:14px 14px;color:var(--dim);font-family:var(--font-mono);font-size:11px;text-align:center">Open the calendar above and pick a day to view or add TEE cases.</div>';
+    return;
+  }
+
+  let isToday = (iso === todayIsoStr);
+  let selCases = Object.values(window.S.teeScheduled||{}).filter(s => s.date === iso);
+  selCases.sort((a,b)=> (a.operator||'zzzz').localeCompare(b.operator||'zzzz') || (a.name||'').localeCompare(b.name||''));
+
+  let titleLabel = isToday ? `Today · ${fmtDate(iso)}` : fmtDate(iso);
+
+  let detail = `<div class="cal-day-detail">
+    <div class="cal-day-detail-head">
+      <div class="cal-day-detail-title">${titleLabel}</div>
+      <div class="cal-day-detail-stats">
+        <span class="cal-day-chip">Total: <b>${selCases.length}</b></span>
+      </div>
+    </div>
+    ${selCases.length === 0
+      ? `<div class="cath-empty" style="padding:20px 10px">No TEE cases scheduled ${isToday?'today':'on this day'}. Use the ＋ Schedule TEE tab to add one.</div>`
+      : selCases.map(s => renderTeeCard(s)).join('')}
+  </div>`;
+  detailEl.innerHTML = detail;
+}
+
+function renderTeeCard(s){
+  let locLine = '';
+  if(s.patientType === 'IP'){
+    locLine = `<span class="tee-pill" style="background:rgba(58,166,183,.12);border:1px solid rgba(58,166,183,.35);color:var(--acc2)">IP · ${escapeHtml(s.patientLocation||'—')}</span>`;
+  } else {
+    locLine = `<span class="tee-pill" style="background:rgba(125,134,150,.12);border:1px solid rgba(125,134,150,.35);color:var(--mid)">OP</span>`;
+  }
+  let procPill = `<span class="tee-pill" style="background:rgba(111,134,214,.12);border:1px solid rgba(111,134,214,.35);color:var(--ep2)">${escapeHtml(s.procLocation||'—')}</span>`;
+  let opPill = `<span class="tee-pill" style="background:rgba(63,185,140,.12);border:1px solid rgba(63,185,140,.35);color:var(--ok)">${escapeHtml(s.operator||'Unassigned')}</span>`;
+  let agePart = s.age ? `${escapeHtml(s.age)}y` : '';
+  let phonePart = s.phone ? `📞 ${escapeHtml(s.phone)}` : '';
+  let metaBits = [agePart, phonePart].filter(Boolean).join(' · ');
+  return `<div class="tee-card" onclick="openTeeForm('${s.id}')">
+    <div class="tee-card-head">
+      <div class="tee-card-name">${escapeHtml(s.name||'—')}</div>
+      <div class="tee-card-pills">${opPill}${locLine}${procPill}</div>
+    </div>
+    ${metaBits ? `<div class="tee-card-meta">${metaBits}</div>` : ''}
+    ${s.indication || s.indicationDetails ? `<div class="tee-card-ind"><span class="tee-card-ind-label">Indication:</span> ${escapeHtml([s.indication, s.indicationDetails].filter(Boolean).join(' — '))}</div>` : ''}
+  </div>`;
+}
+
+// loadTeeForm — populate the inline schedule form and switch to the +Schedule tab.
+// Used both for fresh adds (id=null) and edits (id=existing record).
+window.openTeeForm = function(id, prefilledDate){
+  ensureTeeState();
+  resetTeeForm(true);
+  document.getElementById('tee-edit-id').value = id || '';
+  let titleEl = document.getElementById('teeFormTitle');
+  let editingBanner = document.getElementById('teeFormEditing');
+  let delBtn = document.getElementById('tee-delete-btn');
+  let saveBtn = document.getElementById('teeFormSaveBtn');
+
+  if(id && window.S.teeScheduled[id]){
+    let s = window.S.teeScheduled[id];
+    if(titleEl) titleEl.innerText = 'EDIT TEE — ' + (s.name||'').toUpperCase();
+    if(editingBanner) editingBanner.style.display = '';
+    if(saveBtn) saveBtn.innerText = '💾 Update TEE Appointment';
+    document.getElementById('tee-name').value = s.name || '';
+    document.getElementById('tee-cid').value = s.cid || '';
+    document.getElementById('tee-age').value = s.age || '';
+    document.getElementById('tee-phone').value = s.phone || '';
+    // Indication: dropdown + details. If the saved indication doesn't match a menu option
+    // (legacy records, or "Other"), drop it into the details box and set the dropdown to "Other".
+    let indEl = document.getElementById('tee-indication');
+    let indDetailsEl = document.getElementById('tee-indication-details');
+    let savedInd = s.indication || '';
+    let savedDetails = s.indicationDetails || '';
+    let menuOptions = Array.from(indEl.options).map(o => o.value).filter(Boolean);
+    if(savedInd && menuOptions.includes(savedInd)){
+      indEl.value = savedInd;
+      indDetailsEl.value = savedDetails;
+    } else if(savedInd){
+      // Legacy free-text record — coerce to "Other" + put the original text into details
+      indEl.value = 'Other';
+      indDetailsEl.value = savedDetails ? (savedInd + ' — ' + savedDetails) : savedInd;
+    } else {
+      indEl.value = '';
+      indDetailsEl.value = savedDetails;
+    }
+    document.getElementById('tee-operator').value = s.operator || '';
+    document.getElementById('tee-procloc').value = s.procLocation || '';
+    document.getElementById('tee-date').value = s.date || '';
+    let radios = document.getElementsByName('tee-ptype');
+    for(let r of radios){ r.checked = (r.value === (s.patientType||'')); }
+    if(s.patientType === 'IP'){
+      document.getElementById('tee-ploc-wrap').style.display = '';
+      document.getElementById('tee-ploc').value = s.patientLocation || '';
+    }
+    if(delBtn) delBtn.style.display = '';
+  } else {
+    if(titleEl) titleEl.innerText = 'SCHEDULE A TEE APPOINTMENT';
+    if(editingBanner) editingBanner.style.display = 'none';
+    if(saveBtn) saveBtn.innerText = '💾 Save TEE Appointment';
+    if(prefilledDate){ document.getElementById('tee-date').value = prefilledDate; }
+    if(delBtn) delBtn.style.display = 'none';
+  }
+  // Switch to the +Schedule tab
+  let teeAddBtn = document.getElementById('echo-subtab-teeadd');
+  goEchoTab('teeAdd', teeAddBtn);
+};
+
+// resetTeeForm — clear all fields back to a blank-add state. Mirrors resetCathSchForm.
+window.resetTeeForm = function(quiet){
+  ['tee-edit-id','tee-name','tee-cid','tee-age','tee-phone','tee-indication-details','tee-ploc','tee-date'].forEach(id=>{
+    let el = document.getElementById(id); if(el) el.value = '';
+  });
+  let indEl = document.getElementById('tee-indication'); if(indEl) indEl.selectedIndex = 0;
+  let opEl = document.getElementById('tee-operator'); if(opEl) opEl.selectedIndex = 0;
+  let plEl = document.getElementById('tee-procloc'); if(plEl) plEl.selectedIndex = 0;
+  let radios = document.getElementsByName('tee-ptype');
+  for(let r of radios){ r.checked = false; }
+  let plocWrap = document.getElementById('tee-ploc-wrap'); if(plocWrap) plocWrap.style.display = 'none';
+  let editingBanner = document.getElementById('teeFormEditing'); if(editingBanner) editingBanner.style.display = 'none';
+  let titleEl = document.getElementById('teeFormTitle'); if(titleEl) titleEl.innerText = 'SCHEDULE A TEE APPOINTMENT';
+  let saveBtn = document.getElementById('teeFormSaveBtn'); if(saveBtn) saveBtn.innerText = '💾 Save TEE Appointment';
+  let delBtn = document.getElementById('tee-delete-btn'); if(delBtn) delBtn.style.display = 'none';
+  // quiet=true means the caller is doing the tab switch themselves
+};
+
+window.onTeePtypeChange = function(){
+  let radios = document.getElementsByName('tee-ptype');
+  let val = '';
+  for(let r of radios){ if(r.checked){ val = r.value; break; } }
+  let wrap = document.getElementById('tee-ploc-wrap');
+  let ploc = document.getElementById('tee-ploc');
+  if(val === 'IP'){
+    wrap.style.display = '';
+    ploc.required = true;
+  } else {
+    wrap.style.display = 'none';
+    ploc.required = false;
+    ploc.value = '';
+  }
+};
+
+window.saveTeeCase = function(ev){
+  ev.preventDefault();
+  ensureTeeState();
+  let id = document.getElementById('tee-edit-id').value;
+  let radios = document.getElementsByName('tee-ptype');
+  let ptype = '';
+  for(let r of radios){ if(r.checked){ ptype = r.value; break; } }
+  if(!ptype){ alert('Please select IP or OP.'); return false; }
+
+  let ploc = document.getElementById('tee-ploc').value.trim();
+  if(ptype === 'IP' && !ploc){ alert('Please enter the patient location (ward / bed) for an IP patient.'); return false; }
+
+  let now = Date.now();
+  let who = window.currentDoctor || (window.currentRole === 'admin' ? 'Admin' : (window.currentRole||'Unknown'));
+
+  let rec = id && window.S.teeScheduled[id] ? window.S.teeScheduled[id] : {
+    id: id || ('tee_' + now + '_' + Math.random().toString(36).slice(2,7)),
+    createdAt: now,
+    createdBy: who
+  };
+
+  rec.name = document.getElementById('tee-name').value.trim();
+  rec.cid = document.getElementById('tee-cid').value.trim();
+  rec.age = document.getElementById('tee-age').value.trim();
+  rec.phone = document.getElementById('tee-phone').value.trim();
+  rec.indication = document.getElementById('tee-indication').value.trim();
+  rec.indicationDetails = document.getElementById('tee-indication-details').value.trim();
+  rec.operator = document.getElementById('tee-operator').value;
+  rec.patientType = ptype;
+  rec.patientLocation = (ptype === 'IP') ? ploc : '';
+  rec.procLocation = document.getElementById('tee-procloc').value;
+  rec.date = document.getElementById('tee-date').value;
+  rec.updatedAt = now;
+  rec.updatedBy = who;
+
+  window.S.teeScheduled[rec.id] = rec;
+  if(typeof dbUpdate === 'function'){
+    dbUpdate({ ['teeScheduled/' + rec.id]: rec });
+  }
+  // Move the calendar to the scheduled date and switch back to the TEE Calendar tab
+  let d = new Date(rec.date);
+  if(!isNaN(d)){
+    teeCalState.year = d.getFullYear();
+    teeCalState.month = d.getMonth();
+    teeCalState.selected = rec.date;
+  }
+  resetTeeForm(true);
+  let teeCalBtn = document.getElementById('echo-subtab-teecal');
+  goEchoTab('teeCal', teeCalBtn);
+  return false;
+};
+
+window.deleteTeeCase = function(){
+  let id = document.getElementById('tee-edit-id').value;
+  if(!id) return;
+  ensureTeeState();
+  let s = window.S.teeScheduled[id];
+  if(!s) return;
+  if(!confirm(`Delete TEE case for ${s.name || 'this patient'} on ${s.date || '—'}? This cannot be undone.`)) return;
+  delete window.S.teeScheduled[id];
+  if(typeof dbUpdate === 'function'){
+    dbUpdate({ ['teeScheduled/' + id]: null });
+  }
+  resetTeeForm(true);
+  let teeCalBtn = document.getElementById('echo-subtab-teecal');
+  goEchoTab('teeCal', teeCalBtn);
+};
+
+
+// ============================================================
+// SEND-TO-CATH — opens the Cath schedule form pre-populated
+// from an IP endorsement record (name/age/nationality/file/hx)
 // and opens the Cathlab → ＋ Schedule sub-tab). The saved cath appointment
 // is linked back to the endorsement via sourceEndoId so the IP card shows
 // a "🏥 CATH SCHEDULED" badge.
@@ -6492,7 +7262,18 @@ window.goOpdalTab = function(sub, btn){
 // ============================================================
 // ON CALL CALENDAR
 // ============================================================
-var oncallState = { year: new Date().getFullYear(), month: new Date().getMonth(), selected: null };
+var oncallState = { year: new Date().getFullYear(), month: new Date().getMonth(), selected: _todayIsoLocal(), expanded: false };
+
+window.toggleOncallCalendar = function(){
+  oncallState.expanded = !oncallState.expanded;
+  let body = document.getElementById('oncallCalBody');
+  let bar = document.getElementById('oncallCalBar');
+  let hint = document.getElementById('oncallCalBarHint');
+  if(body) body.style.display = oncallState.expanded ? '' : 'none';
+  if(bar) bar.classList.toggle('expanded', oncallState.expanded);
+  if(hint) hint.textContent = oncallState.expanded ? 'tap to hide calendar' : 'tap to view calendar';
+  if(oncallState.expanded) renderOncallCalendar();
+};
 
 // Build the full list of doctors for dropdowns (sorted, unique).
 // Resolve legacy/aliased doctor names so old roster entries keep working
@@ -6572,13 +7353,26 @@ function oncallCount(roster){
 window.renderOncallCalendar = function(){
   let grid = document.getElementById('oncallGrid');
   let label = document.getElementById('oncallMonthLabel');
-  if(!grid || !label) return;
+  let barLabel = document.getElementById('oncallCalBarLabel');
   let y = oncallState.year, m = oncallState.month;
   let first = new Date(y, m, 1);
   let firstDow = first.getDay();
   let daysInMonth = new Date(y, m+1, 0).getDate();
   let todayIso_ = new Date().toISOString().slice(0,10);
-  label.innerText = first.toLocaleDateString('en-GB', { month:'long', year:'numeric' });
+  let monthLabel = first.toLocaleDateString('en-GB', { month:'long', year:'numeric' });
+  if(label) label.innerText = monthLabel;
+  if(barLabel) barLabel.innerText = monthLabel;
+
+  // Always render the day-detail (today by default)
+  renderOncallDetail();
+  showOncallAdminSearchIfAdmin();
+
+  if(!grid) return;
+  if(!oncallState.expanded){
+    // Calendar grid is collapsed — skip the grid render
+    return;
+  }
+
   let html = '';
   // leading blanks
   for(let i=0;i<firstDow;i++){ html += `<div class="cal-cell outside"></div>`; }
@@ -6611,8 +7405,6 @@ window.renderOncallCalendar = function(){
     html += `<div class="${cls}" onclick="selectOncallDay('${iso}')"><div class="cal-date">${d}</div>${dots?`<div class="oncall-dots">${dots}</div>`:''}${cnt?`<div class="cal-count" style="background:var(--sur2);color:var(--acc2);min-width:18px;font-size:9px">${cnt}/7</div>`:''}</div>`;
   }
   grid.innerHTML = html;
-  renderOncallDetail();
-  showOncallAdminSearchIfAdmin();
 };
 
 window.selectOncallDay = function(iso){
@@ -6975,10 +7767,21 @@ window.exportOncallPdf = function(){
 function renderOncallDetail(){
   let box = document.getElementById('oncallDayDetail');
   if(!box) return;
+  let todayIsoStr = _todayIsoLocal();
+  let now = new Date();
+  let onCurrentMonth = (oncallState.year === now.getFullYear() && oncallState.month === now.getMonth());
+
   let iso = oncallState.selected;
-  if(!iso){ box.innerHTML = ''; return; }
+  if(!iso && onCurrentMonth) iso = todayIsoStr;
+  if(!iso){
+    box.innerHTML = '<div class="cal-day-detail" style="padding:14px 14px;color:var(--dim);font-family:var(--font-mono);font-size:11px;text-align:center">Open the calendar above and pick a day to view the on-call team.</div>';
+    return;
+  }
+
+  let isToday = (iso === todayIsoStr);
   let roster = getOncallForDay(iso) || {};
   let dateLabel = new Date(iso+'T00:00:00').toLocaleDateString('en-GB', { weekday:'long', day:'2-digit', month:'long', year:'numeric' });
+  let titleLabel = isToday ? `Today · ${dateLabel}` : dateLabel;
   let isAdmin = (window.currentRole === 'admin');
   let editBtn = isAdmin ? `<button class="oncall-edit-btn" onclick="openOncallMo('${iso}')">✎ ${oncallHasAny(roster)?'Edit':'Assign'} Roster</button>` : '';
   function chip(name, cls){
@@ -6988,7 +7791,7 @@ function renderOncallDetail(){
   box.innerHTML = `
     <div class="oncall-detail-card">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding-bottom:10px;border-bottom:1px dashed var(--bor);flex-wrap:wrap;gap:8px">
-        <div style="font-family:var(--font-ui);font-size:17px;color:var(--txt)">${dateLabel}</div>
+        <div style="font-family:var(--font-ui);font-size:17px;color:var(--txt)">${titleLabel}</div>
         ${editBtn}
       </div>
       <div class="oncall-role-block">
@@ -7624,17 +8427,20 @@ const HOSPITAL_NUMBERS = [
   { loc: 'Ward 28', name: 'Ward 28 — Head Nurse', ext: '56940', direct: '25364060', hn: 'Heba', phone: '90963111' }
 ];
 
-// Grouping order for filter chips (Casualty/ICU first, then numerical wards)
+// Ward order for the dropdown (Casualty/ICU first, then numerical wards)
 const HOSPITAL_GROUPS = (function(){
   let seen = [];
   HOSPITAL_NUMBERS.forEach(r => { if(!seen.includes(r.loc)) seen.push(r.loc); });
   return seen;
 })();
 
-window.currentHospFilter = 'all';
+// Selected ward in the dropdown ('' = none, show nothing until search or selection)
+window._hospSelectedWard = '';
 
-window.setHospFilter = function(loc){
-  window.currentHospFilter = loc;
+window.hospJumpToWard = function(loc){
+  window._hospSelectedWard = loc || '';
+  // Clear search when picking a ward, so the two filters don't fight each other
+  let s = document.getElementById('hospSearch'); if(s) s.value = '';
   renderHospNumbers();
 };
 
@@ -7642,7 +8448,6 @@ function copyToClipboard(text){
   if(navigator.clipboard && navigator.clipboard.writeText){
     navigator.clipboard.writeText(text).then(()=>showHospToast('Copied: ' + text));
   } else {
-    // Fallback
     let ta = document.createElement('textarea');
     ta.value = text; ta.style.position='fixed'; ta.style.opacity='0';
     document.body.appendChild(ta); ta.select();
@@ -7665,26 +8470,26 @@ function showHospToast(msg){
 }
 
 window.renderHospNumbers = function(){
-  // Build filter chips
-  let bar = document.getElementById('hospFilterBar');
-  if(bar){
-    let counts = {};
-    HOSPITAL_NUMBERS.forEach(r => { counts[r.loc] = (counts[r.loc]||0)+1; });
-    let html = `<button class="hosp-filter${window.currentHospFilter==='all'?' on':''}" onclick="setHospFilter('all')">All <span style="opacity:0.6">${HOSPITAL_NUMBERS.length}</span></button>`;
+  // --- Populate "Select ward…" dropdown (once) ---
+  let jump = document.getElementById('hospJump');
+  if(jump && jump.options.length <= 1){
+    let frag = document.createDocumentFragment();
     HOSPITAL_GROUPS.forEach(loc => {
-      let label = loc.replace(/^Ward /, 'W');
-      html += `<button class="hosp-filter${window.currentHospFilter===loc?' on':''}" onclick="setHospFilter('${loc.replace(/'/g,"\\'")}')">${label} <span style="opacity:0.6">${counts[loc]}</span></button>`;
+      let opt = document.createElement('option');
+      opt.value = loc;
+      opt.textContent = loc.replace(/^Ward /, 'W');
+      frag.appendChild(opt);
     });
-    bar.innerHTML = html;
+    jump.appendChild(frag);
   }
+  // Sync the dropdown to the currently-selected ward
+  if(jump) jump.value = window._hospSelectedWard || '';
 
-  // Filter + search
+  // --- Filter ---
   let q = (document.getElementById('hospSearch')?.value || '').trim().toLowerCase();
   let rows = HOSPITAL_NUMBERS.slice();
-  if(window.currentHospFilter !== 'all'){
-    rows = rows.filter(r => r.loc === window.currentHospFilter);
-  }
   if(q){
+    // Search overrides the dropdown
     rows = rows.filter(r =>
       (r.loc||'').toLowerCase().includes(q) ||
       (r.name||'').toLowerCase().includes(q) ||
@@ -7693,16 +8498,26 @@ window.renderHospNumbers = function(){
       (r.direct||'').includes(q) ||
       (r.phone||'').includes(q)
     );
+  } else if(window._hospSelectedWard){
+    rows = rows.filter(r => r.loc === window._hospSelectedWard);
+  } else {
+    // Nothing selected, no search — show empty placeholder so the user picks a ward
+    rows = [];
   }
 
   let grid = document.getElementById('hospGrid');
   if(!grid) return;
+
   if(!rows.length){
-    grid.innerHTML = '<div class="hosp-empty">No matching numbers.</div>';
+    if(q){
+      grid.innerHTML = '<div class="hosp-empty">No matching numbers.</div>';
+    } else {
+      grid.innerHTML = '<div class="hosp-empty">Select a ward from the menu, or type in the search box.</div>';
+    }
     return;
   }
 
-  // Phone SVG (used for direct/mobile pills)
+  // --- Render flat cards ---
   const PHONE_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>';
   const EXT_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 9h6v6H9z"/></svg>';
 
