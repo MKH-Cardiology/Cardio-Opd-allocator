@@ -3883,14 +3883,20 @@ window.toggleS = (name, type) => {
 };
 
 // ===== BLOCKED DATES ADMIN (per-doctor) =====
+// Doctors who can be blocked even though they have no fixed weekday clinic in
+// CL. They are merged with the unique clinic-doctor names so the dropdown
+// covers everyone who might be away. Add more names here as needed.
+var EXTRA_BLOCKABLE_DOCS = ["Samir"];
+
 function populateBlockedDocDropdown(){
   let sel = document.getElementById("blocked-doc-input");
   if(!sel) return;
   // Preserve current selection if any
   let current = sel.value;
   let opts = '<option value="" disabled selected>Select doctor / clinic...</option>';
-  // Unique doctor names from CL, plus EP clinics
-  let docs = [...new Set(CL.map(c=>c.d))].sort();
+  // Unique doctor names from CL, plus any extra blockable doctors who have no
+  // fixed clinic (e.g. Samir — echo / consultant on rotation only).
+  let docs = [...new Set([...CL.map(c=>c.d), ...EXTRA_BLOCKABLE_DOCS])].sort();
   opts += '<optgroup label="Regular Clinics">';
   docs.forEach(name => { opts += `<option value="${name}">Dr. ${name}</option>`; });
   opts += '</optgroup>';
