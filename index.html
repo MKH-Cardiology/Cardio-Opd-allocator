@@ -551,6 +551,73 @@ header{background:var(--header-gradient);backdrop-filter:blur(14px);-webkit-back
 .oncall-empty{text-align:center;padding:30px 18px;color:var(--dim);font-family:var(--font-mono);font-size:11px}
 .cal-cell.has-oncall{background:linear-gradient(135deg,rgba(96,165,250,.06),rgba(56,189,248,.04))}
 
+/* ===== Morning Duty Schedule (admin) ===== */
+.md-weekpick{display:flex;gap:6px;align-items:center;margin-bottom:14px;flex-wrap:wrap}
+.md-weekpick button{background:var(--sur2);border:1px solid var(--bor);color:var(--mid);border-radius:6px;padding:6px 11px;font-family:var(--font-mono);font-size:10px;cursor:pointer;font-weight:500;letter-spacing:.04em;transition:all .15s}
+.md-weekpick button:hover{border-color:var(--acc-line);color:var(--acc2)}
+.md-week-label{font-family:var(--font-mono);font-size:11px;color:var(--txt);font-weight:600;padding:0 8px;letter-spacing:.04em;flex:1;text-align:center;min-width:150px}
+.md-rules{background:var(--sur2);border:1px solid var(--bor);border-radius:10px;padding:11px 13px;margin-bottom:14px}
+.md-rules-h{font-family:var(--font-mono);font-size:9px;letter-spacing:.08em;color:var(--dim);text-transform:uppercase;margin-bottom:7px}
+.md-rules ul{margin:0;padding-left:16px}
+.md-rules li{font-family:var(--font-mono);font-size:10.5px;color:var(--mid);line-height:1.7}
+.md-rules li b{color:var(--txt);font-weight:600}
+.md-rules li.md-warn-li{color:var(--warn)}
+.md-ccupick{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:rgba(224,161,74,.07);border:1px solid rgba(224,161,74,.32);border-radius:10px;padding:11px 13px;margin-bottom:14px}
+.md-ccupick-label{font-family:var(--font-ui);font-size:12.5px;color:var(--txt);font-weight:600;margin-bottom:3px}
+.md-ccupick-sub{font-family:var(--font-mono);font-size:9.5px;color:var(--dim);line-height:1.55}
+.md-toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.md-toolbar .btn{flex:1;min-width:200px}
+.md-day-card{background:var(--sur);border:1px solid var(--bor);border-radius:11px;padding:13px 14px;margin-bottom:9px}
+.md-day-card.md-today{border-color:var(--acc-line);box-shadow:0 0 0 1px var(--acc-line) inset}
+.md-day-card.md-flag{border-color:rgba(226,100,100,.5)}
+.md-day-card.md-holiday{background:linear-gradient(135deg,rgba(168,85,247,.10),rgba(168,85,247,.04));border-color:rgba(168,85,247,.45)}
+:root[data-theme="light"] .md-day-card.md-holiday{background:linear-gradient(135deg,rgba(126,34,206,.08),rgba(126,34,206,.03));border-color:rgba(126,34,206,.45)}
+.md-holiday-banner{display:flex;align-items:center;gap:13px;padding:8px 4px 4px 4px}
+.md-holiday-emoji{font-size:30px;line-height:1}
+.md-holiday-title{font-family:var(--font-ui);font-size:14px;font-weight:700;color:#c084fc;letter-spacing:.01em}
+:root[data-theme="light"] .md-holiday-title{color:#7e22ce}
+.md-holiday-sub{font-family:var(--font-mono);font-size:10.5px;color:var(--dim);font-weight:500;margin-top:2px}
+.md-day-head{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:10px;padding-bottom:9px;border-bottom:1px dashed var(--bor)}
+.md-day-name{font-family:var(--font-ui);font-size:15px;color:var(--txt);font-weight:600}
+.md-day-name .md-dow{font-family:var(--font-mono);font-size:10px;color:var(--dim);font-weight:500;margin-left:6px}
+.md-edit-btn{background:linear-gradient(135deg,#2563eb,#0891b2);border:none;border-radius:7px;padding:6px 13px;color:#fff;cursor:pointer;font-family:var(--font-mono);font-size:10px;font-weight:600;letter-spacing:.5px;text-transform:uppercase}
+.md-block{margin-bottom:9px}
+.md-block:last-child{margin-bottom:0}
+.md-block-label{font-family:var(--font-mono);font-size:9.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--dim);margin-bottom:4px}
+.md-chips{display:flex;flex-wrap:wrap;gap:5px}
+.md-chip{font-family:var(--font-mono);font-size:10.5px;padding:3px 9px;border-radius:6px;font-weight:600;background:var(--sur2);border:1px solid var(--bor);color:var(--txt)}
+.md-chip.echo{background:var(--acc-soft);border-color:var(--acc-line);color:var(--acc2)}
+.md-chip.cover{background:rgba(224,161,74,.12);border-color:rgba(224,161,74,.35);color:var(--warn)}
+.md-chip.free{background:rgba(63,185,140,.10);border-color:rgba(63,185,140,.32);color:var(--ok)}
+.md-chip.empty{color:var(--dim);font-style:italic;opacity:.75;background:transparent}
+.md-chip-sub{font-weight:400;opacity:.7;font-size:9px}
+.md-count-pill{font-family:var(--font-mono);font-size:9px;font-weight:700;padding:2px 7px;border-radius:9px;letter-spacing:.04em}
+.md-count-ok{background:rgba(63,185,140,.15);border:1px solid rgba(63,185,140,.35);color:var(--ok)}
+.md-count-bad{background:rgba(226,100,100,.15);border:1px solid rgba(226,100,100,.4);color:var(--err)}
+.md-count-todo{background:rgba(224,161,74,.15);border:1px solid rgba(224,161,74,.4);color:var(--warn)}
+.md-count-note{font-family:var(--font-mono);font-size:8.5px;color:var(--warn);font-weight:600;letter-spacing:.03em;margin-left:4px}
+.md-validation{border-radius:10px;padding:10px 13px;margin-bottom:14px;font-family:var(--font-mono);font-size:10.5px;line-height:1.65}
+.md-validation.ok{background:rgba(63,185,140,.08);border:1px solid rgba(63,185,140,.35);color:var(--ok)}
+.md-validation.bad{background:rgba(226,100,100,.07);border:1px solid rgba(226,100,100,.4);color:var(--err)}
+.md-validation.todo{background:rgba(224,161,74,.08);border:1px solid rgba(224,161,74,.4);color:var(--warn)}
+.md-validation-todo-inset{margin-top:10px;padding-top:9px;border-top:1px dashed var(--bor);color:var(--warn)}
+.md-validation ul{margin:6px 0 0;padding-left:17px}
+.md-validation li{margin-bottom:2px}
+.md-savebar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:16px;padding-top:14px;border-top:1px dashed var(--bor)}
+.md-save-hint{font-family:var(--font-mono);font-size:10px;color:var(--dim)}
+.md-add-btn{background:var(--sur2);border:1px dashed var(--bor2);color:var(--mid);border-radius:7px;padding:7px 12px;font-family:var(--font-mono);font-size:10px;cursor:pointer;font-weight:600;letter-spacing:.04em;transition:all .15s}
+.md-add-btn:hover{border-color:var(--acc-line);color:var(--acc2)}
+.md-echo-row{display:flex;gap:6px;align-items:center;margin-bottom:6px}
+.md-echo-row select{flex:1}
+.md-row-del{background:rgba(226,100,100,.1);border:1px solid rgba(226,100,100,.3);color:var(--err);border-radius:6px;width:30px;height:34px;cursor:pointer;font-size:13px;flex-shrink:0}
+.md-need-line{font-family:var(--font-mono);font-size:10px;margin-top:8px;font-weight:600}
+.md-cover-row{background:var(--sur2);border:1px solid var(--bor);border-radius:8px;padding:9px 10px;margin-bottom:8px}
+.md-cover-row .md-cover-owner{font-family:var(--font-mono);font-size:10px;color:var(--warn);margin-bottom:5px;font-weight:600}
+.md-cover-row label{margin-top:0}
+.md-duty-row{display:flex;gap:6px;align-items:center;margin-bottom:6px}
+.md-duty-row input.md-duty-label{flex:1;min-width:0}
+.md-duty-row select{flex:1;min-width:0}
+
 /* Day-of-week color tints for the on-call calendar */
 .cal-cell.cal-thu{background:linear-gradient(135deg,rgba(250,204,21,.08),rgba(250,204,21,.03));border-color:rgba(250,204,21,.28)}
 /* Weekend (Fri + Sat) — shared warm amber tint, calibrated for both themes */
@@ -2029,7 +2096,7 @@ header{background:var(--header-gradient);backdrop-filter:blur(14px);-webkit-back
           <option>Prof. Zubaid</option>
           <option>Dr. Abdullah</option>
           <option>Dr. Fahad</option>
-          <option>Dr. Ali</option>
+          <option>Dr. Ali Alsulaimi</option>
           <option>Dr. Farouk</option>
           <option>Dr. Arab</option>
           <option>Dr. Nazanin</option>
@@ -2340,7 +2407,7 @@ header{background:var(--header-gradient);backdrop-filter:blur(14px);-webkit-back
         <button class="fb" onclick="oncallQuickRange('nextMonth')" style="font-size:10px;padding:4px 9px">Next month</button>
         <button class="fb" onclick="oncallQuickRange('next7')" style="font-size:10px;padding:4px 9px">Next 7 days</button>
         <button class="fb" onclick="oncallQuickRange('next30')" style="font-size:10px;padding:4px 9px">Next 30 days</button>
-        <button class="fb" onclick="oncallQuickRange('eid')" style="font-size:10px;padding:4px 9px">Eid (May 26–30)</button>
+        <button class="fb" onclick="oncallQuickRange('eid')" style="font-size:10px;padding:4px 9px">Eid (May 26–31)</button>
       </div>
       <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
         <span style="font-family:var(--font-mono);font-size:9px;color:var(--dim);letter-spacing:.06em">FROM</span>
@@ -2357,7 +2424,7 @@ header{background:var(--header-gradient);backdrop-filter:blur(14px);-webkit-back
       <div class="cal-legend" style="display:flex;flex-wrap:wrap;gap:8px 14px;font-family:var(--font-mono);font-size:10px;color:var(--dim);margin-bottom:10px;align-items:center">
         <span style="display:inline-flex;align-items:center;gap:5px"><span style="width:12px;height:12px;border-radius:3px;background:rgba(250,204,21,.18);border:1px solid rgba(250,204,21,.35);display:inline-block"></span>Thu</span>
         <span style="display:inline-flex;align-items:center;gap:5px"><span style="width:12px;height:12px;border-radius:3px;background:rgba(245,158,11,.20);border:1px solid rgba(245,158,11,.45);display:inline-block"></span>Weekend (Fri / Sat)</span>
-        <span style="display:inline-flex;align-items:center;gap:5px"><span style="width:12px;height:12px;border-radius:3px;background:rgba(168,85,247,.20);border:1px solid rgba(168,85,247,.5);display:inline-block"></span>Eid (May 26–30)</span>
+        <span style="display:inline-flex;align-items:center;gap:5px"><span style="width:12px;height:12px;border-radius:3px;background:rgba(168,85,247,.20);border:1px solid rgba(168,85,247,.5);display:inline-block"></span>Eid (May 26–31)</span>
       </div>
       <div class="cal-toolbar">
         <button class="cal-nav-btn" onclick="shiftOncallMonth(-1)">◀</button>
@@ -2406,6 +2473,57 @@ header{background:var(--header-gradient);backdrop-filter:blur(14px);-webkit-back
           <button type="button" class="btn btn-secondary" style="margin-top:6px" onclick="clearOncallDay()">🗑 Clear Day</button>
         </form>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- Morning Duty day editor modal (admin) -->
+<div class="mo" id="mdMo">
+  <div class="mb" style="max-width:500px;max-height:92vh">
+    <div class="mh">
+      <h2 id="mdMoTitle" style="font-family:var(--font-ui);font-size:18px">Morning Duties</h2>
+      <button onclick="mdCloseMo()" style="background:none;border:none;color:var(--dim);font-size:20px;cursor:pointer">&#10005;</button>
+    </div>
+    <div class="mbody">
+      <div id="mdMoDate" style="font-family:var(--font-mono);font-size:12px;color:var(--acc2);margin-bottom:6px"></div>
+      <div id="mdMoContext" style="font-family:var(--font-mono);font-size:10px;color:var(--dim);line-height:1.6;margin-bottom:14px"></div>
+      <form onsubmit="return mdSaveDay(event)">
+        <input type="hidden" id="md-iso">
+
+        <div class="rl" style="margin-bottom:6px;color:var(--acc)">ECHO LAB ROSTER</div>
+        <div id="md-echo-rows" style="margin-bottom:6px"></div>
+        <button type="button" class="md-add-btn" onclick="mdAddEchoRow('')">+ Add echo doctor</button>
+        <div id="md-echo-need" class="md-need-line"></div>
+
+        <hr class="adm-hr">
+
+        <div class="rl" style="margin-bottom:6px;color:var(--warn)">CLINIC COVER</div>
+        <div style="font-family:var(--font-mono);font-size:10px;color:var(--dim);line-height:1.55;margin-bottom:8px">
+          Clinics whose owner is on a weekly rotation (CCU 3rd on-call / ASA ward senior) and needs a covering doctor.
+        </div>
+        <div id="md-cover-rows"></div>
+        <div id="md-cover-empty" style="font-family:var(--font-mono);font-size:10.5px;color:var(--dim);font-style:italic;display:none">No clinic-cover needed this day.</div>
+
+        <hr class="adm-hr">
+
+        <div class="rl" style="margin-bottom:6px;color:var(--ep)">GENERAL MORNING DUTIES</div>
+        <div style="font-family:var(--font-mono);font-size:10px;color:var(--dim);line-height:1.55;margin-bottom:8px">
+          Any other morning work slot (ward rounds backup, procedures, ECG / Holter reporting, etc.). Assign a free doctor to each.
+        </div>
+        <div id="md-duty-rows"></div>
+        <button type="button" class="md-add-btn" onclick="mdAddDutyRow('','')">+ Add duty slot</button>
+
+        <hr class="adm-hr">
+
+        <div class="rl" style="margin-bottom:6px;color:var(--ok)">FREE DOCTORS &mdash; SLOT PRIORITY</div>
+        <div style="font-family:var(--font-mono);font-size:10px;color:var(--dim);line-height:1.55;margin-bottom:8px">
+          Doctors with no clinic and no duty today. They have first priority for any empty morning work slot.
+        </div>
+        <div id="md-free-list" style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:6px"></div>
+
+        <button type="submit" class="btn" style="margin-top:10px">&#128190; Save This Day</button>
+        <button type="button" class="btn btn-secondary" style="margin-top:6px" onclick="mdClearDay()">&#128465; Clear This Day</button>
+      </form>
     </div>
   </div>
 </div>
@@ -2524,12 +2642,10 @@ header{background:var(--header-gradient);backdrop-filter:blur(14px);-webkit-back
             </div>
           </div>
           <div class="census-risk-input-group">
-            <label style="color:var(--ok)">🟢 Rest of patients (count only)</label>
-            <input type="text" id="cens-grn" inputmode="numeric" maxlength="2" placeholder="count" style="border-color:rgba(52,211,153,.35);margin-bottom:11px">
+            <label style="color:var(--ok)">🟢 Rest of patients (auto = Occupied − Critical − Moderate)</label>
+            <input type="text" id="cens-grn" readonly placeholder="auto" style="border-color:rgba(52,211,153,.35);margin-bottom:11px;background:rgba(52,211,153,.08);color:var(--ok);font-weight:600">
           </div>
 
-          <label>Doctor PIN</label>
-          <input type="password" id="cens-pin" maxlength="6" inputmode="numeric" required>
           <button type="submit" class="btn" style="margin-top:6px">💾 Save Census Update</button>
         </form>
       </div>
@@ -2629,13 +2745,14 @@ header{background:var(--header-gradient);backdrop-filter:blur(14px);-webkit-back
           <option>Dr. Hany</option>
           <option>Dr. Farouk</option>
           <option>Dr. Maged</option>
+          <option>Dr. Ashraf</option>
           <option>Dr. Fawzy</option>
           <option>Dr. Akmal</option>
           <option>Dr. Zaher</option>
           <option>Dr. Shafie</option>
           <option>Dr. Hamza</option>
           <option>Dr. Ramy</option>
-          <option>Dr. Ali</option>
+          <option>Dr. Ali Nasser</option>
           <option>Dr. Sajid</option>
           <option>Dr. Ibrahim Hassan</option>
           <option>Dr. Ihab</option>
@@ -2692,6 +2809,7 @@ header{background:var(--header-gradient);backdrop-filter:blur(14px);-webkit-back
       <button class="adm-tab" onclick="goAdmTab('analytics',this)">📊 Analytics</button>
       <button class="adm-tab" onclick="goAdmTab('backup',this)">💾 Backup</button>
       <button class="adm-tab" onclick="goAdmTab('dist',this)">Distribution</button>
+      <button class="adm-tab" onclick="goAdmTab('morning',this)">☀ Morning Duties</button>
       <button class="adm-tab" onclick="goAdmTab('log',this)">Log</button>
       <button class="adm-tab" onclick="goAdmTab('export',this)">Export / Print</button>
       <button class="adm-tab" onclick="goAdmTab('danger',this)">⚠ Danger Zone</button>
@@ -2783,6 +2901,53 @@ header{background:var(--header-gradient);backdrop-filter:blur(14px);-webkit-back
       <div class="dg" id="dg"></div>
     </div>
 
+    <div class="adm-sec" id="adm-morning">
+      <div class="adm-section-title">☀ Morning Duty Schedule</div>
+      <div class="adm-section-sub">Weekly echo-lab roster and clinic-cover assignments. The draft is auto-generated from the on-call schedule, clinic distribution and blocked dates &mdash; edit any cell, then save. Admin access only.</div>
+
+      <div class="md-weekpick">
+        <button onclick="mdShiftWeek(-1)">&#9664; Prev week</button>
+        <div class="md-week-label" id="mdWeekLabel">&mdash;</div>
+        <button onclick="mdShiftWeek(1)">Next week &#9654;</button>
+        <button onclick="mdJumpThisWeek()" style="border-color:var(--acc-line);color:var(--acc2)">&#8634; This week</button>
+      </div>
+
+      <div class="md-rules" id="mdRules">
+        <div class="md-rules-h">Coverage rules in effect this week</div>
+        <ul id="mdRulesList"></ul>
+      </div>
+
+      <div class="md-ccupick" id="mdCcuPick">
+        <div>
+          <div class="md-ccupick-label">CCU 3rd-on-call consultant this week</div>
+          <div class="md-ccupick-sub">Admin sets this. His clinic is auto-flagged for cover.</div>
+        </div>
+        <select id="mdCcuSelect" class="fd-sel" style="margin:0;max-width:230px" onchange="mdSetCcu(this.value)"></select>
+      </div>
+
+      <div class="md-ccupick" id="mdWardPick">
+        <div>
+          <div class="md-ccupick-label">ASA ward senior this week</div>
+          <div class="md-ccupick-sub">Auto-read from the Fri/Sat 2nd-on-call &mdash; override here if needed. His clinic is auto-flagged for cover.</div>
+        </div>
+        <select id="mdWardSelect" class="fd-sel" style="margin:0;max-width:230px" onchange="mdSetWard(this.value)"></select>
+      </div>
+
+      <div class="md-toolbar">
+        <button class="btn" style="margin:0" onclick="mdRegenerateDraft()">&#9851; Re-generate draft from rules</button>
+        <button class="btn" style="margin:0;background:var(--sur2);border:1px solid var(--bor);color:var(--mid)" onclick="mdExportPdf()">&#128196; Export week PDF</button>
+      </div>
+
+      <div id="mdValidation"></div>
+
+      <div id="mdGrid"></div>
+
+      <div class="md-savebar">
+        <button class="btn" style="margin:0" onclick="mdSaveWeek()">&#128190; Save Morning Duty Week</button>
+        <span class="md-save-hint" id="mdSaveHint"></span>
+      </div>
+    </div>
+
     <div class="adm-sec" id="adm-log">
       <div class="adm-section-title">Assignment Log</div>
       <div class="adm-section-sub">Last 50 entries across all assignment types.</div>
@@ -2861,7 +3026,7 @@ function dbUpdate(nodesObj){
   // nodesObj is { 'endorsements/abc': {...}, 'removals': [...] }
   return dbRef.update(nodesObj);
 }
-var docPINsHashed = {"fe675fe7aaee830b6fed09b64e034f84dcbdaeb429d9cccd4ebb90e15af8dd71":"Dr. Rehan","b281bc2c616cb3c3a097215fdc9397ae87e6e06b156cc34e656be7a1a9ce8839":"Dr. Ramy","8c9a013ab70c0434313e3e881c310b9ff24aff1075255ceede3f2c239c231623":"Dr. Badawy","75992a5ac67ff644d3063976c2effd10bdd93fcc109798e3d5c1acf2e530d01a":"Dr. Sharkawy","7f861bcee185de001377d79e08af62e94b1e7718e2470e08520c917f8d953602":"Dr. Mostafa","478c4ffb1cbcea37956a748e6c19d8eadd0a47e86f5e308d26cad39453b5d1ab":"Dr. Ibrahim","2c8b871e52d4e5f5db5ff84a82a45327e20df77edef961c4b6fa0e9c3d97ce5b":"Dr. Hadad","9aaf689fbcdfe9f64a071f9cbe28ae44193fa218e72af24456f44bed64583b4d":"Dr. Emara","6ad4a6b1e5ea5569795e516d71909e0ce4809d9dc983d2c219144f684f816e12":"Dr. Rahim","7a5df5ffa0dec2228d90b8d0a0f1b0767b748b0a41314c123075b8289e4e053f":"Dr. Mamdouh","3dd9c0995d54c0abd51a90f1d57b1ce77bc885fc8a7cea52dcad3c2540dda5ee":"Dr. Salam","165940940a02a187e4463ff467090930038c5af8fc26107bf301e714f599a1da":"Dr. Ezz","2ec42bc1f3e672fc1cf7fdcfc23246415dcf20f03c0d4a5bbbd92a185708f5b7":"Dr. R Gamal","df4865fca1f159162557359ef967f9502087f57527b0e030e139933e54f3061e":"Dr. Moghl","9553627933b214db60798fe40d2b4f8497781d024f53d62dc1b12469b7d53784":"Dr. Darwish","ef32cc5c2b7c62093d3ec4844b36a02b08bb83eee2efa6b6b5e85ad605790192":"Dr. Omar","b0ab628c9e14621846c58b4eb35060ef3885253a457d2d76136716d4850bad45":"Dr. Sajid","9989a37538faecc495bbe774b30fb447a1582b8f1bc14ac88dfd84996a7b799a":"Dr. Ali","61ab550f4c85a975cd46f8606ede483d8ee720a76f627773de1bc1dd8ce5fb35":"Dr. Eyad","f296867839c8befafed32b55a7c11ab4ad14387d2434b970a55237d537bc9353":"Dr. Mongy","cdad86ca9450d1c143675a8436131cabaf55905c114fa4524bf6a9ec5662cad7":"Dr. Bahlol","85d6385b945c0d602103db39b0b654b2af93b5127938e26a959c123f0789b948":"Prof. Zubaid","6c94e35ccc352d4e9ef0b99562cff995a5741ce8de8ad11b568892934daee366":"Dr. Abdullah","77459b9b941bcb4714d0c121313c900ecf30541d158eb2b9b178cdb8eca6457e":"Dr. Fahad","483029d526219f816e8e8f6a9de07b422633dba180ffc26faac22862a017519f":"Dr. Farouk","a20a2b7bb0842d5cf8a0c06c626421fd51ec103925c1819a51271f2779afa730":"Dr. Arab","6f6a4e56098cfd9af29e3ae549503b370211a4e94421457fe4cfd39a38a1fa08":"Dr. Nazanin","f1cfa5ebb149e8099d561aae57beed6c68f990f45a910ea9d7b460dbcc5350be":"Dr. Velibore","e5e53c784d5d49de1cabb6e904bf3380026aadcb9769775a268dd304dd9aa2df":"Dr. Ali Alsaygh","f37f3f2b0dc57a86dee4ba6ff855283bb4d2f0dea1c5bd1b708853444c2ffcec":"Dr. Ali Alsulaimi","38206b956d53155a677deb4b506f24e025fd66c62ccb3af33cd7f1319685ea73":"Dr. Hamza","b33ed571eded536f0f0bc2be4e4384055acd592fe6652a555320fdca4dbeb175":"Dr. Ibrahim Hassan","a20c25627ed7bbb6d2b999c589b698e6ecd84384e2e0e510d8869d79a5ad244c":"Dr. Hisham","3ba982075eba89702c1637b9ce03d8a3d8b6dce9434dd07a4c30b5525ab27850":"Dr. Farag","7a24738c1004bcc250f2e527aeab5e3b1891d00a5146a54b2e8c20df84a8c09d":"Dr. Hany","ad25fc1532c8454fdda1d5e5258dd5771e919eaf4db2ca59842043804ccb6fb5":"Dr. Ehab","56f2f6918fec1d2d8eaa4f1b900ee2241576ba4e24f6c601b1ca4f05173fdb5a":"Dr. Samir","59012b44adb8c2f5e94b7a197e260fa945cc23ddd4d8737195d9391396d0ec5c":"Dr. Maged","7e66b5dd3d158d14ba3300cad5702ee6d72befaec37890eed25c91687bb649df":"Dr. Ashraf","e276f59bc5a81f2968dfb34b6324f7d59fea2723fd733bc9e70d65e848ef8f42":"Dr. Fawzy","41214f55c1e8d6170239eb93d7cc105abbee1dc0fbe8f7a258962da285dfe9cd":"Dr. Akmal","ff4b467b7a593047c46682ecdbf6da36b3f3bb4b50d35f08f17f751ef5f15531":"Dr. Zaher","41c8fa7d060badc5618a28326dc00cf07e1ce22a79a94a1fed94f271d3127447":"Dr. Shafie","888df25ae35772424a560c7152a1de794440e0ea5cfee62828333a456a506e05":"Admin"};
+var docPINsHashed = {"fe675fe7aaee830b6fed09b64e034f84dcbdaeb429d9cccd4ebb90e15af8dd71":"Dr. Rehan","b281bc2c616cb3c3a097215fdc9397ae87e6e06b156cc34e656be7a1a9ce8839":"Dr. Ramy","8c9a013ab70c0434313e3e881c310b9ff24aff1075255ceede3f2c239c231623":"Dr. Badawy","75992a5ac67ff644d3063976c2effd10bdd93fcc109798e3d5c1acf2e530d01a":"Dr. Sharkawy","7f861bcee185de001377d79e08af62e94b1e7718e2470e08520c917f8d953602":"Dr. Mostafa","478c4ffb1cbcea37956a748e6c19d8eadd0a47e86f5e308d26cad39453b5d1ab":"Dr. Ibrahim","2c8b871e52d4e5f5db5ff84a82a45327e20df77edef961c4b6fa0e9c3d97ce5b":"Dr. Hadad","9aaf689fbcdfe9f64a071f9cbe28ae44193fa218e72af24456f44bed64583b4d":"Dr. Emara","6ad4a6b1e5ea5569795e516d71909e0ce4809d9dc983d2c219144f684f816e12":"Dr. Rahim","7a5df5ffa0dec2228d90b8d0a0f1b0767b748b0a41314c123075b8289e4e053f":"Dr. Mamdouh","3dd9c0995d54c0abd51a90f1d57b1ce77bc885fc8a7cea52dcad3c2540dda5ee":"Dr. Salam","165940940a02a187e4463ff467090930038c5af8fc26107bf301e714f599a1da":"Dr. Ezz","2ec42bc1f3e672fc1cf7fdcfc23246415dcf20f03c0d4a5bbbd92a185708f5b7":"Dr. R Gamal","df4865fca1f159162557359ef967f9502087f57527b0e030e139933e54f3061e":"Dr. Moghl","9553627933b214db60798fe40d2b4f8497781d024f53d62dc1b12469b7d53784":"Dr. Darwish","ef32cc5c2b7c62093d3ec4844b36a02b08bb83eee2efa6b6b5e85ad605790192":"Dr. Omar","b0ab628c9e14621846c58b4eb35060ef3885253a457d2d76136716d4850bad45":"Dr. Sajid","9989a37538faecc495bbe774b30fb447a1582b8f1bc14ac88dfd84996a7b799a":"Dr. Ali Nasser","61ab550f4c85a975cd46f8606ede483d8ee720a76f627773de1bc1dd8ce5fb35":"Dr. Eyad","f296867839c8befafed32b55a7c11ab4ad14387d2434b970a55237d537bc9353":"Dr. Mongy","cdad86ca9450d1c143675a8436131cabaf55905c114fa4524bf6a9ec5662cad7":"Dr. Bahlol","85d6385b945c0d602103db39b0b654b2af93b5127938e26a959c123f0789b948":"Prof. Zubaid","6c94e35ccc352d4e9ef0b99562cff995a5741ce8de8ad11b568892934daee366":"Dr. Abdullah","77459b9b941bcb4714d0c121313c900ecf30541d158eb2b9b178cdb8eca6457e":"Dr. Fahad","483029d526219f816e8e8f6a9de07b422633dba180ffc26faac22862a017519f":"Dr. Farouk","a20a2b7bb0842d5cf8a0c06c626421fd51ec103925c1819a51271f2779afa730":"Dr. Arab","6f6a4e56098cfd9af29e3ae549503b370211a4e94421457fe4cfd39a38a1fa08":"Dr. Nazanin","f1cfa5ebb149e8099d561aae57beed6c68f990f45a910ea9d7b460dbcc5350be":"Dr. Velibore","e5e53c784d5d49de1cabb6e904bf3380026aadcb9769775a268dd304dd9aa2df":"Dr. Ali Alsaygh","f37f3f2b0dc57a86dee4ba6ff855283bb4d2f0dea1c5bd1b708853444c2ffcec":"Dr. Ali Alsulaimi","38206b956d53155a677deb4b506f24e025fd66c62ccb3af33cd7f1319685ea73":"Dr. Hamza","b33ed571eded536f0f0bc2be4e4384055acd592fe6652a555320fdca4dbeb175":"Dr. Ibrahim Hassan","a20c25627ed7bbb6d2b999c589b698e6ecd84384e2e0e510d8869d79a5ad244c":"Dr. Hisham","3ba982075eba89702c1637b9ce03d8a3d8b6dce9434dd07a4c30b5525ab27850":"Dr. Farag","7a24738c1004bcc250f2e527aeab5e3b1891d00a5146a54b2e8c20df84a8c09d":"Dr. Hany","ad25fc1532c8454fdda1d5e5258dd5771e919eaf4db2ca59842043804ccb6fb5":"Dr. Ehab","56f2f6918fec1d2d8eaa4f1b900ee2241576ba4e24f6c601b1ca4f05173fdb5a":"Dr. Samir","59012b44adb8c2f5e94b7a197e260fa945cc23ddd4d8737195d9391396d0ec5c":"Dr. Maged","7e66b5dd3d158d14ba3300cad5702ee6d72befaec37890eed25c91687bb649df":"Dr. Ashraf","e276f59bc5a81f2968dfb34b6324f7d59fea2723fd733bc9e70d65e848ef8f42":"Dr. Fawzy","41214f55c1e8d6170239eb93d7cc105abbee1dc0fbe8f7a258962da285dfe9cd":"Dr. Akmal","ff4b467b7a593047c46682ecdbf6da36b3f3bb4b50d35f08f17f751ef5f15531":"Dr. Zaher","41c8fa7d060badc5618a28326dc00cf07e1ce22a79a94a1fed94f271d3127447":"Dr. Shafie","888df25ae35772424a560c7152a1de794440e0ea5cfee62828333a456a506e05":"Admin"};
 var ADMIN_HASH = "b2b2f104d32c638903e151a9b20d6e27b41d8c0c84cf8458738f83ca2f1dd744";
 var CLERK_HASH = "158a323a7ba44870f23d96f1516dd70aa48e9a72db4ebb026b0a89e212a208ab";
 
@@ -3214,8 +3379,11 @@ window.doAssign = async function(type, manualSlotIndex=null) {
   if(type==='ip'){
     let fn=document.getElementById("fi").value.trim(), apt=document.getElementById("fd-sel").value;
     if(!/^\d{6}$/.test(fn)) return alert("Check File Number (6 digits).");
-    // If doctor is already logged in, use their identity; otherwise fall back to PIN entry
+    // Identify the registrar signing this action. Priority: logged-in doctor →
+    // logged-in admin/clerk (signed as Admin/Clerk) → legacy PIN entry fallback.
     let reg = window.currentDoctor;
+    if(!reg && window.currentRole === 'admin') reg = 'Admin';
+    if(!reg && window.currentRole === 'clerk') reg = 'Clerk';
     if(!reg){
       let pin=document.getElementById("rpin").value.trim();
       reg = await lookupDocPIN(pin);
@@ -3277,8 +3445,10 @@ window.doSpecificAssign = async function() {
   let apt=document.getElementById("spec-date").value;
   if(!/^\d{6}$/.test(fn)||!apt) return alert("Invalid fields");
   if(isBlocked(apt, selectedSpecificDoc.name)) return alert(`Dr. ${selectedSpecificDoc.name} has this date blocked by admin. Please select a different follow-up date.`);
-  // If doctor is already logged in, use their identity; otherwise fall back to PIN entry
+  // Identify the registrar. Logged-in doctor → admin/clerk → PIN fallback.
   let reg = window.currentDoctor;
+  if(!reg && window.currentRole === 'admin') reg = 'Admin';
+  if(!reg && window.currentRole === 'clerk') reg = 'Clerk';
   if(!reg){
     let pin=document.getElementById("spec-pin").value.trim();
     reg = await lookupDocPIN(pin);
@@ -3347,8 +3517,10 @@ window.doEpAssign=async function(){
   let apt=document.getElementById("ep-date").value;
   if(!/^\d{6}$/.test(fn)||!apt) return alert("Invalid data");
   if(isBlocked(apt, selectedEpClinic.id)) return alert(`${selectedEpClinic.name} has this date blocked by admin. Please select a different follow-up date.`);
-  // If doctor is already logged in, use their identity; otherwise fall back to PIN entry
+  // Identify the registrar. Logged-in doctor → admin/clerk → PIN fallback.
   let regName = window.currentDoctor;
+  if(!regName && window.currentRole === 'admin') regName = 'Admin';
+  if(!regName && window.currentRole === 'clerk') regName = 'Clerk';
   if(!regName){
     let pin=document.getElementById("ep-pin").value.trim();
     regName = await lookupDocPIN(pin);
@@ -4152,6 +4324,7 @@ function ensureExtState(){
   if(!window.S.hfPatients) window.S.hfPatients = {};
   if(!window.S.echoList) window.S.echoList = {};
   if(!window.S.teeScheduled) window.S.teeScheduled = {};
+  if(!window.S.morningDuty) window.S.morningDuty = {};
 }
 
 // Compress image to ~80KB max, return base64 data URL
@@ -5238,7 +5411,10 @@ async function resolveDoctor(pinFieldId){
   if(window.currentDoctor) return window.currentDoctor;
   // If admin is logged in (no specific doctor), allow signing as "Admin"
   if(window.currentRole === 'admin') return 'Admin';
-  // Otherwise, fall back to PIN entry (legacy / clerk save path)
+  // If clerk is logged in, allow signing as "Clerk" — they passed the
+  // role-gate PIN at login and should not re-authenticate per action.
+  if(window.currentRole === 'clerk') return 'Clerk';
+  // Otherwise, fall back to PIN entry (legacy unauthenticated path)
   let pinEl = document.getElementById(pinFieldId);
   let pin = pinEl ? pinEl.value.trim() : '';
   // Treat the placeholder __SESSION__ value as "no PIN entered"
@@ -5252,8 +5428,13 @@ async function resolveDoctor(pinFieldId){
   return name;
 }
 
-// Hide PIN-entry field and its label when a doctor is already logged in.
-// pinFieldId = e.g. 'endo-pin', 'cath-sch-pin', 'cath-p-pin', 'cens-pin'.
+// Hide PIN-entry field and its label when a session is already authenticated
+// at the main role gate. That covers doctors (currentDoctor set), admins and
+// clerks (currentRole set with no per-doctor identity). Once any user has
+// passed the role-gate PIN, they should not have to re-enter a PIN to record
+// an action inside the app — actions signed without a doctor identity fall
+// back to "Admin" / "Clerk" via resolveDoctor().
+// pinFieldId = e.g. 'rpin', 'endo-pin', 'cath-sch-pin', 'cath-p-pin'.
 function hidePinFieldIfLoggedIn(pinFieldId){
   let pinEl = document.getElementById(pinFieldId);
   if(!pinEl) return;
@@ -5261,7 +5442,8 @@ function hidePinFieldIfLoggedIn(pinFieldId){
   if(pinEl.type === 'hidden') return;
   // The label is the <label> element immediately preceding the input
   let label = pinEl.previousElementSibling;
-  if(window.currentDoctor){
+  let authed = !!(window.currentDoctor || window.currentRole);
+  if(authed){
     pinEl.style.display = 'none';
     pinEl.required = false;
     pinEl.value = '';
@@ -5275,8 +5457,9 @@ function hidePinFieldIfLoggedIn(pinFieldId){
 
 // v3.4: sweep ALL known action-form PIN fields in one go.
 // Called at login (via enterApp/applyRoleUI) AND on tab switches as a
-// belt-and-braces measure so a logged-in doctor never has to re-enter a
-// PIN to record an action. Excludes: prof-* (Change-My-PIN modal),
+// belt-and-braces measure so any logged-in user (doctor, admin, or clerk)
+// never has to re-enter a PIN to record an action — they've already passed
+// the role-gate PIN at login. Excludes: prof-* (Change-My-PIN modal),
 // roleStage2Pin (login gate), pinreset-* (admin reset form), api-adm
 // (admin gate) — those fields legitimately need a PIN.
 function hideAllActionPinFields(){
@@ -5286,7 +5469,6 @@ function hideAllActionPinFields(){
     'ep-pin',        // EP allocator
     'cath-sch-pin',  // Cath schedule
     'cath-p-pin',    // Cath waiting list
-    'cens-pin',      // Census
     'hf-pin',        // HF team
     'endo-pin'       // IP patient (already hidden type, but harmless)
   ];
@@ -5475,7 +5657,7 @@ function updateSchDateBadge(){
   let editId = document.getElementById('cath-sch-edit-id')?.value;
   let count = Object.values(window.S.cathScheduled||{}).filter(s => s.date === selected && s.id !== editId).length;
   // Ward 4 available beds (if census updated)
-  let avail = window.S.census?.ward4?.available;
+  let avail = censusAvailable('ward4');
   let shortage = (typeof avail === 'number' && count >= avail);
   let color = count === 0 ? 'var(--ok)' : (count < 4 ? 'var(--acc2)' : 'var(--warn)');
   if(shortage) color = 'var(--err)';
@@ -5914,7 +6096,7 @@ function renderCathToday(){
   all.sort((a,b) => (a.operator||'zzzz').localeCompare(b.operator||'zzzz') || (a.proc||'').localeCompare(b.proc||''));
 
   // Stats strip
-  let avail = window.S.census?.ward4?.available;
+  let avail = censusAvailable('ward4');
   let availBlock = (typeof avail === 'number')
     ? `<div class="today-stat"><div class="today-stat-lbl">WARD 4 AVAIL</div><div class="today-stat-val" style="color:${avail>=all.length?'var(--ok)':'var(--err)'}">${avail}</div></div>`
     : '<div class="today-stat"><div class="today-stat-lbl">WARD 4 AVAIL</div><div class="today-stat-val" style="color:var(--dim);font-size:13px">census not updated</div></div>';
@@ -6074,7 +6256,7 @@ function renderCathCalendar(){
   let daysInMonth = new Date(calState.year, calState.month+1, 0).getDate();
   let daysInPrevMonth = new Date(calState.year, calState.month, 0).getDate();
   let today = todayIso();
-  let ward4Avail = window.S.census?.ward4?.available;
+  let ward4Avail = censusAvailable('ward4');
 
   let cells = [];
   // Leading days from previous month
@@ -6348,7 +6530,7 @@ function renderCathPending(){
 // ============================================================
 // CENSUS (Ward 4 + CCU) — updated twice daily
 // ============================================================
-const WARD_CAPACITIES = { ward4: 20, ccu: 15 };
+const WARD_CAPACITIES = { ward4: 24, ccu: 15 };
 const WARD_LABELS = { ward4: 'Ward 4', ccu: 'CCU' };
 
 window.openCensusMo = function(unit){
@@ -6367,9 +6549,8 @@ window.openCensusMo = function(unit){
   document.getElementById('cens-grn').value = existing?.stable || '';
   document.getElementById('cens-pend-disc').value = existing?.pendingDischarges || '';
   document.getElementById('cens-other-tx').value = existing?.otherWardsTransfer || '';
-  document.getElementById('cens-pin').value = '';
   updateCensAvail();
-  hidePinFieldIfLoggedIn('cens-pin');
+  updateCensStable();
   document.getElementById('censusMo').classList.add('on');
 };
 window.closeCensusMo = function(){ document.getElementById('censusMo').classList.remove('on'); };
@@ -6382,16 +6563,46 @@ function updateCensAvail(){
   document.getElementById('cens-avail').value = avail + ' / ' + cap;
 }
 
+// Live available beds for a unit — always computed from the CURRENT capacity
+// constant and the stored occupied count, never the stale stored `available`
+// (which was frozen at the capacity in force when the record was saved).
+function censusAvailable(unit){
+  let data = window.S.census?.[unit];
+  if(!data || typeof data.occupied !== 'number') return undefined;
+  let cap = WARD_CAPACITIES[unit] || 0;
+  return Math.max(0, cap - data.occupied);
+}
+
+// "Rest of patients" auto-calc: Occupied − Critical − Moderate, never negative.
+function updateCensStable(){
+  let occ = parseInt(document.getElementById('cens-occ').value) || 0;
+  let red = parseInt(document.getElementById('cens-red').value) || 0;
+  let yel = parseInt(document.getElementById('cens-yel').value) || 0;
+  let grnEl = document.getElementById('cens-grn');
+  if(!grnEl) return;
+  let grn = occ - red - yel;
+  if(grn < 0){
+    grnEl.value = '⚠ over';
+    grnEl.style.color = 'var(--err)';
+  } else {
+    grnEl.value = grn;
+    grnEl.style.color = 'var(--ok)';
+  }
+}
+
 // Attach live recalculation
 document.addEventListener('input', function(ev){
-  if(ev.target && ev.target.id === 'cens-occ') updateCensAvail();
+  if(!ev.target) return;
+  if(ev.target.id === 'cens-occ'){ updateCensAvail(); updateCensStable(); }
+  if(ev.target.id === 'cens-red' || ev.target.id === 'cens-yel') updateCensStable();
 });
 
 window.saveCensus = async function(ev){
   ev.preventDefault();
   ensureExtState();
-  let reg = await resolveDoctor('cens-pin');
-  if(!reg) return false;
+  // No PIN gate — the user is already signed in to the app. Record the
+  // census update under the current session identity.
+  let reg = window.currentDoctor || (window.currentRole==='admin' ? 'Admin' : 'Staff');
   let unit = document.getElementById('cens-unit').value;
   let cap = WARD_CAPACITIES[unit] || 0;
   let occupied = parseInt(document.getElementById('cens-occ').value) || 0;
@@ -6402,9 +6613,15 @@ window.saveCensus = async function(ev){
   let redBeds = document.getElementById('cens-red-beds').value.trim();
   let yel = parseInt(document.getElementById('cens-yel').value) || 0;
   let yelBeds = document.getElementById('cens-yel-beds').value.trim();
-  let grn = parseInt(document.getElementById('cens-grn').value) || 0;
   let pendDisc = parseInt(document.getElementById('cens-pend-disc').value) || 0;
   let otherTx = parseInt(document.getElementById('cens-other-tx').value) || 0;
+  // "Rest of patients" (stable / green) is auto-calculated: occupied minus the
+  // critical and moderate counts. Never typed by the user.
+  let grn = Math.max(0, occupied - red - yel);
+  if(red + yel > occupied){
+    alert(`Critical (${red}) + Moderate (${yel}) cannot exceed Occupied beds (${occupied}).`);
+    return false;
+  }
 
   if(!window.S.census) window.S.census = {};
   window.S.census[unit] = {
@@ -6463,8 +6680,8 @@ function renderCensus(){
       </div>
       <div class="census-numbers">
         <div class="census-stat occ"><div class="census-stat-label">Occupied</div><div class="census-stat-val">${data.occupied}</div></div>
-        <div class="census-stat avail"><div class="census-stat-label">Available</div><div class="census-stat-val">${data.available}</div></div>
-        <div class="census-stat capacity"><div class="census-stat-label">Capacity</div><div class="census-stat-val">${data.capacity}</div></div>
+        <div class="census-stat avail"><div class="census-stat-label">Available</div><div class="census-stat-val">${Math.max(0, cap - (data.occupied||0))}</div></div>
+        <div class="census-stat capacity"><div class="census-stat-label">Capacity</div><div class="census-stat-val">${cap}</div></div>
       </div>
       <div class="census-split">
         <div class="census-split-item"><span class="census-split-label">Cardiology</span><span class="census-split-val">${data.cardio}</span></div>
@@ -6511,7 +6728,8 @@ function computeBedAlerts(){
   // Alarm only active in the overnight window (9pm – 9am)
   if(!isCensusAlarmWindow()) return alerts;
   let ward4 = window.S.census?.ward4;
-  if(!ward4 || typeof ward4.available !== 'number') return alerts;
+  let ward4Avail = censusAvailable('ward4');
+  if(!ward4 || typeof ward4Avail !== 'number') return alerts;
   // Only look at tomorrow (next calendar day) — use LOCAL date, not UTC.
   // toISOString() shifts to UTC which causes off-by-one-day errors in Kuwait (UTC+3).
   let tomorrow = new Date(todayIso()+'T00:00:00');
@@ -6522,8 +6740,8 @@ function computeBedAlerts(){
   let nonIpTomorrow = Object.values(window.S.cathScheduled||{}).filter(s => {
     return s.date === tomorrowIso && s.caseType !== 'IP';
   }).length;
-  if(nonIpTomorrow > ward4.available){
-    alerts.push({date: tomorrowIso, scheduled: nonIpTomorrow, available: ward4.available, shortage: nonIpTomorrow - ward4.available});
+  if(nonIpTomorrow > ward4Avail){
+    alerts.push({date: tomorrowIso, scheduled: nonIpTomorrow, available: ward4Avail, shortage: nonIpTomorrow - ward4Avail});
   }
   return alerts;
 }
@@ -6585,13 +6803,13 @@ window.goTab=(id,btn)=>{
   if(typeof hideAllActionPinFields === 'function') hideAllActionPinFields();
   rAll();
 };
-window.goAdmTab=(id,btn)=>{ document.querySelectorAll(".adm-tab").forEach(t=>t.classList.remove("on")); document.querySelectorAll(".adm-sec").forEach(s=>s.classList.remove("on")); btn.classList.add("on"); document.getElementById("adm-"+id).classList.add("on"); if(id==="export") renderClinicExportGrid(); if(id==="blocked") renderBlockedList(); if(id==="pinreset"){ renderPinResetTab(); } if(id==="removals") renderRemovalsList(); if(id==="analytics" && typeof renderAnalytics==='function') renderAnalytics(); if(id==="backup" && typeof renderBackupStats==='function') renderBackupStats(); };
+window.goAdmTab=(id,btn)=>{ document.querySelectorAll(".adm-tab").forEach(t=>t.classList.remove("on")); document.querySelectorAll(".adm-sec").forEach(s=>s.classList.remove("on")); btn.classList.add("on"); document.getElementById("adm-"+id).classList.add("on"); if(id==="export") renderClinicExportGrid(); if(id==="blocked") renderBlockedList(); if(id==="pinreset"){ renderPinResetTab(); } if(id==="removals") renderRemovalsList(); if(id==="analytics" && typeof renderAnalytics==='function') renderAnalytics(); if(id==="backup" && typeof renderBackupStats==='function') renderBackupStats(); if(id==="morning" && typeof renderMorningDuty==='function') renderMorningDuty(); };
 window.filterLog=(f,b)=>{ document.querySelectorAll(".fb").forEach(x=>x.classList.remove("on")); b.classList.add("on"); window.lf=f; rLog(); };
 window.adminLogin=async (id)=>{ let v=document.getElementById(id).value; if(!v) return; let h=await sha256(v); if(h===ADMIN_HASH){ adm=true; document.querySelectorAll(".apgate").forEach(e=>e.style.display="none"); document.querySelectorAll(".ac-content").forEach(e=>e.style.display="block"); rAll(); } else { alert("Incorrect PIN"); document.getElementById(id).value=""; } };
 window.goOpTab=(tab,btn)=>{ document.querySelectorAll("#opc .tab").forEach(t=>t.classList.remove("on")); btn.classList.add("on"); document.getElementById("op-walkin").style.display=tab==="walkin"?"block":"none"; document.getElementById("op-fix").style.display=tab==="fix"?"block":"none"; if(tab==="fix") renderFixClinics(); };
 window.closeMo=()=>document.getElementById("mo").classList.remove("on");
 window.delEntry=()=>{ let s=document.getElementById("dfi").value.trim(); if(!s) return; let idxL=window.S.logs.findIndex(e=>e.fn.toString().includes(s)), idxO=window.S.oplogs.findIndex(e=>e.fn.toString().includes(s)), idxE=(window.S.eplogs||[]).findIndex(e=>e.fn.toString().includes(s)); if(idxL===-1 && idxO===-1 && idxE===-1) return alert("Not found"); if(confirm("Delete?")){ let key; if(idxL!==-1){ window.S.logs.splice(idxL,1); key='logs'; } else if(idxO!==-1){ window.S.oplogs.splice(idxO,1); key='oplogs'; } else { window.S.eplogs.splice(idxE,1); key='eplogs'; } dbWrite(key, window.S[key]); rAll(); } };
-window.resetAll=()=>{ if(confirm("WIPE EVERYTHING?")){ window.S={logs:[], oplogs:[], eplogs:[], leave:{}, skipped:{}, blockedDates:{}, endorsements:{}, cathScheduled:{}, cathPending:{}, census:{ward4:null,ccu:null}, onCall:{}, docPins:{}, pinChanges:[], removals:[]}; dbRef.set(window.S); rAll(); } };
+window.resetAll=()=>{ if(confirm("WIPE EVERYTHING?")){ window.S={logs:[], oplogs:[], eplogs:[], leave:{}, skipped:{}, blockedDates:{}, endorsements:{}, cathScheduled:{}, cathPending:{}, census:{ward4:null,ccu:null}, onCall:{}, docPins:{}, pinChanges:[], removals:[], morningDuty:{}}; dbRef.set(window.S); rAll(); } };
 window.exportWeekly=()=>{ let all=(window.S.logs||[]).concat(window.S.oplogs||[]).concat(window.S.eplogs||[]).sort((a,b)=>b.ts-a.ts); if(!all.length) return alert("No data"); exportPDF("Master Log — All Entries", all); };
 
 dbRef.on('value',(snap)=>{
@@ -6614,6 +6832,7 @@ dbRef.on('value',(snap)=>{
     window.S.hfPatients=d.hfPatients||{};
     window.S.echoList=d.echoList||{};
     window.S.teeScheduled=d.teeScheduled||{};
+    window.S.morningDuty=d.morningDuty||{};
   }
   ensureExtState();
 
@@ -7528,8 +7747,8 @@ window.renderOncallCalendar = function(){
     // Day-of-week tints (Thu=4, Fri=5, Sat=6 — Fri+Sat share a "weekend" tint)
     if(dow === 4) cls += ' cal-thu';
     else if(dow === 5 || dow === 6) cls += ' cal-weekend';
-    // Eid vacation: May 26–30 of the current displayed month/year
-    if(y === 2026 && m === 4 && d >= 26 && d <= 30) cls += ' cal-eid';
+    // Eid vacation: May 26–31 of the current displayed month/year
+    if(y === 2026 && m === 4 && d >= 26 && d <= 31) cls += ' cal-eid';
     let dots = '';
     if(roster){
       // Small colored pills representing filled roles
@@ -7604,7 +7823,7 @@ window.oncallQuickRange = function(kind){
     from = new Date(now); to = new Date(now); to.setDate(to.getDate()+30);
   } else if(kind === 'eid'){
     from = new Date(2026, 4, 26);
-    to   = new Date(2026, 4, 30);
+    to   = new Date(2026, 4, 31);
   } else {
     return;
   }
@@ -7757,7 +7976,7 @@ window.exportOncallPdf = function(){
       if(!names.includes(docVal)){ cursor.setDate(cursor.getDate()+1); continue; }
     }
 
-    let isEid = (cursor.getFullYear() === 2026 && cursor.getMonth() === 4 && cursor.getDate() >= 26 && cursor.getDate() <= 30);
+    let isEid = (cursor.getFullYear() === 2026 && cursor.getMonth() === 4 && cursor.getDate() >= 26 && cursor.getDate() <= 31);
     let dayLabel = shortDate(cursor) + (isEid ? '  · EID' : '');
 
     // Tag the row for didParseCell color-coding (no visible text marker for Thu / weekend)
@@ -7888,7 +8107,7 @@ window.exportOncallPdf = function(){
   let lx = 40;
   legendChip(lx, finalY + 3, [254, 249, 195], 'Thursday');                lx += 70;
   legendChip(lx, finalY + 3, [254, 235, 200], 'Weekend');                 lx += 75;
-  legendChip(lx, finalY + 3, [243, 232, 255], 'Eid (May 26–30)');         lx += 110;
+  legendChip(lx, finalY + 3, [243, 232, 255], 'Eid (May 26–31)');         lx += 110;
 
   // Right side: timestamp
   doc.setFont('helvetica', 'normal');
@@ -9933,6 +10152,1177 @@ window.renderAnalytics = function(){
   </div>`;
 
   host.innerHTML = html;
+};
+
+
+/* ===== MORNING DUTY SCHEDULE FEATURE ===== */
+/* =====================================================================
+   MORNING DUTY SCHEDULE — admin-only weekly morning roster
+   ---------------------------------------------------------------------
+   A "morning duty" week runs Sun→Thu (working week; clinics never run
+   Fri/Sat). The schedule is keyed by the week's Sunday ISO date in
+   window.S.morningDuty[weekSunIso] = {
+     days: {
+       "<iso>": {
+         echo:   ["Dr. X", ...],          // echo-lab roster for that day
+         cover:  { "<clinicIdx>": "Dr. Y" }, // who covers a rotation clinic
+       }, ...
+     },
+     updatedAt, updatedBy
+   }
+   The draft is auto-generated from: on-call roster (CCU 3rd-on-call +
+   ward senior), the CL clinic distribution, blocked dates and leave.
+   Everything is editable; nothing is written to Firebase until Save.
+   ===================================================================== */
+
+/* ---- Category / echo-eligibility tables (from department structure) ---- */
+var MD_CONSULTANTS = ["Hisham","Farag","Ibrahim Hassan","Hany","Ehab","Samir"];
+var MD_SENIORS     = ["Maged","Ashraf","Fawzy","Akmal","Zaher","Shafie","Hamza","Ramy"];
+// Echo trainees — always shown in the free-doctor pool, labelled "echo training".
+// Note: "Ali Nasser" (not "Ali") — three doctors in the PIN database share the
+// first name Ali: Ali Alsulaimi (the Wed Room 11 cath consultant, keyed in CL
+// as bare "Ali"), Ali Alsaygh, and Ali Nasser (the echo trainee on first call).
+// Keying the trainee by full name avoids collision with the cath consultant.
+var MD_ECHO_TRAINEES = ["Sajid","Ali Nasser"];
+
+// Name aliases. mdAlias() collapses any known alias to ONE canonical bare name
+// so clinic days, blocked dates and duty all line up.
+//  - "Ibrahim"  → "Ibrahim Hassan" (clinic list uses the short form)
+//  - "Ali"      → "Ali Alsulaimi"  (clinic list / specificDocs / SKIP_DOCS all
+//                                   say "Ali"; the real person is Dr. Ali
+//                                   Alsulaimi, the Wed Room 11 cath consultant)
+var MD_NAME_ALIAS = {
+  "Ibrahim": "Ibrahim Hassan",
+  "Ali":     "Ali Alsulaimi"
+};
+function mdAlias(bare){
+  if(!bare) return bare;
+  return MD_NAME_ALIAS[bare] || bare;
+}
+
+// The COMPLETE set of doctors the morning-duty roster is allowed to consider.
+// Nothing outside this list ever appears in echo, clinic-cover or the
+// free-doctor pool — the rest of the PIN database is irrelevant here.
+var MD_ROSTER_POOL = MD_CONSULTANTS.concat(MD_SENIORS, ["Farouk"], MD_ECHO_TRAINEES);
+function mdInRosterPool(bare){ return MD_ROSTER_POOL.indexOf(mdAlias(bare))!==-1; }
+
+// Echo-lab eligibility. Value = array of weekday short-codes the doctor may
+// cover echo on, or "any" = any working day (still excluding their own
+// clinic days, handled separately). Samir is on echo every working day
+// EXCEPT the weeks he covers CCU (handled in mdEchoEligible).
+var MD_ECHO_RULES = {
+  "Samir":          "any",
+  "Ehab":           "any",
+  "Ibrahim Hassan": ["Mon"],
+  "Hany":           "any",
+  "Farouk":         ["Tue"],
+  // Seniors cover echo on ANY working day they are free (no own clinic that
+  // day). Hamza is Sunday-only in his base rule, but mdEchoEligible promotes
+  // him to every working day during June 2026 (special departmental cover).
+  "Maged":          "any",
+  "Ashraf":         "any",
+  "Fawzy":          "any",
+  "Akmal":          "any",
+  "Zaher":          "any",
+  "Shafie":         "any",
+  "Ramy":           "any",
+  "Hamza":          ["Sun"],
+  "Sajid":          "any",       // trainee — manual-only, never auto-assigned
+  "Ali Nasser":     "any"        // trainee — manual-only, never auto-assigned
+};
+// Every name the echo-roster dropdown is allowed to offer (chat-named only).
+var MD_ECHO_DOCS = Object.keys(MD_ECHO_RULES);
+
+// Doctors who are echo-ONLY on specific days. On any other day they are not
+// part of the morning roster at all — so they must NOT appear in the
+// free-doctor pool on those other days. Farouk is echo-only on Tuesday.
+// (Hamza is NOT here: he does echo on Sunday — and every working day during
+//  June 2026 — and otherwise joins the free pool the rest of the week.)
+var MD_ECHO_ONLY_DAYS = { "Farouk":["Tue"] };
+
+// HF (Heart Failure) Team members. In the free-doctor pool they carry an
+// "HF Team" tag. (Hamza was previously tagged but is no longer flagged here —
+// he appears in the free pool with no special tag, and during June 2026 he
+// joins the echo team every working day via the June override in
+// mdEchoEligible.)
+var MD_HF_TEAM = [];
+function mdIsHfTeam(bare){ return MD_HF_TEAM.indexOf(mdAlias(bare))!==-1; }
+
+// Echo fill priority — SENIORS first, then consultants, then trainees last.
+// Samir (consultant, echo full-time) sits with the consultants.
+// Day-aware override: on Tuesday, Farouk has absolute first priority — Tuesday
+// is his dedicated echo day so he is placed before any senior.
+function mdEchoPriority(bare, iso){
+  var n=mdAlias(bare);
+  if(iso){
+    var dow=MD_DOW[mdParse(iso).getDay()];
+    if(dow==='Tue' && n==='Farouk') return -1;      // Farouk wins Tuesday
+  }
+  if(MD_SENIORS.indexOf(n)!==-1) return 0;          // seniors fill echo first
+  if(MD_ECHO_TRAINEES.indexOf(n)!==-1) return 2;    // trainees last
+  return 1;                                          // consultants (incl. Samir)
+}
+// Returns a comparator bound to a given day; legacy 2-arg form still works.
+function mdEchoSort(a,b){ return mdEchoPriority(a)-mdEchoPriority(b); }
+function mdEchoSortFor(iso){
+  return function(a,b){ return mdEchoPriority(a,iso)-mdEchoPriority(b,iso); };
+}
+
+/* ---- morning-duty dropdown builder ----------------------------------
+   Unlike buildDocOptions (whole 43-doctor PIN database), this offers ONLY
+   the doctors named for the morning roster. `which` selects the list:
+     'echo'       → echo-roster doctors (MD_ECHO_DOCS)
+     'consultant' → the 6 working consultants
+     'senior'     → the 8 seniors
+     'all'        → every roster doctor (consultants + seniors + Farouk + trainees)
+   Trainees are shown with an "(echo training)" tag. Value is the canonical
+   "Dr. Name"; option text is the bare name for compact display.            */
+function mdBuildDocOptions(selectedValue, which){
+  var list;
+  if(which==='echo')            list=MD_ECHO_DOCS.slice();
+  else if(which==='consultant') list=MD_CONSULTANTS.slice();
+  else if(which==='senior')     list=MD_SENIORS.slice();
+  else                          list=MD_ROSTER_POOL.slice();
+  // de-dupe, keep stable order
+  var seen={}, ordered=[];
+  list.forEach(function(n){ if(!seen[n]){ seen[n]=1; ordered.push(n); } });
+  var selBare = mdAlias(mdStripHon(selectedValue||''));
+  var opts='<option value="">\u2014 Not assigned \u2014</option>';
+  ordered.forEach(function(bare){
+    var tag = (MD_ECHO_TRAINEES.indexOf(bare)!==-1) ? ' (echo training)' : '';
+    var sel = (bare===selBare) ? ' selected' : '';
+    opts += '<option value="'+escapeHtml(mdCanon(bare))+'"'+sel+'>Dr. '+escapeHtml(bare)+tag+'</option>';
+  });
+  return opts;
+}
+
+
+// Samir's hard leave (delegated away + travel). Stored explicitly because it
+// is a fixed departmental fact, independent of the per-doctor blocked ranges.
+var MD_SAMIR_LEAVE = { from: "2026-06-05", to: "2026-06-12" };
+
+// Department-wide holiday ranges. On these dates NO morning duty is scheduled
+// — the day card shows a holiday banner, auto-generation produces empty echo/
+// cover, and validation does not flag missing assignments. Add new ranges
+// here as {from,to,label}. Dates inclusive on both ends.
+var MD_HOLIDAYS = [
+  { from: "2026-05-26", to: "2026-05-31", label: "Eid Vacation" }
+];
+function mdHolidayFor(iso){
+  for(var i=0;i<MD_HOLIDAYS.length;i++){
+    if(mdInRange(iso, MD_HOLIDAYS[i])) return MD_HOLIDAYS[i];
+  }
+  return null;
+}
+function mdIsHoliday(iso){ return !!mdHolidayFor(iso); }
+
+// Echo trainees who must be POST-CALL protected: if they were on the on-call
+// roster the day BEFORE `iso`, they cannot do morning duty on `iso`. They are
+// also removed from the free-doctor pool on those post-call days.
+var MD_POST_CALL_TRAINEES = ["Sajid","Ali Nasser"];
+// Returns true if `bareName` is a post-call trainee on `iso` (i.e. was on
+// any on-call slot the previous calendar day).
+function mdIsPostCallTrainee(bareName, iso){
+  var name = mdAlias(bareName);
+  if(MD_POST_CALL_TRAINEES.indexOf(name) === -1) return false;
+  if(!iso) return false;
+  var prev = mdAddDays(iso, -1);
+  var roster = (window.S && window.S.onCall && window.S.onCall[prev]) || null;
+  if(!roster) return false;
+  var slots = ['first1','first2','first3','ccu','second','second2','interv'];
+  for(var i=0;i<slots.length;i++){
+    var who = roster[slots[i]];
+    if(!who) continue;
+    // on-call rosters may store either a canonical "Dr. X" or a raw name —
+    // resolveDocName + mdStripHon normalises both to the bare name.
+    var bare = mdStripHon(typeof resolveDocName==='function' ? resolveDocName(who) : who);
+    if(mdAlias(bare) === name) return true;
+  }
+  return false;
+}
+
+var MD_DOW = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+
+/* ---- Week state ---- */
+var mdState = { weekSun: null };   // ISO date of the displayed week's Sunday
+var mdDraft = null;                // working copy: { days:{iso:{echo:[],cover:{}}} }
+
+/* ---- small helpers ---- */
+function mdIso(d){
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function mdParse(iso){ return new Date(iso+'T00:00:00'); }
+function mdAddDays(iso,n){ var d=mdParse(iso); d.setDate(d.getDate()+n); return mdIso(d); }
+function mdWeekSundayOf(d){
+  // returns ISO Sunday that starts the week containing date d
+  var x=new Date(d.getFullYear(),d.getMonth(),d.getDate());
+  x.setDate(x.getDate()-x.getDay());   // getDay(): Sun=0
+  return mdIso(x);
+}
+function mdStripHon(n){
+  if(!n) return '';
+  return String(n).replace(/^\s*(?:Dr|Prof|Mr|Ms|Mrs)\.?\s+/i,'').trim();
+}
+// "Hisham" -> "Dr. Hisham" canonical form used everywhere as a value
+function mdCanon(bare){
+  if(!bare) return '';
+  if(/^\s*(?:Dr|Prof)\.?\s+/i.test(bare)) return resolveDocName(bare);
+  return resolveDocName('Dr. '+bare);
+}
+// Is iso inside a {from,to} range?
+function mdInRange(iso,r){ return r && r.from && r.to && iso>=r.from && iso<=r.to; }
+
+// Is this doctor unavailable on this date? Combines blocked ranges, the
+// IP/OP leave flags, and Samir's fixed leave. Alias-aware: checks blocked
+// ranges under every name the doctor is known by (e.g. Ibrahim / Ibrahim Hassan).
+function mdDocUnavailable(bareName,iso){
+  var canonName = mdAlias(bareName);
+  var canon = mdCanon(canonName);
+  if(canonName==='Samir' && mdInRange(iso,MD_SAMIR_LEAVE)) return true;
+  // collect every name string this doctor may be keyed under
+  var names={};
+  names[bareName]=1; names[canonName]=1;
+  Object.keys(MD_NAME_ALIAS).forEach(function(k){
+    if(MD_NAME_ALIAS[k]===canonName) names[k]=1;
+  });
+  names[mdCanon(canonName)]=1; names[mdCanon(bareName)]=1;
+  Object.keys(MD_NAME_ALIAS).forEach(function(k){
+    if(MD_NAME_ALIAS[k]===canonName) names[mdCanon(k)]=1;
+  });
+  var bd=(window.S.blockedDates||{});
+  var keys=Object.keys(names);
+  for(var ki=0; ki<keys.length; ki++){
+    var list=bd[keys[ki]]||[];
+    for(var i=0;i<list.length;i++){
+      var r=list[i];
+      if(typeof r==='string'){ if(r===iso) return true; }
+      else if(mdInRange(iso,r)) return true;
+    }
+  }
+  // hard "off" leave flag (sick / away) — treat OP-off as unavailable for mornings
+  try{ if(typeof isDocOff==='function' && isDocOff(canon,'op')) return true; }catch(e){}
+  return false;
+}
+
+/* ---- echo minimum for a given month ---- */
+// Summer = June, July, August. Wed needs one extra.
+function mdEchoMinimum(iso){
+  var d=mdParse(iso);
+  var mo=d.getMonth();                 // 0-based
+  var isSummer=(mo>=5 && mo<=7);        // Jun(5) Jul(6) Aug(7)
+  var isWed=(d.getDay()===3);
+  if(isSummer) return isWed?6:5;
+  return isWed?7:6;
+}
+
+/* ---- on-call lookups for the week ---- */
+// Auto-detect the CCU consultant from the on-call roster: the CCU doctor who
+// is a consultant, on any working day of the week (it's a weekly assignment).
+function mdAutoCcuConsultant(weekSun){
+  var oc=window.S.onCall||{};
+  for(var i=0;i<5;i++){              // Sun..Thu
+    var iso=mdAddDays(weekSun,i);
+    var r=oc[iso];
+    if(r && r.ccu){
+      var bare=mdStripHon(resolveDocName(r.ccu));
+      if(MD_CONSULTANTS.indexOf(bare)!==-1) return bare;
+    }
+  }
+  return null;
+}
+// The week's effective CCU consultant. Priority: admin-set value on the
+// working draft → saved week → on-call auto-detection.
+function mdWeekCcuConsultant(weekSun){
+  if(mdDraft && mdDraft.__week===weekSun && typeof mdDraft.ccu==='string')
+    return mdDraft.ccu || null;
+  var saved=(window.S.morningDuty||{})[weekSun];
+  if(saved && typeof saved.ccu==='string') return saved.ccu || null;
+  return mdAutoCcuConsultant(weekSun);
+}
+// Auto-detect the ASA ward senior from on-call = the Fri/Sat 2nd-on-call.
+function mdAutoWardSenior(weekSun){
+  var oc=window.S.onCall||{};
+  var friIso=mdAddDays(weekSun,5), satIso=mdAddDays(weekSun,6);
+  var cand=[];
+  [friIso,satIso].forEach(function(iso){
+    var r=oc[iso];
+    if(r){
+      [r.second,r.second2].forEach(function(v){
+        if(v){ var b=mdStripHon(resolveDocName(v)); if(MD_SENIORS.indexOf(b)!==-1) cand.push(b); }
+      });
+    }
+  });
+  return cand.length?cand[0]:null;
+}
+// The week's effective ASA ward senior. Priority: admin-set override on the
+// working draft → saved week → on-call auto-detection (Fri/Sat 2nd-on-call).
+function mdWeekWardSenior(weekSun){
+  if(mdDraft && mdDraft.__week===weekSun && typeof mdDraft.ward==='string')
+    return mdDraft.ward || null;
+  var saved=(window.S.morningDuty||{})[weekSun];
+  if(saved && typeof saved.ward==='string') return saved.ward || null;
+  return mdAutoWardSenior(weekSun);
+}
+// Other doctors who are 3rd-on-call somewhere this week (used as the pool to
+// cover the CCU consultant's clinic).
+function mdWeekThirdOnCallPool(weekSun){
+  var oc=window.S.onCall||{}, pool={};
+  for(var i=0;i<7;i++){
+    var r=oc[mdAddDays(weekSun,i)];
+    if(r){
+      [r.first1,r.first2,r.first3].forEach(function(v){
+        if(v){ pool[mdStripHon(resolveDocName(v))]=true; }
+      });
+    }
+  }
+  return Object.keys(pool);
+}
+
+/* ---- category helpers ---- */
+function mdIsConsultant(bare){ return MD_CONSULTANTS.indexOf(bare)!==-1; }
+function mdIsSenior(bare){ return MD_SENIORS.indexOf(bare)!==-1; }
+// 'consultant' | 'senior' | null  — used to match clinic cover by category.
+function mdDocCategory(bare){
+  if(mdIsConsultant(bare)) return 'consultant';
+  if(mdIsSenior(bare)) return 'senior';
+  return null;
+}
+
+// The week's two rotation doctors (CCU consultant + ward senior). They are
+// fully occupied: excluded from echo, from clinic-cover duty, and from the
+// free-doctor pool.
+function mdWeekOccupied(weekSun, ccuOverride){
+  var occ={};
+  var ccu=(typeof ccuOverride==='string') ? (ccuOverride||null) : mdWeekCcuConsultant(weekSun);
+  var ward=mdWeekWardSenior(weekSun);
+  if(ccu) occ[ccu]=true;
+  if(ward) occ[ward]=true;
+  return occ;
+}
+
+/* ---- clinics that need a covering doctor this week ---- */
+// Returns [{idx, owner, day, room, reason, needCategory}]
+// needCategory follows the OWNER's category — consultants cover consultants,
+// seniors cover seniors. ccuOverride lets the draft generator pass the
+// resolved CCU consultant before the draft is committed to mdDraft.
+function mdClinicsNeedingCover(weekSun, ccuOverride){
+  var ccu=(typeof ccuOverride==='string') ? (ccuOverride||null) : mdWeekCcuConsultant(weekSun);
+  var ward=mdWeekWardSenior(weekSun);
+  var out=[];
+  CL.forEach(function(c,idx){
+    if(ccu && c.d===ccu){
+      out.push({idx:idx, owner:c.d, day:c.days[0], room:c.r,
+        reason:'On CCU 3rd-on-call this week',
+        needCategory:(mdDocCategory(c.d)||'consultant')});
+    } else if(ward && c.d===ward){
+      out.push({idx:idx, owner:c.d, day:c.days[0], room:c.r,
+        reason:'ASA ward senior this week',
+        needCategory:(mdDocCategory(c.d)||'senior')});
+    }
+  });
+  return out;
+}
+
+/* ---- doctors with a clinic on a given weekday ---- */
+function mdClinicDocsOnDay(dowShort){
+  var s={};
+  // Key clinic ownership by the canonical (aliased) name so e.g. CL's
+  // "Ibrahim" registers as "Ibrahim Hassan" — the name the roster uses.
+  CL.forEach(function(c){ if(c.days.indexOf(dowShort)!==-1) s[mdAlias(c.d)]=true; });
+  return s;
+}
+
+/* ---- echo eligibility for a doctor on a specific date ---- */
+// weekSun + ccu let callers pass the week context so the CCU consultant and
+// ward senior (fully occupied) are excluded from echo eligibility.
+function mdEchoEligible(bareName,iso,weekSun,ccu){
+  var name=mdAlias(bareName);
+  var rule=MD_ECHO_RULES[name];
+  if(!rule) return false;
+  // Department-wide holiday — nobody is on echo (no morning duty at all).
+  if(mdIsHoliday(iso)) return false;
+  // Echo trainees post-call (Sajid / Ali): the day after they were on the
+  // on-call roster they are off-duty in the morning.
+  if(mdIsPostCallTrainee(name, iso)) return false;
+  if(mdDocUnavailable(name,iso)) return false;
+  var dow=MD_DOW[mdParse(iso).getDay()];
+  if(dow==='Fri'||dow==='Sat') return false;
+  // doctors cover echo OUTSIDE their own clinic days — UNLESS their clinic
+  // that day is on a blocked date, in which case the clinic isn't running
+  // and they ARE available for echo / morning duty.
+  var clinicDocs=mdClinicDocsOnDay(dow);
+  if(clinicDocs[name] && !mdDocUnavailable(name,iso)){
+    // clinicDocs says they own a clinic this weekday; only block echo if that
+    // clinic is actually running (i.e. not a blocked date — handled above).
+    return false;
+  }
+  // the week's CCU consultant + ward senior are fully occupied — never echo.
+  // (This also handles Samir: when he is the CCU consultant he drops off echo;
+  //  any other week he stays on echo every working day.)
+  var ws=weekSun || (mdDraft && mdDraft.__week);
+  if(ws){
+    var occ=mdWeekOccupied(ws, (typeof ccu==='string')?ccu:undefined);
+    if(occ[name]) return false;
+  }
+  // June 2026 override: Hamza joins the echo team every working day for the
+  // whole month, not just Sunday. Outside June he reverts to his usual
+  // Sunday-only rule from MD_ECHO_RULES.
+  if(name==='Hamza' && iso && iso.slice(0,7)==='2026-06') return true;
+  if(rule==='any') return true;
+  return rule.indexOf(dow)!==-1;
+}
+
+/* =====================================================================
+   DRAFT GENERATION
+   ===================================================================== */
+function mdGenerateDraft(weekSun, ccuOverride){
+  // Resolve CCU consultant before building coverNeeds. Priority:
+  // explicit override → saved week → on-call auto-detection.
+  var ccu;
+  if(typeof ccuOverride==='string') ccu=ccuOverride;
+  else {
+    var saved=(window.S.morningDuty||{})[weekSun];
+    ccu=(saved && typeof saved.ccu==='string') ? saved.ccu : (mdAutoCcuConsultant(weekSun)||'');
+  }
+  var savedW=(window.S.morningDuty||{})[weekSun];
+  var ward=(savedW && typeof savedW.ward==='string') ? savedW.ward : (mdAutoWardSenior(weekSun)||'');
+  var draft={ days:{}, ccu:ccu, ward:ward, __week:weekSun };
+  var coverNeeds=mdClinicsNeedingCover(weekSun, ccu);
+
+  for(var i=0;i<5;i++){            // Sun..Thu only
+    var iso=mdAddDays(weekSun,i);
+    var dow=MD_DOW[mdParse(iso).getDay()];
+    var occupied=mdWeekOccupied(weekSun, ccu);
+
+    // Holiday: no morning duty scheduled on this day at all. The grid will
+    // render a holiday banner instead of empty roster slots.
+    if(mdIsHoliday(iso)){
+      draft.days[iso]={ echo:[], cover:{}, duties:[], holiday:true };
+      continue;
+    }
+
+    /* --- echo roster --- */
+    var need=mdEchoMinimum(iso);
+    var eligible=[];
+    Object.keys(MD_ECHO_RULES).forEach(function(bare){
+      // trainees are NEVER auto-assigned — admin adds them manually if wanted
+      if(MD_ECHO_TRAINEES.indexOf(bare)!==-1) return;
+      if(mdEchoEligible(bare,iso,weekSun,ccu)) eligible.push(bare);
+    });
+    // Priority order: Farouk on Tuesday → seniors → consultants → trainees.
+    eligible.sort(mdEchoSortFor(iso));
+    // take exactly `need` if we have enough, otherwise take all eligible
+    var echo=eligible.slice(0,need);
+
+    /* --- clinic cover for this weekday --- */
+    // Category-matched: a consultant's clinic is covered by a consultant,
+    // a senior's by a senior. The week's two occupied doctors are excluded.
+    var cover={};
+    coverNeeds.forEach(function(cn){
+      if(cn.day!==dow) return;
+      var pool=(cn.needCategory==='senior') ? MD_SENIORS.slice() : MD_CONSULTANTS.slice();
+      var clinicDocs=mdClinicDocsOnDay(dow);
+      var chosen='';
+      for(var p=0;p<pool.length;p++){
+        var cand=pool[p];
+        if(cand===cn.owner) continue;
+        if(occupied[cand]) continue;              // CCU consultant / ward senior
+        if(mdDocUnavailable(cand,iso)) continue;
+        if(clinicDocs[cand]) continue;            // already has own clinic
+        if(echo.indexOf(cand)!==-1) continue;     // already on echo
+        chosen=cand; break;
+      }
+      cover[cn.idx]=mdCanon(chosen);
+    });
+
+    draft.days[iso]={
+      echo: echo.map(mdCanon),
+      cover: cover
+    };
+  }
+  return draft;
+}
+
+/* ---- free doctors for a day (no clinic, no echo, no cover, available) ---- */
+function mdFreeDoctors(iso,dayObj,weekSun,ccu){
+  // Holiday: nobody is on duty at all, so the "free" concept doesn't apply —
+  // the grid shows a holiday banner instead.
+  if(mdIsHoliday(iso)) return [];
+  var dow=MD_DOW[mdParse(iso).getDay()];
+  var clinicDocs=mdClinicDocsOnDay(dow);
+  var busy={};
+  (dayObj.echo||[]).forEach(function(v){ busy[mdAlias(mdStripHon(v))]=true; });
+  Object.values(dayObj.cover||{}).forEach(function(v){ if(v) busy[mdAlias(mdStripHon(v))]=true; });
+  (dayObj.duties||[]).forEach(function(d){ if(d&&d.doc) busy[mdAlias(mdStripHon(d.doc))]=true; });
+  // the week's CCU consultant + ward senior are fully occupied
+  var ws=weekSun || (mdDraft && mdDraft.__week);
+  var occupied=ws ? mdWeekOccupied(ws,(typeof ccu==='string')?ccu:undefined) : {};
+  var free=[];
+  // ONLY the named working consultants + seniors (plus echo trainees / Farouk)
+  // are ever candidates — never the whole PIN database.
+  MD_ROSTER_POOL.forEach(function(bare){
+    // echo-only doctors (e.g. Farouk Tue) are NOT free on their non-echo days.
+    var onlyDays=MD_ECHO_ONLY_DAYS[bare];
+    if(onlyDays && onlyDays.indexOf(dow)===-1) return;
+    // Post-call trainees (Sajid / Ali) are off the morning duty entirely the
+    // day after they appear on the on-call roster — not even in the free pool.
+    if(mdIsPostCallTrainee(bare, iso)) return;
+    // HF Team members (Hamza) do echo on their echo day and are free (HF Team)
+    // the rest of the week — so on an echo-eligible day they are NOT "free".
+    if(mdIsHfTeam(bare) && mdEchoEligible(bare,iso,ws,ccu)) return;
+    if(clinicDocs[bare]) return;
+    if(busy[bare]) return;
+    if(occupied[bare]) return;
+    if(mdDocUnavailable(bare,iso)) return;
+    free.push(bare);
+  });
+  return free.sort();
+}
+
+// Render one free-doctor chip. Echo trainees carry an "echo training" tag;
+// HF Team members carry an "HF Team" tag.
+function mdFreeChip(bare){
+  var tag='';
+  if(MD_ECHO_TRAINEES.indexOf(mdAlias(bare))!==-1)
+    tag=' <span class="md-chip-sub">echo training</span>';
+  else if(mdIsHfTeam(bare))
+    tag=' <span class="md-chip-sub">HF Team</span>';
+  return '<span class="md-chip free">'+escapeHtml(bare)+tag+'</span>';
+}
+
+/* =====================================================================
+   RENDER
+   ===================================================================== */
+window.renderMorningDuty=function(){
+  ensureExtState();
+  if(!mdState.weekSun) mdState.weekSun=mdWeekSundayOf(new Date());
+  // load saved week into the working draft, else generate
+  var saved=(window.S.morningDuty||{})[mdState.weekSun];
+  if(saved && saved.days){
+    mdDraft=JSON.parse(JSON.stringify(saved));
+  } else if(!mdDraft || mdDraft.__week!==mdState.weekSun){
+    mdDraft=mdGenerateDraft(mdState.weekSun);
+  }
+  mdDraft.__week=mdState.weekSun;
+  // ensure the draft always carries ccu + ward fields (admin-editable)
+  if(typeof mdDraft.ccu!=='string')
+    mdDraft.ccu = mdAutoCcuConsultant(mdState.weekSun) || '';
+  if(typeof mdDraft.ward!=='string')
+    mdDraft.ward = mdAutoWardSenior(mdState.weekSun) || '';
+
+  mdRenderLabel();
+  mdRenderRules();
+  mdRenderCcuPicker();
+  mdRenderWardPicker();
+  mdRenderGrid();
+  mdRenderValidation();
+  var hint=document.getElementById('mdSaveHint');
+  if(hint) hint.textContent = saved
+    ? 'Loaded saved week. Edit and re-save to update.'
+    : 'Unsaved draft — generated from current rules.';
+};
+
+// CCU consultant picker — only consultants are offered.
+function mdRenderCcuPicker(){
+  var sel=document.getElementById('mdCcuSelect'); if(!sel) return;
+  var cur=mdDraft.ccu||'';
+  var auto=mdAutoCcuConsultant(mdState.weekSun)||'';
+  var opts='<option value="">— Not set —</option>';
+  // All consultants are in the CCU rotation — including Samir. When Samir
+  // covers CCU he drops off echo for that week; otherwise he is on echo.
+  MD_CONSULTANTS.forEach(function(bare){
+    var tag=(bare===auto)?' (on-call default)':'';
+    opts+='<option value="'+escapeHtml(bare)+'"'+(bare===cur?' selected':'')+'>Dr. '+escapeHtml(bare)+tag+'</option>';
+  });
+  sel.innerHTML=opts;
+}
+
+// ASA ward-senior picker — only seniors are offered. Auto value comes from
+// the Fri/Sat 2nd-on-call; admin may override it here.
+function mdRenderWardPicker(){
+  var sel=document.getElementById('mdWardSelect'); if(!sel) return;
+  var cur=mdWeekWardSenior(mdState.weekSun)||'';
+  var auto=mdAutoWardSenior(mdState.weekSun)||'';
+  var opts='<option value="">— Not set —</option>';
+  MD_SENIORS.forEach(function(bare){
+    var tag=(bare===auto)?' (on-call default)':'';
+    opts+='<option value="'+escapeHtml(bare)+'"'+(bare===cur?' selected':'')+'>Dr. '+escapeHtml(bare)+tag+'</option>';
+  });
+  sel.innerHTML=opts;
+}
+
+// Shared week re-flow: given the current mdDraft.ccu / mdDraft.ward, recompute
+// who is occupied, drop now-ineligible echo doctors, top echo back up
+// (seniors first), and re-flow clinic cover. Manual picks kept where valid.
+function mdReflowWeek(){
+  if(!mdDraft) return;
+  var ws=mdState.weekSun;
+  var ccu=mdDraft.ccu;
+  var occupied=mdWeekOccupied(ws, ccu);
+  var coverNeeds=mdClinicsNeedingCover(ws, ccu);
+  for(var i=0;i<5;i++){
+    var iso=mdAddDays(ws,i);
+    var dow=MD_DOW[mdParse(iso).getDay()];
+    var day=mdDraft.days[iso]||(mdDraft.days[iso]={echo:[],cover:{},duties:[]});
+    var clinicDocs=mdClinicDocsOnDay(dow);
+
+    /* --- re-flow echo: drop anyone now occupied/ineligible, top up if short.
+       Manually-added trainees are KEPT (they pass mdEchoEligible); but the
+       auto top-up pool never pulls trainees in on its own. --- */
+    var echo=(day.echo||[]).map(mdStripHon).filter(function(n){
+      return mdEchoEligible(n,iso,ws,ccu);
+    });
+    var need=mdEchoMinimum(iso);
+    if(echo.length<need){
+      var pool=Object.keys(MD_ECHO_RULES).filter(function(b){
+        if(MD_ECHO_TRAINEES.indexOf(b)!==-1) return false;   // no auto trainees
+        return mdEchoEligible(b,iso,ws,ccu) && echo.indexOf(b)===-1;
+      });
+      pool.sort(mdEchoSortFor(iso));
+      echo=echo.concat(pool.slice(0,need-echo.length));
+    }
+    day.echo=echo.map(mdCanon);
+
+    /* --- re-flow clinic cover (category-matched, occupied excluded) --- */
+    var echoSet=day.echo.map(mdStripHon);
+    var newCover={};
+    coverNeeds.filter(function(c){return c.day===dow;}).forEach(function(c){
+      var existing=day.cover && day.cover[c.idx] ? mdStripHon(day.cover[c.idx]) : '';
+      if(existing && existing!==c.owner && !occupied[existing]
+         && !mdDocUnavailable(existing,iso) && !clinicDocs[existing]
+         && echoSet.indexOf(existing)===-1){
+        newCover[c.idx]=mdCanon(existing); return;
+      }
+      var pool=(c.needCategory==='senior')?MD_SENIORS.slice():MD_CONSULTANTS.slice();
+      var chosen='';
+      for(var p=0;p<pool.length;p++){
+        var cand=pool[p];
+        if(cand===c.owner) continue;
+        if(occupied[cand]) continue;
+        if(mdDocUnavailable(cand,iso)) continue;
+        if(clinicDocs[cand]) continue;
+        if(echoSet.indexOf(cand)!==-1) continue;
+        chosen=cand; break;
+      }
+      newCover[c.idx]=mdCanon(chosen);
+    });
+    day.cover=newCover;
+  }
+}
+
+// Admin changed the CCU consultant — re-flow the week.
+window.mdSetCcu=function(val){
+  if(window.currentRole!=='admin'){ alert('Admin only.'); renderMorningDuty(); return; }
+  if(!mdDraft) return;
+  mdDraft.ccu = val || '';
+  mdReflowWeek();
+  mdRenderRules(); mdRenderCcuPicker(); mdRenderWardPicker(); mdRenderGrid(); mdRenderValidation();
+  var hint=document.getElementById('mdSaveHint');
+  if(hint) hint.textContent='CCU consultant updated — echo roster and clinic cover re-flowed. Remember to Save the week.';
+};
+
+// Admin manually set / overrode the ASA ward senior — re-flow the week.
+window.mdSetWard=function(val){
+  if(window.currentRole!=='admin'){ alert('Admin only.'); renderMorningDuty(); return; }
+  if(!mdDraft) return;
+  mdDraft.ward = val || '';
+  mdReflowWeek();
+  mdRenderRules(); mdRenderCcuPicker(); mdRenderWardPicker(); mdRenderGrid(); mdRenderValidation();
+  var hint=document.getElementById('mdSaveHint');
+  if(hint) hint.textContent='Ward senior updated — echo roster and clinic cover re-flowed. Remember to Save the week.';
+};
+
+function mdRenderLabel(){
+  var el=document.getElementById('mdWeekLabel'); if(!el) return;
+  var sun=mdParse(mdState.weekSun), thu=mdParse(mdAddDays(mdState.weekSun,4));
+  var opt={day:'2-digit',month:'short'};
+  el.textContent='Week of '+sun.toLocaleDateString('en-GB',opt)+
+    ' \u2013 '+thu.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+}
+
+function mdRenderRules(){
+  var ul=document.getElementById('mdRulesList'); if(!ul) return;
+  var ws=mdState.weekSun;
+  var ccu=mdWeekCcuConsultant(ws);
+  var ward=mdWeekWardSenior(ws);
+  var sampleMin=mdEchoMinimum(mdAddDays(ws,1));   // a Monday
+  var wedMin=mdEchoMinimum(mdAddDays(ws,3));      // Wednesday
+  var summer=(mdParse(ws).getMonth()>=5 && mdParse(ws).getMonth()<=7);
+  var li=[];
+  li.push('Echo lab: <b>'+sampleMin+'</b> doctors/day, <b>'+wedMin+'</b> on Wednesday ('+
+    (summer?'summer rule, Jun\u2013Aug':'standard months')+').');
+  if(ccu) li.push('CCU 3rd-on-call this week: <b>Dr. '+ccu+'</b> \u2014 covers CCU and is off all morning duties; his clinic is covered by another '+(mdDocCategory(ccu)==='senior'?'senior':'consultant')+'.');
+  else li.push('<span class="md-warn-li">CCU consultant not set \u2014 pick one below so his clinic can be flagged for cover.</span>');
+  if(ward) li.push('ASA ward senior this week: <b>Dr. '+ward+'</b> (= Fri/Sat 2nd-on-call) \u2014 off all morning duties; his clinic is covered by a senior.');
+  else li.push('<span class="md-warn-li">No ward senior found (Fri/Sat 2nd-on-call empty in the On Call tab) \u2014 fill it first.</span>');
+  if(ccu==='Samir')
+    li.push('Dr. Samir covers CCU this week \u2014 so he is <b>not</b> on the echo roster.');
+  else
+    li.push('Dr. Samir is on the echo lab roster every working day this week'+
+      (mdParse(ws)<=mdParse(MD_SAMIR_LEAVE.to) && mdParse(mdAddDays(ws,6))>=mdParse(MD_SAMIR_LEAVE.from)
+        ? ' <span class="md-warn-li">(on leave 5\u201312 Jun 2026 this week)</span>' : '')+'.');
+  li.push('Clinic cover matches category \u2014 a consultant covers a consultant, a senior covers a senior.');
+  li.push('A doctor with no clinic and no duty has first priority for any empty morning work slot.');
+  ul.innerHTML=li.map(function(t){
+    return '<li'+(t.indexOf('md-warn-li')!==-1?' class="md-warn-li"':'')+'>'+t+'</li>';
+  }).join('');
+}
+
+function mdRenderGrid(){
+  var host=document.getElementById('mdGrid'); if(!host) return;
+  var todayIso=mdIso(new Date());
+  var html='';
+  for(var i=0;i<5;i++){
+    var iso=mdAddDays(mdState.weekSun,i);
+    var dow=MD_DOW[mdParse(iso).getDay()];
+    var day=mdDraft.days[iso]||{echo:[],cover:{}};
+    var dateLabel=mdParse(iso).toLocaleDateString('en-GB',{weekday:'long',day:'2-digit',month:'short'});
+
+    // ---- Department holiday: render a single banner, skip all duty blocks ----
+    var holiday=mdHolidayFor(iso);
+    if(holiday){
+      html+='<div class="md-day-card md-holiday'+(iso===todayIso?' md-today':'')+'">'
+        +'<div class="md-day-head">'
+          +'<div class="md-day-name">'+escapeHtml(dateLabel)+(iso===todayIso?' <span class="md-dow">\u00b7 today</span>':'')+'</div>'
+        +'</div>'
+        +'<div class="md-holiday-banner">'
+          +'<span class="md-holiday-emoji">\ud83c\udf19</span>'
+          +'<div><div class="md-holiday-title">'+escapeHtml(holiday.label)+'</div>'
+            +'<div class="md-holiday-sub">No morning duty scheduled.</div></div>'
+        +'</div>'
+      +'</div>';
+      continue;
+    }
+
+    var need=mdEchoMinimum(iso);
+    var echoN=(day.echo||[]).length;
+    var echoOk=echoN>=need;
+    var coverNeeds=mdClinicsNeedingCover(mdState.weekSun).filter(function(c){return c.day===dow;});
+    var coverMissing=coverNeeds.some(function(c){return !day.cover||!day.cover[c.idx];});
+    // red flag only for a real cover gap; echo shortfall is an expected to-do
+    var flagged=coverMissing;
+
+    var echoChips=(day.echo&&day.echo.length)
+      ? day.echo.map(function(n){return '<span class="md-chip echo">'+escapeHtml(mdStripHon(n))+'</span>';}).join('')
+      : '<span class="md-chip empty">none assigned</span>';
+
+    var coverHtml;
+    if(!coverNeeds.length){
+      coverHtml='<span class="md-chip empty">no rotation clinic today</span>';
+    } else {
+      coverHtml=coverNeeds.map(function(c){
+        var who=day.cover&&day.cover[c.idx];
+        return '<span class="md-chip cover">'+(who?escapeHtml(mdStripHon(who)):'\u26a0 unassigned')+
+          ' <span class="md-chip-sub">\u2190 Dr. '+escapeHtml(c.owner)+' \u00b7 '+escapeHtml(abbrevRoom(c.room))+'</span></span>';
+      }).join('');
+    }
+
+    var free=mdFreeDoctors(iso,day,mdState.weekSun,mdDraft.ccu);
+    var freeHtml=free.length
+      ? free.slice(0,12).map(mdFreeChip).join('')
+        +(free.length>12?'<span class="md-chip empty">+'+(free.length-12)+' more</span>':'')
+      : '<span class="md-chip empty">none free</span>';
+
+    var duties=(day.duties||[]).filter(function(d){return d&&(d.label||d.doc);});
+    var dutyHtml=duties.length
+      ? duties.map(function(d){
+          return '<span class="md-chip cover">'+escapeHtml(d.doc?mdStripHon(d.doc):'\u26a0 unassigned')+
+            ' <span class="md-chip-sub">\u00b7 '+escapeHtml(d.label||'duty')+'</span></span>';
+        }).join('')
+      : '<span class="md-chip empty">none</span>';
+
+    html+='<div class="md-day-card'+(iso===todayIso?' md-today':'')+(flagged?' md-flag':'')+'">'
+      +'<div class="md-day-head">'
+        +'<div class="md-day-name">'+escapeHtml(dateLabel)+(iso===todayIso?' <span class="md-dow">\u00b7 today</span>':'')+'</div>'
+        +'<button class="md-edit-btn" onclick="mdOpenMo(\''+iso+'\')">\u270e Edit</button>'
+      +'</div>'
+      +'<div class="md-block"><div class="md-block-label">Echo lab roster '
+        +'<span class="md-count-pill '+(echoOk?'md-count-ok':'md-count-todo')+'">'+echoN+' / '+need+'</span>'
+        +(echoOk?'':' <span class="md-count-note">add '+(need-echoN)+' more</span>')+'</div>'
+        +'<div class="md-chips">'+echoChips+'</div></div>'
+      +'<div class="md-block"><div class="md-block-label">Clinic cover</div>'
+        +'<div class="md-chips">'+coverHtml+'</div></div>'
+      +'<div class="md-block"><div class="md-block-label">General morning duties</div>'
+        +'<div class="md-chips">'+dutyHtml+'</div></div>'
+      +'<div class="md-block"><div class="md-block-label">Free doctors (slot priority)</div>'
+        +'<div class="md-chips">'+freeHtml+'</div></div>'
+    +'</div>';
+  }
+  host.innerHTML=html;
+}
+
+function mdRenderValidation(){
+  var host=document.getElementById('mdValidation'); if(!host) return;
+  var errors=[];    // real problems — must be fixed
+  var notices=[];   // expected to-dos — admin completes manually (echo top-up)
+  for(var i=0;i<5;i++){
+    var iso=mdAddDays(mdState.weekSun,i);
+    var dow=MD_DOW[mdParse(iso).getDay()];
+    var day=mdDraft.days[iso]||{echo:[],cover:{}};
+    var label=mdParse(iso).toLocaleDateString('en-GB',{weekday:'short',day:'2-digit',month:'short'});
+    // Holiday — no morning duty expected; skip all validation for this day.
+    if(mdIsHoliday(iso)) continue;
+    var need=mdEchoMinimum(iso);
+    var echo=(day.echo||[]).map(mdStripHon);
+    var ws=mdState.weekSun, ccu=mdDraft.ccu;
+    var occupied=mdWeekOccupied(ws,ccu);
+    // echo below the minimum is EXPECTED mid-week — a to-do, not an error
+    if(echo.length<need)
+      notices.push(label+': echo lab '+echo.length+'/'+need+' \u2014 add '+(need-echo.length)+' more doctor'+((need-echo.length)>1?'s':'')+' manually.');
+    // duplicate echo doctors
+    var seen={};
+    echo.forEach(function(n){ if(seen[n]) errors.push(label+': Dr. '+n+' listed twice on echo.'); seen[n]=true; });
+    // echo doctor unavailable / running own clinic / occupied this week
+    echo.forEach(function(n){
+      if(mdDocUnavailable(n,iso)) errors.push(label+': echo doctor Dr. '+n+' is on leave / blocked.');
+      if(mdClinicDocsOnDay(dow)[n]) errors.push(label+': echo doctor Dr. '+n+' runs their own clinic this day.');
+      if(occupied[n]) errors.push(label+': Dr. '+n+' is this week\u2019s CCU consultant or ward senior \u2014 remove from echo.');
+      if(!mdInRosterPool(n)) errors.push(label+': Dr. '+n+' is not a working consultant / senior \u2014 remove from echo.');
+    });
+    // cover gaps
+    mdClinicsNeedingCover(ws,ccu).filter(function(c){return c.day===dow;}).forEach(function(c){
+      var who=day.cover&&day.cover[c.idx]?mdStripHon(day.cover[c.idx]):'';
+      if(!who){ errors.push(label+': Dr. '+c.owner+'\u2019s clinic ('+abbrevRoom(c.room)+') has no covering doctor.'); return; }
+      if(who===c.owner) errors.push(label+': Dr. '+c.owner+'\u2019s clinic is "covered" by himself.');
+      if(mdDocUnavailable(who,iso)) errors.push(label+': covering Dr. '+who+' is on leave / blocked.');
+      if(occupied[who]) errors.push(label+': covering Dr. '+who+' is this week\u2019s CCU consultant or ward senior \u2014 not free to cover.');
+      var want=(c.needCategory==='senior')?'senior':'consultant';
+      if(mdDocCategory(who)!==want)
+        notices.push(label+': Dr. '+c.owner+'\u2019s clinic is covered by Dr. '+who
+          +' \u2014 recommended a '+want+', but admin-assigned, so allowed.');
+      if(echo.indexOf(who)!==-1) errors.push(label+': Dr. '+who+' is assigned to both echo and clinic cover.');
+    });
+    // general duty slots
+    (day.duties||[]).forEach(function(d){
+      if(!d) return;
+      if(d.label && !d.doc) errors.push(label+': duty "'+d.label+'" has no doctor assigned.');
+      if(d.doc && !d.label) errors.push(label+': a duty has Dr. '+mdStripHon(d.doc)+' assigned but no slot name.');
+      if(d.doc && mdDocUnavailable(mdStripHon(d.doc),iso))
+        errors.push(label+': duty doctor Dr. '+mdStripHon(d.doc)+' is on leave / blocked.');
+      if(d.doc && occupied[mdStripHon(d.doc)])
+        errors.push(label+': duty doctor Dr. '+mdStripHon(d.doc)+' is this week\u2019s CCU consultant or ward senior.');
+      if(d.doc && echo.indexOf(mdStripHon(d.doc))!==-1)
+        errors.push(label+': Dr. '+mdStripHon(d.doc)+' is assigned to both echo and a general duty.');
+    });
+  }
+
+  function block(items){ return '<ul>'+items.map(function(p){return '<li>'+escapeHtml(p)+'</li>';}).join('')+'</ul>'; }
+  var html='';
+  // top status class: bad if real errors, todo if only notices, ok if clean
+  if(errors.length){
+    host.className='md-validation bad';
+    html='\u26a0 '+errors.length+' issue'+(errors.length>1?'s':'')+' to fix:'+block(errors);
+    if(notices.length)
+      html+='<div class="md-validation-todo-inset">\u2398 '+notices.length+' day'+(notices.length>1?'s':'')+' need echo top-up (expected \u2014 complete manually):'+block(notices)+'</div>';
+  } else if(notices.length){
+    host.className='md-validation todo';
+    html='\u2398 No rule violations. '+notices.length+' day'+(notices.length>1?'s':'')
+      +' still need echo doctors added manually \u2014 this is expected mid-week, not an error:'+block(notices);
+  } else {
+    host.className='md-validation ok';
+    html='\u2713 All coverage rules satisfied and echo minimums met for this week.';
+  }
+  host.innerHTML=html;
+}
+
+/* ---- week navigation ---- */
+window.mdShiftWeek=function(delta){
+  mdState.weekSun=mdAddDays(mdState.weekSun||mdWeekSundayOf(new Date()),delta*7);
+  mdDraft=null;
+  renderMorningDuty();
+};
+window.mdJumpThisWeek=function(){
+  mdState.weekSun=mdWeekSundayOf(new Date());
+  mdDraft=null;
+  renderMorningDuty();
+};
+window.mdRegenerateDraft=function(){
+  if(!confirm('Re-generate this week\u2019s draft from the rules? Any unsaved edits to the displayed week will be lost.')) return;
+  var keepCcu=(mdDraft && typeof mdDraft.ccu==='string')?mdDraft.ccu:undefined;
+  var keepWard=(mdDraft && typeof mdDraft.ward==='string')?mdDraft.ward:undefined;
+  mdDraft=mdGenerateDraft(mdState.weekSun, keepCcu);
+  mdDraft.__week=mdState.weekSun;
+  if(typeof keepWard==='string') mdDraft.ward=keepWard;
+  mdRenderRules(); mdRenderCcuPicker(); mdRenderWardPicker(); mdRenderGrid(); mdRenderValidation();
+  var hint=document.getElementById('mdSaveHint');
+  if(hint) hint.textContent='Fresh draft generated \u2014 not yet saved.';
+};
+
+/* =====================================================================
+   DAY EDITOR MODAL
+   ===================================================================== */
+window.mdOpenMo=function(iso){
+  if(window.currentRole!=='admin'){ alert('Admin only.'); return; }
+  var holiday=mdHolidayFor(iso);
+  if(holiday){
+    alert(holiday.label+' \u2014 no morning duty is scheduled for this day.');
+    return;
+  }
+  var dow=MD_DOW[mdParse(iso).getDay()];
+  var day=mdDraft.days[iso]||{echo:[],cover:{}};
+  document.getElementById('md-iso').value=iso;
+  document.getElementById('mdMoTitle').textContent='Morning Duties \u2014 '+dow;
+  document.getElementById('mdMoDate').textContent=
+    mdParse(iso).toLocaleDateString('en-GB',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
+  var need=mdEchoMinimum(iso);
+  document.getElementById('mdMoContext').textContent=
+    'Echo lab needs at least '+need+' doctor'+(need>1?'s':'')+' today. '
+    +'Doctors cover echo outside their own clinic days.';
+
+  // echo rows
+  var box=document.getElementById('md-echo-rows'); box.innerHTML='';
+  var echo=(day.echo&&day.echo.length)?day.echo.slice():[];
+  if(!echo.length) echo=[''];   // start with one empty row
+  echo.forEach(function(v){ mdAddEchoRow(v); });
+  mdUpdateEchoNeed();
+
+  // cover rows
+  var coverNeeds=mdClinicsNeedingCover(mdState.weekSun).filter(function(c){return c.day===dow;});
+  var cbox=document.getElementById('md-cover-rows'); cbox.innerHTML='';
+  document.getElementById('md-cover-empty').style.display=coverNeeds.length?'none':'block';
+  coverNeeds.forEach(function(c){
+    var cur=(day.cover&&day.cover[c.idx])||'';
+    var row=document.createElement('div');
+    row.className='md-cover-row';
+    var rec=(c.needCategory==='senior')?'senior':'consultant';
+    row.innerHTML='<div class="md-cover-owner">Dr. '+escapeHtml(c.owner)+' \u2014 '
+      +escapeHtml(abbrevRoom(c.room))+' \u00b7 '+escapeHtml(c.reason)+'</div>'
+      +'<label>Covered by <span style="opacity:.7">(recommended: a '+rec+')</span></label>'
+      +'<select class="fd-sel md-cover-sel" data-clinic-idx="'+c.idx+'" style="margin-bottom:0">'
+      +mdBuildDocOptions(cur,'all')+'</select>';
+    cbox.appendChild(row);
+  });
+
+  // general morning duty rows
+  var dbox=document.getElementById('md-duty-rows'); dbox.innerHTML='';
+  var duties=(day.duties&&day.duties.length)?day.duties.slice():[];
+  duties.forEach(function(d){ mdAddDutyRow(d.label||'', d.doc||''); });
+
+  // free doctors preview
+  mdRenderFreePreview(iso);
+
+  document.getElementById('mdMo').classList.add('on');
+};
+
+window.mdAddDutyRow=function(label,doc){
+  var box=document.getElementById('md-duty-rows');
+  var row=document.createElement('div');
+  row.className='md-duty-row';
+  row.innerHTML='<input type="text" class="pi md-duty-label" placeholder="Duty / slot name" '
+    +'style="margin-bottom:0" value="'+escapeHtml(label||'')+'">'
+    +'<select class="fd-sel md-duty-sel" style="margin-bottom:0">'+mdBuildDocOptions(doc||'','all')+'</select>'
+    +'<button type="button" class="md-row-del" title="Remove" onclick="this.parentNode.remove()">\u2715</button>';
+  box.appendChild(row);
+};
+
+window.mdAddEchoRow=function(val){
+  var box=document.getElementById('md-echo-rows');
+  var row=document.createElement('div');
+  row.className='md-echo-row';
+  row.innerHTML='<select class="fd-sel md-echo-sel" style="margin-bottom:0" onchange="mdUpdateEchoNeed()">'
+    +mdBuildDocOptions(val||'','echo')+'</select>'
+    +'<button type="button" class="md-row-del" title="Remove" onclick="this.parentNode.remove();mdUpdateEchoNeed()">\u2715</button>';
+  box.appendChild(row);
+  mdUpdateEchoNeed();
+};
+
+function mdUpdateEchoNeed(){
+  var iso=document.getElementById('md-iso').value;
+  if(!iso) return;
+  var need=mdEchoMinimum(iso);
+  var filled=Array.from(document.querySelectorAll('.md-echo-sel'))
+    .map(function(s){return s.value;}).filter(Boolean).length;
+  var el=document.getElementById('md-echo-need');
+  if(filled>=need){ el.style.color='var(--ok)'; el.textContent='\u2713 '+filled+' / '+need+' minimum met.'; }
+  else { el.style.color='var(--err)'; el.textContent='\u26a0 '+filled+' / '+need+' \u2014 add '+(need-filled)+' more.'; }
+}
+
+function mdCollectDuties(){
+  var out=[];
+  document.querySelectorAll('#md-duty-rows .md-duty-row').forEach(function(row){
+    var label=(row.querySelector('.md-duty-label')||{}).value||'';
+    var doc=(row.querySelector('.md-duty-sel')||{}).value||'';
+    label=label.trim();
+    if(label||doc) out.push({label:label,doc:doc});
+  });
+  return out;
+}
+
+function mdRenderFreePreview(iso){
+  // build a provisional day object from what's currently in the form
+  var echo=Array.from(document.querySelectorAll('.md-echo-sel'))
+    .map(function(s){return s.value;}).filter(Boolean);
+  var cover={};
+  document.querySelectorAll('.md-cover-sel').forEach(function(s){
+    if(s.value) cover[s.getAttribute('data-clinic-idx')]=s.value;
+  });
+  var free=mdFreeDoctors(iso,{echo:echo,cover:cover,duties:mdCollectDuties()},
+    mdState.weekSun,(mdDraft&&mdDraft.ccu));
+  var box=document.getElementById('md-free-list');
+  box.innerHTML=free.length
+    ? free.map(mdFreeChip).join('')
+    : '<span class="md-chip empty">none free</span>';
+}
+
+window.mdCloseMo=function(){ document.getElementById('mdMo').classList.remove('on'); };
+
+window.mdSaveDay=function(ev){
+  ev.preventDefault();
+  if(window.currentRole!=='admin'){ alert('Admin only.'); return false; }
+  var iso=document.getElementById('md-iso').value;
+  if(!iso) return false;
+  var echo=Array.from(document.querySelectorAll('.md-echo-sel'))
+    .map(function(s){return s.value;}).filter(Boolean);
+  // de-dupe while preserving order
+  var seen={},echoClean=[];
+  echo.forEach(function(v){ if(!seen[v]){ seen[v]=1; echoClean.push(v); } });
+  var cover={};
+  document.querySelectorAll('.md-cover-sel').forEach(function(s){
+    if(s.value) cover[s.getAttribute('data-clinic-idx')]=s.value;
+  });
+  if(!mdDraft.days) mdDraft.days={};
+  mdDraft.days[iso]={echo:echoClean,cover:cover,duties:mdCollectDuties()};
+  mdCloseMo();
+  mdRenderGrid(); mdRenderValidation();
+  var hint=document.getElementById('mdSaveHint');
+  if(hint) hint.textContent='Day edited \u2014 remember to Save the week.';
+  return false;
+};
+
+window.mdClearDay=function(){
+  var iso=document.getElementById('md-iso').value;
+  if(!iso) return;
+  if(!confirm('Clear all morning duties for this day?')) return;
+  if(mdDraft.days) mdDraft.days[iso]={echo:[],cover:{},duties:[]};
+  mdCloseMo();
+  mdRenderGrid(); mdRenderValidation();
+  var hint=document.getElementById('mdSaveHint');
+  if(hint) hint.textContent='Day cleared \u2014 remember to Save the week.';
+};
+
+/* ---- live free-preview refresh when modal selects change ---- */
+document.addEventListener('change',function(e){
+  if(!document.getElementById('mdMo')||!document.getElementById('mdMo').classList.contains('on')) return;
+  if(e.target.classList && (e.target.classList.contains('md-echo-sel')||e.target.classList.contains('md-cover-sel')||e.target.classList.contains('md-duty-sel'))){
+    var iso=document.getElementById('md-iso').value;
+    if(iso) mdRenderFreePreview(iso);
+  }
+});
+
+/* =====================================================================
+   SAVE WHOLE WEEK
+   ===================================================================== */
+window.mdSaveWeek=function(){
+  if(window.currentRole!=='admin'){ alert('Admin only.'); return; }
+  ensureExtState();
+  // light validation gate — warn but allow
+  var problems=document.getElementById('mdValidation');
+  if(problems && problems.classList.contains('bad')){
+    if(!confirm('This week still has unresolved coverage issues. Save anyway?')) return;
+  }
+  var ws=mdState.weekSun;
+  var rec={
+    days: (mdDraft&&mdDraft.days)?mdDraft.days:{},
+    ccu: (mdDraft&&typeof mdDraft.ccu==='string')?mdDraft.ccu:'',
+    ward: (mdDraft&&typeof mdDraft.ward==='string')?mdDraft.ward:'',
+    updatedAt: Date.now(),
+    updatedBy: 'Admin'
+  };
+  if(!window.S.morningDuty) window.S.morningDuty={};
+  window.S.morningDuty[ws]=rec;
+  // scoped write — only this week's node
+  dbWriteAt('morningDuty/'+ws, rec);
+  var hint=document.getElementById('mdSaveHint');
+  if(hint) hint.textContent='\u2713 Saved to server '+new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})+'.';
+};
+
+/* =====================================================================
+   PDF EXPORT — one week
+   ===================================================================== */
+window.mdExportPdf=function(){
+  if(typeof window.jspdf==='undefined'){ alert('PDF library still loading. Please try again in a second.'); return; }
+  var jsPDF=window.jspdf.jsPDF;
+  var doc=new jsPDF({orientation:'landscape',unit:'pt',format:'a4'});
+  var pageW=doc.internal.pageSize.getWidth();
+  var ws=mdState.weekSun;
+  var sun=mdParse(ws), thu=mdParse(mdAddDays(ws,4));
+
+  doc.setFont('helvetica','bold'); doc.setFontSize(15);
+  doc.text('MKH Cardiology \u2014 Morning Duty Schedule', pageW/2, 38, {align:'center'});
+  doc.setFont('helvetica','normal'); doc.setFontSize(10); doc.setTextColor(90);
+  doc.text('Week of '+sun.toLocaleDateString('en-GB',{day:'2-digit',month:'short'})
+    +' \u2013 '+thu.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}),
+    pageW/2, 55, {align:'center'});
+  doc.setFontSize(8);
+  doc.text('Generated '+new Date().toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}),
+    pageW/2, 68, {align:'center'});
+  doc.setTextColor(0);
+
+  var ccu=mdWeekCcuConsultant(ws), ward=mdWeekWardSenior(ws);
+  var body=[];
+  for(var i=0;i<5;i++){
+    var iso=mdAddDays(ws,i);
+    var dow=MD_DOW[mdParse(iso).getDay()];
+    var dayLabel=mdParse(iso).toLocaleDateString('en-GB',{weekday:'long',day:'2-digit',month:'short'});
+    // Holiday row — single merged-looking cell describing the holiday.
+    var holiday=mdHolidayFor(iso);
+    if(holiday){
+      body.push([
+        dayLabel,
+        holiday.label+' \u2014 no morning duty.',
+        '\u2014', '\u2014', '\u2014'
+      ]);
+      continue;
+    }
+    var day=(mdDraft&&mdDraft.days&&mdDraft.days[iso])||{echo:[],cover:{}};
+    var need=mdEchoMinimum(iso);
+    var echo=(day.echo||[]).map(mdStripHon);
+    var echoCell=(echo.length?echo.join(', '):'\u2014')+'\n('+echo.length+'/'+need+')';
+    var coverNeeds=mdClinicsNeedingCover(ws).filter(function(c){return c.day===dow;});
+    var coverCell=coverNeeds.length
+      ? coverNeeds.map(function(c){
+          var who=day.cover&&day.cover[c.idx]?mdStripHon(day.cover[c.idx]):'UNASSIGNED';
+          return who+'  (\u2190 '+c.owner+', '+abbrevRoom(c.room)+')';
+        }).join('\n')
+      : '\u2014';
+    var duties=(day.duties||[]).filter(function(d){return d&&(d.label||d.doc);});
+    var dutyCell=duties.length
+      ? duties.map(function(d){
+          return (d.doc?mdStripHon(d.doc):'UNASSIGNED')+'  \u2014 '+(d.label||'duty');
+        }).join('\n')
+      : '\u2014';
+    var free=mdFreeDoctors(iso,{echo:day.echo||[],cover:day.cover||{},duties:day.duties||[]},
+      ws,(mdDraft&&mdDraft.ccu));
+    var freeCell=free.length?free.map(function(n){
+      if(MD_ECHO_TRAINEES.indexOf(mdAlias(n))!==-1) return n+' (echo training)';
+      if(mdIsHfTeam(n)) return n+' (HF Team)';
+      return n;
+    }).join(', '):'\u2014';
+    body.push([
+      dayLabel,
+      echoCell, coverCell, dutyCell, freeCell
+    ]);
+  }
+
+  doc.autoTable({
+    startY:82,
+    head:[['Day','Echo Lab Roster','Clinic Cover','General Duties','Free Doctors']],
+    body:body,
+    styles:{font:'helvetica',fontSize:8.5,cellPadding:6,valign:'top',lineColor:[210,215,222],lineWidth:0.5},
+    headStyles:{fillColor:[34,40,49],textColor:255,fontSize:9,fontStyle:'bold'},
+    columnStyles:{0:{cellWidth:108,fontStyle:'bold'},1:{cellWidth:172},2:{cellWidth:188},3:{cellWidth:160},4:{cellWidth:'auto'}},
+    alternateRowStyles:{fillColor:[245,247,249]},
+    margin:{left:30,right:30}
+  });
+
+  var fy=doc.lastAutoTable.finalY+22;
+  doc.setFontSize(8.5); doc.setTextColor(70);
+  doc.text('CCU 3rd-on-call this week: '+(ccu?'Dr. '+ccu:'\u2014')
+    +'      ASA ward senior this week: '+(ward?'Dr. '+ward:'\u2014'), 30, fy);
+  doc.text('Echo minimum: '+mdEchoMinimum(mdAddDays(ws,1))+'/day, '+mdEchoMinimum(mdAddDays(ws,3))+' on Wednesday.'
+    +'  Free doctors have first priority for empty morning work slots.', 30, fy+13);
+
+  doc.save('MorningDuty_'+ws+'.pdf');
 };
 
 console.info('[MKH] v3.3 enhancements loaded — hero card · global search · complexity tag · JSON backup · analytics');
