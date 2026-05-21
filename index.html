@@ -1133,6 +1133,7 @@ header{background:var(--header-gradient);backdrop-filter:blur(14px);-webkit-back
   <button class="tab" data-role="registrar admin" onclick="goTab('endo',this)">IP Patient's List</button>
   <button class="tab" data-role="registrar admin" onclick="goTab('cath',this)">Cathlab</button>
   <button class="tab" data-role="registrar admin" onclick="goTab('census',this)">Census</button>
+  <button class="tab" data-role="admin" onclick="goTab('morning',this)">☀ Morning Duties</button>
   <button class="tab" data-role="registrar admin" onclick="goTab('echolist',this)">Echo List</button>
   <button class="tab" data-role="registrar admin" onclick="goTab('oncall',this)">On Call</button>
   <button class="tab" data-role="registrar admin" onclick="goTab('hosp',this)">Hospital Numbers</button>
@@ -1152,7 +1153,7 @@ header{background:var(--header-gradient);backdrop-filter:blur(14px);-webkit-back
 </div>
 
 <!-- INPATIENT -->
-<div class="pg" id="pg-ip"><div class="card"><div id="skip-banner" style="display:none;background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.45);border-radius:8px;padding:10px 12px;margin-bottom:12px;font-size:11px;color:#fbbf24;line-height:1.5"></div><div class="cbox"><div class="rl">NEXT AVAILABLE CLINIC (AUTO)</div><div class="rd" id="nd">—</div><div class="rr" id="nr">—</div><div id="skip-panel" style="display:none;margin-top:12px;padding-top:12px;border-top:1px dashed var(--bor)"><div style="font-size:10px;color:var(--dim);margin-bottom:6px;text-align:left">⚠ Cath-specific doctor. If this patient was NOT catheterized by <span id="skip-doc-name" style="color:#fbbf24;font-weight:600"></span>, skip to pass this patient to the next doctor. Skipped doctor auto-returns to queue after the next assignment.</div><button class="btn" id="skip-btn" style="background:rgba(251,191,36,0.15);border:1px solid rgba(251,191,36,0.5);color:#fbbf24;margin-top:0" onclick="skipCurrentDoc()">⏭ Skip — Not Cathed by This Doctor</button></div><div style="margin-top:15px;border-top:1px dashed var(--bor);padding-top:12px;"><label style="color:var(--dim);font-size:9px;">AVAILABLE FOLLOW-UP DATES (NEXT 4 MONTHS)</label><select id="fd-sel" class="fd-sel"></select></div></div><div class="rb" id="rb"></div><label>File Number (6 Digits)</label><input type="text" id="fi" maxlength="6" inputmode="numeric" placeholder="e.g. 123456"><label>Registrar PIN</label><input type="password" id="rpin" maxlength="6" inputmode="numeric"><button class="btn" onclick="doAssign('ip')">Assign IP Discharge (Auto) →</button></div></div>
+<div class="pg" id="pg-ip"><div class="card"><div id="skip-banner" style="display:none;background:var(--acc-soft);border:1px solid var(--acc-line);border-radius:8px;padding:10px 12px;margin-bottom:12px;font-size:11px;color:var(--acc2);line-height:1.5"></div><div class="cbox"><div class="rl">NEXT AVAILABLE CLINIC (AUTO)</div><div class="rd" id="nd">—</div><div class="rr" id="nr">—</div><div id="skip-panel" style="display:none;margin-top:12px;padding-top:12px;border-top:1px dashed var(--bor)"><div style="font-size:10px;color:var(--dim);margin-bottom:6px;text-align:left">⚠ Cath-specific doctor. If this patient was NOT catheterized by <span id="skip-doc-name" style="color:var(--acc2);font-weight:600"></span>, skip to pass this patient to the next doctor. Skipped doctor auto-returns to queue after the next assignment.</div><button class="btn" id="skip-btn" style="background:var(--acc-soft);border:1px solid var(--acc-line);color:var(--acc2);margin-top:0" onclick="skipCurrentDoc()">⏭ Skip — Not Cathed by This Doctor</button></div><div style="margin-top:15px;border-top:1px dashed var(--bor);padding-top:12px;"><label style="color:var(--dim);font-size:9px;">AVAILABLE FOLLOW-UP DATES (NEXT 4 MONTHS)</label><select id="fd-sel" class="fd-sel"></select></div></div><div class="rb" id="rb"></div><label>File Number (6 Digits)</label><input type="text" id="fi" maxlength="6" inputmode="numeric" placeholder="e.g. 123456"><label>Registrar PIN</label><input type="password" id="rpin" maxlength="6" inputmode="numeric"><button class="btn" onclick="doAssign('ip')">Assign IP Discharge (Auto) →</button></div></div>
 
 <!-- INTERVENTIONAL -->
 <div class="pg" id="pg-spec"><div class="card"><div class="spec-grid" id="spec-grid"></div><div class="spec-form" id="spec-form"><div class="spec-hint" id="spec-hint">Loading dates...</div><label>Follow-up Date</label><select id="spec-date" class="fd-sel" style="margin-bottom:15px;"></select><label>File Number (6 Digits)</label><input type="text" id="spec-fi" maxlength="6" inputmode="numeric" placeholder="e.g. 123456" style="margin-bottom:11px;"><label>Registrar PIN</label><input type="password" id="spec-pin" maxlength="6" inputmode="numeric" style="margin-bottom:15px;"><button class="btn" onclick="doSpecificAssign()">Assign to Selected Clinic →</button></div></div></div>
@@ -2654,6 +2655,62 @@ header{background:var(--header-gradient);backdrop-filter:blur(14px);-webkit-back
 </div>
 
 
+<!-- ============= MORNING DUTIES (top-level, admin-only) ============= -->
+<div class="pg" id="pg-morning">
+  <div class="card apgate" style="text-align:center">
+    <label>ADMIN PIN</label>
+    <input class="pi" type="password" id="api-morning" maxlength="4">
+    <button class="btn" onclick="adminLogin('api-morning')">Unlock</button>
+  </div>
+  <div class="ac-content">
+    <div class="card">
+      <div class="adm-section-title">☀ Morning Duty Schedule</div>
+      <div class="adm-section-sub">Weekly echo-lab roster and clinic-cover assignments. The draft is auto-generated from the on-call schedule, clinic distribution and blocked dates &mdash; edit any cell, then save. Admin access only.</div>
+
+      <div class="md-weekpick">
+        <button onclick="mdShiftWeek(-1)">&#9664; Prev week</button>
+        <div class="md-week-label" id="mdWeekLabel">&mdash;</div>
+        <button onclick="mdShiftWeek(1)">Next week &#9654;</button>
+        <button onclick="mdJumpThisWeek()" style="border-color:var(--acc-line);color:var(--acc2)">&#8634; This week</button>
+      </div>
+
+      <div class="md-rules" id="mdRules" style="display:none">
+        <div class="md-rules-h">Coverage rules in effect this week</div>
+        <ul id="mdRulesList"></ul>
+      </div>
+
+      <div class="md-ccupick" id="mdCcuPick">
+        <div>
+          <div class="md-ccupick-label">CCU consultant this week</div>
+        </div>
+        <select id="mdCcuSelect" class="fd-sel" style="margin:0;max-width:230px" onchange="mdSetCcu(this.value)"></select>
+      </div>
+
+      <div class="md-ccupick" id="mdWardPick">
+        <div>
+          <div class="md-ccupick-label">Ward senior this week</div>
+        </div>
+        <select id="mdWardSelect" class="fd-sel" style="margin:0;max-width:230px" onchange="mdSetWard(this.value)"></select>
+      </div>
+
+      <div class="md-toolbar">
+        <button class="btn" style="margin:0" onclick="mdRegenerateDraft()">&#9851; Re-generate draft from rules</button>
+        <button class="btn" style="margin:0;background:linear-gradient(135deg,#7c3aed,#2563eb);border:none;color:#fff" onclick="mdExportPdf()">&#128196; Export week PDF</button>
+      </div>
+
+      <div id="mdValidation"></div>
+
+      <div id="mdGrid"></div>
+
+      <div class="md-savebar">
+        <button class="btn" style="margin:0" onclick="mdSaveWeek()">&#128190; Save Morning Duty Week</button>
+        <span class="md-save-hint" id="mdSaveHint"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <!-- ============= ECHO LIST (IP Echo + TEE) — Cathlab-style sub-tabs ============= -->
 <div class="pg" id="pg-echolist">
   <div class="cath-subtabs">
@@ -2809,7 +2866,6 @@ header{background:var(--header-gradient);backdrop-filter:blur(14px);-webkit-back
       <button class="adm-tab" onclick="goAdmTab('analytics',this)">📊 Analytics</button>
       <button class="adm-tab" onclick="goAdmTab('backup',this)">💾 Backup</button>
       <button class="adm-tab" onclick="goAdmTab('dist',this)">Distribution</button>
-      <button class="adm-tab" onclick="goAdmTab('morning',this)">☀ Morning Duties</button>
       <button class="adm-tab" onclick="goAdmTab('log',this)">Log</button>
       <button class="adm-tab" onclick="goAdmTab('export',this)">Export / Print</button>
       <button class="adm-tab" onclick="goAdmTab('danger',this)">⚠ Danger Zone</button>
@@ -2899,53 +2955,6 @@ header{background:var(--header-gradient);backdrop-filter:blur(14px);-webkit-back
       <div class="adm-section-title">Slot Distribution</div>
       <div class="adm-section-sub">Click any slot card to view its patient list and print.</div>
       <div class="dg" id="dg"></div>
-    </div>
-
-    <div class="adm-sec" id="adm-morning">
-      <div class="adm-section-title">☀ Morning Duty Schedule</div>
-      <div class="adm-section-sub">Weekly echo-lab roster and clinic-cover assignments. The draft is auto-generated from the on-call schedule, clinic distribution and blocked dates &mdash; edit any cell, then save. Admin access only.</div>
-
-      <div class="md-weekpick">
-        <button onclick="mdShiftWeek(-1)">&#9664; Prev week</button>
-        <div class="md-week-label" id="mdWeekLabel">&mdash;</div>
-        <button onclick="mdShiftWeek(1)">Next week &#9654;</button>
-        <button onclick="mdJumpThisWeek()" style="border-color:var(--acc-line);color:var(--acc2)">&#8634; This week</button>
-      </div>
-
-      <div class="md-rules" id="mdRules">
-        <div class="md-rules-h">Coverage rules in effect this week</div>
-        <ul id="mdRulesList"></ul>
-      </div>
-
-      <div class="md-ccupick" id="mdCcuPick">
-        <div>
-          <div class="md-ccupick-label">CCU 3rd-on-call consultant this week</div>
-          <div class="md-ccupick-sub">Admin sets this. His clinic is auto-flagged for cover.</div>
-        </div>
-        <select id="mdCcuSelect" class="fd-sel" style="margin:0;max-width:230px" onchange="mdSetCcu(this.value)"></select>
-      </div>
-
-      <div class="md-ccupick" id="mdWardPick">
-        <div>
-          <div class="md-ccupick-label">ASA ward senior this week</div>
-          <div class="md-ccupick-sub">Auto-read from the Fri/Sat 2nd-on-call &mdash; override here if needed. His clinic is auto-flagged for cover.</div>
-        </div>
-        <select id="mdWardSelect" class="fd-sel" style="margin:0;max-width:230px" onchange="mdSetWard(this.value)"></select>
-      </div>
-
-      <div class="md-toolbar">
-        <button class="btn" style="margin:0" onclick="mdRegenerateDraft()">&#9851; Re-generate draft from rules</button>
-        <button class="btn" style="margin:0;background:var(--sur2);border:1px solid var(--bor);color:var(--mid)" onclick="mdExportPdf()">&#128196; Export week PDF</button>
-      </div>
-
-      <div id="mdValidation"></div>
-
-      <div id="mdGrid"></div>
-
-      <div class="md-savebar">
-        <button class="btn" style="margin:0" onclick="mdSaveWeek()">&#128190; Save Morning Duty Week</button>
-        <span class="md-save-hint" id="mdSaveHint"></span>
-      </div>
     </div>
 
     <div class="adm-sec" id="adm-log">
@@ -4027,7 +4036,7 @@ function rAll(){
     let active=SKIP_DOCS.filter(n=>isSkipped(n));
     if(active.length){
       banner.innerHTML = `⏭ <strong>Skipped:</strong> ${active.map(n=>"Dr. "+n).join(", ")} &nbsp; ` +
-        active.map(n=>`<button onclick="unskipDoc('${n}')" style="background:none;border:1px solid rgba(251,191,36,0.5);color:#fbbf24;border-radius:4px;padding:2px 8px;font-size:10px;cursor:pointer;margin-left:4px;font-family:inherit">Restore ${n}</button>`).join(" ");
+        active.map(n=>`<button onclick="unskipDoc('${n}')" style="background:none;border:1px solid var(--acc-line);color:var(--acc2);border-radius:4px;padding:2px 8px;font-size:10px;cursor:pointer;margin-left:4px;font-family:inherit">Restore ${n}</button>`).join(" ");
       banner.style.display="block";
     } else {
       banner.style.display="none";
@@ -6794,6 +6803,7 @@ window.goTab=(id,btn)=>{
   if(id==="endo"){ renderEndoList(); renderHFList(); }
   if(id==="cath") renderCathAll();
   if(id==="census"){ renderCensus(); renderCensusAlert(); }
+  if(id==="morning" && typeof renderMorningDuty==='function') renderMorningDuty();
   if(id==="echolist"){
     renderEchoList();
     // Re-render whichever Echo sub-section is active; refresh both counts
@@ -6809,7 +6819,7 @@ window.goTab=(id,btn)=>{
   if(typeof hideAllActionPinFields === 'function') hideAllActionPinFields();
   rAll();
 };
-window.goAdmTab=(id,btn)=>{ document.querySelectorAll(".adm-tab").forEach(t=>t.classList.remove("on")); document.querySelectorAll(".adm-sec").forEach(s=>s.classList.remove("on")); btn.classList.add("on"); document.getElementById("adm-"+id).classList.add("on"); if(id==="export") renderClinicExportGrid(); if(id==="blocked") renderBlockedList(); if(id==="pinreset"){ renderPinResetTab(); } if(id==="removals") renderRemovalsList(); if(id==="analytics" && typeof renderAnalytics==='function') renderAnalytics(); if(id==="backup" && typeof renderBackupStats==='function') renderBackupStats(); if(id==="morning" && typeof renderMorningDuty==='function') renderMorningDuty(); };
+window.goAdmTab=(id,btn)=>{ document.querySelectorAll(".adm-tab").forEach(t=>t.classList.remove("on")); document.querySelectorAll(".adm-sec").forEach(s=>s.classList.remove("on")); btn.classList.add("on"); document.getElementById("adm-"+id).classList.add("on"); if(id==="export") renderClinicExportGrid(); if(id==="blocked") renderBlockedList(); if(id==="pinreset"){ renderPinResetTab(); } if(id==="removals") renderRemovalsList(); if(id==="analytics" && typeof renderAnalytics==='function') renderAnalytics(); if(id==="backup" && typeof renderBackupStats==='function') renderBackupStats(); };
 window.filterLog=(f,b)=>{ document.querySelectorAll(".fb").forEach(x=>x.classList.remove("on")); b.classList.add("on"); window.lf=f; rLog(); };
 window.adminLogin=async (id)=>{ let v=document.getElementById(id).value; if(!v) return; let h=await sha256(v); if(h===ADMIN_HASH){ adm=true; document.querySelectorAll(".apgate").forEach(e=>e.style.display="none"); document.querySelectorAll(".ac-content").forEach(e=>e.style.display="block"); rAll(); } else { alert("Incorrect PIN"); document.getElementById(id).value=""; } };
 window.goOpTab=(tab,btn)=>{ document.querySelectorAll("#opc .tab").forEach(t=>t.classList.remove("on")); btn.classList.add("on"); document.getElementById("op-walkin").style.display=tab==="walkin"?"block":"none"; document.getElementById("op-fix").style.display=tab==="fix"?"block":"none"; if(tab==="fix") renderFixClinics(); };
@@ -6874,6 +6884,7 @@ dbRef.on('value',(snap)=>{
   if(document.getElementById('pg-endo')?.classList.contains('on')){ renderEndoList(); renderHFList(); }
   if(document.getElementById('pg-cath')?.classList.contains('on')) renderCathAll();
   if(document.getElementById('pg-census')?.classList.contains('on')){ renderCensus(); renderCensusAlert(); }
+  if(document.getElementById('pg-morning')?.classList.contains('on') && typeof renderMorningDuty==='function') renderMorningDuty();
   if(document.getElementById('pg-echolist')?.classList.contains('on')){
     renderEchoList();
     if(typeof refreshEchoSubtabCounts === 'function') refreshEchoSubtabCounts();
@@ -10737,7 +10748,7 @@ function mdRenderCcuPicker(){
   // All consultants are in the CCU rotation — including Samir. When Samir
   // covers CCU he drops off echo for that week; otherwise he is on echo.
   MD_CONSULTANTS.forEach(function(bare){
-    var tag=(bare===auto)?' (on-call default)':'';
+    var tag='';
     opts+='<option value="'+escapeHtml(bare)+'"'+(bare===cur?' selected':'')+'>Dr. '+escapeHtml(bare)+tag+'</option>';
   });
   sel.innerHTML=opts;
@@ -10751,7 +10762,7 @@ function mdRenderWardPicker(){
   var auto=mdAutoWardSenior(mdState.weekSun)||'';
   var opts='<option value="">— Not set —</option>';
   MD_SENIORS.forEach(function(bare){
-    var tag=(bare===auto)?' (on-call default)':'';
+    var tag='';
     opts+='<option value="'+escapeHtml(bare)+'"'+(bare===cur?' selected':'')+'>Dr. '+escapeHtml(bare)+tag+'</option>';
   });
   sel.innerHTML=opts;
@@ -11243,90 +11254,356 @@ window.mdSaveWeek=function(){
 };
 
 /* =====================================================================
-   PDF EXPORT — one week
+   PDF EXPORT — one week  (v2: redesigned for clarity + easier reading)
    ===================================================================== */
 window.mdExportPdf=function(){
   if(typeof window.jspdf==='undefined'){ alert('PDF library still loading. Please try again in a second.'); return; }
   var jsPDF=window.jspdf.jsPDF;
   var doc=new jsPDF({orientation:'landscape',unit:'pt',format:'a4'});
   var pageW=doc.internal.pageSize.getWidth();
+  var pageH=doc.internal.pageSize.getHeight();
   var ws=mdState.weekSun;
   var sun=mdParse(ws), thu=mdParse(mdAddDays(ws,4));
 
-  doc.setFont('helvetica','bold'); doc.setFontSize(15);
-  doc.text('MKH Cardiology \u2014 Morning Duty Schedule', pageW/2, 38, {align:'center'});
-  doc.setFont('helvetica','normal'); doc.setFontSize(10); doc.setTextColor(90);
-  doc.text('Week of '+sun.toLocaleDateString('en-GB',{day:'2-digit',month:'short'})
-    +' \u2013 '+thu.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}),
-    pageW/2, 55, {align:'center'});
-  doc.setFontSize(8);
-  doc.text('Generated '+new Date().toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}),
-    pageW/2, 68, {align:'center'});
-  doc.setTextColor(0);
+  // ---------- color palette (soft, calm, professional) ----------
+  var C = {
+    bandTop:    [37, 99, 235],     // indigo-600
+    bandBot:    [14, 165, 233],    // sky-500
+    accent:     [124, 58, 237],    // violet-600 — separator / brand
+    text:       [30, 41, 59],      // slate-800
+    textSoft:   [71, 85, 105],     // slate-600
+    textFaint:  [148, 163, 184],   // slate-400
+    headerCell: [30, 41, 59],      // slate-800 for table head
+    grid:       [226, 232, 240],   // slate-200
+    stripe:     [248, 250, 252],   // slate-50
+    holiday:    [243, 232, 255],   // violet-100
+    holidayBd:  [168, 85, 247],    // violet-500
+    holidayTx:  [88, 28, 135],     // violet-900
+    unassigned: [220, 38, 38],     // red-600
+    free:       [22, 163, 74],     // green-600
+    coverWarn:  [217, 119, 6],     // amber-600
+    // soft day-of-week tints (left accent strip on the Day column)
+    daySun:     [254, 226, 226],   // red-100
+    daySunBd:   [239, 68, 68],
+    dayMon:     [254, 243, 199],   // amber-100
+    dayMonBd:   [245, 158, 11],
+    dayTue:     [220, 252, 231],   // green-100
+    dayTueBd:   [34, 197, 94],
+    dayWed:     [207, 250, 254],   // cyan-100
+    dayWedBd:   [6, 182, 212],
+    dayThu:     [224, 231, 255],   // indigo-100
+    dayThuBd:   [99, 102, 241]
+  };
+  var DAY_TINT = {Sun:[C.daySun,C.daySunBd], Mon:[C.dayMon,C.dayMonBd], Tue:[C.dayTue,C.dayTueBd], Wed:[C.dayWed,C.dayWedBd], Thu:[C.dayThu,C.dayThuBd]};
 
+  // ---------- gradient header band ----------
+  // jsPDF has no native gradient — fake it with thin horizontal bands.
+  var bandH = 74, bandSteps = 58;
+  for(var i=0;i<bandSteps;i++){
+    var t = i/(bandSteps-1);
+    var r = C.bandTop[0]+(C.bandBot[0]-C.bandTop[0])*t;
+    var g = C.bandTop[1]+(C.bandBot[1]-C.bandTop[1])*t;
+    var b = C.bandTop[2]+(C.bandBot[2]-C.bandTop[2])*t;
+    doc.setFillColor(r,g,b);
+    doc.rect(0, i*(bandH/bandSteps), pageW, bandH/bandSteps+0.6, 'F');
+  }
+  // accent strip at the bottom of the band
+  doc.setFillColor.apply(doc, C.accent);
+  doc.rect(0, bandH, pageW, 3, 'F');
+
+  // Title + subtitle on the band
+  doc.setTextColor(255,255,255);
+  doc.setFont('helvetica','bold'); doc.setFontSize(18);
+  doc.text('MKH Cardiology', 36, 32);
+  doc.setFont('helvetica','normal'); doc.setFontSize(11);
+  doc.text('Morning Duty Schedule', 36, 50);
+
+  // Week range — right-aligned on the band
+  var weekText = sun.toLocaleDateString('en-GB',{day:'2-digit',month:'short'})
+               + '  \u2013  '
+               + thu.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+  doc.setFont('helvetica','bold'); doc.setFontSize(13);
+  doc.text(weekText, pageW-36, 30, {align:'right'});
+
+  // CCU consultant + Ward senior — right-aligned, in the band under the date
   var ccu=mdWeekCcuConsultant(ws), ward=mdWeekWardSenior(ws);
-  var body=[];
+  var infoLine = 'CCU Consultant: '+(ccu?'Dr. '+ccu:'Not set')
+               + '      Ward Senior: '+(ward?'Dr. '+ward:'Not set');
+  doc.setFont('helvetica','normal'); doc.setFontSize(10);
+  doc.setTextColor(219, 234, 254);
+  doc.text(infoLine, pageW-36, 50, {align:'right'});
+
+  // ---------- table body ----------
+  var body=[], rowMeta=[];
   for(var i=0;i<5;i++){
     var iso=mdAddDays(ws,i);
     var dow=MD_DOW[mdParse(iso).getDay()];
-    var dayLabel=mdParse(iso).toLocaleDateString('en-GB',{weekday:'long',day:'2-digit',month:'short'});
-    // Holiday row — single merged-looking cell describing the holiday.
+    var dateObj=mdParse(iso);
+    var dayLabel=dateObj.toLocaleDateString('en-GB',{weekday:'long'})
+               +'\n'+dateObj.toLocaleDateString('en-GB',{day:'2-digit',month:'short'});
+
     var holiday=mdHolidayFor(iso);
     if(holiday){
-      body.push([
-        dayLabel,
-        holiday.label+' \u2014 no morning duty.',
-        '\u2014', '\u2014', '\u2014'
-      ]);
+      body.push([dayLabel, holiday.label+'  \u2014  no morning duty.', '', '', '']);
+      rowMeta.push({dow:dow, holiday:true});
       continue;
     }
     var day=(mdDraft&&mdDraft.days&&mdDraft.days[iso])||{echo:[],cover:{}};
     var need=mdEchoMinimum(iso);
     var echo=(day.echo||[]).map(mdStripHon);
-    var echoCell=(echo.length?echo.join(', '):'\u2014')+'\n('+echo.length+'/'+need+')';
+    // ECHOCELL sentinel — custom two-column render in didDrawCell.
+    // payload: names joined by | , then \u0001 , then "count/need"
+    var echoCell='\u0002ECHO\u0001'
+      + (echo.length?echo.join('|'):'')
+      + '\u0001' + echo.length + '/' + need;
+
     var coverNeeds=mdClinicsNeedingCover(ws).filter(function(c){return c.day===dow;});
     var coverCell=coverNeeds.length
       ? coverNeeds.map(function(c){
           var who=day.cover&&day.cover[c.idx]?mdStripHon(day.cover[c.idx]):'UNASSIGNED';
-          return who+'  (\u2190 '+c.owner+', '+abbrevRoom(c.room)+')';
-        }).join('\n')
+          return who+'\n'+c.owner+'  \u00B7  '+abbrevRoom(c.room);
+        }).join('\n\n')
       : '\u2014';
+
     var duties=(day.duties||[]).filter(function(d){return d&&(d.label||d.doc);});
     var dutyCell=duties.length
       ? duties.map(function(d){
-          return (d.doc?mdStripHon(d.doc):'UNASSIGNED')+'  \u2014 '+(d.label||'duty');
-        }).join('\n')
+          return (d.doc?mdStripHon(d.doc):'UNASSIGNED')+'\n'+(d.label||'duty');
+        }).join('\n\n')
       : '\u2014';
+
     var free=mdFreeDoctors(iso,{echo:day.echo||[],cover:day.cover||{},duties:day.duties||[]},
       ws,(mdDraft&&mdDraft.ccu));
-    var freeCell=free.length?free.map(function(n){
-      if(MD_ECHO_TRAINEES.indexOf(mdAlias(n))!==-1) return n+' (echo training)';
-      if(mdIsHfTeam(n)) return n+' (HF Team)';
+    var freeNames=free.map(function(n){
+      if(MD_ECHO_TRAINEES.indexOf(mdAlias(n))!==-1) return n+' (echo)';
+      if(mdIsHfTeam(n)) return n+' (HF)';
       return n;
-    }).join(', '):'\u2014';
-    body.push([
-      dayLabel,
-      echoCell, coverCell, dutyCell, freeCell
-    ]);
+    });
+    // FREE sentinel — custom two-column render in didDrawCell
+    var freeCell=freeNames.length ? '\u0002FREE\u0001'+freeNames.join('|') : '\u2014';
+
+    body.push([dayLabel, echoCell, coverCell, dutyCell, freeCell]);
+    rowMeta.push({dow:dow, holiday:false});
   }
 
+  var tableStartY = bandH + 3 + 14;
+
   doc.autoTable({
-    startY:82,
-    head:[['Day','Echo Lab Roster','Clinic Cover','General Duties','Free Doctors']],
-    body:body,
-    styles:{font:'helvetica',fontSize:8.5,cellPadding:6,valign:'top',lineColor:[210,215,222],lineWidth:0.5},
-    headStyles:{fillColor:[34,40,49],textColor:255,fontSize:9,fontStyle:'bold'},
-    columnStyles:{0:{cellWidth:108,fontStyle:'bold'},1:{cellWidth:172},2:{cellWidth:188},3:{cellWidth:160},4:{cellWidth:'auto'}},
-    alternateRowStyles:{fillColor:[245,247,249]},
-    margin:{left:30,right:30}
+    startY: tableStartY,
+    head: [['Day','Echo Lab Roster','Clinic Cover','General Duties','Free Doctors']],
+    body: body,
+    theme: 'grid',
+    rowPageBreak: 'avoid',
+    styles: {
+      font:'helvetica',
+      fontSize:8,
+      cellPadding:{top:3,right:7,bottom:3,left:7},
+      valign:'top',
+      lineColor:C.grid,
+      lineWidth:0.5,
+      textColor:C.text,
+      overflow:'linebreak',
+      minCellHeight:0
+    },
+    headStyles: {
+      fillColor: C.headerCell,
+      textColor: 255,
+      fontSize: 9,
+      fontStyle: 'bold',
+      halign: 'left',
+      cellPadding: {top:7,right:7,bottom:7,left:9},
+      lineWidth: 0
+    },
+    columnStyles: {
+      0:{cellWidth:90, fontStyle:'bold', fontSize:9, textColor:C.text, fillColor:[255,255,255]},
+      1:{cellWidth:212},
+      2:{cellWidth:148},
+      3:{cellWidth:120},
+      4:{cellWidth:212, textColor:C.textSoft}
+    },
+    alternateRowStyles: { fillColor: C.stripe },
+    margin: {left:30, right:30},
+    didDrawPage: function(data){
+      // Footer on every page
+      doc.setDrawColor.apply(doc, C.grid);
+      doc.setLineWidth(0.5);
+      doc.line(30, pageH-30, pageW-30, pageH-30);
+      doc.setFont('helvetica','normal'); doc.setFontSize(8);
+      doc.setTextColor.apply(doc, C.textFaint);
+      doc.text('Generated '+new Date().toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}),
+        30, pageH-18);
+      doc.text('MKH Cardiology  \u00b7  Morning Duty Schedule', pageW/2, pageH-18, {align:'center'});
+      doc.text('Page '+data.pageNumber, pageW-30, pageH-18, {align:'right'});
+    },
+    didParseCell: function(data){
+      if(data.section !== 'body') return;
+      var meta = rowMeta[data.row.index];
+      if(!meta) return;
+
+      // Holiday rows — purple wash across the whole row.
+      if(meta.holiday){
+        data.cell.styles.fillColor = C.holiday;
+        data.cell.styles.textColor = C.holidayTx;
+        data.cell.styles.fontStyle = 'bold';
+        if(data.column.index === 0){
+          data.cell.styles.fillColor = C.holidayBd;
+          data.cell.styles.textColor = [255,255,255];
+        }
+        return;
+      }
+
+      // Day column — soft day-of-week tint
+      if(data.column.index === 0){
+        var tint = DAY_TINT[meta.dow];
+        if(tint){
+          data.cell.styles.fillColor = tint[0];
+          data.cell.styles.textColor = C.text;
+        }
+      }
+
+      // Echo Lab Roster (1) — custom two-column numbered list, drawn by hand.
+      if(data.column.index===1){
+        var rawE = Array.isArray(data.cell.raw) ? data.cell.raw.join('') : String(data.cell.raw||'');
+        if(rawE.indexOf('\u0002ECHO\u0001')===0){
+          var partsE = rawE.slice(6).split('\u0001');
+          var namesE = partsE[0] ? partsE[0].split('|') : [];
+          data.cell._mdEcho = { names: namesE, count: partsE[1]||'' };
+          var rowsE = Math.ceil(namesE.length/2);
+          var needE = data.cell.padding('top') + data.cell.padding('bottom')
+                    + rowsE*14 + 12;   // list rows + count line
+          data.cell.styles.minCellHeight = Math.max(data.cell.styles.minCellHeight||0, needE);
+          data.cell.text = [''];
+        }
+      }
+
+      // Free Doctors (4) — custom two-column numbered list.
+      if(data.column.index===4){
+        var rawF = Array.isArray(data.cell.raw) ? data.cell.raw.join('') : String(data.cell.raw||'');
+        if(rawF.indexOf('\u0002FREE\u0001')===0){
+          var namesF = rawF.slice(6).split('|');
+          data.cell._mdFree = namesF;
+          var rowsF = Math.ceil(namesF.length/2);
+          var needF = data.cell.padding('top') + data.cell.padding('bottom') + rowsF*14.5 + 4;
+          data.cell.styles.minCellHeight = Math.max(data.cell.styles.minCellHeight||0, needF);
+          data.cell.text = [''];
+        }
+      }
+
+      // Cover (2) and General Duties (3) — we draw these cells by hand in
+      // didDrawCell, so parse the entries and blank the default text.
+      if((data.column.index===2 || data.column.index===3)){
+        var raw = Array.isArray(data.cell.raw) ? data.cell.raw.join('') : String(data.cell.raw||'');
+        if(raw !== '\u2014' && raw !== ''){
+          data.cell._mdEntries = raw.split('\n\n').map(function(blk){
+            var parts = blk.split('\n');
+            return { name: (parts[0]||'').trim(), sub: (parts[1]||'').trim() };
+          });
+          // reserve enough vertical room: ~22pt per entry
+          var need = data.cell.padding('top') + data.cell.padding('bottom')
+                   + data.cell._mdEntries.length*24 + 4;
+          data.cell.styles.minCellHeight = Math.max(data.cell.styles.minCellHeight||0, need);
+          data.cell.text = [''];   // suppress default rendering
+        }
+      }
+    },
+    didDrawCell: function(data){
+      if(data.section !== 'body') return;
+      var meta = rowMeta[data.row.index];
+      if(!meta || meta.holiday) return;
+
+      // Left accent bar on the Day column matching that day's color
+      if(data.column.index === 0){
+        var tint = DAY_TINT[meta.dow];
+        if(tint){
+          doc.setFillColor.apply(doc, tint[1]);
+          doc.rect(data.cell.x, data.cell.y, 3, data.cell.height, 'F');
+        }
+      }
+
+      // Custom-render Echo Lab Roster as a two-column numbered list (~11pt).
+      if(data.column.index===1 && data.cell._mdEcho){
+        var ec = data.cell._mdEcho;
+        var ex = data.cell.x + data.cell.padding('left');
+        var ey = data.cell.y + data.cell.padding('top') + 9;
+        var colW = (data.cell.width - data.cell.padding('left') - data.cell.padding('right'))/2;
+        var rowsE2 = Math.ceil(ec.names.length/2);
+        if(ec.names.length){
+          doc.setFont('helvetica','normal'); doc.setFontSize(10.5);
+          doc.setTextColor.apply(doc, C.text);
+          for(var ei=0; ei<ec.names.length; ei++){
+            var col = (ei < rowsE2) ? 0 : 1;
+            var rowIdx = ei - col*rowsE2;
+            doc.text((ei+1)+'. '+ec.names[ei], ex + col*colW, ey + rowIdx*14);
+          }
+        } else {
+          doc.setFont('helvetica','bold'); doc.setFontSize(10.5);
+          doc.setTextColor.apply(doc, C.unassigned);
+          doc.text('Unassigned', ex, ey);
+        }
+        // count line, muted, below the list
+        doc.setFont('helvetica','italic'); doc.setFontSize(8);
+        doc.setTextColor.apply(doc, C.textFaint);
+        doc.text('('+ec.count+' assigned)', ex, ey + rowsE2*14 + 1);
+      }
+
+      // Custom-render Free Doctors as a two-column numbered list (~11pt).
+      if(data.column.index===4 && data.cell._mdFree){
+        var fn = data.cell._mdFree;
+        var fx = data.cell.x + data.cell.padding('left');
+        var fy = data.cell.y + data.cell.padding('top') + 9;
+        var fcolW = (data.cell.width - data.cell.padding('left') - data.cell.padding('right'))/2;
+        var rowsF2 = Math.ceil(fn.length/2);
+        doc.setFont('helvetica','normal'); doc.setFontSize(10);
+        doc.setTextColor.apply(doc, C.textSoft);
+        for(var fi=0; fi<fn.length; fi++){
+          var fcol = (fi < rowsF2) ? 0 : 1;
+          var frow = fi - fcol*rowsF2;
+          doc.text((fi+1)+'. '+fn[fi], fx + fcol*fcolW, fy + frow*14.5);
+        }
+      }
+
+      // Custom-render Clinic Cover / General Duties entries:
+      //   line 1 -> doctor name (bold; red if UNASSIGNED)
+      //   line 2 -> owner / duty label (small, muted)
+      if((data.column.index===2 || data.column.index===3) && data.cell._mdEntries){
+        var entries = data.cell._mdEntries;
+        var tx  = data.cell.x + data.cell.padding('left');
+        var ty  = data.cell.y + data.cell.padding('top') + 8;
+        var hasUnassigned = false;
+        for(var e=0;e<entries.length;e++){
+          var ent = entries[e];
+          var isUn = ent.name.indexOf('UNASSIGNED') !== -1;
+          if(isUn) hasUnassigned = true;
+          doc.setFont('helvetica','bold'); doc.setFontSize(10);
+          doc.setTextColor.apply(doc, isUn ? C.unassigned : C.text);
+          doc.text((e+1)+'. '+ent.name, tx, ty);
+          if(ent.sub){
+            doc.setFont('helvetica','normal'); doc.setFontSize(8);
+            doc.setTextColor.apply(doc, C.textFaint);
+            doc.text(ent.sub, tx + 12, ty + 10);
+          }
+          ty += 24;
+        }
+        if(hasUnassigned){
+          doc.setFillColor.apply(doc, C.unassigned);
+          doc.triangle(
+            data.cell.x + data.cell.width - 8, data.cell.y + 2,
+            data.cell.x + data.cell.width - 2, data.cell.y + 2,
+            data.cell.x + data.cell.width - 2, data.cell.y + 8,
+            'F'
+          );
+        }
+      }
+    }
   });
 
-  var fy=doc.lastAutoTable.finalY+22;
-  doc.setFontSize(8.5); doc.setTextColor(70);
-  doc.text('CCU 3rd-on-call this week: '+(ccu?'Dr. '+ccu:'\u2014')
-    +'      ASA ward senior this week: '+(ward?'Dr. '+ward:'\u2014'), 30, fy);
-  doc.text('Echo minimum: '+mdEchoMinimum(mdAddDays(ws,1))+'/day, '+mdEchoMinimum(mdAddDays(ws,3))+' on Wednesday.'
-    +'  Free doctors have first priority for empty morning work slots.', 30, fy+13);
+  // ---------- closing note ----------
+  var noteY = doc.lastAutoTable.finalY + 18;
+  if(noteY > pageH - 50){ doc.addPage(); noteY = 50; }
+  doc.setFont('helvetica','italic'); doc.setFontSize(8);
+  doc.setTextColor.apply(doc, C.textFaint);
+  doc.text('Free doctors have first priority for any empty morning work slot.',
+    30, noteY);
 
   doc.save('MorningDuty_'+ws+'.pdf');
 };
