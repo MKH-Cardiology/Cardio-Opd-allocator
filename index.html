@@ -10727,6 +10727,38 @@ window.renderMorningDuty=function(){
   if(typeof mdDraft.ward!=='string')
     mdDraft.ward = mdAutoWardSenior(mdState.weekSun) || '';
 
+  // ---- AUTO-CLEANUP: strip out doctors who are now unavailable -----------
+  // A saved week may have been built before a doctor was blocked / put on
+  // leave. Drop those names from echo, clinic-cover and duty slots so the
+  // displayed roster always reflects current blocked-date / leave state.
+  // The user can still click "Re-generate draft from rules" to refill the
+  // gaps; here we only REMOVE conflicts, never invent new assignments.
+  if(mdDraft && mdDraft.days){
+    Object.keys(mdDraft.days).forEach(function(iso){
+      var day=mdDraft.days[iso]; if(!day) return;
+      // echo list
+      if(Array.isArray(day.echo)){
+        day.echo=day.echo.filter(function(n){
+          return !mdDocUnavailable(mdStripHon(n),iso);
+        });
+      }
+      // clinic-cover map { clinicIdx: doctorName }
+      if(day.cover && typeof day.cover==='object'){
+        Object.keys(day.cover).forEach(function(k){
+          var who=day.cover[k];
+          if(who && mdDocUnavailable(mdStripHon(who),iso)) delete day.cover[k];
+        });
+      }
+      // general duty rows [{label,doc}]
+      if(Array.isArray(day.duties)){
+        day.duties.forEach(function(d){
+          if(d && d.doc && mdDocUnavailable(mdStripHon(d.doc),iso)) d.doc='';
+        });
+      }
+    });
+  }
+  // -----------------------------------------------------------------------
+
   mdRenderLabel();
   mdRenderRules();
   mdRenderCcuPicker();
