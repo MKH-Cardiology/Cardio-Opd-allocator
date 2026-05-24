@@ -3895,7 +3895,7 @@ window.toggleS = (name, type) => {
 // Doctors who can be blocked even though they have no fixed weekday clinic in
 // CL. They are merged with the unique clinic-doctor names so the dropdown
 // covers everyone who might be away. Add more names here as needed.
-var EXTRA_BLOCKABLE_DOCS = ["Samir"];
+var EXTRA_BLOCKABLE_DOCS = ["Samir", "Ramy", "Ali Nasser", "Hamza", "Sajid"];
 
 function populateBlockedDocDropdown(){
   let sel = document.getElementById("blocked-doc-input");
@@ -11121,12 +11121,23 @@ window.mdOpenMo=function(iso){
   document.getElementById('mdMo').classList.add('on');
 };
 
+// Preset duty labels offered in the General Morning Duties dropdown.
+// Custom labels are still allowed — the input accepts free text in addition
+// to these presets via the datalist.
+window.MD_DUTY_PRESETS = ["Echo Distribution", "Committee", "Teaching"];
 window.mdAddDutyRow=function(label,doc){
   var box=document.getElementById('md-duty-rows');
   var row=document.createElement('div');
   row.className='md-duty-row';
+  // Unique datalist id per row so the browser keeps the suggestion menus tidy.
+  var dlId='md-duty-presets-'+(Date.now().toString(36))+'-'+Math.floor(Math.random()*1e6).toString(36);
+  var presetOpts=window.MD_DUTY_PRESETS.map(function(p){
+    return '<option value="'+escapeHtml(p)+'"></option>';
+  }).join('');
   row.innerHTML='<input type="text" class="pi md-duty-label" placeholder="Duty / slot name" '
+    +'list="'+dlId+'" '
     +'style="margin-bottom:0" value="'+escapeHtml(label||'')+'">'
+    +'<datalist id="'+dlId+'">'+presetOpts+'</datalist>'
     +'<select class="fd-sel md-duty-sel" style="margin-bottom:0">'+mdBuildDocOptions(doc||'','all')+'</select>'
     +'<button type="button" class="md-row-del" title="Remove" onclick="this.parentNode.remove()">\u2715</button>';
   box.appendChild(row);
