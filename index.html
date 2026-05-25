@@ -632,6 +632,25 @@ header{background:var(--header-gradient);backdrop-filter:blur(14px);-webkit-back
 /* Selected/today still wins visually */
 .cal-cell.selected{z-index:1}
 
+/* ===== Morning Duty — read-only viewer mode ===== */
+/* Whitelisted consultants can view the weekly roster but cannot edit it.
+   Hide every edit affordance: per-day Edit buttons, Save bar, Re-generate
+   button, Export PDF (kept), CCU/Ward pickers, and the bottom save hint. */
+#pg-morning.md-readonly .md-edit-btn,
+#pg-morning.md-readonly .md-savebar,
+#pg-morning.md-readonly #mdCcuPick,
+#pg-morning.md-readonly #mdWardPick,
+#pg-morning.md-readonly .md-toolbar .btn[onclick*="mdRegenerateDraft"]{
+  display:none !important;
+}
+/* In read-only mode the toolbar still shows the Export PDF button alone. */
+#pg-morning.md-readonly .md-toolbar{margin-bottom:14px}
+/* Add a subtle banner so the viewer knows it's view-only. */
+#pg-morning.md-readonly .adm-section-sub::after{
+  content:" \2022 You are viewing this page in read-only mode.";
+  color:var(--acc2);font-weight:600;
+}
+
 /* ============= REMOVALS LOG ============= */
 .rem-card{background:var(--sur);border:1px solid var(--bor);border-radius:10px;padding:12px 14px}
 .rem-card-head{display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap}
@@ -1133,7 +1152,7 @@ header{background:var(--header-gradient);backdrop-filter:blur(14px);-webkit-back
   <button class="tab" data-role="registrar admin" onclick="goTab('endo',this)">IP Patient's List</button>
   <button class="tab" data-role="registrar admin" onclick="goTab('cath',this)">Cathlab</button>
   <button class="tab" data-role="registrar admin" onclick="goTab('census',this)">Census</button>
-  <button class="tab" data-role="admin" onclick="goTab('morning',this)">☀ Morning Duties</button>
+  <button class="tab" data-role="admin registrar" onclick="goTab('morning',this)">☀ Morning Duties</button>
   <button class="tab" data-role="registrar admin" onclick="goTab('echolist',this)">Echo List</button>
   <button class="tab" data-role="registrar admin" onclick="goTab('oncall',this)">On Call</button>
   <button class="tab" data-role="registrar admin" onclick="goTab('hosp',this)">Hospital Numbers</button>
@@ -4230,6 +4249,14 @@ function applyRoleUI(role){
   document.querySelectorAll('#mainTabs .tab').forEach(t=>{
     let roles = (t.getAttribute('data-role')||'').split(' ');
     let ok = roles.some(r => allowed.includes(r));
+    // Per-doctor restriction: the Morning Duties tab is visible to admins and
+    // to a named set of consultants (read-only). Hide for any other registrar.
+    let onclick = t.getAttribute('onclick')||'';
+    if(ok && role==='registrar' && /'morning'/.test(onclick)){
+      var bare = window.currentDoctor ? String(window.currentDoctor).replace(/^\s*(?:Dr|Prof|Mr|Ms|Mrs)\.?\s+/i,'').trim() : '';
+      var viewerList = (typeof MD_VIEWER_CONSULTANTS!=='undefined') ? MD_VIEWER_CONSULTANTS : [];
+      if(viewerList.indexOf(bare)===-1) ok = false;
+    }
     t.style.display = ok ? '' : 'none';
     t.classList.remove('on');
   });
@@ -10195,6 +10222,19 @@ window.renderAnalytics = function(){
 /* ---- Category / echo-eligibility tables (from department structure) ---- */
 var MD_CONSULTANTS = ["Hisham","Farag","Ibrahim Hassan","Hany","Ehab","Samir"];
 var MD_SENIORS     = ["Maged","Ashraf","Fawzy","Akmal","Zaher","Shafie","Hamza","Ramy"];
+// Consultants / seniors permitted to OPEN the morning-duty page in read-only
+// mode (no Edit buttons, no Save, no Re-generate, no CCU/Ward pickers).
+// Admin is always allowed to view AND edit. Anyone else hits the PIN gate.
+var MD_VIEWER_CONSULTANTS = ["Shafie","Maged","Ashraf","Fawzy","Akmal","Zaher","Ramy"];
+function mdCanView(){
+  if(window.currentRole==='admin') return true;
+  if(window.currentRole==='registrar' && window.currentDoctor){
+    var bare=mdStripHon(window.currentDoctor);
+    return MD_VIEWER_CONSULTANTS.indexOf(bare)!==-1;
+  }
+  return false;
+}
+function mdCanEdit(){ return window.currentRole==='admin'; }
 // Echo trainees — always shown in the free-doctor pool, labelled "echo training".
 // Note: "Ali Nasser" (not "Ali") — three doctors in the PIN database share the
 // first name Ali: Ali Alsulaimi (the Wed Room 11 cath consultant, keyed in CL
@@ -10712,6 +10752,22 @@ function mdFreeChip(bare){
    ===================================================================== */
 window.renderMorningDuty=function(){
   ensureExtState();
+  // ---- Read-only viewer mode ----------------------------------------------
+  // Admins get full edit access (handled by enterApp/.apgate auto-unlock).
+  // Whitelisted consultants (MD_VIEWER_CONSULTANTS) are also granted access
+  // here, but in a read-only mode: the PIN gate is hidden, the content is
+  // shown, and all edit controls are hidden via the .md-readonly body class.
+  var pg=document.getElementById('pg-morning');
+  if(pg){
+    var canView = (typeof mdCanView==='function') ? mdCanView() : (window.currentRole==='admin');
+    var canEdit = (typeof mdCanEdit==='function') ? mdCanEdit() : (window.currentRole==='admin');
+    if(canView){
+      pg.querySelectorAll('.apgate').forEach(function(e){ e.style.display='none'; });
+      pg.querySelectorAll('.ac-content').forEach(function(e){ e.style.display='block'; });
+    }
+    pg.classList.toggle('md-readonly', canView && !canEdit);
+  }
+  // -------------------------------------------------------------------------
   if(!mdState.weekSun) mdState.weekSun=mdWeekSundayOf(new Date());
   // load saved week into the working draft, else generate
   var saved=(window.S.morningDuty||{})[mdState.weekSun];
@@ -11002,76 +11058,12 @@ function mdRenderGrid(){
 
 function mdRenderValidation(){
   var host=document.getElementById('mdValidation'); if(!host) return;
-  var errors=[];    // real problems — must be fixed
-  var notices=[];   // expected to-dos — admin completes manually (echo top-up)
-  for(var i=0;i<5;i++){
-    var iso=mdAddDays(mdState.weekSun,i);
-    var dow=MD_DOW[mdParse(iso).getDay()];
-    var day=mdDraft.days[iso]||{echo:[],cover:{}};
-    var label=mdParse(iso).toLocaleDateString('en-GB',{weekday:'short',day:'2-digit',month:'short'});
-    // Holiday — no morning duty expected; skip all validation for this day.
-    if(mdIsHoliday(iso)) continue;
-    var need=mdEchoMinimum(iso);
-    var echo=(day.echo||[]).map(mdStripHon);
-    var ws=mdState.weekSun, ccu=mdDraft.ccu;
-    var occupied=mdWeekOccupied(ws,ccu);
-    // echo below the minimum is EXPECTED mid-week — a to-do, not an error
-    if(echo.length<need)
-      notices.push(label+': echo lab '+echo.length+'/'+need+' \u2014 add '+(need-echo.length)+' more doctor'+((need-echo.length)>1?'s':'')+' manually.');
-    // duplicate echo doctors
-    var seen={};
-    echo.forEach(function(n){ if(seen[n]) errors.push(label+': Dr. '+n+' listed twice on echo.'); seen[n]=true; });
-    // echo doctor unavailable / running own clinic / occupied this week
-    echo.forEach(function(n){
-      if(mdDocUnavailable(n,iso)) errors.push(label+': echo doctor Dr. '+n+' is on leave / blocked.');
-      if(mdClinicDocsOnDay(dow)[n]) errors.push(label+': echo doctor Dr. '+n+' runs their own clinic this day.');
-      if(occupied[n]) errors.push(label+': Dr. '+n+' is this week\u2019s CCU consultant or ward senior \u2014 remove from echo.');
-      if(!mdInRosterPool(n)) errors.push(label+': Dr. '+n+' is not a working consultant / senior \u2014 remove from echo.');
-    });
-    // cover gaps
-    mdClinicsNeedingCover(ws,ccu).filter(function(c){return c.day===dow;}).forEach(function(c){
-      var who=day.cover&&day.cover[c.idx]?mdStripHon(day.cover[c.idx]):'';
-      if(!who){ errors.push(label+': Dr. '+c.owner+'\u2019s clinic ('+abbrevRoom(c.room)+') has no covering doctor.'); return; }
-      if(who===c.owner) errors.push(label+': Dr. '+c.owner+'\u2019s clinic is "covered" by himself.');
-      if(mdDocUnavailable(who,iso)) errors.push(label+': covering Dr. '+who+' is on leave / blocked.');
-      if(occupied[who]) errors.push(label+': covering Dr. '+who+' is this week\u2019s CCU consultant or ward senior \u2014 not free to cover.');
-      var want=(c.needCategory==='senior')?'senior':'consultant';
-      if(mdDocCategory(who)!==want)
-        notices.push(label+': Dr. '+c.owner+'\u2019s clinic is covered by Dr. '+who
-          +' \u2014 recommended a '+want+', but admin-assigned, so allowed.');
-      if(echo.indexOf(who)!==-1) errors.push(label+': Dr. '+who+' is assigned to both echo and clinic cover.');
-    });
-    // general duty slots
-    (day.duties||[]).forEach(function(d){
-      if(!d) return;
-      if(d.label && !d.doc) errors.push(label+': duty "'+d.label+'" has no doctor assigned.');
-      if(d.doc && !d.label) errors.push(label+': a duty has Dr. '+mdStripHon(d.doc)+' assigned but no slot name.');
-      if(d.doc && mdDocUnavailable(mdStripHon(d.doc),iso))
-        errors.push(label+': duty doctor Dr. '+mdStripHon(d.doc)+' is on leave / blocked.');
-      if(d.doc && occupied[mdStripHon(d.doc)])
-        errors.push(label+': duty doctor Dr. '+mdStripHon(d.doc)+' is this week\u2019s CCU consultant or ward senior.');
-      if(d.doc && echo.indexOf(mdStripHon(d.doc))!==-1)
-        errors.push(label+': Dr. '+mdStripHon(d.doc)+' is assigned to both echo and a general duty.');
-    });
-  }
-
-  function block(items){ return '<ul>'+items.map(function(p){return '<li>'+escapeHtml(p)+'</li>';}).join('')+'</ul>'; }
-  var html='';
-  // top status class: bad if real errors, todo if only notices, ok if clean
-  if(errors.length){
-    host.className='md-validation bad';
-    html='\u26a0 '+errors.length+' issue'+(errors.length>1?'s':'')+' to fix:'+block(errors);
-    if(notices.length)
-      html+='<div class="md-validation-todo-inset">\u2398 '+notices.length+' day'+(notices.length>1?'s':'')+' need echo top-up (expected \u2014 complete manually):'+block(notices)+'</div>';
-  } else if(notices.length){
-    host.className='md-validation todo';
-    html='\u2398 No rule violations. '+notices.length+' day'+(notices.length>1?'s':'')
-      +' still need echo doctors added manually \u2014 this is expected mid-week, not an error:'+block(notices);
-  } else {
-    host.className='md-validation ok';
-    html='\u2713 All coverage rules satisfied and echo minimums met for this week.';
-  }
-  host.innerHTML=html;
+  // Validation panel hidden by request — no notices or errors shown to any
+  // user (admin or read-only viewer). Clear contents AND class so the host
+  // collapses to nothing and the Save flow's "still has issues" prompt
+  // (which checks for .bad on this element) never triggers.
+  host.innerHTML='';
+  host.className='';
 }
 
 /* ---- week navigation ---- */
@@ -11086,6 +11078,7 @@ window.mdJumpThisWeek=function(){
   renderMorningDuty();
 };
 window.mdRegenerateDraft=function(){
+  if(window.currentRole!=='admin'){ alert('Admin only.'); return; }
   if(!confirm('Re-generate this week\u2019s draft from the rules? Any unsaved edits to the displayed week will be lost.')) return;
   var keepCcu=(mdDraft && typeof mdDraft.ccu==='string')?mdDraft.ccu:undefined;
   var keepWard=(mdDraft && typeof mdDraft.ward==='string')?mdDraft.ward:undefined;
