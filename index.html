@@ -388,6 +388,10 @@ hr.adm-hr{border:0;border-top:1px solid var(--bor);margin:20px 0}
 .hosp-name{font-family:var(--font-ui);font-size:14px;color:var(--txt);font-weight:600;margin-bottom:2px;letter-spacing:-0.01em}
 .hosp-hn{font-family:var(--font-ui);font-size:12px;color:var(--mid);font-weight:500;margin-top:2px}
 .hosp-numbers{display:flex;flex-direction:column;gap:5px;align-items:flex-end}
+.hosp-admin-actions{grid-column:1 / -1;display:flex;gap:8px;margin-top:4px;padding-top:8px;border-top:1px dashed var(--bor)}
+.hosp-admin-btn{background:var(--sur2);border:1px solid var(--bor);border-radius:6px;padding:4px 10px;font-family:var(--font-mono);font-size:10.5px;color:var(--mid);cursor:pointer;transition:all .15s;font-weight:600}
+.hosp-admin-btn:hover{border-color:var(--acc-line);color:var(--acc2)}
+.hosp-admin-btn.del:hover{border-color:rgba(226,100,100,.5);color:var(--err)}
 .hosp-num-pill{display:flex;align-items:center;gap:6px;background:var(--sur2);border:1px solid var(--bor);border-radius:6px;padding:5px 9px;font-family:var(--font-mono);font-size:11.5px;color:var(--acc2);cursor:pointer;transition:all .15s;font-weight:500;text-decoration:none}
 .hosp-num-pill:hover{border-color:var(--acc-line);background:var(--acc-soft)}
 .hosp-num-pill.ext{color:var(--mid)}
@@ -462,6 +466,30 @@ header{background:var(--header-gradient);backdrop-filter:blur(14px);-webkit-back
 .endo-field-big.active{border-left-color:var(--err)}
 .endo-field-big .endo-field-label{margin-bottom:6px;color:var(--mid)}
 .endo-field-big .endo-field-text{font-size:13.5px;line-height:1.6;color:var(--txt)}
+
+/* === PER-SECTION COLOUR TINTS === */
+/* Each clinical section gets its own subtle background tint + left accent
+   so the eye can separate History / Reason / Investigations / Issues / Plan. */
+.sec-hx{background:rgba(96,165,250,.07);border-left:3px solid rgba(96,165,250,.55);border-radius:8px;padding:9px 12px;margin-bottom:10px}
+.sec-hx .endo-field-label{color:#7fb1f5}
+.sec-reason{background:rgba(167,139,250,.07);border-left:3px solid rgba(167,139,250,.55);border-radius:8px;padding:9px 12px;margin-bottom:10px}
+.sec-reason .endo-field-label{color:#b6a0fb}
+.sec-ix{background:rgba(45,212,191,.07);border-left:3px solid rgba(45,212,191,.6);border-radius:8px;padding:9px 12px;margin-bottom:10px}
+.sec-ix .endo-field-label{color:#4fd6c4}
+.sec-active{background:rgba(248,113,113,.07);border-left:3px solid rgba(248,113,113,.6);border-radius:8px;padding:9px 12px;margin-bottom:10px}
+.sec-active .endo-field-label{color:#fb8a8a}
+.sec-plan{background:rgba(163,230,53,.07);border-left:3px solid rgba(163,230,53,.55);border-radius:8px;padding:9px 12px;margin-bottom:10px}
+.sec-plan .endo-field-label{color:#a9d957}
+:root[data-theme="light"] .sec-hx{background:rgba(37,99,235,.06)}
+:root[data-theme="light"] .sec-hx .endo-field-label{color:#2563eb}
+:root[data-theme="light"] .sec-reason{background:rgba(124,58,237,.06)}
+:root[data-theme="light"] .sec-reason .endo-field-label{color:#7c3aed}
+:root[data-theme="light"] .sec-ix{background:rgba(13,148,136,.06)}
+:root[data-theme="light"] .sec-ix .endo-field-label{color:#0d9488}
+:root[data-theme="light"] .sec-active{background:rgba(220,38,38,.06)}
+:root[data-theme="light"] .sec-active .endo-field-label{color:#dc2626}
+:root[data-theme="light"] .sec-plan{background:rgba(101,163,13,.07)}
+:root[data-theme="light"] .sec-plan .endo-field-label{color:#65a30d}
 .endo-actions{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
 .endo-act-btn{flex:1 1 calc(50% - 3px);background:var(--sur2);border:1px solid var(--bor);color:var(--mid);border-radius:7px;padding:8px 6px;cursor:pointer;font-family:var(--font-mono);font-size:10px;letter-spacing:0.06em;text-transform:uppercase;transition:all .15s;font-weight:600;min-width:0;white-space:normal;line-height:1.25}
 .endo-act-btn:hover{border-color:var(--acc-line);color:var(--acc2);background:var(--acc-soft)}
@@ -2535,6 +2563,9 @@ header{background:var(--header-gradient);backdrop-filter:blur(14px);-webkit-back
       <input type="text" class="hosp-search" id="hospSearch" placeholder="Search ward, location, or head nurse…" oninput="renderHospNumbers()">
       <select class="hosp-filter-select" id="hospFilterSelect" onchange="setHospFilter(this.value)"></select>
     </div>
+    <div id="hospAdminBar" style="display:none;margin-bottom:12px">
+      <button type="button" class="endo-act-btn" style="border-color:rgba(63,185,140,.5);color:var(--ok)" onclick="openHospNumForm()">＋ Add number</button>
+    </div>
     <div id="hospGrid" class="hosp-grid"></div>
   </div>
 </div>
@@ -2569,6 +2600,36 @@ header{background:var(--header-gradient);backdrop-filter:blur(14px);-webkit-back
 
 <!-- Toast for hospital numbers (clipboard copy) -->
 <div class="hosp-toast" id="hospToast">Copied</div>
+
+<!-- HOSPITAL NUMBER editor (admin add / edit) -->
+<div class="mo" id="hospNumMo">
+  <div class="mb" style="max-width:440px;max-height:92vh">
+    <div class="mh">
+      <h2 style="font-family:var(--font-ui);font-size:17px;font-weight:600;letter-spacing:-0.01em;display:flex;align-items:center;gap:8px">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--acc2)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        <span id="hospNumFormTitle">Add number</span>
+      </h2>
+      <button onclick="closeHospNumForm()" style="background:none;border:none;color:var(--dim);font-size:20px;cursor:pointer;line-height:1">✕</button>
+    </div>
+    <div class="mbody">
+      <input type="hidden" id="hospNum-id">
+      <label>Location / Group *</label>
+      <input type="text" id="hospNum-loc" autocomplete="off" placeholder="e.g. Echo Department">
+      <label>Name / Label *</label>
+      <input type="text" id="hospNum-name" autocomplete="off" placeholder="e.g. Echo 1">
+      <label>Extension</label>
+      <input type="text" id="hospNum-ext" inputmode="numeric" autocomplete="off" placeholder="e.g. 57902">
+      <label>Direct line</label>
+      <input type="text" id="hospNum-direct" inputmode="numeric" autocomplete="off" placeholder="optional">
+      <label>Mobile</label>
+      <input type="text" id="hospNum-phone" inputmode="numeric" autocomplete="off" placeholder="optional">
+      <label>Head nurse</label>
+      <input type="text" id="hospNum-hn" autocomplete="off" placeholder="optional">
+      <button type="button" class="btn" style="margin-top:10px" onclick="saveHospNum()">💾 Save number</button>
+      <button type="button" class="btn btn-secondary" style="margin-top:6px" onclick="closeHospNumForm()">Cancel</button>
+    </div>
+  </div>
+</div>
 
 <!-- WARD CENSUS -->
 <div class="pg" id="pg-census">
@@ -3091,7 +3152,7 @@ var EP_CLINICS = [{id:"ep-sun", name:"EP Device Clinic", room:"Room 21", day:"Su
 var EP_MAX_PER_DATE = 12;
 var specificDocs = [{name:"Fahad", indices:[0], room:"Room 24", day:"Mon", label:"Monday"},{name:"Ali", indices:[9], room:"Room 11", day:"Wed", label:"Wednesday"},{name:"Arab", indices:[14], room:"Room 25", day:"Tue", label:"Tuesday"},{name:"Nazanin", indices:[7], room:"Room 25", day:"Sun", label:"Sunday"}];
 var selectedSpecificDoc = null, selectedFixDoc = null, selectedEpClinic = null;
-window.S = {logs:[], oplogs:[], eplogs:[], leave:{}, skipped:{}, blockedDates:{}, onCall:{}, docPins:{}, pinChanges:[], removals:[]};
+window.S = {logs:[], oplogs:[], eplogs:[], leave:{}, skipped:{}, blockedDates:{}, onCall:{}, docPins:{}, pinChanges:[], removals:[], hospNumbers:{edits:{},deleted:[],custom:[]}};
 // Doctors who can be temporarily skipped on the Inpatient (auto) tab when
 // the current patient was not catheterized by them. Keyed by doctor name.
 var SKIP_DOCS = ["Fahad","Arab","Ali","Nazanin"];
@@ -5532,10 +5593,22 @@ window.collapseAllHF = function(){
 
 function field(label, val){
   let empty = !val || !val.trim();
-  return `<div class="endo-field">
+  let tint = _sectionTintClass(label);
+  return `<div class="endo-field${tint?' '+tint:''}">
     <div class="endo-field-label">${label}</div>
     <div class="endo-field-text${empty?' empty':''}">${empty?'— not documented —':escapeHtml(val)}</div>
   </div>`;
+}
+
+// Map a section label → its colour-tint class (see CSS .sec-* rules).
+function _sectionTintClass(label){
+  let l = (label||'').toLowerCase();
+  if(l.includes('past') || l.includes('history')) return 'sec-hx';
+  if(l.includes('reason') || l.includes('admission')) return 'sec-reason';
+  if(l.includes('investigation')) return 'sec-ix';
+  if(l.includes('active') || l.includes('issue')) return 'sec-active';
+  if(l.includes('plan')) return 'sec-plan';
+  return '';
 }
 
 // Bigger, more prominent box for fields the team reads most often
@@ -5545,7 +5618,8 @@ function field(label, val){
 // dangerous lab numbers (Trop, K, Na, Cr, Hb, INR, BNP, Lactate, Glucose).
 function bigField(label, val, variant){
   let empty = !val || !val.trim();
-  let cls = 'endo-field-big' + (variant ? ' ' + variant : '');
+  let tint = _sectionTintClass(label);
+  let cls = 'endo-field-big' + (variant ? ' ' + variant : '') + (tint ? ' ' + tint : '');
   let body;
   if(empty){
     body = '— not documented —';
@@ -6854,7 +6928,9 @@ dbRef.on('value',(snap)=>{
     window.S.echoList=d.echoList||{};
     window.S.teeScheduled=d.teeScheduled||{};
     window.S.morningDuty=d.morningDuty||{};
+    window.S.hospNumbers=d.hospNumbers||{edits:{},deleted:[],custom:[]};
   }
+  if(typeof buildHospNumbers === 'function') buildHospNumbers();
   ensureExtState();
 
   // ONE-TIME CLEANUP: strip any leftover 'images' arrays from existing records
@@ -6899,6 +6975,7 @@ dbRef.on('value',(snap)=>{
     }
   }
   if(document.getElementById('pg-oncall')?.classList.contains('on')) renderOncallCalendar();
+  if(document.getElementById('pg-hosp')?.classList.contains('on') && typeof renderHospNumbers==='function') renderHospNumbers();
   if(document.getElementById('pg-adm')?.classList.contains('on')){
     if(document.getElementById('adm-pinreset')?.classList.contains('on')) renderPinResetTab();
     if(document.getElementById('adm-removals')?.classList.contains('on')) renderRemovalsList();
@@ -8700,7 +8777,7 @@ setInterval(function(){
 // HOSPITAL NUMBERS — directory data extracted from the dept PDF.
 // Tap a pill to copy the number to clipboard.
 // ============================================================
-const HOSPITAL_NUMBERS = [
+const HOSPITAL_NUMBERS_SEED = [
   // Casualty
   { loc: 'Casualty', name: 'Casualty Reception', ext: '58450', direct: '25364088' },
   { loc: 'Casualty', name: 'Casualty Reception', ext: '58451', direct: '25364088' },
@@ -8801,15 +8878,54 @@ const HOSPITAL_NUMBERS = [
   { loc: 'Ward 27', name: 'W27 — Head Nurse', ext: '56875', direct: '25364059', hn: 'Mohsin', phone: '66147142' },
   // Ward 28
   { loc: 'Ward 28', name: 'Ward 28 — Reception', ext: '56935' },
-  { loc: 'Ward 28', name: 'Ward 28 — Head Nurse', ext: '56940', direct: '25364060', hn: 'Heba', phone: '90963111' }
+  { loc: 'Ward 28', name: 'Ward 28 — Head Nurse', ext: '56940', direct: '25364060', hn: 'Heba', phone: '90963111' },
+  // Echo Department
+  { loc: 'Echo Department', name: 'Echo — Reception', ext: '57901' },
+  { loc: 'Echo Department', name: 'Echo 1', ext: '57902' },
+  { loc: 'Echo Department', name: 'Echo 2', ext: '57903' },
+  { loc: 'Echo Department', name: 'Echo 3', ext: '57907' },
+  { loc: 'Echo Department', name: 'Echo 4', ext: '57905' },
+  { loc: 'Echo Department', name: 'Holter', ext: '57906' }
 ];
 
-// Grouping order for filter chips (Casualty/ICU first, then numerical wards)
-const HOSPITAL_GROUPS = (function(){
-  let seen = [];
-  HOSPITAL_NUMBERS.forEach(r => { if(!seen.includes(r.loc)) seen.push(r.loc); });
-  return seen;
-})();
+// Give every seed row a stable id (used as the key for admin edits/deletes).
+HOSPITAL_NUMBERS_SEED.forEach((r, i) => { r.id = 'seed-' + i; r._seed = true; });
+
+// ------------------------------------------------------------
+// LIVE hospital-numbers list = seed rows (with admin edits applied,
+// minus admin-deleted ones) + admin-added custom rows.
+// Admin layer lives in window.S.hospNumbers = { edits:{id:{...}},
+// deleted:[id,...], custom:[{id,loc,name,ext,direct,phone,hn}] } and
+// is synced through Firebase like every other node.
+// HOSPITAL_NUMBERS is rebuilt by buildHospNumbers() on every data load.
+// ------------------------------------------------------------
+let HOSPITAL_NUMBERS = [];
+
+function buildHospNumbers(){
+  let layer = (window.S && window.S.hospNumbers) || {};
+  let edits = layer.edits || {};
+  let deleted = layer.deleted || [];
+  let custom = layer.custom || [];
+  let out = [];
+  HOSPITAL_NUMBERS_SEED.forEach(r => {
+    if(deleted.includes(r.id)) return;
+    let e = edits[r.id];
+    out.push(e ? Object.assign({}, r, e, { id: r.id, _seed: true }) : r);
+  });
+  custom.forEach(c => {
+    if(deleted.includes(c.id)) return;
+    out.push(Object.assign({}, c, { _seed: false }));
+  });
+  HOSPITAL_NUMBERS = out;
+  // Rebuild the location-group order from the live list.
+  HOSPITAL_GROUPS = [];
+  HOSPITAL_NUMBERS.forEach(r => { if(!HOSPITAL_GROUPS.includes(r.loc)) HOSPITAL_GROUPS.push(r.loc); });
+  return HOSPITAL_NUMBERS;
+}
+
+// Grouping order for filter chips (rebuilt live by buildHospNumbers)
+let HOSPITAL_GROUPS = [];
+buildHospNumbers();
 
 window.currentHospFilter = 'all';
 
@@ -8845,6 +8961,10 @@ function showHospToast(msg){
 }
 
 window.renderHospNumbers = function(){
+  // Reveal the admin "Add number" bar only for admins (do this first so it
+  // shows even when the grid is in its empty "pick a location" state).
+  let adminBar = document.getElementById('hospAdminBar');
+  if(adminBar) adminBar.style.display = (window.currentRole === 'admin') ? '' : 'none';
   // Build location dropdown (replaces the old chip bar)
   let sel = document.getElementById('hospFilterSelect');
   if(sel){
@@ -8911,6 +9031,13 @@ window.renderHospNumbers = function(){
         <span>${PHONE_SVG}</span><span class="lbl">Mobile</span><span>${r.phone}</span></button>`;
     }
     let hnLine = r.hn ? `<div class="hosp-hn">H/N · ${escapeHtml(r.hn)}</div>` : '';
+    let adminRow = '';
+    if(window.currentRole === 'admin'){
+      adminRow = `<div class="hosp-admin-actions">
+        <button type="button" class="hosp-admin-btn" onclick="openHospNumForm('${r.id}')">✎ Edit</button>
+        <button type="button" class="hosp-admin-btn del" onclick="deleteHospNum('${r.id}')">✕ Delete</button>
+      </div>`;
+    }
     return `<div class="hosp-card">
       <div>
         <div class="hosp-loc">${escapeHtml(r.loc)}</div>
@@ -8918,8 +9045,91 @@ window.renderHospNumbers = function(){
         ${hnLine}
       </div>
       <div class="hosp-numbers">${pills}</div>
+      ${adminRow}
     </div>`;
   }).join('');
+};
+
+// ============================================================
+// HOSPITAL NUMBERS — admin add / edit / delete
+// Admin layer is stored in window.S.hospNumbers and synced to Firebase
+// under the 'hospNumbers' node. Seed rows are edited via an `edits` map
+// keyed by their stable id; deletions go into `deleted`; brand-new rows
+// are appended to `custom`. buildHospNumbers() merges them for display.
+// ============================================================
+function _ensureHospLayer(){
+  if(!window.S.hospNumbers) window.S.hospNumbers = {};
+  if(!window.S.hospNumbers.edits)   window.S.hospNumbers.edits = {};
+  if(!window.S.hospNumbers.deleted) window.S.hospNumbers.deleted = [];
+  if(!window.S.hospNumbers.custom)  window.S.hospNumbers.custom = [];
+  return window.S.hospNumbers;
+}
+
+window.openHospNumForm = function(id){
+  if(window.currentRole !== 'admin'){ alert('Admin only.'); return; }
+  let titleEl = document.getElementById('hospNumFormTitle');
+  let setVal = (k,v)=>{ let el=document.getElementById('hospNum-'+k); if(el) el.value = v||''; };
+  if(id){
+    let r = HOSPITAL_NUMBERS.find(x => x.id === id);
+    if(!r){ alert('Number not found.'); return; }
+    titleEl.textContent = 'Edit number';
+    setVal('id', r.id);
+    setVal('loc', r.loc); setVal('name', r.name); setVal('ext', r.ext);
+    setVal('direct', r.direct); setVal('phone', r.phone); setVal('hn', r.hn);
+  } else {
+    titleEl.textContent = 'Add number';
+    ['id','loc','name','ext','direct','phone','hn'].forEach(k => setVal(k,''));
+  }
+  document.getElementById('hospNumMo').classList.add('on');
+};
+
+window.closeHospNumForm = function(){
+  document.getElementById('hospNumMo').classList.remove('on');
+};
+
+window.saveHospNum = function(){
+  if(window.currentRole !== 'admin'){ alert('Admin only.'); return; }
+  let g = k => (document.getElementById('hospNum-'+k)?.value || '').trim();
+  let id = g('id');
+  let rec = { loc:g('loc'), name:g('name'), ext:g('ext'), direct:g('direct'), phone:g('phone'), hn:g('hn') };
+  if(!rec.loc || !rec.name){ alert('Location and Name are required.'); return; }
+  if(!rec.ext && !rec.direct && !rec.phone){ alert('Enter at least one number (extension, direct, or mobile).'); return; }
+  let layer = _ensureHospLayer();
+  if(id && id.indexOf('seed-') === 0){
+    // Edit of a seed row → store override
+    layer.edits = Object.assign({}, layer.edits, { [id]: rec });
+  } else if(id){
+    // Edit of an existing custom row
+    layer.custom = (layer.custom||[]).map(c => c.id === id ? Object.assign({}, c, rec, {id}) : c);
+  } else {
+    // New custom row
+    rec.id = 'custom-' + Date.now() + '-' + Math.floor(Math.random()*1000);
+    layer.custom = (layer.custom||[]).concat([rec]);
+  }
+  dbWrite('hospNumbers', layer);
+  buildHospNumbers();
+  renderHospNumbers();
+  closeHospNumForm();
+  showHospToast('Saved');
+};
+
+window.deleteHospNum = function(id){
+  if(window.currentRole !== 'admin'){ alert('Admin only.'); return; }
+  let r = HOSPITAL_NUMBERS.find(x => x.id === id);
+  if(!r) return;
+  if(!confirm(`Delete "${r.name}" (${r.loc})?`)) return;
+  let layer = _ensureHospLayer();
+  if(id.indexOf('seed-') === 0){
+    if(!layer.deleted.includes(id)) layer.deleted = layer.deleted.concat([id]);
+    // drop any stale edit for this row
+    if(layer.edits && layer.edits[id]){ let e = Object.assign({}, layer.edits); delete e[id]; layer.edits = e; }
+  } else {
+    layer.custom = (layer.custom||[]).filter(c => c.id !== id);
+  }
+  dbWrite('hospNumbers', layer);
+  buildHospNumbers();
+  renderHospNumbers();
+  showHospToast('Deleted');
 };
 
 // ============================================================================
@@ -9058,13 +9268,15 @@ window.highlightLabValues = function(escapedHtml){
         let n = parseFloat(numStr);
         if(isNaN(n)) return full;
         let sev = _flagSeverity(rule, n);
-        if(!sev) return full;
+        if(!sev) return full;   // only abnormal values are highlighted
         // Preserve the leading-context character (the bit we matched with [^A-Za-z])
         // so we don't eat the previous character. The captured "label" group
         // skips that prefix character because of the (?:^|[^A-Za-z]) non-cap.
         let prefixLen = full.indexOf(label);
         let prefix = prefixLen > 0 ? full.slice(0, prefixLen) : '';
-        return `${prefix}<span class="lab-flag ${sev}" title="${rule.label} ${n}${rule.unit ? ' '+rule.unit : ''} — outside ${sev==='crit'?'critical':'normal'} range">${label} ${numStr}</span>`;
+        // No title attribute — the previous title text was leaking the closing
+        // quote into the visible output. The colour alone signals abnormality.
+        return `${prefix}<span class="lab-flag ${sev}">${label} ${numStr}</span>`;
       });
     });
   });
