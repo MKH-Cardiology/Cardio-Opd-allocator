@@ -204,6 +204,17 @@ label{display:block;font-size:10px;font-family:var(--font-mono);text-transform:u
 input,textarea,select{width:100%;background:var(--sur2);border:1px solid var(--bor);border-radius:var(--r-md);padding:11px;color:var(--txt);font-family:var(--font-mono);font-size:14px;outline:none;margin-bottom:11px;transition:border-color .15s,background .15s}
 input:focus,textarea:focus,select:focus{border-color:var(--acc-line);background:rgba(58,166,183,0.04)}
 textarea{font-family:var(--font-ui);font-size:13px;line-height:1.55;resize:vertical}
+
+/* iOS Safari auto-zooms into any text field smaller than 16px when you tap
+   it, which is what was breaking the IP-edit experience on iPhone (zoomed
+   layout, keyboard covering the textarea, manual zoom-out needed). The
+   feature query below targets ONLY iOS/iPadOS Safari, so Android and desktop
+   keep their compact 13–15px controls. scroll-margin-bottom keeps the focused
+   field visible above the on-screen keyboard. */
+@supports (-webkit-touch-callout: none){
+  input,textarea,select,.pi,.fd-sel{font-size:16px !important}
+  input:focus,textarea:focus,select:focus{scroll-margin-bottom:240px}
+}
 .btn{width:100%;background:linear-gradient(180deg,var(--acc),#2e8b9a);border:1px solid var(--acc);border-radius:var(--r-md);padding:12px;color:#fff;font-weight:600;font-family:var(--font-ui);cursor:pointer;margin-bottom:5px;transition:all 0.18s;letter-spacing:0.01em;font-size:13.5px;box-shadow:0 1px 0 rgba(255,255,255,0.1) inset,0 2px 6px rgba(0,0,0,0.2)}
 .btn:hover{filter:brightness(1.08);transform:translateY(-1px);box-shadow:0 1px 0 rgba(255,255,255,0.1) inset,0 4px 10px rgba(58,166,183,0.25)}
 .btn:active{transform:translateY(0)}
@@ -388,10 +399,6 @@ hr.adm-hr{border:0;border-top:1px solid var(--bor);margin:20px 0}
 .hosp-name{font-family:var(--font-ui);font-size:14px;color:var(--txt);font-weight:600;margin-bottom:2px;letter-spacing:-0.01em}
 .hosp-hn{font-family:var(--font-ui);font-size:12px;color:var(--mid);font-weight:500;margin-top:2px}
 .hosp-numbers{display:flex;flex-direction:column;gap:5px;align-items:flex-end}
-.hosp-admin-actions{grid-column:1 / -1;display:flex;gap:8px;margin-top:4px;padding-top:8px;border-top:1px dashed var(--bor)}
-.hosp-admin-btn{background:var(--sur2);border:1px solid var(--bor);border-radius:6px;padding:4px 10px;font-family:var(--font-mono);font-size:10.5px;color:var(--mid);cursor:pointer;transition:all .15s;font-weight:600}
-.hosp-admin-btn:hover{border-color:var(--acc-line);color:var(--acc2)}
-.hosp-admin-btn.del:hover{border-color:rgba(226,100,100,.5);color:var(--err)}
 .hosp-num-pill{display:flex;align-items:center;gap:6px;background:var(--sur2);border:1px solid var(--bor);border-radius:6px;padding:5px 9px;font-family:var(--font-mono);font-size:11.5px;color:var(--acc2);cursor:pointer;transition:all .15s;font-weight:500;text-decoration:none}
 .hosp-num-pill:hover{border-color:var(--acc-line);background:var(--acc-soft)}
 .hosp-num-pill.ext{color:var(--mid)}
@@ -466,30 +473,6 @@ header{background:var(--header-gradient);backdrop-filter:blur(14px);-webkit-back
 .endo-field-big.active{border-left-color:var(--err)}
 .endo-field-big .endo-field-label{margin-bottom:6px;color:var(--mid)}
 .endo-field-big .endo-field-text{font-size:13.5px;line-height:1.6;color:var(--txt)}
-
-/* === PER-SECTION COLOUR TINTS === */
-/* Each clinical section gets its own subtle background tint + left accent
-   so the eye can separate History / Reason / Investigations / Issues / Plan. */
-.sec-hx{background:rgba(96,165,250,.07);border-left:3px solid rgba(96,165,250,.55);border-radius:8px;padding:9px 12px;margin-bottom:10px}
-.sec-hx .endo-field-label{color:#7fb1f5}
-.sec-reason{background:rgba(167,139,250,.07);border-left:3px solid rgba(167,139,250,.55);border-radius:8px;padding:9px 12px;margin-bottom:10px}
-.sec-reason .endo-field-label{color:#b6a0fb}
-.sec-ix{background:rgba(45,212,191,.07);border-left:3px solid rgba(45,212,191,.6);border-radius:8px;padding:9px 12px;margin-bottom:10px}
-.sec-ix .endo-field-label{color:#4fd6c4}
-.sec-active{background:rgba(248,113,113,.07);border-left:3px solid rgba(248,113,113,.6);border-radius:8px;padding:9px 12px;margin-bottom:10px}
-.sec-active .endo-field-label{color:#fb8a8a}
-.sec-plan{background:rgba(163,230,53,.07);border-left:3px solid rgba(163,230,53,.55);border-radius:8px;padding:9px 12px;margin-bottom:10px}
-.sec-plan .endo-field-label{color:#a9d957}
-:root[data-theme="light"] .sec-hx{background:rgba(37,99,235,.06)}
-:root[data-theme="light"] .sec-hx .endo-field-label{color:#2563eb}
-:root[data-theme="light"] .sec-reason{background:rgba(124,58,237,.06)}
-:root[data-theme="light"] .sec-reason .endo-field-label{color:#7c3aed}
-:root[data-theme="light"] .sec-ix{background:rgba(13,148,136,.06)}
-:root[data-theme="light"] .sec-ix .endo-field-label{color:#0d9488}
-:root[data-theme="light"] .sec-active{background:rgba(220,38,38,.06)}
-:root[data-theme="light"] .sec-active .endo-field-label{color:#dc2626}
-:root[data-theme="light"] .sec-plan{background:rgba(101,163,13,.07)}
-:root[data-theme="light"] .sec-plan .endo-field-label{color:#65a30d}
 .endo-actions{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
 .endo-act-btn{flex:1 1 calc(50% - 3px);background:var(--sur2);border:1px solid var(--bor);color:var(--mid);border-radius:7px;padding:8px 6px;cursor:pointer;font-family:var(--font-mono);font-size:10px;letter-spacing:0.06em;text-transform:uppercase;transition:all .15s;font-weight:600;min-width:0;white-space:normal;line-height:1.25}
 .endo-act-btn:hover{border-color:var(--acc-line);color:var(--acc2);background:var(--acc-soft)}
@@ -598,13 +581,6 @@ header{background:var(--header-gradient);backdrop-filter:blur(14px);-webkit-back
 .md-day-card{background:var(--sur);border:1px solid var(--bor);border-radius:11px;padding:13px 14px;margin-bottom:9px}
 .md-day-card.md-today{border-color:var(--acc-line);box-shadow:0 0 0 1px var(--acc-line) inset}
 .md-day-card.md-flag{border-color:rgba(226,100,100,.5)}
-.md-day-card.md-holiday{background:linear-gradient(135deg,rgba(168,85,247,.10),rgba(168,85,247,.04));border-color:rgba(168,85,247,.45)}
-:root[data-theme="light"] .md-day-card.md-holiday{background:linear-gradient(135deg,rgba(126,34,206,.08),rgba(126,34,206,.03));border-color:rgba(126,34,206,.45)}
-.md-holiday-banner{display:flex;align-items:center;gap:13px;padding:8px 4px 4px 4px}
-.md-holiday-emoji{font-size:30px;line-height:1}
-.md-holiday-title{font-family:var(--font-ui);font-size:14px;font-weight:700;color:#c084fc;letter-spacing:.01em}
-:root[data-theme="light"] .md-holiday-title{color:#7e22ce}
-.md-holiday-sub{font-family:var(--font-mono);font-size:10.5px;color:var(--dim);font-weight:500;margin-top:2px}
 .md-day-head{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:10px;padding-bottom:9px;border-bottom:1px dashed var(--bor)}
 .md-day-name{font-family:var(--font-ui);font-size:15px;color:var(--txt);font-weight:600}
 .md-day-name .md-dow{font-family:var(--font-mono);font-size:10px;color:var(--dim);font-weight:500;margin-left:6px}
@@ -659,32 +635,6 @@ header{background:var(--header-gradient);backdrop-filter:blur(14px);-webkit-back
 :root[data-theme="light"] .cal-cell.cal-eid .cal-date{color:#7e22ce}
 /* Selected/today still wins visually */
 .cal-cell.selected{z-index:1}
-
-/* ===== Rich-text textarea enhancement ===== */
-/* Wraps a <textarea data-richtext="1"> with a compact formatting toolbar.
-   Storage stays plain text: bullets are "• ", numbered list items are
-   "1. ", "2. " etc. The toolbar buttons insert these prefixes and smart
-   Enter auto-continues the sequence. No HTML in saved values. */
-/* Bullet-list textareas: plain styling, no toolbar. */
-
-/* ===== Morning Duty — read-only viewer mode ===== */
-/* Whitelisted consultants can view the weekly roster but cannot edit it.
-   Hide every edit affordance: per-day Edit buttons, Save bar, Re-generate
-   button, Export PDF (kept), CCU/Ward pickers, and the bottom save hint. */
-#pg-morning.md-readonly .md-edit-btn,
-#pg-morning.md-readonly .md-savebar,
-#pg-morning.md-readonly #mdCcuPick,
-#pg-morning.md-readonly #mdWardPick,
-#pg-morning.md-readonly .md-toolbar .btn[onclick*="mdRegenerateDraft"]{
-  display:none !important;
-}
-/* In read-only mode the toolbar still shows the Export PDF button alone. */
-#pg-morning.md-readonly .md-toolbar{margin-bottom:14px}
-/* Add a subtle banner so the viewer knows it's view-only. */
-#pg-morning.md-readonly .adm-section-sub::after{
-  content:" \2022 You are viewing this page in read-only mode.";
-  color:var(--acc2);font-weight:600;
-}
 
 /* ============= REMOVALS LOG ============= */
 .rem-card{background:var(--sur);border:1px solid var(--bor);border-radius:10px;padding:12px 14px}
@@ -855,7 +805,7 @@ header{background:var(--header-gradient);backdrop-filter:blur(14px);-webkit-back
 
 /* ===========================================================
    ENHANCEMENT FEATURES — added in v3.2
-   #2 Global search · #4 Bulk actions
+   #2 Global search · #3 Hero card · #4 Bulk actions
    #5 Critical lab flags · #6 Stale enforcement
    #10 ICS export · #12 Case complexity tag
    #16 JSON backup · #21 Analytics
@@ -891,6 +841,40 @@ header{background:var(--header-gradient);backdrop-filter:blur(14px);-webkit-back
 .gs-row-sub{font-family:var(--font-mono);font-size:10px;color:var(--dim);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .gs-row-tag{flex-shrink:0;font-family:var(--font-mono);font-size:9px;color:var(--dim);background:var(--sur2);border:1px solid var(--bor);border-radius:4px;padding:2px 6px;letter-spacing:.5px}
 .gs-empty{text-align:center;padding:40px 20px;color:var(--dim);font-family:var(--font-mono);font-size:11px}
+
+/* === HERO CARD: My Patients (named-list version) === */
+.hero-card{background:linear-gradient(135deg,var(--sur),var(--sur2));border:1px solid var(--acc-line);border-left:3px solid var(--acc);border-radius:14px;padding:16px 18px;margin-bottom:16px;box-shadow:0 4px 18px rgba(0,0,0,.18),0 0 0 1px rgba(58,166,183,.06)}
+.hero-card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px}
+.hero-card-title{font-family:var(--font-ui);font-size:15px;font-weight:600;color:var(--txt);letter-spacing:-.01em}
+.hero-card-title-sub{font-family:var(--font-mono);font-size:9.5px;color:var(--dim);letter-spacing:.06em;text-transform:uppercase;font-weight:500;margin-top:2px}
+.hero-card-dismiss{background:var(--sur2);border:1px solid var(--bor);color:var(--dim);width:24px;height:24px;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;transition:all .15s;flex-shrink:0}
+.hero-card-dismiss:hover{color:var(--err);border-color:var(--err)}
+
+.hero-row-list{display:flex;flex-direction:column;gap:5px}
+.hero-row{display:flex;align-items:center;gap:9px;padding:9px 11px;background:var(--sur2);border:1px solid var(--bor);border-radius:8px;cursor:pointer;transition:all .15s;min-height:38px}
+.hero-row:hover{border-color:var(--acc-line);background:var(--sur3);transform:translateX(2px)}
+.hero-row-dot{flex-shrink:0;width:8px;height:8px;border-radius:50%;background:transparent;border:1.5px solid var(--bor2)}
+.hero-row-dot.stale{background:var(--warn);border-color:var(--warn);box-shadow:0 0 0 2px rgba(224,161,74,.18)}
+.hero-row-dot.fresh{background:transparent;border-color:var(--bor2)}
+.hero-row-name{flex:1;min-width:0;font-family:var(--font-ui);font-size:13px;font-weight:500;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hero-row-loc{flex-shrink:0;font-family:var(--font-mono);font-size:10px;color:var(--dim);letter-spacing:.02em;white-space:nowrap}
+.hero-row-badge{flex-shrink:0;font-family:var(--font-mono);font-size:9.5px;font-weight:600;color:var(--warn);background:rgba(224,161,74,.12);border:1px solid rgba(224,161,74,.35);border-radius:4px;padding:2px 6px;letter-spacing:.04em}
+:root[data-theme="light"] .hero-row-badge{background:rgba(180,83,9,.10);border-color:rgba(180,83,9,.35);color:var(--warn)}
+.hero-row-arrow{flex-shrink:0;font-family:var(--font-mono);font-size:13px;color:var(--dim);transition:transform .15s,color .15s}
+.hero-row:hover .hero-row-arrow{color:var(--acc2);transform:translateX(2px)}
+
+.hero-row-toggle{text-align:center;font-family:var(--font-mono);font-size:10px;color:var(--acc2);padding:7px;cursor:pointer;border-radius:6px;letter-spacing:.04em;font-weight:500;transition:background .15s;margin-top:2px}
+.hero-row-toggle:hover{background:var(--acc-soft)}
+
+/* Mobile-friendly tightening */
+@media (max-width:520px){
+  .hero-row{padding:8px 10px;gap:7px;flex-wrap:wrap}
+  .hero-row-name{font-size:13px;flex-basis:100%;order:1}
+  .hero-row-dot{order:0}
+  .hero-row-arrow{order:5;margin-left:auto}
+  .hero-row-loc{order:3;font-size:9.5px}
+  .hero-row-badge{order:4}
+}
 
 /* === Mobile layout fixes (header + tabs + page padding) === */
 @media (max-width:600px){
@@ -1153,7 +1137,6 @@ header{background:var(--header-gradient);backdrop-filter:blur(14px);-webkit-back
   <button class="tab" data-role="registrar admin" onclick="goTab('endo',this)">IP Patient's List</button>
   <button class="tab" data-role="registrar admin" onclick="goTab('cath',this)">Cathlab</button>
   <button class="tab" data-role="registrar admin" onclick="goTab('census',this)">Census</button>
-  <button class="tab" data-role="admin registrar" onclick="goTab('morning',this)">☀ Morning Duties</button>
   <button class="tab" data-role="registrar admin" onclick="goTab('echolist',this)">Echo List</button>
   <button class="tab" data-role="registrar admin" onclick="goTab('oncall',this)">On Call</button>
   <button class="tab" data-role="registrar admin" onclick="goTab('hosp',this)">Hospital Numbers</button>
@@ -1173,7 +1156,7 @@ header{background:var(--header-gradient);backdrop-filter:blur(14px);-webkit-back
 </div>
 
 <!-- INPATIENT -->
-<div class="pg" id="pg-ip"><div class="card"><div id="skip-banner" style="display:none;background:var(--acc-soft);border:1px solid var(--acc-line);border-radius:8px;padding:10px 12px;margin-bottom:12px;font-size:11px;color:var(--acc2);line-height:1.5"></div><div class="cbox"><div class="rl">NEXT AVAILABLE CLINIC (AUTO)</div><div class="rd" id="nd">—</div><div class="rr" id="nr">—</div><div id="skip-panel" style="display:none;margin-top:12px;padding-top:12px;border-top:1px dashed var(--bor)"><div style="font-size:10px;color:var(--dim);margin-bottom:6px;text-align:left">⚠ Cath-specific doctor. If this patient was NOT catheterized by <span id="skip-doc-name" style="color:var(--acc2);font-weight:600"></span>, skip to pass this patient to the next doctor. Skipped doctor auto-returns to queue after the next assignment.</div><button class="btn" id="skip-btn" style="background:var(--acc-soft);border:1px solid var(--acc-line);color:var(--acc2);margin-top:0" onclick="skipCurrentDoc()">⏭ Skip — Not Cathed by This Doctor</button></div><div style="margin-top:15px;border-top:1px dashed var(--bor);padding-top:12px;"><label style="color:var(--dim);font-size:9px;">AVAILABLE FOLLOW-UP DATES (NEXT 4 MONTHS)</label><select id="fd-sel" class="fd-sel"></select></div></div><div class="rb" id="rb"></div><label>File Number (6 Digits)</label><input type="text" id="fi" maxlength="6" inputmode="numeric" placeholder="e.g. 123456"><label>Registrar PIN</label><input type="password" id="rpin" maxlength="6" inputmode="numeric"><button class="btn" onclick="doAssign('ip')">Assign IP Discharge (Auto) →</button></div></div>
+<div class="pg" id="pg-ip"><div class="card"><div id="skip-banner" style="display:none;background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.45);border-radius:8px;padding:10px 12px;margin-bottom:12px;font-size:11px;color:#fbbf24;line-height:1.5"></div><div class="cbox"><div class="rl">NEXT AVAILABLE CLINIC (AUTO)</div><div class="rd" id="nd">—</div><div class="rr" id="nr">—</div><div id="skip-panel" style="display:none;margin-top:12px;padding-top:12px;border-top:1px dashed var(--bor)"><div style="font-size:10px;color:var(--dim);margin-bottom:6px;text-align:left">⚠ Cath-specific doctor. If this patient was NOT catheterized by <span id="skip-doc-name" style="color:#fbbf24;font-weight:600"></span>, skip to pass this patient to the next doctor. Skipped doctor auto-returns to queue after the next assignment.</div><button class="btn" id="skip-btn" style="background:rgba(251,191,36,0.15);border:1px solid rgba(251,191,36,0.5);color:#fbbf24;margin-top:0" onclick="skipCurrentDoc()">⏭ Skip — Not Cathed by This Doctor</button></div><div style="margin-top:15px;border-top:1px dashed var(--bor);padding-top:12px;"><label style="color:var(--dim);font-size:9px;">AVAILABLE FOLLOW-UP DATES (NEXT 4 MONTHS)</label><select id="fd-sel" class="fd-sel"></select></div></div><div class="rb" id="rb"></div><label>File Number (6 Digits)</label><input type="text" id="fi" maxlength="6" inputmode="numeric" placeholder="e.g. 123456"><label>Registrar PIN</label><input type="password" id="rpin" maxlength="6" inputmode="numeric"><button class="btn" onclick="doAssign('ip')">Assign IP Discharge (Auto) →</button></div></div>
 
 <!-- INTERVENTIONAL -->
 <div class="pg" id="pg-spec"><div class="card"><div class="spec-grid" id="spec-grid"></div><div class="spec-form" id="spec-form"><div class="spec-hint" id="spec-hint">Loading dates...</div><label>Follow-up Date</label><select id="spec-date" class="fd-sel" style="margin-bottom:15px;"></select><label>File Number (6 Digits)</label><input type="text" id="spec-fi" maxlength="6" inputmode="numeric" placeholder="e.g. 123456" style="margin-bottom:11px;"><label>Registrar PIN</label><input type="password" id="spec-pin" maxlength="6" inputmode="numeric" style="margin-bottom:15px;"><button class="btn" onclick="doSpecificAssign()">Assign to Selected Clinic →</button></div></div></div>
@@ -2117,7 +2100,7 @@ header{background:var(--header-gradient);backdrop-filter:blur(14px);-webkit-back
           <option>Prof. Zubaid</option>
           <option>Dr. Abdullah</option>
           <option>Dr. Fahad</option>
-          <option>Dr. Ali Alsulaimi</option>
+          <option>Dr. Ali</option>
           <option>Dr. Farouk</option>
           <option>Dr. Arab</option>
           <option>Dr. Nazanin</option>
@@ -2428,7 +2411,7 @@ header{background:var(--header-gradient);backdrop-filter:blur(14px);-webkit-back
         <button class="fb" onclick="oncallQuickRange('nextMonth')" style="font-size:10px;padding:4px 9px">Next month</button>
         <button class="fb" onclick="oncallQuickRange('next7')" style="font-size:10px;padding:4px 9px">Next 7 days</button>
         <button class="fb" onclick="oncallQuickRange('next30')" style="font-size:10px;padding:4px 9px">Next 30 days</button>
-        <button class="fb" onclick="oncallQuickRange('eid')" style="font-size:10px;padding:4px 9px">Eid (May 26–31)</button>
+        <button class="fb" onclick="oncallQuickRange('eid')" style="font-size:10px;padding:4px 9px">Eid (May 26–30)</button>
       </div>
       <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
         <span style="font-family:var(--font-mono);font-size:9px;color:var(--dim);letter-spacing:.06em">FROM</span>
@@ -2445,7 +2428,7 @@ header{background:var(--header-gradient);backdrop-filter:blur(14px);-webkit-back
       <div class="cal-legend" style="display:flex;flex-wrap:wrap;gap:8px 14px;font-family:var(--font-mono);font-size:10px;color:var(--dim);margin-bottom:10px;align-items:center">
         <span style="display:inline-flex;align-items:center;gap:5px"><span style="width:12px;height:12px;border-radius:3px;background:rgba(250,204,21,.18);border:1px solid rgba(250,204,21,.35);display:inline-block"></span>Thu</span>
         <span style="display:inline-flex;align-items:center;gap:5px"><span style="width:12px;height:12px;border-radius:3px;background:rgba(245,158,11,.20);border:1px solid rgba(245,158,11,.45);display:inline-block"></span>Weekend (Fri / Sat)</span>
-        <span style="display:inline-flex;align-items:center;gap:5px"><span style="width:12px;height:12px;border-radius:3px;background:rgba(168,85,247,.20);border:1px solid rgba(168,85,247,.5);display:inline-block"></span>Eid (May 26–31)</span>
+        <span style="display:inline-flex;align-items:center;gap:5px"><span style="width:12px;height:12px;border-radius:3px;background:rgba(168,85,247,.20);border:1px solid rgba(168,85,247,.5);display:inline-block"></span>Eid (May 26–30)</span>
       </div>
       <div class="cal-toolbar">
         <button class="cal-nav-btn" onclick="shiftOncallMonth(-1)">◀</button>
@@ -2563,9 +2546,6 @@ header{background:var(--header-gradient);backdrop-filter:blur(14px);-webkit-back
       <input type="text" class="hosp-search" id="hospSearch" placeholder="Search ward, location, or head nurse…" oninput="renderHospNumbers()">
       <select class="hosp-filter-select" id="hospFilterSelect" onchange="setHospFilter(this.value)"></select>
     </div>
-    <div id="hospAdminBar" style="display:none;margin-bottom:12px">
-      <button type="button" class="endo-act-btn" style="border-color:rgba(63,185,140,.5);color:var(--ok)" onclick="openHospNumForm()">＋ Add number</button>
-    </div>
     <div id="hospGrid" class="hosp-grid"></div>
   </div>
 </div>
@@ -2600,36 +2580,6 @@ header{background:var(--header-gradient);backdrop-filter:blur(14px);-webkit-back
 
 <!-- Toast for hospital numbers (clipboard copy) -->
 <div class="hosp-toast" id="hospToast">Copied</div>
-
-<!-- HOSPITAL NUMBER editor (admin add / edit) -->
-<div class="mo" id="hospNumMo">
-  <div class="mb" style="max-width:440px;max-height:92vh">
-    <div class="mh">
-      <h2 style="font-family:var(--font-ui);font-size:17px;font-weight:600;letter-spacing:-0.01em;display:flex;align-items:center;gap:8px">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--acc2)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-        <span id="hospNumFormTitle">Add number</span>
-      </h2>
-      <button onclick="closeHospNumForm()" style="background:none;border:none;color:var(--dim);font-size:20px;cursor:pointer;line-height:1">✕</button>
-    </div>
-    <div class="mbody">
-      <input type="hidden" id="hospNum-id">
-      <label>Location / Group *</label>
-      <input type="text" id="hospNum-loc" autocomplete="off" placeholder="e.g. Echo Department">
-      <label>Name / Label *</label>
-      <input type="text" id="hospNum-name" autocomplete="off" placeholder="e.g. Echo 1">
-      <label>Extension</label>
-      <input type="text" id="hospNum-ext" inputmode="numeric" autocomplete="off" placeholder="e.g. 57902">
-      <label>Direct line</label>
-      <input type="text" id="hospNum-direct" inputmode="numeric" autocomplete="off" placeholder="optional">
-      <label>Mobile</label>
-      <input type="text" id="hospNum-phone" inputmode="numeric" autocomplete="off" placeholder="optional">
-      <label>Head nurse</label>
-      <input type="text" id="hospNum-hn" autocomplete="off" placeholder="optional">
-      <button type="button" class="btn" style="margin-top:10px" onclick="saveHospNum()">💾 Save number</button>
-      <button type="button" class="btn btn-secondary" style="margin-top:6px" onclick="closeHospNumForm()">Cancel</button>
-    </div>
-  </div>
-</div>
 
 <!-- WARD CENSUS -->
 <div class="pg" id="pg-census">
@@ -2702,62 +2652,6 @@ header{background:var(--header-gradient);backdrop-filter:blur(14px);-webkit-back
 
           <button type="submit" class="btn" style="margin-top:6px">💾 Save Census Update</button>
         </form>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-<!-- ============= MORNING DUTIES (top-level, admin-only) ============= -->
-<div class="pg" id="pg-morning">
-  <div class="card apgate" style="text-align:center">
-    <label>ADMIN PIN</label>
-    <input class="pi" type="password" id="api-morning" maxlength="4">
-    <button class="btn" onclick="adminLogin('api-morning')">Unlock</button>
-  </div>
-  <div class="ac-content">
-    <div class="card">
-      <div class="adm-section-title">☀ Morning Duty Schedule</div>
-      <div class="adm-section-sub">Weekly echo-lab roster and clinic-cover assignments. The draft is auto-generated from the on-call schedule, clinic distribution and blocked dates &mdash; edit any cell, then save. Admin access only.</div>
-
-      <div class="md-weekpick">
-        <button onclick="mdShiftWeek(-1)">&#9664; Prev week</button>
-        <div class="md-week-label" id="mdWeekLabel">&mdash;</div>
-        <button onclick="mdShiftWeek(1)">Next week &#9654;</button>
-        <button onclick="mdJumpThisWeek()" style="border-color:var(--acc-line);color:var(--acc2)">&#8634; This week</button>
-      </div>
-
-      <div class="md-rules" id="mdRules" style="display:none">
-        <div class="md-rules-h">Coverage rules in effect this week</div>
-        <ul id="mdRulesList"></ul>
-      </div>
-
-      <div class="md-ccupick" id="mdCcuPick">
-        <div>
-          <div class="md-ccupick-label">CCU consultant this week</div>
-        </div>
-        <select id="mdCcuSelect" class="fd-sel" style="margin:0;max-width:230px" onchange="mdSetCcu(this.value)"></select>
-      </div>
-
-      <div class="md-ccupick" id="mdWardPick">
-        <div>
-          <div class="md-ccupick-label">Ward senior this week</div>
-        </div>
-        <select id="mdWardSelect" class="fd-sel" style="margin:0;max-width:230px" onchange="mdSetWard(this.value)"></select>
-      </div>
-
-      <div class="md-toolbar">
-        <button class="btn" style="margin:0" onclick="mdRegenerateDraft()">&#9851; Re-generate draft from rules</button>
-        <button class="btn" style="margin:0;background:linear-gradient(135deg,#7c3aed,#2563eb);border:none;color:#fff" onclick="mdExportPdf()">&#128196; Export week PDF</button>
-      </div>
-
-      <div id="mdValidation"></div>
-
-      <div id="mdGrid"></div>
-
-      <div class="md-savebar">
-        <button class="btn" style="margin:0" onclick="mdSaveWeek()">&#128190; Save Morning Duty Week</button>
-        <span class="md-save-hint" id="mdSaveHint"></span>
       </div>
     </div>
   </div>
@@ -2862,7 +2756,7 @@ header{background:var(--header-gradient);backdrop-filter:blur(14px);-webkit-back
           <option>Dr. Shafie</option>
           <option>Dr. Hamza</option>
           <option>Dr. Ramy</option>
-          <option>Dr. Ali Nasser</option>
+          <option>Dr. Ali</option>
           <option>Dr. Sajid</option>
           <option>Dr. Ibrahim Hassan</option>
           <option>Dr. Ihab</option>
@@ -2919,6 +2813,7 @@ header{background:var(--header-gradient);backdrop-filter:blur(14px);-webkit-back
       <button class="adm-tab" onclick="goAdmTab('analytics',this)">📊 Analytics</button>
       <button class="adm-tab" onclick="goAdmTab('backup',this)">💾 Backup</button>
       <button class="adm-tab" onclick="goAdmTab('dist',this)">Distribution</button>
+      <button class="adm-tab" onclick="goAdmTab('morning',this)">☀ Morning Duties</button>
       <button class="adm-tab" onclick="goAdmTab('log',this)">Log</button>
       <button class="adm-tab" onclick="goAdmTab('export',this)">Export / Print</button>
       <button class="adm-tab" onclick="goAdmTab('danger',this)">⚠ Danger Zone</button>
@@ -3010,6 +2905,53 @@ header{background:var(--header-gradient);backdrop-filter:blur(14px);-webkit-back
       <div class="dg" id="dg"></div>
     </div>
 
+    <div class="adm-sec" id="adm-morning">
+      <div class="adm-section-title">☀ Morning Duty Schedule</div>
+      <div class="adm-section-sub">Weekly echo-lab roster and clinic-cover assignments. The draft is auto-generated from the on-call schedule, clinic distribution and blocked dates &mdash; edit any cell, then save. Admin access only.</div>
+
+      <div class="md-weekpick">
+        <button onclick="mdShiftWeek(-1)">&#9664; Prev week</button>
+        <div class="md-week-label" id="mdWeekLabel">&mdash;</div>
+        <button onclick="mdShiftWeek(1)">Next week &#9654;</button>
+        <button onclick="mdJumpThisWeek()" style="border-color:var(--acc-line);color:var(--acc2)">&#8634; This week</button>
+      </div>
+
+      <div class="md-rules" id="mdRules">
+        <div class="md-rules-h">Coverage rules in effect this week</div>
+        <ul id="mdRulesList"></ul>
+      </div>
+
+      <div class="md-ccupick" id="mdCcuPick">
+        <div>
+          <div class="md-ccupick-label">CCU 3rd-on-call consultant this week</div>
+          <div class="md-ccupick-sub">Admin sets this. His clinic is auto-flagged for cover.</div>
+        </div>
+        <select id="mdCcuSelect" class="fd-sel" style="margin:0;max-width:230px" onchange="mdSetCcu(this.value)"></select>
+      </div>
+
+      <div class="md-ccupick" id="mdWardPick">
+        <div>
+          <div class="md-ccupick-label">ASA ward senior this week</div>
+          <div class="md-ccupick-sub">Auto-read from the Fri/Sat 2nd-on-call &mdash; override here if needed. His clinic is auto-flagged for cover.</div>
+        </div>
+        <select id="mdWardSelect" class="fd-sel" style="margin:0;max-width:230px" onchange="mdSetWard(this.value)"></select>
+      </div>
+
+      <div class="md-toolbar">
+        <button class="btn" style="margin:0" onclick="mdRegenerateDraft()">&#9851; Re-generate draft from rules</button>
+        <button class="btn" style="margin:0;background:var(--sur2);border:1px solid var(--bor);color:var(--mid)" onclick="mdExportPdf()">&#128196; Export week PDF</button>
+      </div>
+
+      <div id="mdValidation"></div>
+
+      <div id="mdGrid"></div>
+
+      <div class="md-savebar">
+        <button class="btn" style="margin:0" onclick="mdSaveWeek()">&#128190; Save Morning Duty Week</button>
+        <span class="md-save-hint" id="mdSaveHint"></span>
+      </div>
+    </div>
+
     <div class="adm-sec" id="adm-log">
       <div class="adm-section-title">Assignment Log</div>
       <div class="adm-section-sub">Last 50 entries across all assignment types.</div>
@@ -3088,7 +3030,7 @@ function dbUpdate(nodesObj){
   // nodesObj is { 'endorsements/abc': {...}, 'removals': [...] }
   return dbRef.update(nodesObj);
 }
-var docPINsHashed = {"fe675fe7aaee830b6fed09b64e034f84dcbdaeb429d9cccd4ebb90e15af8dd71":"Dr. Rehan","b281bc2c616cb3c3a097215fdc9397ae87e6e06b156cc34e656be7a1a9ce8839":"Dr. Ramy","8c9a013ab70c0434313e3e881c310b9ff24aff1075255ceede3f2c239c231623":"Dr. Badawy","75992a5ac67ff644d3063976c2effd10bdd93fcc109798e3d5c1acf2e530d01a":"Dr. Sharkawy","7f861bcee185de001377d79e08af62e94b1e7718e2470e08520c917f8d953602":"Dr. Mostafa","478c4ffb1cbcea37956a748e6c19d8eadd0a47e86f5e308d26cad39453b5d1ab":"Dr. Ibrahim","2c8b871e52d4e5f5db5ff84a82a45327e20df77edef961c4b6fa0e9c3d97ce5b":"Dr. Hadad","9aaf689fbcdfe9f64a071f9cbe28ae44193fa218e72af24456f44bed64583b4d":"Dr. Emara","6ad4a6b1e5ea5569795e516d71909e0ce4809d9dc983d2c219144f684f816e12":"Dr. Rahim","7a5df5ffa0dec2228d90b8d0a0f1b0767b748b0a41314c123075b8289e4e053f":"Dr. Mamdouh","3dd9c0995d54c0abd51a90f1d57b1ce77bc885fc8a7cea52dcad3c2540dda5ee":"Dr. Salam","165940940a02a187e4463ff467090930038c5af8fc26107bf301e714f599a1da":"Dr. Ezz","2ec42bc1f3e672fc1cf7fdcfc23246415dcf20f03c0d4a5bbbd92a185708f5b7":"Dr. R Gamal","df4865fca1f159162557359ef967f9502087f57527b0e030e139933e54f3061e":"Dr. Moghl","9553627933b214db60798fe40d2b4f8497781d024f53d62dc1b12469b7d53784":"Dr. Darwish","ef32cc5c2b7c62093d3ec4844b36a02b08bb83eee2efa6b6b5e85ad605790192":"Dr. Omar","b0ab628c9e14621846c58b4eb35060ef3885253a457d2d76136716d4850bad45":"Dr. Sajid","9989a37538faecc495bbe774b30fb447a1582b8f1bc14ac88dfd84996a7b799a":"Dr. Ali Nasser","61ab550f4c85a975cd46f8606ede483d8ee720a76f627773de1bc1dd8ce5fb35":"Dr. Eyad","f296867839c8befafed32b55a7c11ab4ad14387d2434b970a55237d537bc9353":"Dr. Mongy","cdad86ca9450d1c143675a8436131cabaf55905c114fa4524bf6a9ec5662cad7":"Dr. Bahlol","85d6385b945c0d602103db39b0b654b2af93b5127938e26a959c123f0789b948":"Prof. Zubaid","6c94e35ccc352d4e9ef0b99562cff995a5741ce8de8ad11b568892934daee366":"Dr. Abdullah","77459b9b941bcb4714d0c121313c900ecf30541d158eb2b9b178cdb8eca6457e":"Dr. Fahad","483029d526219f816e8e8f6a9de07b422633dba180ffc26faac22862a017519f":"Dr. Farouk","a20a2b7bb0842d5cf8a0c06c626421fd51ec103925c1819a51271f2779afa730":"Dr. Arab","6f6a4e56098cfd9af29e3ae549503b370211a4e94421457fe4cfd39a38a1fa08":"Dr. Nazanin","f1cfa5ebb149e8099d561aae57beed6c68f990f45a910ea9d7b460dbcc5350be":"Dr. Velibore","e5e53c784d5d49de1cabb6e904bf3380026aadcb9769775a268dd304dd9aa2df":"Dr. Ali Alsaygh","f37f3f2b0dc57a86dee4ba6ff855283bb4d2f0dea1c5bd1b708853444c2ffcec":"Dr. Ali Alsulaimi","38206b956d53155a677deb4b506f24e025fd66c62ccb3af33cd7f1319685ea73":"Dr. Hamza","b33ed571eded536f0f0bc2be4e4384055acd592fe6652a555320fdca4dbeb175":"Dr. Ibrahim Hassan","a20c25627ed7bbb6d2b999c589b698e6ecd84384e2e0e510d8869d79a5ad244c":"Dr. Hisham","3ba982075eba89702c1637b9ce03d8a3d8b6dce9434dd07a4c30b5525ab27850":"Dr. Farag","7a24738c1004bcc250f2e527aeab5e3b1891d00a5146a54b2e8c20df84a8c09d":"Dr. Hany","ad25fc1532c8454fdda1d5e5258dd5771e919eaf4db2ca59842043804ccb6fb5":"Dr. Ehab","56f2f6918fec1d2d8eaa4f1b900ee2241576ba4e24f6c601b1ca4f05173fdb5a":"Dr. Samir","59012b44adb8c2f5e94b7a197e260fa945cc23ddd4d8737195d9391396d0ec5c":"Dr. Maged","7e66b5dd3d158d14ba3300cad5702ee6d72befaec37890eed25c91687bb649df":"Dr. Ashraf","e276f59bc5a81f2968dfb34b6324f7d59fea2723fd733bc9e70d65e848ef8f42":"Dr. Fawzy","41214f55c1e8d6170239eb93d7cc105abbee1dc0fbe8f7a258962da285dfe9cd":"Dr. Akmal","ff4b467b7a593047c46682ecdbf6da36b3f3bb4b50d35f08f17f751ef5f15531":"Dr. Zaher","41c8fa7d060badc5618a28326dc00cf07e1ce22a79a94a1fed94f271d3127447":"Dr. Shafie","888df25ae35772424a560c7152a1de794440e0ea5cfee62828333a456a506e05":"Admin"};
+var docPINsHashed = {"fe675fe7aaee830b6fed09b64e034f84dcbdaeb429d9cccd4ebb90e15af8dd71":"Dr. Rehan","b281bc2c616cb3c3a097215fdc9397ae87e6e06b156cc34e656be7a1a9ce8839":"Dr. Ramy","8c9a013ab70c0434313e3e881c310b9ff24aff1075255ceede3f2c239c231623":"Dr. Badawy","75992a5ac67ff644d3063976c2effd10bdd93fcc109798e3d5c1acf2e530d01a":"Dr. Sharkawy","7f861bcee185de001377d79e08af62e94b1e7718e2470e08520c917f8d953602":"Dr. Mostafa","478c4ffb1cbcea37956a748e6c19d8eadd0a47e86f5e308d26cad39453b5d1ab":"Dr. Ibrahim","2c8b871e52d4e5f5db5ff84a82a45327e20df77edef961c4b6fa0e9c3d97ce5b":"Dr. Hadad","9aaf689fbcdfe9f64a071f9cbe28ae44193fa218e72af24456f44bed64583b4d":"Dr. Emara","6ad4a6b1e5ea5569795e516d71909e0ce4809d9dc983d2c219144f684f816e12":"Dr. Rahim","7a5df5ffa0dec2228d90b8d0a0f1b0767b748b0a41314c123075b8289e4e053f":"Dr. Mamdouh","3dd9c0995d54c0abd51a90f1d57b1ce77bc885fc8a7cea52dcad3c2540dda5ee":"Dr. Salam","165940940a02a187e4463ff467090930038c5af8fc26107bf301e714f599a1da":"Dr. Ezz","2ec42bc1f3e672fc1cf7fdcfc23246415dcf20f03c0d4a5bbbd92a185708f5b7":"Dr. R Gamal","df4865fca1f159162557359ef967f9502087f57527b0e030e139933e54f3061e":"Dr. Moghl","9553627933b214db60798fe40d2b4f8497781d024f53d62dc1b12469b7d53784":"Dr. Darwish","ef32cc5c2b7c62093d3ec4844b36a02b08bb83eee2efa6b6b5e85ad605790192":"Dr. Omar","b0ab628c9e14621846c58b4eb35060ef3885253a457d2d76136716d4850bad45":"Dr. Sajid","9989a37538faecc495bbe774b30fb447a1582b8f1bc14ac88dfd84996a7b799a":"Dr. Ali","61ab550f4c85a975cd46f8606ede483d8ee720a76f627773de1bc1dd8ce5fb35":"Dr. Eyad","f296867839c8befafed32b55a7c11ab4ad14387d2434b970a55237d537bc9353":"Dr. Mongy","cdad86ca9450d1c143675a8436131cabaf55905c114fa4524bf6a9ec5662cad7":"Dr. Bahlol","85d6385b945c0d602103db39b0b654b2af93b5127938e26a959c123f0789b948":"Prof. Zubaid","6c94e35ccc352d4e9ef0b99562cff995a5741ce8de8ad11b568892934daee366":"Dr. Abdullah","77459b9b941bcb4714d0c121313c900ecf30541d158eb2b9b178cdb8eca6457e":"Dr. Fahad","483029d526219f816e8e8f6a9de07b422633dba180ffc26faac22862a017519f":"Dr. Farouk","a20a2b7bb0842d5cf8a0c06c626421fd51ec103925c1819a51271f2779afa730":"Dr. Arab","6f6a4e56098cfd9af29e3ae549503b370211a4e94421457fe4cfd39a38a1fa08":"Dr. Nazanin","f1cfa5ebb149e8099d561aae57beed6c68f990f45a910ea9d7b460dbcc5350be":"Dr. Velibore","e5e53c784d5d49de1cabb6e904bf3380026aadcb9769775a268dd304dd9aa2df":"Dr. Ali Alsaygh","f37f3f2b0dc57a86dee4ba6ff855283bb4d2f0dea1c5bd1b708853444c2ffcec":"Dr. Ali Alsulaimi","38206b956d53155a677deb4b506f24e025fd66c62ccb3af33cd7f1319685ea73":"Dr. Hamza","b33ed571eded536f0f0bc2be4e4384055acd592fe6652a555320fdca4dbeb175":"Dr. Ibrahim Hassan","a20c25627ed7bbb6d2b999c589b698e6ecd84384e2e0e510d8869d79a5ad244c":"Dr. Hisham","3ba982075eba89702c1637b9ce03d8a3d8b6dce9434dd07a4c30b5525ab27850":"Dr. Farag","7a24738c1004bcc250f2e527aeab5e3b1891d00a5146a54b2e8c20df84a8c09d":"Dr. Hany","ad25fc1532c8454fdda1d5e5258dd5771e919eaf4db2ca59842043804ccb6fb5":"Dr. Ehab","56f2f6918fec1d2d8eaa4f1b900ee2241576ba4e24f6c601b1ca4f05173fdb5a":"Dr. Samir","59012b44adb8c2f5e94b7a197e260fa945cc23ddd4d8737195d9391396d0ec5c":"Dr. Maged","7e66b5dd3d158d14ba3300cad5702ee6d72befaec37890eed25c91687bb649df":"Dr. Ashraf","e276f59bc5a81f2968dfb34b6324f7d59fea2723fd733bc9e70d65e848ef8f42":"Dr. Fawzy","41214f55c1e8d6170239eb93d7cc105abbee1dc0fbe8f7a258962da285dfe9cd":"Dr. Akmal","ff4b467b7a593047c46682ecdbf6da36b3f3bb4b50d35f08f17f751ef5f15531":"Dr. Zaher","41c8fa7d060badc5618a28326dc00cf07e1ce22a79a94a1fed94f271d3127447":"Dr. Shafie","888df25ae35772424a560c7152a1de794440e0ea5cfee62828333a456a506e05":"Admin"};
 var ADMIN_HASH = "b2b2f104d32c638903e151a9b20d6e27b41d8c0c84cf8458738f83ca2f1dd744";
 var CLERK_HASH = "158a323a7ba44870f23d96f1516dd70aa48e9a72db4ebb026b0a89e212a208ab";
 
@@ -3129,7 +3071,7 @@ async function lookupDocPIN(pin){
 }
 var CL = [
   {d:"Fahad",    r:"Room 24", days:["Mon"], dist: 0},   // 1
-  {d:"Akmal",   r:"Room 10", days:["Mon"], dist: 9},   // 2
+  {d:"Akmal",   r:"Room 10", days:["Mon"], dist: 0},   // 2
   {d:"Farag",   r:"Room 8",  days:["Mon"], dist: 0},   // 3
   {d:"Ehab",    r:"Room 25", days:["Mon"], dist: 0},   // 4
   {d:"Maged",   r:"Room 20", days:["Sun"], dist: 1},   // 5
@@ -3152,7 +3094,7 @@ var EP_CLINICS = [{id:"ep-sun", name:"EP Device Clinic", room:"Room 21", day:"Su
 var EP_MAX_PER_DATE = 12;
 var specificDocs = [{name:"Fahad", indices:[0], room:"Room 24", day:"Mon", label:"Monday"},{name:"Ali", indices:[9], room:"Room 11", day:"Wed", label:"Wednesday"},{name:"Arab", indices:[14], room:"Room 25", day:"Tue", label:"Tuesday"},{name:"Nazanin", indices:[7], room:"Room 25", day:"Sun", label:"Sunday"}];
 var selectedSpecificDoc = null, selectedFixDoc = null, selectedEpClinic = null;
-window.S = {logs:[], oplogs:[], eplogs:[], leave:{}, skipped:{}, blockedDates:{}, onCall:{}, docPins:{}, pinChanges:[], removals:[], hospNumbers:{edits:{},deleted:[],custom:[]}};
+window.S = {logs:[], oplogs:[], eplogs:[], leave:{}, skipped:{}, blockedDates:{}, onCall:{}, docPins:{}, pinChanges:[], removals:[]};
 // Doctors who can be temporarily skipped on the Inpatient (auto) tab when
 // the current patient was not catheterized by them. Keyed by doctor name.
 var SKIP_DOCS = ["Fahad","Arab","Ali","Nazanin"];
@@ -3441,11 +3383,8 @@ window.doAssign = async function(type, manualSlotIndex=null) {
   if(type==='ip'){
     let fn=document.getElementById("fi").value.trim(), apt=document.getElementById("fd-sel").value;
     if(!/^\d{6}$/.test(fn)) return alert("Check File Number (6 digits).");
-    // Identify the registrar signing this action. Priority: logged-in doctor →
-    // logged-in admin/clerk (signed as Admin/Clerk) → legacy PIN entry fallback.
+    // If doctor is already logged in, use their identity; otherwise fall back to PIN entry
     let reg = window.currentDoctor;
-    if(!reg && window.currentRole === 'admin') reg = 'Admin';
-    if(!reg && window.currentRole === 'clerk') reg = 'Clerk';
     if(!reg){
       let pin=document.getElementById("rpin").value.trim();
       reg = await lookupDocPIN(pin);
@@ -3507,10 +3446,8 @@ window.doSpecificAssign = async function() {
   let apt=document.getElementById("spec-date").value;
   if(!/^\d{6}$/.test(fn)||!apt) return alert("Invalid fields");
   if(isBlocked(apt, selectedSpecificDoc.name)) return alert(`Dr. ${selectedSpecificDoc.name} has this date blocked by admin. Please select a different follow-up date.`);
-  // Identify the registrar. Logged-in doctor → admin/clerk → PIN fallback.
+  // If doctor is already logged in, use their identity; otherwise fall back to PIN entry
   let reg = window.currentDoctor;
-  if(!reg && window.currentRole === 'admin') reg = 'Admin';
-  if(!reg && window.currentRole === 'clerk') reg = 'Clerk';
   if(!reg){
     let pin=document.getElementById("spec-pin").value.trim();
     reg = await lookupDocPIN(pin);
@@ -3579,10 +3516,8 @@ window.doEpAssign=async function(){
   let apt=document.getElementById("ep-date").value;
   if(!/^\d{6}$/.test(fn)||!apt) return alert("Invalid data");
   if(isBlocked(apt, selectedEpClinic.id)) return alert(`${selectedEpClinic.name} has this date blocked by admin. Please select a different follow-up date.`);
-  // Identify the registrar. Logged-in doctor → admin/clerk → PIN fallback.
+  // If doctor is already logged in, use their identity; otherwise fall back to PIN entry
   let regName = window.currentDoctor;
-  if(!regName && window.currentRole === 'admin') regName = 'Admin';
-  if(!regName && window.currentRole === 'clerk') regName = 'Clerk';
   if(!regName){
     let pin=document.getElementById("ep-pin").value.trim();
     regName = await lookupDocPIN(pin);
@@ -3945,20 +3880,14 @@ window.toggleS = (name, type) => {
 };
 
 // ===== BLOCKED DATES ADMIN (per-doctor) =====
-// Doctors who can be blocked even though they have no fixed weekday clinic in
-// CL. They are merged with the unique clinic-doctor names so the dropdown
-// covers everyone who might be away. Add more names here as needed.
-var EXTRA_BLOCKABLE_DOCS = ["Samir", "Ramy", "Ali Nasser", "Hamza", "Sajid"];
-
 function populateBlockedDocDropdown(){
   let sel = document.getElementById("blocked-doc-input");
   if(!sel) return;
   // Preserve current selection if any
   let current = sel.value;
   let opts = '<option value="" disabled selected>Select doctor / clinic...</option>';
-  // Unique doctor names from CL, plus any extra blockable doctors who have no
-  // fixed clinic (e.g. Samir — echo / consultant on rotation only).
-  let docs = [...new Set([...CL.map(c=>c.d), ...EXTRA_BLOCKABLE_DOCS])].sort();
+  // Unique doctor names from CL, plus EP clinics
+  let docs = [...new Set(CL.map(c=>c.d))].sort();
   opts += '<optgroup label="Regular Clinics">';
   docs.forEach(name => { opts += `<option value="${name}">Dr. ${name}</option>`; });
   opts += '</optgroup>';
@@ -4089,7 +4018,7 @@ function rAll(){
     let active=SKIP_DOCS.filter(n=>isSkipped(n));
     if(active.length){
       banner.innerHTML = `⏭ <strong>Skipped:</strong> ${active.map(n=>"Dr. "+n).join(", ")} &nbsp; ` +
-        active.map(n=>`<button onclick="unskipDoc('${n}')" style="background:none;border:1px solid var(--acc-line);color:var(--acc2);border-radius:4px;padding:2px 8px;font-size:10px;cursor:pointer;margin-left:4px;font-family:inherit">Restore ${n}</button>`).join(" ");
+        active.map(n=>`<button onclick="unskipDoc('${n}')" style="background:none;border:1px solid rgba(251,191,36,0.5);color:#fbbf24;border-radius:4px;padding:2px 8px;font-size:10px;cursor:pointer;margin-left:4px;font-family:inherit">Restore ${n}</button>`).join(" ");
       banner.style.display="block";
     } else {
       banner.style.display="none";
@@ -4221,13 +4150,9 @@ window.submitRolePin = async function(){
   }
 };
 
-// Allow Enter key to submit PIN — only while the role gate is on screen.
+// Allow Enter key to submit PIN
 document.addEventListener('keydown', function(e){
-  if(e.key !== 'Enter') return;
-  var gate = document.getElementById('roleGate');
-  // Gate must be visible (not yet logged in) AND the PIN stage shown.
-  if(!gate || gate.classList.contains('hidden')) return;
-  if(document.getElementById('roleStage2').style.display === 'block'){
+  if(e.key === 'Enter' && document.getElementById('roleStage2').style.display === 'block'){
     submitRolePin();
   }
 });
@@ -4235,9 +4160,6 @@ document.addEventListener('keydown', function(e){
 function enterApp(role){
   window.currentRole = role;
   document.getElementById('roleGate').classList.add('hidden');
-  // Reset the PIN stage so a stale display:block can't arm key handlers.
-  document.getElementById('roleStage2').style.display = 'none';
-  document.getElementById('roleStage2Pin').value = '';
   // Update header chip + logout button
   let chip = document.getElementById('roleChip');
   chip.style.display = 'inline-block';
@@ -4290,14 +4212,6 @@ function applyRoleUI(role){
   document.querySelectorAll('#mainTabs .tab').forEach(t=>{
     let roles = (t.getAttribute('data-role')||'').split(' ');
     let ok = roles.some(r => allowed.includes(r));
-    // Per-doctor restriction: the Morning Duties tab is visible to admins and
-    // to a named set of consultants (read-only). Hide for any other registrar.
-    let onclick = t.getAttribute('onclick')||'';
-    if(ok && role==='registrar' && /'morning'/.test(onclick)){
-      var bare = window.currentDoctor ? String(window.currentDoctor).replace(/^\s*(?:Dr|Prof|Mr|Ms|Mrs)\.?\s+/i,'').trim() : '';
-      var viewerList = (typeof MD_VIEWER_CONSULTANTS!=='undefined') ? MD_VIEWER_CONSULTANTS : [];
-      if(viewerList.indexOf(bare)===-1) ok = false;
-    }
     t.style.display = ok ? '' : 'none';
     t.classList.remove('on');
   });
@@ -5238,6 +5152,8 @@ function renderEndoList(){
   ensureExtState();
   // Run auto-removal sweep BEFORE building the list
   sweepStalePatients();
+  // v3.3: Render the "My Patients Today" hero card (no-op when not a doctor)
+  if(typeof renderHeroCard === 'function') renderHeroCard();
   let c = document.getElementById('endoList');
   if(!c) return;
   let all = Object.values(window.S.endorsements || {});
@@ -5492,10 +5408,7 @@ async function resolveDoctor(pinFieldId){
   if(window.currentDoctor) return window.currentDoctor;
   // If admin is logged in (no specific doctor), allow signing as "Admin"
   if(window.currentRole === 'admin') return 'Admin';
-  // If clerk is logged in, allow signing as "Clerk" — they passed the
-  // role-gate PIN at login and should not re-authenticate per action.
-  if(window.currentRole === 'clerk') return 'Clerk';
-  // Otherwise, fall back to PIN entry (legacy unauthenticated path)
+  // Otherwise, fall back to PIN entry (legacy / clerk save path)
   let pinEl = document.getElementById(pinFieldId);
   let pin = pinEl ? pinEl.value.trim() : '';
   // Treat the placeholder __SESSION__ value as "no PIN entered"
@@ -5509,13 +5422,8 @@ async function resolveDoctor(pinFieldId){
   return name;
 }
 
-// Hide PIN-entry field and its label when a session is already authenticated
-// at the main role gate. That covers doctors (currentDoctor set), admins and
-// clerks (currentRole set with no per-doctor identity). Once any user has
-// passed the role-gate PIN, they should not have to re-enter a PIN to record
-// an action inside the app — actions signed without a doctor identity fall
-// back to "Admin" / "Clerk" via resolveDoctor().
-// pinFieldId = e.g. 'rpin', 'endo-pin', 'cath-sch-pin', 'cath-p-pin'.
+// Hide PIN-entry field and its label when a doctor is already logged in.
+// pinFieldId = e.g. 'endo-pin', 'cath-sch-pin', 'cath-p-pin', 'cens-pin'.
 function hidePinFieldIfLoggedIn(pinFieldId){
   let pinEl = document.getElementById(pinFieldId);
   if(!pinEl) return;
@@ -5523,8 +5431,7 @@ function hidePinFieldIfLoggedIn(pinFieldId){
   if(pinEl.type === 'hidden') return;
   // The label is the <label> element immediately preceding the input
   let label = pinEl.previousElementSibling;
-  let authed = !!(window.currentDoctor || window.currentRole);
-  if(authed){
+  if(window.currentDoctor){
     pinEl.style.display = 'none';
     pinEl.required = false;
     pinEl.value = '';
@@ -5538,9 +5445,8 @@ function hidePinFieldIfLoggedIn(pinFieldId){
 
 // v3.4: sweep ALL known action-form PIN fields in one go.
 // Called at login (via enterApp/applyRoleUI) AND on tab switches as a
-// belt-and-braces measure so any logged-in user (doctor, admin, or clerk)
-// never has to re-enter a PIN to record an action — they've already passed
-// the role-gate PIN at login. Excludes: prof-* (Change-My-PIN modal),
+// belt-and-braces measure so a logged-in doctor never has to re-enter a
+// PIN to record an action. Excludes: prof-* (Change-My-PIN modal),
 // roleStage2Pin (login gate), pinreset-* (admin reset form), api-adm
 // (admin gate) — those fields legitimately need a PIN.
 function hideAllActionPinFields(){
@@ -5593,22 +5499,10 @@ window.collapseAllHF = function(){
 
 function field(label, val){
   let empty = !val || !val.trim();
-  let tint = _sectionTintClass(label);
-  return `<div class="endo-field${tint?' '+tint:''}">
+  return `<div class="endo-field">
     <div class="endo-field-label">${label}</div>
     <div class="endo-field-text${empty?' empty':''}">${empty?'— not documented —':escapeHtml(val)}</div>
   </div>`;
-}
-
-// Map a section label → its colour-tint class (see CSS .sec-* rules).
-function _sectionTintClass(label){
-  let l = (label||'').toLowerCase();
-  if(l.includes('past') || l.includes('history')) return 'sec-hx';
-  if(l.includes('reason') || l.includes('admission')) return 'sec-reason';
-  if(l.includes('investigation')) return 'sec-ix';
-  if(l.includes('active') || l.includes('issue')) return 'sec-active';
-  if(l.includes('plan')) return 'sec-plan';
-  return '';
 }
 
 // Bigger, more prominent box for fields the team reads most often
@@ -5618,8 +5512,7 @@ function _sectionTintClass(label){
 // dangerous lab numbers (Trop, K, Na, Cr, Hb, INR, BNP, Lactate, Glucose).
 function bigField(label, val, variant){
   let empty = !val || !val.trim();
-  let tint = _sectionTintClass(label);
-  let cls = 'endo-field-big' + (variant ? ' ' + variant : '') + (tint ? ' ' + tint : '');
+  let cls = 'endo-field-big' + (variant ? ' ' + variant : '');
   let body;
   if(empty){
     body = '— not documented —';
@@ -6882,7 +6775,6 @@ window.goTab=(id,btn)=>{
   if(id==="endo"){ renderEndoList(); renderHFList(); }
   if(id==="cath") renderCathAll();
   if(id==="census"){ renderCensus(); renderCensusAlert(); }
-  if(id==="morning" && typeof renderMorningDuty==='function') renderMorningDuty();
   if(id==="echolist"){
     renderEchoList();
     // Re-render whichever Echo sub-section is active; refresh both counts
@@ -6898,7 +6790,7 @@ window.goTab=(id,btn)=>{
   if(typeof hideAllActionPinFields === 'function') hideAllActionPinFields();
   rAll();
 };
-window.goAdmTab=(id,btn)=>{ document.querySelectorAll(".adm-tab").forEach(t=>t.classList.remove("on")); document.querySelectorAll(".adm-sec").forEach(s=>s.classList.remove("on")); btn.classList.add("on"); document.getElementById("adm-"+id).classList.add("on"); if(id==="export") renderClinicExportGrid(); if(id==="blocked") renderBlockedList(); if(id==="pinreset"){ renderPinResetTab(); } if(id==="removals") renderRemovalsList(); if(id==="analytics" && typeof renderAnalytics==='function') renderAnalytics(); if(id==="backup" && typeof renderBackupStats==='function') renderBackupStats(); };
+window.goAdmTab=(id,btn)=>{ document.querySelectorAll(".adm-tab").forEach(t=>t.classList.remove("on")); document.querySelectorAll(".adm-sec").forEach(s=>s.classList.remove("on")); btn.classList.add("on"); document.getElementById("adm-"+id).classList.add("on"); if(id==="export") renderClinicExportGrid(); if(id==="blocked") renderBlockedList(); if(id==="pinreset"){ renderPinResetTab(); } if(id==="removals") renderRemovalsList(); if(id==="analytics" && typeof renderAnalytics==='function') renderAnalytics(); if(id==="backup" && typeof renderBackupStats==='function') renderBackupStats(); if(id==="morning" && typeof renderMorningDuty==='function') renderMorningDuty(); };
 window.filterLog=(f,b)=>{ document.querySelectorAll(".fb").forEach(x=>x.classList.remove("on")); b.classList.add("on"); window.lf=f; rLog(); };
 window.adminLogin=async (id)=>{ let v=document.getElementById(id).value; if(!v) return; let h=await sha256(v); if(h===ADMIN_HASH){ adm=true; document.querySelectorAll(".apgate").forEach(e=>e.style.display="none"); document.querySelectorAll(".ac-content").forEach(e=>e.style.display="block"); rAll(); } else { alert("Incorrect PIN"); document.getElementById(id).value=""; } };
 window.goOpTab=(tab,btn)=>{ document.querySelectorAll("#opc .tab").forEach(t=>t.classList.remove("on")); btn.classList.add("on"); document.getElementById("op-walkin").style.display=tab==="walkin"?"block":"none"; document.getElementById("op-fix").style.display=tab==="fix"?"block":"none"; if(tab==="fix") renderFixClinics(); };
@@ -6928,9 +6820,7 @@ dbRef.on('value',(snap)=>{
     window.S.echoList=d.echoList||{};
     window.S.teeScheduled=d.teeScheduled||{};
     window.S.morningDuty=d.morningDuty||{};
-    window.S.hospNumbers=d.hospNumbers||{edits:{},deleted:[],custom:[]};
   }
-  if(typeof buildHospNumbers === 'function') buildHospNumbers();
   ensureExtState();
 
   // ONE-TIME CLEANUP: strip any leftover 'images' arrays from existing records
@@ -6965,7 +6855,6 @@ dbRef.on('value',(snap)=>{
   if(document.getElementById('pg-endo')?.classList.contains('on')){ renderEndoList(); renderHFList(); }
   if(document.getElementById('pg-cath')?.classList.contains('on')) renderCathAll();
   if(document.getElementById('pg-census')?.classList.contains('on')){ renderCensus(); renderCensusAlert(); }
-  if(document.getElementById('pg-morning')?.classList.contains('on') && typeof renderMorningDuty==='function') renderMorningDuty();
   if(document.getElementById('pg-echolist')?.classList.contains('on')){
     renderEchoList();
     if(typeof refreshEchoSubtabCounts === 'function') refreshEchoSubtabCounts();
@@ -6975,7 +6864,6 @@ dbRef.on('value',(snap)=>{
     }
   }
   if(document.getElementById('pg-oncall')?.classList.contains('on')) renderOncallCalendar();
-  if(document.getElementById('pg-hosp')?.classList.contains('on') && typeof renderHospNumbers==='function') renderHospNumbers();
   if(document.getElementById('pg-adm')?.classList.contains('on')){
     if(document.getElementById('adm-pinreset')?.classList.contains('on')) renderPinResetTab();
     if(document.getElementById('adm-removals')?.classList.contains('on')) renderRemovalsList();
@@ -7846,8 +7734,8 @@ window.renderOncallCalendar = function(){
     // Day-of-week tints (Thu=4, Fri=5, Sat=6 — Fri+Sat share a "weekend" tint)
     if(dow === 4) cls += ' cal-thu';
     else if(dow === 5 || dow === 6) cls += ' cal-weekend';
-    // Eid vacation: May 26–31 of the current displayed month/year
-    if(y === 2026 && m === 4 && d >= 26 && d <= 31) cls += ' cal-eid';
+    // Eid vacation: May 26–30 of the current displayed month/year
+    if(y === 2026 && m === 4 && d >= 26 && d <= 30) cls += ' cal-eid';
     let dots = '';
     if(roster){
       // Small colored pills representing filled roles
@@ -7922,7 +7810,7 @@ window.oncallQuickRange = function(kind){
     from = new Date(now); to = new Date(now); to.setDate(to.getDate()+30);
   } else if(kind === 'eid'){
     from = new Date(2026, 4, 26);
-    to   = new Date(2026, 4, 31);
+    to   = new Date(2026, 4, 30);
   } else {
     return;
   }
@@ -8075,7 +7963,7 @@ window.exportOncallPdf = function(){
       if(!names.includes(docVal)){ cursor.setDate(cursor.getDate()+1); continue; }
     }
 
-    let isEid = (cursor.getFullYear() === 2026 && cursor.getMonth() === 4 && cursor.getDate() >= 26 && cursor.getDate() <= 31);
+    let isEid = (cursor.getFullYear() === 2026 && cursor.getMonth() === 4 && cursor.getDate() >= 26 && cursor.getDate() <= 30);
     let dayLabel = shortDate(cursor) + (isEid ? '  · EID' : '');
 
     // Tag the row for didParseCell color-coding (no visible text marker for Thu / weekend)
@@ -8206,7 +8094,7 @@ window.exportOncallPdf = function(){
   let lx = 40;
   legendChip(lx, finalY + 3, [254, 249, 195], 'Thursday');                lx += 70;
   legendChip(lx, finalY + 3, [254, 235, 200], 'Weekend');                 lx += 75;
-  legendChip(lx, finalY + 3, [243, 232, 255], 'Eid (May 26–31)');         lx += 110;
+  legendChip(lx, finalY + 3, [243, 232, 255], 'Eid (May 26–30)');         lx += 110;
 
   // Right side: timestamp
   doc.setFont('helvetica', 'normal');
@@ -8777,7 +8665,7 @@ setInterval(function(){
 // HOSPITAL NUMBERS — directory data extracted from the dept PDF.
 // Tap a pill to copy the number to clipboard.
 // ============================================================
-const HOSPITAL_NUMBERS_SEED = [
+const HOSPITAL_NUMBERS = [
   // Casualty
   { loc: 'Casualty', name: 'Casualty Reception', ext: '58450', direct: '25364088' },
   { loc: 'Casualty', name: 'Casualty Reception', ext: '58451', direct: '25364088' },
@@ -8878,54 +8766,15 @@ const HOSPITAL_NUMBERS_SEED = [
   { loc: 'Ward 27', name: 'W27 — Head Nurse', ext: '56875', direct: '25364059', hn: 'Mohsin', phone: '66147142' },
   // Ward 28
   { loc: 'Ward 28', name: 'Ward 28 — Reception', ext: '56935' },
-  { loc: 'Ward 28', name: 'Ward 28 — Head Nurse', ext: '56940', direct: '25364060', hn: 'Heba', phone: '90963111' },
-  // Echo Department
-  { loc: 'Echo Department', name: 'Echo — Reception', ext: '57901' },
-  { loc: 'Echo Department', name: 'Echo 1', ext: '57902' },
-  { loc: 'Echo Department', name: 'Echo 2', ext: '57903' },
-  { loc: 'Echo Department', name: 'Echo 3', ext: '57907' },
-  { loc: 'Echo Department', name: 'Echo 4', ext: '57905' },
-  { loc: 'Echo Department', name: 'Holter', ext: '57906' }
+  { loc: 'Ward 28', name: 'Ward 28 — Head Nurse', ext: '56940', direct: '25364060', hn: 'Heba', phone: '90963111' }
 ];
 
-// Give every seed row a stable id (used as the key for admin edits/deletes).
-HOSPITAL_NUMBERS_SEED.forEach((r, i) => { r.id = 'seed-' + i; r._seed = true; });
-
-// ------------------------------------------------------------
-// LIVE hospital-numbers list = seed rows (with admin edits applied,
-// minus admin-deleted ones) + admin-added custom rows.
-// Admin layer lives in window.S.hospNumbers = { edits:{id:{...}},
-// deleted:[id,...], custom:[{id,loc,name,ext,direct,phone,hn}] } and
-// is synced through Firebase like every other node.
-// HOSPITAL_NUMBERS is rebuilt by buildHospNumbers() on every data load.
-// ------------------------------------------------------------
-let HOSPITAL_NUMBERS = [];
-
-function buildHospNumbers(){
-  let layer = (window.S && window.S.hospNumbers) || {};
-  let edits = layer.edits || {};
-  let deleted = layer.deleted || [];
-  let custom = layer.custom || [];
-  let out = [];
-  HOSPITAL_NUMBERS_SEED.forEach(r => {
-    if(deleted.includes(r.id)) return;
-    let e = edits[r.id];
-    out.push(e ? Object.assign({}, r, e, { id: r.id, _seed: true }) : r);
-  });
-  custom.forEach(c => {
-    if(deleted.includes(c.id)) return;
-    out.push(Object.assign({}, c, { _seed: false }));
-  });
-  HOSPITAL_NUMBERS = out;
-  // Rebuild the location-group order from the live list.
-  HOSPITAL_GROUPS = [];
-  HOSPITAL_NUMBERS.forEach(r => { if(!HOSPITAL_GROUPS.includes(r.loc)) HOSPITAL_GROUPS.push(r.loc); });
-  return HOSPITAL_NUMBERS;
-}
-
-// Grouping order for filter chips (rebuilt live by buildHospNumbers)
-let HOSPITAL_GROUPS = [];
-buildHospNumbers();
+// Grouping order for filter chips (Casualty/ICU first, then numerical wards)
+const HOSPITAL_GROUPS = (function(){
+  let seen = [];
+  HOSPITAL_NUMBERS.forEach(r => { if(!seen.includes(r.loc)) seen.push(r.loc); });
+  return seen;
+})();
 
 window.currentHospFilter = 'all';
 
@@ -8961,10 +8810,6 @@ function showHospToast(msg){
 }
 
 window.renderHospNumbers = function(){
-  // Reveal the admin "Add number" bar only for admins (do this first so it
-  // shows even when the grid is in its empty "pick a location" state).
-  let adminBar = document.getElementById('hospAdminBar');
-  if(adminBar) adminBar.style.display = (window.currentRole === 'admin') ? '' : 'none';
   // Build location dropdown (replaces the old chip bar)
   let sel = document.getElementById('hospFilterSelect');
   if(sel){
@@ -9031,13 +8876,6 @@ window.renderHospNumbers = function(){
         <span>${PHONE_SVG}</span><span class="lbl">Mobile</span><span>${r.phone}</span></button>`;
     }
     let hnLine = r.hn ? `<div class="hosp-hn">H/N · ${escapeHtml(r.hn)}</div>` : '';
-    let adminRow = '';
-    if(window.currentRole === 'admin'){
-      adminRow = `<div class="hosp-admin-actions">
-        <button type="button" class="hosp-admin-btn" onclick="openHospNumForm('${r.id}')">✎ Edit</button>
-        <button type="button" class="hosp-admin-btn del" onclick="deleteHospNum('${r.id}')">✕ Delete</button>
-      </div>`;
-    }
     return `<div class="hosp-card">
       <div>
         <div class="hosp-loc">${escapeHtml(r.loc)}</div>
@@ -9045,91 +8883,8 @@ window.renderHospNumbers = function(){
         ${hnLine}
       </div>
       <div class="hosp-numbers">${pills}</div>
-      ${adminRow}
     </div>`;
   }).join('');
-};
-
-// ============================================================
-// HOSPITAL NUMBERS — admin add / edit / delete
-// Admin layer is stored in window.S.hospNumbers and synced to Firebase
-// under the 'hospNumbers' node. Seed rows are edited via an `edits` map
-// keyed by their stable id; deletions go into `deleted`; brand-new rows
-// are appended to `custom`. buildHospNumbers() merges them for display.
-// ============================================================
-function _ensureHospLayer(){
-  if(!window.S.hospNumbers) window.S.hospNumbers = {};
-  if(!window.S.hospNumbers.edits)   window.S.hospNumbers.edits = {};
-  if(!window.S.hospNumbers.deleted) window.S.hospNumbers.deleted = [];
-  if(!window.S.hospNumbers.custom)  window.S.hospNumbers.custom = [];
-  return window.S.hospNumbers;
-}
-
-window.openHospNumForm = function(id){
-  if(window.currentRole !== 'admin'){ alert('Admin only.'); return; }
-  let titleEl = document.getElementById('hospNumFormTitle');
-  let setVal = (k,v)=>{ let el=document.getElementById('hospNum-'+k); if(el) el.value = v||''; };
-  if(id){
-    let r = HOSPITAL_NUMBERS.find(x => x.id === id);
-    if(!r){ alert('Number not found.'); return; }
-    titleEl.textContent = 'Edit number';
-    setVal('id', r.id);
-    setVal('loc', r.loc); setVal('name', r.name); setVal('ext', r.ext);
-    setVal('direct', r.direct); setVal('phone', r.phone); setVal('hn', r.hn);
-  } else {
-    titleEl.textContent = 'Add number';
-    ['id','loc','name','ext','direct','phone','hn'].forEach(k => setVal(k,''));
-  }
-  document.getElementById('hospNumMo').classList.add('on');
-};
-
-window.closeHospNumForm = function(){
-  document.getElementById('hospNumMo').classList.remove('on');
-};
-
-window.saveHospNum = function(){
-  if(window.currentRole !== 'admin'){ alert('Admin only.'); return; }
-  let g = k => (document.getElementById('hospNum-'+k)?.value || '').trim();
-  let id = g('id');
-  let rec = { loc:g('loc'), name:g('name'), ext:g('ext'), direct:g('direct'), phone:g('phone'), hn:g('hn') };
-  if(!rec.loc || !rec.name){ alert('Location and Name are required.'); return; }
-  if(!rec.ext && !rec.direct && !rec.phone){ alert('Enter at least one number (extension, direct, or mobile).'); return; }
-  let layer = _ensureHospLayer();
-  if(id && id.indexOf('seed-') === 0){
-    // Edit of a seed row → store override
-    layer.edits = Object.assign({}, layer.edits, { [id]: rec });
-  } else if(id){
-    // Edit of an existing custom row
-    layer.custom = (layer.custom||[]).map(c => c.id === id ? Object.assign({}, c, rec, {id}) : c);
-  } else {
-    // New custom row
-    rec.id = 'custom-' + Date.now() + '-' + Math.floor(Math.random()*1000);
-    layer.custom = (layer.custom||[]).concat([rec]);
-  }
-  dbWrite('hospNumbers', layer);
-  buildHospNumbers();
-  renderHospNumbers();
-  closeHospNumForm();
-  showHospToast('Saved');
-};
-
-window.deleteHospNum = function(id){
-  if(window.currentRole !== 'admin'){ alert('Admin only.'); return; }
-  let r = HOSPITAL_NUMBERS.find(x => x.id === id);
-  if(!r) return;
-  if(!confirm(`Delete "${r.name}" (${r.loc})?`)) return;
-  let layer = _ensureHospLayer();
-  if(id.indexOf('seed-') === 0){
-    if(!layer.deleted.includes(id)) layer.deleted = layer.deleted.concat([id]);
-    // drop any stale edit for this row
-    if(layer.edits && layer.edits[id]){ let e = Object.assign({}, layer.edits); delete e[id]; layer.edits = e; }
-  } else {
-    layer.custom = (layer.custom||[]).filter(c => c.id !== id);
-  }
-  dbWrite('hospNumbers', layer);
-  buildHospNumbers();
-  renderHospNumbers();
-  showHospToast('Deleted');
 };
 
 // ============================================================================
@@ -9268,15 +9023,13 @@ window.highlightLabValues = function(escapedHtml){
         let n = parseFloat(numStr);
         if(isNaN(n)) return full;
         let sev = _flagSeverity(rule, n);
-        if(!sev) return full;   // only abnormal values are highlighted
+        if(!sev) return full;
         // Preserve the leading-context character (the bit we matched with [^A-Za-z])
         // so we don't eat the previous character. The captured "label" group
         // skips that prefix character because of the (?:^|[^A-Za-z]) non-cap.
         let prefixLen = full.indexOf(label);
         let prefix = prefixLen > 0 ? full.slice(0, prefixLen) : '';
-        // No title attribute — the previous title text was leaking the closing
-        // quote into the visible output. The colour alone signals abnormality.
-        return `${prefix}<span class="lab-flag ${sev}">${label} ${numStr}</span>`;
+        return `${prefix}<span class="lab-flag ${sev}" title="${rule.label} ${n}${rule.unit ? ' '+rule.unit : ''} — outside ${sev==='crit'?'critical':'normal'} range">${label} ${numStr}</span>`;
       });
     });
   });
@@ -9526,6 +9279,7 @@ console.info('[MKH] v3.2 enhancements loaded — bulk actions · lab flags · st
 // =====================  v3.3 ENHANCEMENTS — ROUND 2 + 3  ===================
 // ----------------------------------------------------------------------------
 //   #12 Cath case complexity tag (display + auto-suggest)
+//   #3  "My patients today" hero card (post-login landing for doctors)
 //   #2  Global header search (cmd+K)
 //   #16 Admin: Export full app state as JSON
 //   #21 Admin: Department analytics dashboard
@@ -9589,6 +9343,210 @@ window.complexityBadge = function(complexity, procText){
 // (Removed: the manual complexity dropdown was deprecated. Complexity is
 // now auto-derived from the procedure at save time, so this helper is no
 // longer needed.)
+
+
+// ============================================================
+// #3 — "MY PATIENTS TODAY" HERO CARD
+// Renders into <div id="heroMyPatients"> at the top of the IP list.
+// Three quick stats for the logged-in doctor:
+//   1. IP patients I created/last-updated and that are now stale (>24h)
+//   2. Cath cases scheduled with me today (operator = me)
+//   3. My on-call status today (which role, if any)
+// Hidden for clerks and admins (admins see the full Admin tab anyway).
+// User can dismiss for the current session via the × button.
+// ============================================================
+window._heroDismissed = false;
+
+window.renderHeroCard = function(){
+  let host = document.getElementById('heroMyPatients');
+  if(!host) return;
+  // Only show for logged-in doctors
+  if(!window.currentDoctor || window.currentRole !== 'registrar' || window._heroDismissed){
+    host.innerHTML = '';
+    return;
+  }
+  ensureExtState();
+  let me = window.canonicalDocName(window.currentDoctor);
+  let meBare = window.bareName(me);
+  let now = Date.now();
+  const H24 = 24 * 60 * 60 * 1000;
+
+  // Collect every patient (IP + HF) attributable to this doctor.
+  // "Mine" = I created OR I last updated.
+  let mine = [];
+  Object.values(window.S.endorsements || {}).forEach(e => {
+    let cb = window.canonicalDocName(e.createdBy);
+    let ub = window.canonicalDocName(e.updatedBy);
+    if(cb === me || ub === me){
+      let last = e.updatedAt || e.createdAt || 0;
+      mine.push({ rec: e, kind: 'ip', last, isStale: last && (now - last) > H24 });
+    }
+  });
+  Object.values(window.S.hfPatients || {}).forEach(p => {
+    let cb = window.canonicalDocName(p.createdBy);
+    let ub = window.canonicalDocName(p.updatedBy);
+    if(cb === me || ub === me){
+      let last = p.updatedAt || p.createdAt || 0;
+      mine.push({ rec: p, kind: 'hf', last, isStale: last && (now - last) > H24 });
+    }
+  });
+
+  // Empty state — show but be quiet about it
+  if(!mine.length){
+    host.innerHTML = `<div class="hero-card">
+      <div class="hero-card-head">
+        <div>
+          <div class="hero-card-title">Welcome back, ${escapeHtml(meBare)}</div>
+          <div class="hero-card-title-sub">No patients attributed to you yet</div>
+        </div>
+        <button class="hero-card-dismiss" onclick="dismissHero()" title="Hide for this session">✕</button>
+      </div>
+    </div>`;
+    return;
+  }
+
+  // Sort: stale first (oldest update first), then by ward → bed.
+  // This way the most-overdue patient lands at the top.
+  const wardOrder = (w) => {
+    if(w === 'Ward 4') return 0;
+    if(w === 'CCU')    return 1;
+    if(w === 'HF Team') return 2; // synthetic ward used for sort only
+    return 3;
+  };
+  mine.sort((a,b) => {
+    if(a.isStale !== b.isStale) return a.isStale ? -1 : 1;
+    if(a.isStale && b.isStale) return (a.last||0) - (b.last||0); // oldest stale on top
+    let aw = a.kind === 'hf' ? 'HF Team' : (a.rec.ward||'');
+    let bw = b.kind === 'hf' ? 'HF Team' : (b.rec.ward||'');
+    let wd = wardOrder(aw) - wardOrder(bw);
+    if(wd !== 0) return wd;
+    // Same ward → sort by bed numerically when possible
+    let abed = parseInt((a.rec.bed||'').replace(/\D/g,'')) || 0;
+    let bbed = parseInt((b.rec.bed||'').replace(/\D/g,'')) || 0;
+    return abed - bbed;
+  });
+
+  // Format "29 h" / "3 d" stale duration label
+  function staleLbl(last){
+    if(!last) return '';
+    let h = Math.floor((now - last) / (60*60*1000));
+    if(h < 48) return h + ' h';
+    return Math.floor(h/24) + ' d';
+  }
+
+  // Render up to 5 rows by default; rest behind a toggle.
+  const VISIBLE = 5;
+  let expanded = !!window._heroExpanded;
+  let visible = (mine.length <= VISIBLE || expanded) ? mine : mine.slice(0, VISIBLE);
+
+  let rows = visible.map((m, idx) => {
+    let r = m.rec;
+    let location = m.kind === 'hf'
+      ? 'HF Team'
+      : `${abbrevWard(r.ward||'')||'—'} · ${bedLabel(r.bed||'—')}`;
+    let dotCls = m.isStale ? 'stale' : 'fresh';
+    let badge = m.isStale ? `<span class="hero-row-badge">${staleLbl(m.last)}</span>` : '';
+    return `<div class="hero-row" onclick="goToMyPatient('${m.kind}','${escapeHtml(r.id)}')" title="Open this patient">
+      <span class="hero-row-dot ${dotCls}"></span>
+      <span class="hero-row-name">${escapeHtml(r.name||'—')}</span>
+      <span class="hero-row-loc">${escapeHtml(location)}</span>
+      ${badge}
+      <span class="hero-row-arrow">→</span>
+    </div>`;
+  }).join('');
+
+  let toggleRow = '';
+  if(mine.length > VISIBLE){
+    toggleRow = expanded
+      ? `<div class="hero-row-toggle" onclick="toggleHeroExpanded()">▴ Show less</div>`
+      : `<div class="hero-row-toggle" onclick="toggleHeroExpanded()">+ ${mine.length - VISIBLE} more ▾</div>`;
+  }
+
+  let staleCount = mine.filter(m => m.isStale).length;
+  let subtitle = staleCount
+    ? `${mine.length} patient${mine.length>1?'s':''} · ${staleCount} not updated &gt;24 h`
+    : `${mine.length} patient${mine.length>1?'s':''} · all up to date`;
+
+  host.innerHTML = `<div class="hero-card">
+    <div class="hero-card-head">
+      <div>
+        <div class="hero-card-title">Welcome back, ${escapeHtml(meBare)}</div>
+        <div class="hero-card-title-sub">${subtitle}</div>
+      </div>
+      <button class="hero-card-dismiss" onclick="dismissHero()" title="Hide for this session">✕</button>
+    </div>
+    <div class="hero-row-list">
+      ${rows}
+      ${toggleRow}
+    </div>
+  </div>`;
+};
+
+window.dismissHero = function(){
+  window._heroDismissed = true;
+  let h = document.getElementById('heroMyPatients');
+  if(h) h.innerHTML = '';
+};
+
+window.toggleHeroExpanded = function(){
+  window._heroExpanded = !window._heroExpanded;
+  if(typeof renderHeroCard === 'function') renderHeroCard();
+};
+
+// Direct jump from a hero-card row to that specific patient's card.
+// Switches tab/filter as needed, scrolls to the card, and highlights it.
+window.goToMyPatient = function(kind, id){
+  let now = Date.now();
+  const H24 = 24 * 60 * 60 * 1000;
+
+  if(kind === 'ip'){
+    let rec = window.S.endorsements && window.S.endorsements[id];
+    if(!rec) return;
+    let last = rec.updatedAt || rec.createdAt || 0;
+    let highlight = (last && (now - last) > H24) ? 'var(--warn)' : 'var(--acc)';
+    // Make sure we're on the IP tab and All filter so the card is visible
+    if(typeof currentWardFilter !== 'undefined' && currentWardFilter !== 'all'){
+      if(typeof filterByWard === 'function') filterByWard('all');
+    }
+    setTimeout(()=>{
+      let card = document.querySelector(`.endo-card[data-endo-id="${id}"]`);
+      if(card){
+        card.scrollIntoView({ behavior:'smooth', block:'center' });
+        card.style.outline = '2px solid ' + highlight;
+        setTimeout(()=>{ card.style.outline = ''; }, 1800);
+      }
+    }, 80);
+  } else if(kind === 'hf'){
+    let rec = window.S.hfPatients && window.S.hfPatients[id];
+    if(!rec) return;
+    let last = rec.updatedAt || rec.createdAt || 0;
+    let highlight = (last && (now - last) > H24) ? 'var(--warn)' : 'var(--acc)';
+    if(typeof filterByWard === 'function') filterByWard('hf');
+    setTimeout(()=>{
+      // Auto-expand the card
+      if(window.expandedHFIds && !window.expandedHFIds.has(id)){
+        window.expandedHFIds.add(id);
+        if(typeof renderHFList === 'function') renderHFList();
+      }
+      setTimeout(()=>{
+        // HF cards don't carry a data-* hook — match by name + MRN
+        let cards = document.querySelectorAll('#hfList .endo-card');
+        let match = null;
+        cards.forEach(c => {
+          if(match) return;
+          let nm = c.querySelector('.endo-name')?.innerText || '';
+          let mr = c.querySelector('.endo-mrn')?.innerText || '';
+          if(nm.includes(rec.name||'') && mr.includes(rec.mrn||'')) match = c;
+        });
+        if(match){
+          match.scrollIntoView({ behavior:'smooth', block:'center' });
+          match.style.outline = '2px solid ' + highlight;
+          setTimeout(()=>{ match.style.outline = ''; }, 1800);
+        }
+      }, 80);
+    }, 100);
+  }
+};
 
 
 
@@ -10207,36 +10165,14 @@ window.renderAnalytics = function(){
 /* ---- Category / echo-eligibility tables (from department structure) ---- */
 var MD_CONSULTANTS = ["Hisham","Farag","Ibrahim Hassan","Hany","Ehab","Samir"];
 var MD_SENIORS     = ["Maged","Ashraf","Fawzy","Akmal","Zaher","Shafie","Hamza","Ramy"];
-// Consultants / seniors permitted to OPEN the morning-duty page in read-only
-// mode (no Edit buttons, no Save, no Re-generate, no CCU/Ward pickers).
-// Admin is always allowed to view AND edit. Anyone else hits the PIN gate.
-var MD_VIEWER_CONSULTANTS = ["Shafie","Maged","Ashraf","Fawzy","Akmal","Zaher","Ramy"];
-function mdCanView(){
-  if(window.currentRole==='admin') return true;
-  if(window.currentRole==='registrar' && window.currentDoctor){
-    var bare=mdStripHon(window.currentDoctor);
-    return MD_VIEWER_CONSULTANTS.indexOf(bare)!==-1;
-  }
-  return false;
-}
-function mdCanEdit(){ return window.currentRole==='admin'; }
 // Echo trainees — always shown in the free-doctor pool, labelled "echo training".
-// Note: "Ali Nasser" (not "Ali") — three doctors in the PIN database share the
-// first name Ali: Ali Alsulaimi (the Wed Room 11 cath consultant, keyed in CL
-// as bare "Ali"), Ali Alsaygh, and Ali Nasser (the echo trainee on first call).
-// Keying the trainee by full name avoids collision with the cath consultant.
-var MD_ECHO_TRAINEES = ["Sajid","Ali Nasser"];
+var MD_ECHO_TRAINEES = ["Sajid","Ali"];
 
-// Name aliases. mdAlias() collapses any known alias to ONE canonical bare name
-// so clinic days, blocked dates and duty all line up.
-//  - "Ibrahim"  → "Ibrahim Hassan" (clinic list uses the short form)
-//  - "Ali"      → "Ali Alsulaimi"  (clinic list / specificDocs / SKIP_DOCS all
-//                                   say "Ali"; the real person is Dr. Ali
-//                                   Alsulaimi, the Wed Room 11 cath consultant)
-var MD_NAME_ALIAS = {
-  "Ibrahim": "Ibrahim Hassan",
-  "Ali":     "Ali Alsulaimi"
-};
+// Name aliases. The clinic list (CL) and PIN database call this doctor
+// "Ibrahim"; the department roster calls him "Ibrahim Hassan" — same person.
+// mdAlias() collapses any known alias to ONE canonical bare name so clinic
+// days, blocked dates and duty all line up.
+var MD_NAME_ALIAS = { "Ibrahim":"Ibrahim Hassan" };
 function mdAlias(bare){
   if(!bare) return bare;
   return MD_NAME_ALIAS[bare] || bare;
@@ -10259,8 +10195,8 @@ var MD_ECHO_RULES = {
   "Hany":           "any",
   "Farouk":         ["Tue"],
   // Seniors cover echo on ANY working day they are free (no own clinic that
-  // day). Hamza is Sunday-only in his base rule, but mdEchoEligible promotes
-  // him to every working day during June 2026 (special departmental cover).
+  // day). Hamza stays Sunday-only — he is an echo-only doctor pinned to
+  // Sunday via MD_ECHO_ONLY_DAYS.
   "Maged":          "any",
   "Ashraf":         "any",
   "Fawzy":          "any",
@@ -10269,8 +10205,8 @@ var MD_ECHO_RULES = {
   "Shafie":         "any",
   "Ramy":           "any",
   "Hamza":          ["Sun"],
-  "Sajid":          "any",       // trainee — manual-only, never auto-assigned
-  "Ali Nasser":     "any"        // trainee — manual-only, never auto-assigned
+  "Sajid":          "any",   // trainee — manual-only, never auto-assigned
+  "Ali":            "any"    // trainee — manual-only, never auto-assigned
 };
 // Every name the echo-roster dropdown is allowed to offer (chat-named only).
 var MD_ECHO_DOCS = Object.keys(MD_ECHO_RULES);
@@ -10278,37 +10214,24 @@ var MD_ECHO_DOCS = Object.keys(MD_ECHO_RULES);
 // Doctors who are echo-ONLY on specific days. On any other day they are not
 // part of the morning roster at all — so they must NOT appear in the
 // free-doctor pool on those other days. Farouk is echo-only on Tuesday.
-// (Hamza is NOT here: he does echo on Sunday — and every working day during
-//  June 2026 — and otherwise joins the free pool the rest of the week.)
+// (Hamza is NOT here: he does echo on Sunday but joins the free pool the rest
+//  of the week as an HF Team member — see MD_HF_TEAM.)
 var MD_ECHO_ONLY_DAYS = { "Farouk":["Tue"] };
 
 // HF (Heart Failure) Team members. In the free-doctor pool they carry an
-// "HF Team" tag. (Hamza was previously tagged but is no longer flagged here —
-// he appears in the free pool with no special tag, and during June 2026 he
-// joins the echo team every working day via the June override in
-// mdEchoEligible.)
-var MD_HF_TEAM = [];
+// "HF Team" tag. Hamza does echo on Sunday and is free (HF Team) Mon–Thu.
+var MD_HF_TEAM = ["Hamza"];
 function mdIsHfTeam(bare){ return MD_HF_TEAM.indexOf(mdAlias(bare))!==-1; }
 
 // Echo fill priority — SENIORS first, then consultants, then trainees last.
 // Samir (consultant, echo full-time) sits with the consultants.
-// Day-aware override: on Tuesday, Farouk has absolute first priority — Tuesday
-// is his dedicated echo day so he is placed before any senior.
-function mdEchoPriority(bare, iso){
+function mdEchoPriority(bare){
   var n=mdAlias(bare);
-  if(iso){
-    var dow=MD_DOW[mdParse(iso).getDay()];
-    if(dow==='Tue' && n==='Farouk') return -1;      // Farouk wins Tuesday
-  }
   if(MD_SENIORS.indexOf(n)!==-1) return 0;          // seniors fill echo first
   if(MD_ECHO_TRAINEES.indexOf(n)!==-1) return 2;    // trainees last
   return 1;                                          // consultants (incl. Samir)
 }
-// Returns a comparator bound to a given day; legacy 2-arg form still works.
 function mdEchoSort(a,b){ return mdEchoPriority(a)-mdEchoPriority(b); }
-function mdEchoSortFor(iso){
-  return function(a,b){ return mdEchoPriority(a,iso)-mdEchoPriority(b,iso); };
-}
 
 /* ---- morning-duty dropdown builder ----------------------------------
    Unlike buildDocOptions (whole 43-doctor PIN database), this offers ONLY
@@ -10342,46 +10265,6 @@ function mdBuildDocOptions(selectedValue, which){
 // Samir's hard leave (delegated away + travel). Stored explicitly because it
 // is a fixed departmental fact, independent of the per-doctor blocked ranges.
 var MD_SAMIR_LEAVE = { from: "2026-06-05", to: "2026-06-12" };
-
-// Department-wide holiday ranges. On these dates NO morning duty is scheduled
-// — the day card shows a holiday banner, auto-generation produces empty echo/
-// cover, and validation does not flag missing assignments. Add new ranges
-// here as {from,to,label}. Dates inclusive on both ends.
-var MD_HOLIDAYS = [
-  { from: "2026-05-26", to: "2026-05-31", label: "Eid Vacation" }
-];
-function mdHolidayFor(iso){
-  for(var i=0;i<MD_HOLIDAYS.length;i++){
-    if(mdInRange(iso, MD_HOLIDAYS[i])) return MD_HOLIDAYS[i];
-  }
-  return null;
-}
-function mdIsHoliday(iso){ return !!mdHolidayFor(iso); }
-
-// Echo trainees who must be POST-CALL protected: if they were on the on-call
-// roster the day BEFORE `iso`, they cannot do morning duty on `iso`. They are
-// also removed from the free-doctor pool on those post-call days.
-var MD_POST_CALL_TRAINEES = ["Sajid","Ali Nasser"];
-// Returns true if `bareName` is a post-call trainee on `iso` (i.e. was on
-// any on-call slot the previous calendar day).
-function mdIsPostCallTrainee(bareName, iso){
-  var name = mdAlias(bareName);
-  if(MD_POST_CALL_TRAINEES.indexOf(name) === -1) return false;
-  if(!iso) return false;
-  var prev = mdAddDays(iso, -1);
-  var roster = (window.S && window.S.onCall && window.S.onCall[prev]) || null;
-  if(!roster) return false;
-  var slots = ['first1','first2','first3','ccu','second','second2','interv'];
-  for(var i=0;i<slots.length;i++){
-    var who = roster[slots[i]];
-    if(!who) continue;
-    // on-call rosters may store either a canonical "Dr. X" or a raw name —
-    // resolveDocName + mdStripHon normalises both to the bare name.
-    var bare = mdStripHon(typeof resolveDocName==='function' ? resolveDocName(who) : who);
-    if(mdAlias(bare) === name) return true;
-  }
-  return false;
-}
 
 var MD_DOW = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 
@@ -10581,11 +10464,6 @@ function mdEchoEligible(bareName,iso,weekSun,ccu){
   var name=mdAlias(bareName);
   var rule=MD_ECHO_RULES[name];
   if(!rule) return false;
-  // Department-wide holiday — nobody is on echo (no morning duty at all).
-  if(mdIsHoliday(iso)) return false;
-  // Echo trainees post-call (Sajid / Ali): the day after they were on the
-  // on-call roster they are off-duty in the morning.
-  if(mdIsPostCallTrainee(name, iso)) return false;
   if(mdDocUnavailable(name,iso)) return false;
   var dow=MD_DOW[mdParse(iso).getDay()];
   if(dow==='Fri'||dow==='Sat') return false;
@@ -10606,10 +10484,6 @@ function mdEchoEligible(bareName,iso,weekSun,ccu){
     var occ=mdWeekOccupied(ws, (typeof ccu==='string')?ccu:undefined);
     if(occ[name]) return false;
   }
-  // June 2026 override: Hamza joins the echo team every working day for the
-  // whole month, not just Sunday. Outside June he reverts to his usual
-  // Sunday-only rule from MD_ECHO_RULES.
-  if(name==='Hamza' && iso && iso.slice(0,7)==='2026-06') return true;
   if(rule==='any') return true;
   return rule.indexOf(dow)!==-1;
 }
@@ -10636,13 +10510,6 @@ function mdGenerateDraft(weekSun, ccuOverride){
     var dow=MD_DOW[mdParse(iso).getDay()];
     var occupied=mdWeekOccupied(weekSun, ccu);
 
-    // Holiday: no morning duty scheduled on this day at all. The grid will
-    // render a holiday banner instead of empty roster slots.
-    if(mdIsHoliday(iso)){
-      draft.days[iso]={ echo:[], cover:{}, duties:[], holiday:true };
-      continue;
-    }
-
     /* --- echo roster --- */
     var need=mdEchoMinimum(iso);
     var eligible=[];
@@ -10651,8 +10518,8 @@ function mdGenerateDraft(weekSun, ccuOverride){
       if(MD_ECHO_TRAINEES.indexOf(bare)!==-1) return;
       if(mdEchoEligible(bare,iso,weekSun,ccu)) eligible.push(bare);
     });
-    // Priority order: Farouk on Tuesday → seniors → consultants → trainees.
-    eligible.sort(mdEchoSortFor(iso));
+    // Priority order: SENIORS first, then consultants.
+    eligible.sort(mdEchoSort);
     // take exactly `need` if we have enough, otherwise take all eligible
     var echo=eligible.slice(0,need);
 
@@ -10687,9 +10554,6 @@ function mdGenerateDraft(weekSun, ccuOverride){
 
 /* ---- free doctors for a day (no clinic, no echo, no cover, available) ---- */
 function mdFreeDoctors(iso,dayObj,weekSun,ccu){
-  // Holiday: nobody is on duty at all, so the "free" concept doesn't apply —
-  // the grid shows a holiday banner instead.
-  if(mdIsHoliday(iso)) return [];
   var dow=MD_DOW[mdParse(iso).getDay()];
   var clinicDocs=mdClinicDocsOnDay(dow);
   var busy={};
@@ -10706,9 +10570,6 @@ function mdFreeDoctors(iso,dayObj,weekSun,ccu){
     // echo-only doctors (e.g. Farouk Tue) are NOT free on their non-echo days.
     var onlyDays=MD_ECHO_ONLY_DAYS[bare];
     if(onlyDays && onlyDays.indexOf(dow)===-1) return;
-    // Post-call trainees (Sajid / Ali) are off the morning duty entirely the
-    // day after they appear on the on-call roster — not even in the free pool.
-    if(mdIsPostCallTrainee(bare, iso)) return;
     // HF Team members (Hamza) do echo on their echo day and are free (HF Team)
     // the rest of the week — so on an echo-eligible day they are NOT "free".
     if(mdIsHfTeam(bare) && mdEchoEligible(bare,iso,ws,ccu)) return;
@@ -10737,22 +10598,6 @@ function mdFreeChip(bare){
    ===================================================================== */
 window.renderMorningDuty=function(){
   ensureExtState();
-  // ---- Read-only viewer mode ----------------------------------------------
-  // Admins get full edit access (handled by enterApp/.apgate auto-unlock).
-  // Whitelisted consultants (MD_VIEWER_CONSULTANTS) are also granted access
-  // here, but in a read-only mode: the PIN gate is hidden, the content is
-  // shown, and all edit controls are hidden via the .md-readonly body class.
-  var pg=document.getElementById('pg-morning');
-  if(pg){
-    var canView = (typeof mdCanView==='function') ? mdCanView() : (window.currentRole==='admin');
-    var canEdit = (typeof mdCanEdit==='function') ? mdCanEdit() : (window.currentRole==='admin');
-    if(canView){
-      pg.querySelectorAll('.apgate').forEach(function(e){ e.style.display='none'; });
-      pg.querySelectorAll('.ac-content').forEach(function(e){ e.style.display='block'; });
-    }
-    pg.classList.toggle('md-readonly', canView && !canEdit);
-  }
-  // -------------------------------------------------------------------------
   if(!mdState.weekSun) mdState.weekSun=mdWeekSundayOf(new Date());
   // load saved week into the working draft, else generate
   var saved=(window.S.morningDuty||{})[mdState.weekSun];
@@ -10767,38 +10612,6 @@ window.renderMorningDuty=function(){
     mdDraft.ccu = mdAutoCcuConsultant(mdState.weekSun) || '';
   if(typeof mdDraft.ward!=='string')
     mdDraft.ward = mdAutoWardSenior(mdState.weekSun) || '';
-
-  // ---- AUTO-CLEANUP: strip out doctors who are now unavailable -----------
-  // A saved week may have been built before a doctor was blocked / put on
-  // leave. Drop those names from echo, clinic-cover and duty slots so the
-  // displayed roster always reflects current blocked-date / leave state.
-  // The user can still click "Re-generate draft from rules" to refill the
-  // gaps; here we only REMOVE conflicts, never invent new assignments.
-  if(mdDraft && mdDraft.days){
-    Object.keys(mdDraft.days).forEach(function(iso){
-      var day=mdDraft.days[iso]; if(!day) return;
-      // echo list
-      if(Array.isArray(day.echo)){
-        day.echo=day.echo.filter(function(n){
-          return !mdDocUnavailable(mdStripHon(n),iso);
-        });
-      }
-      // clinic-cover map { clinicIdx: doctorName }
-      if(day.cover && typeof day.cover==='object'){
-        Object.keys(day.cover).forEach(function(k){
-          var who=day.cover[k];
-          if(who && mdDocUnavailable(mdStripHon(who),iso)) delete day.cover[k];
-        });
-      }
-      // general duty rows [{label,doc}]
-      if(Array.isArray(day.duties)){
-        day.duties.forEach(function(d){
-          if(d && d.doc && mdDocUnavailable(mdStripHon(d.doc),iso)) d.doc='';
-        });
-      }
-    });
-  }
-  // -----------------------------------------------------------------------
 
   mdRenderLabel();
   mdRenderRules();
@@ -10821,7 +10634,7 @@ function mdRenderCcuPicker(){
   // All consultants are in the CCU rotation — including Samir. When Samir
   // covers CCU he drops off echo for that week; otherwise he is on echo.
   MD_CONSULTANTS.forEach(function(bare){
-    var tag='';
+    var tag=(bare===auto)?' (on-call default)':'';
     opts+='<option value="'+escapeHtml(bare)+'"'+(bare===cur?' selected':'')+'>Dr. '+escapeHtml(bare)+tag+'</option>';
   });
   sel.innerHTML=opts;
@@ -10835,7 +10648,7 @@ function mdRenderWardPicker(){
   var auto=mdAutoWardSenior(mdState.weekSun)||'';
   var opts='<option value="">— Not set —</option>';
   MD_SENIORS.forEach(function(bare){
-    var tag='';
+    var tag=(bare===auto)?' (on-call default)':'';
     opts+='<option value="'+escapeHtml(bare)+'"'+(bare===cur?' selected':'')+'>Dr. '+escapeHtml(bare)+tag+'</option>';
   });
   sel.innerHTML=opts;
@@ -10868,7 +10681,7 @@ function mdReflowWeek(){
         if(MD_ECHO_TRAINEES.indexOf(b)!==-1) return false;   // no auto trainees
         return mdEchoEligible(b,iso,ws,ccu) && echo.indexOf(b)===-1;
       });
-      pool.sort(mdEchoSortFor(iso));
+      pool.sort(mdEchoSort);
       echo=echo.concat(pool.slice(0,need-echo.length));
     }
     day.echo=echo.map(mdCanon);
@@ -10966,24 +10779,6 @@ function mdRenderGrid(){
     var iso=mdAddDays(mdState.weekSun,i);
     var dow=MD_DOW[mdParse(iso).getDay()];
     var day=mdDraft.days[iso]||{echo:[],cover:{}};
-    var dateLabel=mdParse(iso).toLocaleDateString('en-GB',{weekday:'long',day:'2-digit',month:'short'});
-
-    // ---- Department holiday: render a single banner, skip all duty blocks ----
-    var holiday=mdHolidayFor(iso);
-    if(holiday){
-      html+='<div class="md-day-card md-holiday'+(iso===todayIso?' md-today':'')+'">'
-        +'<div class="md-day-head">'
-          +'<div class="md-day-name">'+escapeHtml(dateLabel)+(iso===todayIso?' <span class="md-dow">\u00b7 today</span>':'')+'</div>'
-        +'</div>'
-        +'<div class="md-holiday-banner">'
-          +'<span class="md-holiday-emoji">\ud83c\udf19</span>'
-          +'<div><div class="md-holiday-title">'+escapeHtml(holiday.label)+'</div>'
-            +'<div class="md-holiday-sub">No morning duty scheduled.</div></div>'
-        +'</div>'
-      +'</div>';
-      continue;
-    }
-
     var need=mdEchoMinimum(iso);
     var echoN=(day.echo||[]).length;
     var echoOk=echoN>=need;
@@ -10991,6 +10786,7 @@ function mdRenderGrid(){
     var coverMissing=coverNeeds.some(function(c){return !day.cover||!day.cover[c.idx];});
     // red flag only for a real cover gap; echo shortfall is an expected to-do
     var flagged=coverMissing;
+    var dateLabel=mdParse(iso).toLocaleDateString('en-GB',{weekday:'long',day:'2-digit',month:'short'});
 
     var echoChips=(day.echo&&day.echo.length)
       ? day.echo.map(function(n){return '<span class="md-chip echo">'+escapeHtml(mdStripHon(n))+'</span>';}).join('')
@@ -11043,12 +10839,74 @@ function mdRenderGrid(){
 
 function mdRenderValidation(){
   var host=document.getElementById('mdValidation'); if(!host) return;
-  // Validation panel hidden by request — no notices or errors shown to any
-  // user (admin or read-only viewer). Clear contents AND class so the host
-  // collapses to nothing and the Save flow's "still has issues" prompt
-  // (which checks for .bad on this element) never triggers.
-  host.innerHTML='';
-  host.className='';
+  var errors=[];    // real problems — must be fixed
+  var notices=[];   // expected to-dos — admin completes manually (echo top-up)
+  for(var i=0;i<5;i++){
+    var iso=mdAddDays(mdState.weekSun,i);
+    var dow=MD_DOW[mdParse(iso).getDay()];
+    var day=mdDraft.days[iso]||{echo:[],cover:{}};
+    var label=mdParse(iso).toLocaleDateString('en-GB',{weekday:'short',day:'2-digit',month:'short'});
+    var need=mdEchoMinimum(iso);
+    var echo=(day.echo||[]).map(mdStripHon);
+    var ws=mdState.weekSun, ccu=mdDraft.ccu;
+    var occupied=mdWeekOccupied(ws,ccu);
+    // echo below the minimum is EXPECTED mid-week — a to-do, not an error
+    if(echo.length<need)
+      notices.push(label+': echo lab '+echo.length+'/'+need+' \u2014 add '+(need-echo.length)+' more doctor'+((need-echo.length)>1?'s':'')+' manually.');
+    // duplicate echo doctors
+    var seen={};
+    echo.forEach(function(n){ if(seen[n]) errors.push(label+': Dr. '+n+' listed twice on echo.'); seen[n]=true; });
+    // echo doctor unavailable / running own clinic / occupied this week
+    echo.forEach(function(n){
+      if(mdDocUnavailable(n,iso)) errors.push(label+': echo doctor Dr. '+n+' is on leave / blocked.');
+      if(mdClinicDocsOnDay(dow)[n]) errors.push(label+': echo doctor Dr. '+n+' runs their own clinic this day.');
+      if(occupied[n]) errors.push(label+': Dr. '+n+' is this week\u2019s CCU consultant or ward senior \u2014 remove from echo.');
+      if(!mdInRosterPool(n)) errors.push(label+': Dr. '+n+' is not a working consultant / senior \u2014 remove from echo.');
+    });
+    // cover gaps
+    mdClinicsNeedingCover(ws,ccu).filter(function(c){return c.day===dow;}).forEach(function(c){
+      var who=day.cover&&day.cover[c.idx]?mdStripHon(day.cover[c.idx]):'';
+      if(!who){ errors.push(label+': Dr. '+c.owner+'\u2019s clinic ('+abbrevRoom(c.room)+') has no covering doctor.'); return; }
+      if(who===c.owner) errors.push(label+': Dr. '+c.owner+'\u2019s clinic is "covered" by himself.');
+      if(mdDocUnavailable(who,iso)) errors.push(label+': covering Dr. '+who+' is on leave / blocked.');
+      if(occupied[who]) errors.push(label+': covering Dr. '+who+' is this week\u2019s CCU consultant or ward senior \u2014 not free to cover.');
+      var want=(c.needCategory==='senior')?'senior':'consultant';
+      if(mdDocCategory(who)!==want)
+        notices.push(label+': Dr. '+c.owner+'\u2019s clinic is covered by Dr. '+who
+          +' \u2014 recommended a '+want+', but admin-assigned, so allowed.');
+      if(echo.indexOf(who)!==-1) errors.push(label+': Dr. '+who+' is assigned to both echo and clinic cover.');
+    });
+    // general duty slots
+    (day.duties||[]).forEach(function(d){
+      if(!d) return;
+      if(d.label && !d.doc) errors.push(label+': duty "'+d.label+'" has no doctor assigned.');
+      if(d.doc && !d.label) errors.push(label+': a duty has Dr. '+mdStripHon(d.doc)+' assigned but no slot name.');
+      if(d.doc && mdDocUnavailable(mdStripHon(d.doc),iso))
+        errors.push(label+': duty doctor Dr. '+mdStripHon(d.doc)+' is on leave / blocked.');
+      if(d.doc && occupied[mdStripHon(d.doc)])
+        errors.push(label+': duty doctor Dr. '+mdStripHon(d.doc)+' is this week\u2019s CCU consultant or ward senior.');
+      if(d.doc && echo.indexOf(mdStripHon(d.doc))!==-1)
+        errors.push(label+': Dr. '+mdStripHon(d.doc)+' is assigned to both echo and a general duty.');
+    });
+  }
+
+  function block(items){ return '<ul>'+items.map(function(p){return '<li>'+escapeHtml(p)+'</li>';}).join('')+'</ul>'; }
+  var html='';
+  // top status class: bad if real errors, todo if only notices, ok if clean
+  if(errors.length){
+    host.className='md-validation bad';
+    html='\u26a0 '+errors.length+' issue'+(errors.length>1?'s':'')+' to fix:'+block(errors);
+    if(notices.length)
+      html+='<div class="md-validation-todo-inset">\u2398 '+notices.length+' day'+(notices.length>1?'s':'')+' need echo top-up (expected \u2014 complete manually):'+block(notices)+'</div>';
+  } else if(notices.length){
+    host.className='md-validation todo';
+    html='\u2398 No rule violations. '+notices.length+' day'+(notices.length>1?'s':'')
+      +' still need echo doctors added manually \u2014 this is expected mid-week, not an error:'+block(notices);
+  } else {
+    host.className='md-validation ok';
+    html='\u2713 All coverage rules satisfied and echo minimums met for this week.';
+  }
+  host.innerHTML=html;
 }
 
 /* ---- week navigation ---- */
@@ -11063,7 +10921,6 @@ window.mdJumpThisWeek=function(){
   renderMorningDuty();
 };
 window.mdRegenerateDraft=function(){
-  if(window.currentRole!=='admin'){ alert('Admin only.'); return; }
   if(!confirm('Re-generate this week\u2019s draft from the rules? Any unsaved edits to the displayed week will be lost.')) return;
   var keepCcu=(mdDraft && typeof mdDraft.ccu==='string')?mdDraft.ccu:undefined;
   var keepWard=(mdDraft && typeof mdDraft.ward==='string')?mdDraft.ward:undefined;
@@ -11080,11 +10937,6 @@ window.mdRegenerateDraft=function(){
    ===================================================================== */
 window.mdOpenMo=function(iso){
   if(window.currentRole!=='admin'){ alert('Admin only.'); return; }
-  var holiday=mdHolidayFor(iso);
-  if(holiday){
-    alert(holiday.label+' \u2014 no morning duty is scheduled for this day.');
-    return;
-  }
   var dow=MD_DOW[mdParse(iso).getDay()];
   var day=mdDraft.days[iso]||{echo:[],cover:{}};
   document.getElementById('md-iso').value=iso;
@@ -11131,23 +10983,12 @@ window.mdOpenMo=function(iso){
   document.getElementById('mdMo').classList.add('on');
 };
 
-// Preset duty labels offered in the General Morning Duties dropdown.
-// Custom labels are still allowed — the input accepts free text in addition
-// to these presets via the datalist.
-window.MD_DUTY_PRESETS = ["Echo Distribution", "Committee", "Teaching"];
 window.mdAddDutyRow=function(label,doc){
   var box=document.getElementById('md-duty-rows');
   var row=document.createElement('div');
   row.className='md-duty-row';
-  // Unique datalist id per row so the browser keeps the suggestion menus tidy.
-  var dlId='md-duty-presets-'+(Date.now().toString(36))+'-'+Math.floor(Math.random()*1e6).toString(36);
-  var presetOpts=window.MD_DUTY_PRESETS.map(function(p){
-    return '<option value="'+escapeHtml(p)+'"></option>';
-  }).join('');
   row.innerHTML='<input type="text" class="pi md-duty-label" placeholder="Duty / slot name" '
-    +'list="'+dlId+'" '
     +'style="margin-bottom:0" value="'+escapeHtml(label||'')+'">'
-    +'<datalist id="'+dlId+'">'+presetOpts+'</datalist>'
     +'<select class="fd-sel md-duty-sel" style="margin-bottom:0">'+mdBuildDocOptions(doc||'','all')+'</select>'
     +'<button type="button" class="md-row-del" title="Remove" onclick="this.parentNode.remove()">\u2715</button>';
   box.appendChild(row);
@@ -11275,494 +11116,84 @@ window.mdSaveWeek=function(){
 };
 
 /* =====================================================================
-   PDF EXPORT — one week  (v2: redesigned for clarity + easier reading)
+   PDF EXPORT — one week
    ===================================================================== */
 window.mdExportPdf=function(){
   if(typeof window.jspdf==='undefined'){ alert('PDF library still loading. Please try again in a second.'); return; }
   var jsPDF=window.jspdf.jsPDF;
   var doc=new jsPDF({orientation:'landscape',unit:'pt',format:'a4'});
   var pageW=doc.internal.pageSize.getWidth();
-  var pageH=doc.internal.pageSize.getHeight();
   var ws=mdState.weekSun;
   var sun=mdParse(ws), thu=mdParse(mdAddDays(ws,4));
 
-  // ---------- color palette (soft, calm, professional) ----------
-  var C = {
-    bandTop:    [37, 99, 235],     // indigo-600
-    bandBot:    [14, 165, 233],    // sky-500
-    accent:     [124, 58, 237],    // violet-600 — separator / brand
-    text:       [30, 41, 59],      // slate-800
-    textSoft:   [71, 85, 105],     // slate-600
-    textFaint:  [148, 163, 184],   // slate-400
-    headerCell: [30, 41, 59],      // slate-800 for table head
-    grid:       [226, 232, 240],   // slate-200
-    stripe:     [248, 250, 252],   // slate-50
-    holiday:    [243, 232, 255],   // violet-100
-    holidayBd:  [168, 85, 247],    // violet-500
-    holidayTx:  [88, 28, 135],     // violet-900
-    unassigned: [220, 38, 38],     // red-600
-    free:       [22, 163, 74],     // green-600
-    coverWarn:  [217, 119, 6],     // amber-600
-    // soft day-of-week tints (left accent strip on the Day column)
-    daySun:     [254, 226, 226],   // red-100
-    daySunBd:   [239, 68, 68],
-    dayMon:     [254, 243, 199],   // amber-100
-    dayMonBd:   [245, 158, 11],
-    dayTue:     [220, 252, 231],   // green-100
-    dayTueBd:   [34, 197, 94],
-    dayWed:     [207, 250, 254],   // cyan-100
-    dayWedBd:   [6, 182, 212],
-    dayThu:     [224, 231, 255],   // indigo-100
-    dayThuBd:   [99, 102, 241]
-  };
-  var DAY_TINT = {Sun:[C.daySun,C.daySunBd], Mon:[C.dayMon,C.dayMonBd], Tue:[C.dayTue,C.dayTueBd], Wed:[C.dayWed,C.dayWedBd], Thu:[C.dayThu,C.dayThuBd]};
+  doc.setFont('helvetica','bold'); doc.setFontSize(15);
+  doc.text('MKH Cardiology \u2014 Morning Duty Schedule', pageW/2, 38, {align:'center'});
+  doc.setFont('helvetica','normal'); doc.setFontSize(10); doc.setTextColor(90);
+  doc.text('Week of '+sun.toLocaleDateString('en-GB',{day:'2-digit',month:'short'})
+    +' \u2013 '+thu.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}),
+    pageW/2, 55, {align:'center'});
+  doc.setFontSize(8);
+  doc.text('Generated '+new Date().toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}),
+    pageW/2, 68, {align:'center'});
+  doc.setTextColor(0);
 
-  // ---------- gradient header band ----------
-  // jsPDF has no native gradient — fake it with thin horizontal bands.
-  var bandH = 74, bandSteps = 58;
-  for(var i=0;i<bandSteps;i++){
-    var t = i/(bandSteps-1);
-    var r = C.bandTop[0]+(C.bandBot[0]-C.bandTop[0])*t;
-    var g = C.bandTop[1]+(C.bandBot[1]-C.bandTop[1])*t;
-    var b = C.bandTop[2]+(C.bandBot[2]-C.bandTop[2])*t;
-    doc.setFillColor(r,g,b);
-    doc.rect(0, i*(bandH/bandSteps), pageW, bandH/bandSteps+0.6, 'F');
-  }
-  // accent strip at the bottom of the band
-  doc.setFillColor.apply(doc, C.accent);
-  doc.rect(0, bandH, pageW, 3, 'F');
-
-  // Title + subtitle on the band
-  doc.setTextColor(255,255,255);
-  doc.setFont('helvetica','bold'); doc.setFontSize(18);
-  doc.text('MKH Cardiology', 36, 32);
-  doc.setFont('helvetica','normal'); doc.setFontSize(11);
-  doc.text('Morning Duty Schedule', 36, 50);
-
-  // Week range — right-aligned on the band
-  var weekText = sun.toLocaleDateString('en-GB',{day:'2-digit',month:'short'})
-               + '  \u2013  '
-               + thu.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
-  doc.setFont('helvetica','bold'); doc.setFontSize(13);
-  doc.text(weekText, pageW-36, 30, {align:'right'});
-
-  // CCU consultant + Ward senior — right-aligned, in the band under the date
   var ccu=mdWeekCcuConsultant(ws), ward=mdWeekWardSenior(ws);
-  var infoLine = 'CCU Consultant: '+(ccu?'Dr. '+ccu:'Not set')
-               + '      Ward Senior: '+(ward?'Dr. '+ward:'Not set');
-  doc.setFont('helvetica','normal'); doc.setFontSize(10);
-  doc.setTextColor(219, 234, 254);
-  doc.text(infoLine, pageW-36, 50, {align:'right'});
-
-  // ---------- table body ----------
-  var body=[], rowMeta=[];
+  var body=[];
   for(var i=0;i<5;i++){
     var iso=mdAddDays(ws,i);
     var dow=MD_DOW[mdParse(iso).getDay()];
-    var dateObj=mdParse(iso);
-    var dayLabel=dateObj.toLocaleDateString('en-GB',{weekday:'long'})
-               +'\n'+dateObj.toLocaleDateString('en-GB',{day:'2-digit',month:'short'});
-
-    var holiday=mdHolidayFor(iso);
-    if(holiday){
-      body.push([dayLabel, holiday.label+'  \u2014  no morning duty.', '', '', '']);
-      rowMeta.push({dow:dow, holiday:true});
-      continue;
-    }
     var day=(mdDraft&&mdDraft.days&&mdDraft.days[iso])||{echo:[],cover:{}};
     var need=mdEchoMinimum(iso);
     var echo=(day.echo||[]).map(mdStripHon);
-    // ECHOCELL sentinel — custom two-column render in didDrawCell.
-    // payload: names joined by | , then \u0001 , then "count/need"
-    var echoCell='\u0002ECHO\u0001'
-      + (echo.length?echo.join('|'):'')
-      + '\u0001' + echo.length + '/' + need;
-
+    var echoCell=(echo.length?echo.join(', '):'\u2014')+'\n('+echo.length+'/'+need+')';
     var coverNeeds=mdClinicsNeedingCover(ws).filter(function(c){return c.day===dow;});
     var coverCell=coverNeeds.length
       ? coverNeeds.map(function(c){
           var who=day.cover&&day.cover[c.idx]?mdStripHon(day.cover[c.idx]):'UNASSIGNED';
-          return who+'\n'+c.owner+'  \u00B7  '+abbrevRoom(c.room);
-        }).join('\n\n')
+          return who+'  (\u2190 '+c.owner+', '+abbrevRoom(c.room)+')';
+        }).join('\n')
       : '\u2014';
-
     var duties=(day.duties||[]).filter(function(d){return d&&(d.label||d.doc);});
     var dutyCell=duties.length
       ? duties.map(function(d){
-          return (d.doc?mdStripHon(d.doc):'UNASSIGNED')+'\n'+(d.label||'duty');
-        }).join('\n\n')
+          return (d.doc?mdStripHon(d.doc):'UNASSIGNED')+'  \u2014 '+(d.label||'duty');
+        }).join('\n')
       : '\u2014';
-
     var free=mdFreeDoctors(iso,{echo:day.echo||[],cover:day.cover||{},duties:day.duties||[]},
       ws,(mdDraft&&mdDraft.ccu));
-    var freeNames=free.map(function(n){
-      if(MD_ECHO_TRAINEES.indexOf(mdAlias(n))!==-1) return n+' (echo)';
-      if(mdIsHfTeam(n)) return n+' (HF)';
+    var freeCell=free.length?free.map(function(n){
+      if(MD_ECHO_TRAINEES.indexOf(mdAlias(n))!==-1) return n+' (echo training)';
+      if(mdIsHfTeam(n)) return n+' (HF Team)';
       return n;
-    });
-    // FREE sentinel — custom two-column render in didDrawCell
-    var freeCell=freeNames.length ? '\u0002FREE\u0001'+freeNames.join('|') : '\u2014';
-
-    body.push([dayLabel, echoCell, coverCell, dutyCell, freeCell]);
-    rowMeta.push({dow:dow, holiday:false});
+    }).join(', '):'\u2014';
+    body.push([
+      mdParse(iso).toLocaleDateString('en-GB',{weekday:'long',day:'2-digit',month:'short'}),
+      echoCell, coverCell, dutyCell, freeCell
+    ]);
   }
 
-  var tableStartY = bandH + 3 + 14;
-
   doc.autoTable({
-    startY: tableStartY,
-    head: [['Day','Echo Lab Roster','Clinic Cover','General Duties','Free Doctors']],
-    body: body,
-    theme: 'grid',
-    rowPageBreak: 'avoid',
-    styles: {
-      font:'helvetica',
-      fontSize:8,
-      cellPadding:{top:3,right:7,bottom:3,left:7},
-      valign:'top',
-      lineColor:C.grid,
-      lineWidth:0.5,
-      textColor:C.text,
-      overflow:'linebreak',
-      minCellHeight:0
-    },
-    headStyles: {
-      fillColor: C.headerCell,
-      textColor: 255,
-      fontSize: 9,
-      fontStyle: 'bold',
-      halign: 'left',
-      cellPadding: {top:7,right:7,bottom:7,left:9},
-      lineWidth: 0
-    },
-    columnStyles: {
-      0:{cellWidth:90, fontStyle:'bold', fontSize:9, textColor:C.text, fillColor:[255,255,255]},
-      1:{cellWidth:212},
-      2:{cellWidth:148},
-      3:{cellWidth:120},
-      4:{cellWidth:212, textColor:C.textSoft}
-    },
-    alternateRowStyles: { fillColor: C.stripe },
-    margin: {left:30, right:30},
-    didDrawPage: function(data){
-      // Footer on every page
-      doc.setDrawColor.apply(doc, C.grid);
-      doc.setLineWidth(0.5);
-      doc.line(30, pageH-30, pageW-30, pageH-30);
-      doc.setFont('helvetica','normal'); doc.setFontSize(8);
-      doc.setTextColor.apply(doc, C.textFaint);
-      doc.text('Generated '+new Date().toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}),
-        30, pageH-18);
-      doc.text('MKH Cardiology  \u00b7  Morning Duty Schedule', pageW/2, pageH-18, {align:'center'});
-      doc.text('Page '+data.pageNumber, pageW-30, pageH-18, {align:'right'});
-    },
-    didParseCell: function(data){
-      if(data.section !== 'body') return;
-      var meta = rowMeta[data.row.index];
-      if(!meta) return;
-
-      // Holiday rows — purple wash across the whole row.
-      if(meta.holiday){
-        data.cell.styles.fillColor = C.holiday;
-        data.cell.styles.textColor = C.holidayTx;
-        data.cell.styles.fontStyle = 'bold';
-        if(data.column.index === 0){
-          data.cell.styles.fillColor = C.holidayBd;
-          data.cell.styles.textColor = [255,255,255];
-        }
-        return;
-      }
-
-      // Day column — soft day-of-week tint
-      if(data.column.index === 0){
-        var tint = DAY_TINT[meta.dow];
-        if(tint){
-          data.cell.styles.fillColor = tint[0];
-          data.cell.styles.textColor = C.text;
-        }
-      }
-
-      // Echo Lab Roster (1) — custom two-column numbered list, drawn by hand.
-      if(data.column.index===1){
-        var rawE = Array.isArray(data.cell.raw) ? data.cell.raw.join('') : String(data.cell.raw||'');
-        if(rawE.indexOf('\u0002ECHO\u0001')===0){
-          var partsE = rawE.slice(6).split('\u0001');
-          var namesE = partsE[0] ? partsE[0].split('|') : [];
-          data.cell._mdEcho = { names: namesE, count: partsE[1]||'' };
-          var rowsE = Math.ceil(namesE.length/2);
-          var needE = data.cell.padding('top') + data.cell.padding('bottom')
-                    + rowsE*14 + 12;   // list rows + count line
-          data.cell.styles.minCellHeight = Math.max(data.cell.styles.minCellHeight||0, needE);
-          data.cell.text = [''];
-        }
-      }
-
-      // Free Doctors (4) — custom two-column numbered list.
-      if(data.column.index===4){
-        var rawF = Array.isArray(data.cell.raw) ? data.cell.raw.join('') : String(data.cell.raw||'');
-        if(rawF.indexOf('\u0002FREE\u0001')===0){
-          var namesF = rawF.slice(6).split('|');
-          data.cell._mdFree = namesF;
-          var rowsF = Math.ceil(namesF.length/2);
-          var needF = data.cell.padding('top') + data.cell.padding('bottom') + rowsF*14.5 + 4;
-          data.cell.styles.minCellHeight = Math.max(data.cell.styles.minCellHeight||0, needF);
-          data.cell.text = [''];
-        }
-      }
-
-      // Cover (2) and General Duties (3) — we draw these cells by hand in
-      // didDrawCell, so parse the entries and blank the default text.
-      if((data.column.index===2 || data.column.index===3)){
-        var raw = Array.isArray(data.cell.raw) ? data.cell.raw.join('') : String(data.cell.raw||'');
-        if(raw !== '\u2014' && raw !== ''){
-          data.cell._mdEntries = raw.split('\n\n').map(function(blk){
-            var parts = blk.split('\n');
-            return { name: (parts[0]||'').trim(), sub: (parts[1]||'').trim() };
-          });
-          // reserve enough vertical room: ~22pt per entry
-          var need = data.cell.padding('top') + data.cell.padding('bottom')
-                   + data.cell._mdEntries.length*24 + 4;
-          data.cell.styles.minCellHeight = Math.max(data.cell.styles.minCellHeight||0, need);
-          data.cell.text = [''];   // suppress default rendering
-        }
-      }
-    },
-    didDrawCell: function(data){
-      if(data.section !== 'body') return;
-      var meta = rowMeta[data.row.index];
-      if(!meta || meta.holiday) return;
-
-      // Left accent bar on the Day column matching that day's color
-      if(data.column.index === 0){
-        var tint = DAY_TINT[meta.dow];
-        if(tint){
-          doc.setFillColor.apply(doc, tint[1]);
-          doc.rect(data.cell.x, data.cell.y, 3, data.cell.height, 'F');
-        }
-      }
-
-      // Custom-render Echo Lab Roster as a two-column numbered list (~11pt).
-      if(data.column.index===1 && data.cell._mdEcho){
-        var ec = data.cell._mdEcho;
-        var ex = data.cell.x + data.cell.padding('left');
-        var ey = data.cell.y + data.cell.padding('top') + 9;
-        var colW = (data.cell.width - data.cell.padding('left') - data.cell.padding('right'))/2;
-        var rowsE2 = Math.ceil(ec.names.length/2);
-        if(ec.names.length){
-          doc.setFont('helvetica','normal'); doc.setFontSize(10.5);
-          doc.setTextColor.apply(doc, C.text);
-          for(var ei=0; ei<ec.names.length; ei++){
-            var col = (ei < rowsE2) ? 0 : 1;
-            var rowIdx = ei - col*rowsE2;
-            doc.text((ei+1)+'. '+ec.names[ei], ex + col*colW, ey + rowIdx*14);
-          }
-        } else {
-          doc.setFont('helvetica','bold'); doc.setFontSize(10.5);
-          doc.setTextColor.apply(doc, C.unassigned);
-          doc.text('Unassigned', ex, ey);
-        }
-        // count line, muted, below the list
-        doc.setFont('helvetica','italic'); doc.setFontSize(8);
-        doc.setTextColor.apply(doc, C.textFaint);
-        doc.text('('+ec.count+' assigned)', ex, ey + rowsE2*14 + 1);
-      }
-
-      // Custom-render Free Doctors as a two-column numbered list (~11pt).
-      if(data.column.index===4 && data.cell._mdFree){
-        var fn = data.cell._mdFree;
-        var fx = data.cell.x + data.cell.padding('left');
-        var fy = data.cell.y + data.cell.padding('top') + 9;
-        var fcolW = (data.cell.width - data.cell.padding('left') - data.cell.padding('right'))/2;
-        var rowsF2 = Math.ceil(fn.length/2);
-        doc.setFont('helvetica','normal'); doc.setFontSize(10);
-        doc.setTextColor.apply(doc, C.textSoft);
-        for(var fi=0; fi<fn.length; fi++){
-          var fcol = (fi < rowsF2) ? 0 : 1;
-          var frow = fi - fcol*rowsF2;
-          doc.text((fi+1)+'. '+fn[fi], fx + fcol*fcolW, fy + frow*14.5);
-        }
-      }
-
-      // Custom-render Clinic Cover / General Duties entries:
-      //   line 1 -> doctor name (bold; red if UNASSIGNED)
-      //   line 2 -> owner / duty label (small, muted)
-      if((data.column.index===2 || data.column.index===3) && data.cell._mdEntries){
-        var entries = data.cell._mdEntries;
-        var tx  = data.cell.x + data.cell.padding('left');
-        var ty  = data.cell.y + data.cell.padding('top') + 8;
-        var hasUnassigned = false;
-        for(var e=0;e<entries.length;e++){
-          var ent = entries[e];
-          var isUn = ent.name.indexOf('UNASSIGNED') !== -1;
-          if(isUn) hasUnassigned = true;
-          doc.setFont('helvetica','bold'); doc.setFontSize(10);
-          doc.setTextColor.apply(doc, isUn ? C.unassigned : C.text);
-          doc.text((e+1)+'. '+ent.name, tx, ty);
-          if(ent.sub){
-            doc.setFont('helvetica','normal'); doc.setFontSize(8);
-            doc.setTextColor.apply(doc, C.textFaint);
-            doc.text(ent.sub, tx + 12, ty + 10);
-          }
-          ty += 24;
-        }
-        if(hasUnassigned){
-          doc.setFillColor.apply(doc, C.unassigned);
-          doc.triangle(
-            data.cell.x + data.cell.width - 8, data.cell.y + 2,
-            data.cell.x + data.cell.width - 2, data.cell.y + 2,
-            data.cell.x + data.cell.width - 2, data.cell.y + 8,
-            'F'
-          );
-        }
-      }
-    }
+    startY:82,
+    head:[['Day','Echo Lab Roster','Clinic Cover','General Duties','Free Doctors']],
+    body:body,
+    styles:{font:'helvetica',fontSize:8.5,cellPadding:6,valign:'top',lineColor:[210,215,222],lineWidth:0.5},
+    headStyles:{fillColor:[34,40,49],textColor:255,fontSize:9,fontStyle:'bold'},
+    columnStyles:{0:{cellWidth:108,fontStyle:'bold'},1:{cellWidth:172},2:{cellWidth:188},3:{cellWidth:160},4:{cellWidth:'auto'}},
+    alternateRowStyles:{fillColor:[245,247,249]},
+    margin:{left:30,right:30}
   });
 
-  // ---------- closing note ----------
-  var noteY = doc.lastAutoTable.finalY + 18;
-  if(noteY > pageH - 50){ doc.addPage(); noteY = 50; }
-  doc.setFont('helvetica','italic'); doc.setFontSize(8);
-  doc.setTextColor.apply(doc, C.textFaint);
-  doc.text('Free doctors have first priority for any empty morning work slot.',
-    30, noteY);
+  var fy=doc.lastAutoTable.finalY+22;
+  doc.setFontSize(8.5); doc.setTextColor(70);
+  doc.text('CCU 3rd-on-call this week: '+(ccu?'Dr. '+ccu:'\u2014')
+    +'      ASA ward senior this week: '+(ward?'Dr. '+ward:'\u2014'), 30, fy);
+  doc.text('Echo minimum: '+mdEchoMinimum(mdAddDays(ws,1))+'/day, '+mdEchoMinimum(mdAddDays(ws,3))+' on Wednesday.'
+    +'  Free doctors have first priority for empty morning work slots.', 30, fy+13);
 
   doc.save('MorningDuty_'+ws+'.pdf');
 };
 
-console.info('[MKH] v3.3 enhancements loaded — global search · complexity tag · JSON backup · analytics');
-// ============================================================
-// CLINICAL TEXTAREA — AUTO BULLET LIST
-// Selected clinical-text textareas behave as a bullet list by
-// default: the first line gets a "• ", every Enter starts a new
-// "• " line, and an empty bullet + Enter just clears that line
-// (no dead blank section). Enter never submits the form.
-// Storage stays plain text — no HTML — so PDF export, search,
-// and all existing .value reads keep working unchanged.
-// ============================================================
-(function(){
-  // Textareas that should behave as auto bullet lists.
-  var RT_IDS = [
-    'hf-hx','hf-reason','hf-ix','hf-active','hf-plan',
-    'endo-hx','endo-reason','endo-ix','endo-active','endo-plan',
-    'cath-sch-hx','cath-p-hx','tee-indication-details'
-  ];
-
-  var BULLET = '\u2022 ';
-  var BULLET_RE = /^(\s*)\u2022\s+(.*)$/;   // "• text"  -> [ , indent, text ]
-
-  function getLineBounds(ta){
-    var v = ta.value, s = ta.selectionStart;
-    var lineStart = v.lastIndexOf('\n', s - 1) + 1;
-    var nlIdx = v.indexOf('\n', s);
-    var lineEnd = (nlIdx === -1) ? v.length : nlIdx;
-    return { start: lineStart, end: lineEnd, text: v.slice(lineStart, lineEnd) };
-  }
-
-  function setValue(ta, val, caret){
-    ta.value = val;
-    ta.selectionStart = ta.selectionEnd = caret;
-    ta.dispatchEvent(new Event('input', { bubbles: true }));
-  }
-
-  // Ensure the textarea opens with a bullet ready to type into.
-  function seedBullet(ta){
-    if(ta.value === ''){
-      ta.value = BULLET;
-      try { ta.selectionStart = ta.selectionEnd = BULLET.length; } catch(e){}
-    }
-  }
-
-  function handleEnter(ta, ev){
-    // Let Shift/Ctrl/Alt/Meta+Enter fall through untouched.
-    if(ev.shiftKey || ev.ctrlKey || ev.altKey || ev.metaKey) return;
-
-    // Plain Enter inside these fields must never submit the form
-    // and must never move focus — always handle it here.
-    ev.preventDefault();
-
-    var b = getLineBounds(ta);
-    var line = b.text;
-    var m = line.match(BULLET_RE);
-
-    if(m && m[2].trim() === ''){
-      // Empty bullet -> clear it, stay on the same (now blank) line.
-      var before = ta.value.slice(0, b.start);
-      var after  = ta.value.slice(b.end);
-      setValue(ta, before + m[1] + after, b.start + m[1].length);
-      return;
-    }
-
-    // Continue / start the bullet list on a fresh line.
-    var indent = m ? m[1] : (line.match(/^\s*/) || [''])[0];
-    var s = ta.selectionStart, e = ta.selectionEnd;
-    var ins = '\n' + indent + BULLET;
-    setValue(ta, ta.value.slice(0, s) + ins + ta.value.slice(e), s + ins.length);
-  }
-
-  // Strip blank/empty bullet lines so a field that only ever held a
-  // seeded "• " saves as truly empty, not as "•".
-  function cleanListText(v){
-    if(v == null) return '';
-    var kept = v.split('\n').filter(function(ln){
-      var m = ln.match(BULLET_RE);
-      if(m) return m[2].trim() !== '';   // drop empty bullets
-      return ln.trim() !== '';           // drop blank lines
-    });
-    return kept.join('\n');
-  }
-  window.cleanListText = cleanListText;
-
-  function enhance(ta){
-    if(!ta || ta.dataset.rtEnhanced === '1') return;
-    ta.dataset.rtEnhanced = '1';
-
-    ta.addEventListener('keydown', function(ev){
-      if(ev.key === 'Enter') handleEnter(ta, ev);
-    });
-    // Seed a bullet the first time the field is focused while empty.
-    ta.addEventListener('focus', function(){ seedBullet(ta); });
-    // On blur, drop any dangling empty bullets so saved values are clean.
-    ta.addEventListener('blur', function(){
-      var cleaned = cleanListText(ta.value);
-      if(cleaned !== ta.value){
-        ta.value = cleaned;
-        ta.dispatchEvent(new Event('input', { bubbles: true }));
-      }
-    });
-    // If something fills the field programmatically with plain text,
-    // leave it alone — only seed when it is genuinely empty.
-    seedBullet(ta);
-  }
-
-  function initAll(){
-    RT_IDS.forEach(function(id){
-      var ta = document.getElementById(id);
-      if(ta) enhance(ta);
-    });
-    document.querySelectorAll('textarea[data-richtext="1"]').forEach(enhance);
-  }
-
-  // Final safety net: clean every list textarea right before a form
-  // submits, in case submit fires before the field's blur handler.
-  document.addEventListener('submit', function(){
-    RT_IDS.forEach(function(id){
-      var ta = document.getElementById(id);
-      if(!ta) return;
-      var cleaned = cleanListText(ta.value);
-      if(cleaned !== ta.value) ta.value = cleaned;
-    });
-  }, true);
-
-  // Re-seed bullets after a value is cleared elsewhere (e.g. on
-  // modal close/reset) so the field is always list-ready next open.
-  window.initRichTextEditors = initAll;
-
-  if(document.readyState === 'loading'){
-    document.addEventListener('DOMContentLoaded', initAll);
-  } else {
-    initAll();
-  }
-})();
+console.info('[MKH] v3.3 enhancements loaded — hero card · global search · complexity tag · JSON backup · analytics');
 
 </script>
 
