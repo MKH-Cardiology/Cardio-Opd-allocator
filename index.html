@@ -10558,17 +10558,42 @@ function mdClinicsNeedingCover(weekSun, ccuOverride){
   var ward=mdWeekWardSenior(weekSun);
   var out=[];
   CL.forEach(function(c,idx){
-    if(ccu && c.d===ccu){
-      out.push({idx:idx, owner:c.d, day:c.days[0], room:c.r,
+    // Resolve the clinic owner to its canonical roster name so the CL short
+    // form "Ibrahim" matches the CCU consultant "Ibrahim Hassan" — they are
+    // the same doctor, so his clinics must be flagged for cover when he is on
+    // CCU 3rd-on-call this week.
+    var ownerCanon=mdAlias(c.d);
+    if(ccu && ownerCanon===ccu){
+      out.push({idx:idx, owner:ownerCanon, day:c.days[0], room:c.r,
         reason:'On CCU 3rd-on-call this week',
-        needCategory:(mdDocCategory(c.d)||'consultant')});
-    } else if(ward && c.d===ward){
-      out.push({idx:idx, owner:c.d, day:c.days[0], room:c.r,
+        needCategory:(mdDocCategory(ownerCanon)||'consultant')});
+    } else if(ward && ownerCanon===ward){
+      out.push({idx:idx, owner:ownerCanon, day:c.days[0], room:c.r,
         reason:'ASA ward senior this week',
-        needCategory:(mdDocCategory(c.d)||'senior')});
+        needCategory:(mdDocCategory(ownerCanon)||'senior')});
     }
   });
   return out;
+}
+
+/* ---- OPD coverage priority by weekday ----
+   When a consultant clinic needs covering, the FIRST-choice covering consultant
+   depends on the weekday. The named priority doctor is tried first; if he is
+   unavailable (occupied as CCU/ward, on leave, owns a clinic that day, or is
+   already on echo) the remaining consultants are tried in the default order. */
+var MD_OPD_DAY_PRIORITY = {
+  "Sun": "Ibrahim Hassan",
+  "Mon": "Hisham",
+  "Tue": "Farag",
+  "Wed": "Ehab",
+  "Thu": "Hany"
+};
+// Ordered consultant pool for clinic cover on a given weekday: the day's
+// priority consultant first, then the rest of MD_CONSULTANTS in default order.
+function mdConsultantCoverPool(dow){
+  var first=MD_OPD_DAY_PRIORITY[dow];
+  if(!first) return MD_CONSULTANTS.slice();
+  return [first].concat(MD_CONSULTANTS.filter(function(n){ return n!==first; }));
 }
 
 /* ---- doctors with a clinic on a given weekday ---- */
@@ -10668,7 +10693,7 @@ function mdGenerateDraft(weekSun, ccuOverride){
     var cover={};
     coverNeeds.forEach(function(cn){
       if(cn.day!==dow) return;
-      var pool=(cn.needCategory==='senior') ? MD_SENIORS.slice() : MD_CONSULTANTS.slice();
+      var pool=(cn.needCategory==='senior') ? MD_SENIORS.slice() : mdConsultantCoverPool(dow);
       var clinicDocs=mdClinicDocsOnDay(dow);
       var chosen='';
       for(var p=0;p<pool.length;p++){
@@ -10889,7 +10914,7 @@ function mdReflowWeek(){
          && echoSet.indexOf(existing)===-1){
         newCover[c.idx]=mdCanon(existing); return;
       }
-      var pool=(c.needCategory==='senior')?MD_SENIORS.slice():MD_CONSULTANTS.slice();
+      var pool=(c.needCategory==='senior')?MD_SENIORS.slice():mdConsultantCoverPool(dow);
       var chosen='';
       for(var p=0;p<pool.length;p++){
         var cand=pool[p];
